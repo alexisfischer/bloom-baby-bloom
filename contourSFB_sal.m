@@ -1,10 +1,11 @@
-% creates a contour plot of San Francisco Bay
+%% creates a contour plot of San Francisco Bay
 
-% [sfb,s]=import_SFB_data('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/Data/sfb_raw.csv');
+% [sfb,s]=import_SFB_data_new('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\sfb_raw.csv');
 load('sfb.mat');
 
-for i=1:length(s)
-    
+%for i=1:length(s)
+for i=1:8
+   
     yrok = s(i).dn(1);
     lat = s(i).lat; 
     lon = s(i).long; 
@@ -19,7 +20,7 @@ for i=1:length(s)
 
     % contour plot 
     x = -122.56:.001:-121.76; y = 37.4:.001:38.22;
-    bathydata = load('../bloom-baby-bloom/Data/SFB_bathymetry.mat');
+    bathydata = load('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\SFB_bathymetry.mat');
     xx = bathydata.lon; yy = bathydata.lat;
     F = scatteredInterpolant(lonok,latok,vvok,'nearest','nearest'); %F is a function
     zz = F(xx,yy); %must call scatteredInterp function in order to plot
@@ -41,7 +42,7 @@ for i=1:length(s)
     caxis(cax); hold on;
 
     % plots outline of sfb
-    plot_SFB_coastline('k-'); 
+    coastline_SFB('k-'); 
 
     % add station locations
     plot(lon,lat,'ko','markerfacecolor','w','markersize',5);
@@ -60,7 +61,7 @@ for i=1:length(s)
 
     % Set figure parameters
     set(gcf,'color','w');
-    print(gcf,'-dtiff','-r600',['~/Documents/MATLAB/bloom-baby-bloom/Figs/' num2str(str) '.tif'])
+    print(gcf,'-dtiff','-r600',['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\' num2str(str) '.tif'])
     hold off
 
 end 
