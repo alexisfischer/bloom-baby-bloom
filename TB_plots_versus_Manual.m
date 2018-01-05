@@ -1,4 +1,4 @@
-class2do_string = 'Ceratium'; %USER 
+class2do_string = 'Akashiwo'; %USER 
 slope = 1; %corresponds to threshold value Coeffs(:,2)
 
 load 'F:\IFCB104\manual\summary\count_biovol_manual_01Jan2018' %load manual count result file that you made from running 'biovolume_summary_manual_user_training.m'
@@ -34,21 +34,32 @@ ind2 = strmatch(class2do_string, class2use); %change this for whatever class you
 %%
 figure
 
-plot(mdateTB, y_mat/slope,'k-') %This adjusts the automated counts by the chosen slope. 
-
+%plot(mdateTB, y_mat/slope,'k-') %This adjusts the automated counts by the chosen slope. 
 %plot(mdate_mat_match(:), y_mat_match(:)/.79*1000,'k-') %This adjusts the automated counts by the chosen slope. 
+
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.79*1000,'k-') %This adjusts the automated counts by the chosen slope. 
+
+
+
+for i=1:length(yearlist)
+    ind_nan=find(~isnan(y_mat_match(:,i)));
+    h1=stem(mdate_mat_match(ind_nan,i), y_mat_match(ind_nan,i),'kd-','Markersize',8) %This adjusts the automated counts by the chosen slope.     
+    hold on
+end
 
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*')
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*')
 end
-hold on
+
+hold all
 datetick,set(gca, 'xgrid', 'on')
 ylabel(['\it' num2str(class2do_string) '\rm concentration (ml^{-1})\bf'], 'fontsize',16, 'fontname', 'Times');
 set(gca, 'fontsize', 16, 'fontname', 'Times')
-lh=legend('Automated classification', 'Manual classification');
+lh = legend([h1,h2], 'Automated classification','Manual classification');
+hold on
+
 set(lh,'fontsize',12)
 set(gcf,'PaperOrientation','landscape');
 set(gcf,'units','inches')
@@ -60,7 +71,7 @@ set(gca,'xticklabels',...
     '                                                                     2016',...
     '                                                                     2017'});
 %datetick('x', 'keeplimits', 'keepticks')
-%ylim([0 140])
+%ylim([-1 2])
 
 % set figure parameters
 set(gcf,'color','w');
