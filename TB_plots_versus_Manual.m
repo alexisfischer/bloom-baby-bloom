@@ -1,5 +1,6 @@
 class2do_string = 'Akashiwo'; %USER 
-slope = 0.65; %corresponds to threshold value Coeffs(:,2)
+slope = 0.6; %corresponds to threshold value Coeffs(:,2)
+bin=5;
 
 load 'F:\IFCB104\manual\summary\count_biovol_manual_07Jan2018' %load manual count result file that you made from running 'biovolume_summary_manual_user_training.m'
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
@@ -13,13 +14,13 @@ end
 
 % Makes day bins for the matched automated counts. I've used column 6 because this is for the 0.5 threshold. 
 [matdate_bin_match, classcount_bin_match, ml_analyzed_mat_bin_match] =...
-    make_day_bins(mdateTB(it),classcountTB_above_thre(it,4),ml_analyzedTB(it)); 
+    make_day_bins(mdateTB(it),classcountTB_above_thre(it,bin),ml_analyzedTB(it)); 
 
 % Takes the series of day bins for automated counts and puts it into a year x day matrix.
 [ mdate_mat_match, y_mat_match, yearlist, yd ] =...
     timeseries2ydmat(matdate_bin_match,classcount_bin_match./ml_analyzed_mat_bin_match ); 
 
-y_mat=classcountTB_above_thre(:,6)./ml_analyzedTB(:);
+y_mat=classcountTB_above_thre(:,bin)./ml_analyzedTB(:);
 y_mat((y_mat<0)) = 0; % cannot have negative numbers 
 
 ind2 = strmatch(class2do_string, class2use); %change this for whatever class you are analyzing
