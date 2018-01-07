@@ -68,7 +68,7 @@ hold on
 set(lh,'fontsize',12)
 %set(gcf,'PaperOrientation','landscape');
 set(gcf,'units','inches')
-set(gcf,'position',[5 6 9 3.5],'paperposition', [-0.5 3 12 4]);
+set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
 set(gca,'xlim',[datenum('2016-01-01') datenum('2017-01-01')],...
         'xtick',[datenum('2016-01-01'),...
