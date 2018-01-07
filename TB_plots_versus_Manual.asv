@@ -1,7 +1,7 @@
 class2do_string = 'Akashiwo'; %USER 
-slope = 1; %corresponds to threshold value Coeffs(:,2)
+slope = 0.65; %corresponds to threshold value Coeffs(:,2)
 
-load 'F:\IFCB104\manual\summary\count_biovol_manual_01Jan2018' %load manual count result file that you made from running 'biovolume_summary_manual_user_training.m'
+load 'F:\IFCB104\manual\summary\count_biovol_manual_07Jan2018' %load manual count result file that you made from running 'biovolume_summary_manual_user_training.m'
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 
@@ -13,7 +13,7 @@ end
 
 % Makes day bins for the matched automated counts. I've used column 6 because this is for the 0.5 threshold. 
 [matdate_bin_match, classcount_bin_match, ml_analyzed_mat_bin_match] =...
-    make_day_bins(mdateTB(it),classcountTB_above_thre(it,6),ml_analyzedTB(it)); 
+    make_day_bins(mdateTB(it),classcountTB_above_thre(it,4),ml_analyzedTB(it)); 
 
 % Takes the series of day bins for automated counts and puts it into a year x day matrix.
 [ mdate_mat_match, y_mat_match, yearlist, yd ] =...
@@ -30,44 +30,52 @@ ind2 = strmatch(class2do_string, class2use); %change this for whatever class you
 
 % Takes the series of day bins and puts it into a year x day matrix.
 [mdate_mat_manual, y_mat_manual, yearlist, yd ] =...
-    timeseries2ydmat(matdate_bin_auto,classcount_bin_auto./ml_analyzed_mat_bin_auto);  
+    timeseries2ydmat(matdate_bin_auto,classcount_bin_auto./ml_analyzed_mat_bin_auto); 
+
+ind=(find(y_mat)); % find dates associated with nonzero elements
+mdate_val=[mdateTB(ind),y_mat(ind)];
+save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\need_more_manual_Akashiwo.mat','mdate_val');
+
 %%
 figure
 
 %plot(mdateTB, y_mat/slope,'k-') %This adjusts the automated counts by the chosen slope. 
-%plot(mdate_mat_match(:), y_mat_match(:)/.79*1000,'k-') %This adjusts the automated counts by the chosen slope. 
-
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.79*1000,'k-') %This adjusts the automated counts by the chosen slope. 
-
-
 
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_match(:,i)));
-    stem(mdate_mat_match(ind_nan,i), y_mat_match(ind_nan,i),'kd-','Markersize',8) %This adjusts the automated counts by the chosen slope.     
+    h1=stem(mdate_mat_match(ind_nan,i), y_mat_match(ind_nan,i)/.8,'kd-','Markersize',4); %This adjusts the automated counts by the chosen slope.     
     hold on
 end
 
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    test=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*')
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*');
 end
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
-ylabel(['\it' num2str(class2do_string) '\rm concentration (ml^{-1})\bf'], 'fontsize',16, 'fontname', 'Times');
+ylabel(['\it' num2str(class2do_string) '\rm concentration (mL^{-1})\bf'], 'fontsize',16, 'fontname', 'Times');
 set(gca, 'fontsize', 16, 'fontname', 'Times')
-lh=legend('Automated classification', 'Manual classification');
+lh = legend([h1,h2], 'Automated classification','Manual classification');
+hold on
+
 set(lh,'fontsize',12)
 set(gcf,'PaperOrientation','landscape');
 set(gcf,'units','inches')
 set(gcf,'position',[6 7 12 4],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca, 'xtick', datenum(['1-1-2015';'1-1-2016'; '1-1-2017']),'tickdir','out')
-set(gca,'xticklabels',...
-    {'                                                                    2015',...
-    '                                                                     2016',...
-    '                                                                     2017'});
+set(gca,'xlim',[datenum('2016-01-01') datenum('2017-01-01')],...
+        'xtick','xtick',[datenum('2016-01-01'),...
+        datenum('2016-02-01'),datenum('2016-03-01'),...
+        datenum('2016-04-01'),datenum('2016-05-01'),...
+        datenum('2016-06-01'),datenum('2016-07-01'),...
+        datenum('2016-08-01'),datenum('2016-09-01'),...
+        datenum('2016-10-01'),datenum('2016-11-01'),...
+        datenum('2016-12-01')],...
+        'XTickLabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug',...
+        'Sep','Oct','Nov','Dec'},'tickdir','out');
 %datetick('x', 'keeplimits', 'keepticks')
 %ylim([-1 2])
 
