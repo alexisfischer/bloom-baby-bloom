@@ -40,7 +40,7 @@ save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\need_more_manual
 %%
 figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
 
-h1=plot(mdateTB, y_mat/slope,'k-'); %This adjusts the automated counts by the chosen slope. 
+h1=plot(mdateTB, y_mat/slope,'k-','Linewidth',1.2); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
 % 
 % for i=1:length(yearlist)
@@ -52,23 +52,23 @@ h1=plot(mdateTB, y_mat/slope,'k-'); %This adjusts the automated counts by the ch
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',7);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',10,'linewidth',1.2);
 end
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
 ylabel(['\it' num2str(class2do_string) '\rm concentration (mL^{-1})\bf'],...
-    'fontsize',14, 'fontname', 'Arial');
+    'fontsize',12, 'fontname', 'Arial');
 title('2016', 'fontsize',14, 'fontname', 'Arial');
 
-set(gca, 'fontsize', 14, 'fontname', 'Arial')
+set(gca, 'fontsize', 12, 'fontname', 'Arial')
 lh = legend([h1,h2], 'Automated classification','Manual classification','Location','Northwest');
 hold on
 
 set(lh,'fontsize',12)
 %set(gcf,'PaperOrientation','landscape');
 set(gcf,'units','inches')
-set(gcf,'position',[5 6 10 3.5],'paperposition', [-0.5 3 12 4]);
+set(gcf,'position',[5 6 9 3.5],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
 set(gca,'xlim',[datenum('2016-01-01') datenum('2017-01-01')],...
         'xtick',[datenum('2016-01-01'),...
