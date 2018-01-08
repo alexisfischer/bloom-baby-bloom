@@ -1,4 +1,4 @@
-class2do_string = 'Akashiwo'; %USER 
+class2do_string = 'Dinophysis'; %USER 
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 
