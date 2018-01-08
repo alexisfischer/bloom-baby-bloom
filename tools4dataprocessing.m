@@ -114,7 +114,7 @@ compile_train_features_user_training(manualpath, feapath_base, maxn, minn,...
 %% Train (make) the classifier
 
 result_path = 'F:\IFCB104\manual\summary\'; %USER location of training file and classifier output
-train_filename = 'UserExample_Train_19Dec2017'; %USER what file contains your training features
+train_filename = 'UserExample_Train_08Jan2018'; %USER what file contains your training features
 result_str = 'UserExample_Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
