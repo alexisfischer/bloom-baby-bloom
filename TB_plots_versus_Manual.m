@@ -1,6 +1,6 @@
 class2do_string = 'Akashiwo'; %USER 
 slope = 0.6; %corresponds to threshold value Coeffs(:,2)
-bin=5;
+bin=3;
 
 load 'F:\IFCB104\manual\summary\count_biovol_manual_07Jan2018' %load manual count result file that you made from running 'biovolume_summary_manual_user_training.m'
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
