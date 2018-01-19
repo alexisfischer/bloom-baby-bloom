@@ -40,29 +40,28 @@ save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\need_more_manual
 %%
 figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
 
-%h1=plot(mdateTB, y_mat/slope,'k-','Linewidth',1.2); %This adjusts the automated counts by the chosen slope. 
+h1=plot(mdateTB, y_mat/slope,'k-','Linewidth',1.2); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
 % 
-for i=1:length(yearlist)
-    ind_nan=find(~isnan(y_mat_match(:,i)));
-    h1=stem(mdate_mat_match(ind_nan,i), y_mat_match(ind_nan,i)/.8,'kd-','Markersize',4); %This adjusts the automated counts by the chosen slope.     
-    hold on
-end
+% for i=1:length(yearlist)
+%     ind_nan=find(~isnan(y_mat_match(:,i)));
+%     h1=stem(mdate_mat_match(ind_nan,i), y_mat_match(ind_nan,i)/slope,'kd-','Markersize',4); %This adjusts the automated counts by the chosen slope.     
+%     hold on
+% end
 
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',10,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',1.2);
 end
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
 ylabel(['\it' num2str(class2do_string) '\rm concentration (mL^{-1})\bf'],...
     'fontsize',12, 'fontname', 'Arial');
-title('2016', 'fontsize',14, 'fontname', 'Arial');
 
 set(gca, 'fontsize', 12, 'fontname', 'Arial')
-lh = legend([h1,h2], 'Automated classification','Manual classification','Location','Northwest');
+lh = legend([h1,h2], 'Automated classification','Manual classification','Location','Northeast');
 hold on
 
 set(lh,'fontsize',12)
@@ -70,21 +69,20 @@ set(lh,'fontsize',12)
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca,'xlim',[datenum('2016-01-01') datenum('2017-01-01')],...
-        'xtick',[datenum('2016-01-01'),...
-        datenum('2016-02-01'),datenum('2016-03-01'),...
-        datenum('2016-04-01'),datenum('2016-05-01'),...
-        datenum('2016-06-01'),datenum('2016-07-01'),...
-        datenum('2016-08-01'),datenum('2016-09-01'),...
+set(gca,'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
+        'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
-        datenum('2016-12-01')],...
-        'XTickLabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug',...
-        'Sep','Oct','Nov','Dec'},'tickdir','out');
+        datenum('2016-12-01'),datenum('2017-01-01'),...
+        datenum('2017-02-01'),datenum('2017-03-01'),...
+        datenum('2017-04-01'),datenum('2017-05-01'),...
+        datenum('2017-06-01')],...
+        'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan',...
+        'Feb','Mar','Apr','May','Jun'},'tickdir','out');
 %datetick('x', 'keeplimits', 'keepticks')
 %ylim([-1 2])
 
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',...
-    ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\SCW_manual_automated_' num2str(class2do_string) '.tif']);
+    ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\SCW_manual_automated_ALL_' num2str(class2do_string) '.tif']);
 hold off
