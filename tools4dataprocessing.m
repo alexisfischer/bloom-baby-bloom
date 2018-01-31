@@ -94,7 +94,7 @@ start_classify_batch_user_training(...
 % Summarize random forest classification results by class
 countcells_allTBnew_user_training(...
     'F:\IFCB104\class\classxxxx_v1\',...
-    'F:\IFCB104\data\', 2015:2017)
+    'F:\IFCB104\data\', 2016:2017)
 
 %% Compile features for the training set
 
@@ -102,26 +102,23 @@ manualpath = 'F:\IFCB104\manual\'; % manual annotation file location
 feapath_base = 'F:\IFCB104\features\'; %feature file location, assumes \yyyy\ organization
 maxn = 100; %maximum number of images per class to include
 minn = 50; %minimum number for inclusion
+class2skip = {'unclassified' 'Fragilariopsis' 'Navicula' 'Beads' 'bubbles'...
+    'Amy_Gony_Ling_Protoc' 'Rhiz_Prob' 'Det_Cer_Lau' 'Entomoneis'};
+class2group = {{'Cryptophyte' 'NanoP_less10'} {'Ciliate' 'zooplankton_misc'}}; %use nested cells for multiple groups of 2 or more classes 
 
-compile_train_features_user_training(manualpath, feapath_base, maxn, minn,...
-    {'unclassified'...
-    'Fragilariopsis'...
-    'Navicula'...
-    'DinoMix'...
-    'Beads'...
-    'Detritus'});
+compile_train_features_user_training(manualpath, feapath_base, maxn, minn,class2skip,class2group);
 
 %% Train (make) the classifier
 
 result_path = 'F:\IFCB104\manual\summary\'; %USER location of training file and classifier output
-train_filename = 'UserExample_Train_08Jan2018'; %USER what file contains your training features
+train_filename = 'UserExample_Train_26Jan2018'; %USER what file contains your training features
 result_str = 'UserExample_Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 make_TreeBaggerClassifier_user_training(result_path, train_filename, result_str, nTrees)
 
 %%
-classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_08Jan2018');
+classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_21Jan2018');
 
 %% Find the volume sampled in milliliters for >1 IFCB files
 %examples
