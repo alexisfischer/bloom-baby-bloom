@@ -58,7 +58,7 @@ end
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
-ylabel(['\it' num2str(class2do_string) '\rm concentration (mL^{-1})\bf'],...
+ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
     'fontsize',12, 'fontname', 'Arial');
 
 set(gca, 'fontsize', 12, 'fontname', 'Arial')
