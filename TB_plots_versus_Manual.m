@@ -1,5 +1,5 @@
-class2do_string = 'Dinophysis'; %USER 
-bin=5;
+class2do_string = 'Pseudo-nitzschia'; %USER 
+bin=6;
 slope = Coeffs(bin,2);
 
 load 'F:\IFCB104\manual\summary\count_biovol_manual_21Jan2018' %load manual count result file that you made from running 'biovolume_summary_manual_user_training.m'
