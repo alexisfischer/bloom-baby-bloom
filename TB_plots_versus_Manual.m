@@ -1,10 +1,12 @@
-class2do_string = 'Dinophysis'; %USER 
-bin=5;
+class2do_string = 'Alexandrium'; %USER 
+bin=6;
 slope = Coeffs(bin,2);
 
 load 'F:\IFCB104\manual\summary\count_biovol_manual_21Jan2018' %load manual count result file that you made from running 'biovolume_summary_manual_user_training.m'
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
+
+load 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\SCW_microscopydata.mat' %load cell count data
 
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
@@ -38,9 +40,9 @@ mdate_val=[mdateTB(ind),y_mat(ind)];
 %save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\need_more_manual_Akashiwo.mat','mdate_val');
 
 %%
-figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 6 2],'PaperPositionMode','auto');
 
-h1=plot(mdateTB, y_mat/slope,'k-','Linewidth',1.2); %This adjusts the automated counts by the chosen slope. 
+h1=plot(mdateTB, y_mat*1000./slope,'k-','Linewidth',1.2); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
 
 % %plots only matching MC
@@ -53,15 +55,16 @@ h1=plot(mdateTB, y_mat/slope,'k-','Linewidth',1.2); %This adjusts the automated 
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i)*1000,'r*','Markersize',6,'linewidth',1.2);
 end
+
+hold on
+h3=plot(micros.alex.dn, micros.alex.avg,'bo','Markersize',4,'linewidth',1.2);
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
-ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
-    'fontsize',12, 'fontname', 'Arial');
 
-set(gca, 'fontsize', 12, 'fontname', 'Arial')
+set(gca, 'fontsize', 11, 'fontname', 'Arial')
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
@@ -74,6 +77,8 @@ set(gca,'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         datenum('2017-06-01')],...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');
+ylabel(['\it' num2str(class2do_string) '\rm cells L^{-1}\bf'],...
+    'fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
@@ -81,9 +86,9 @@ vfill([datenum('2016-11-05'),0,datenum('2017-02-22'),500],[200 200 200]/255,'Fac
 hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
-lh = legend([h1,h2], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
-    'Manual classification','Location','NorthOutside');
-set(lh,'fontsize',12)
+lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
+    'Manual classification','Microscopy','Location','North');
+set(lh,'fontsize',10)
 hold on
 % set figure parameters
 set(gcf,'color','w');
