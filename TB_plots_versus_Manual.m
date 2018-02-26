@@ -1,8 +1,8 @@
-class2do_string = 'Alexandrium'; %USER 
-bin=6;
+class2do_string = 'Dinophysis'; %USER 
+bin=7;
 slope = Coeffs(bin,2);
 
-load 'F:\IFCB104\manual\summary\count_biovol_manual_21Jan2018' %load manual count result file that you made from running 'biovolume_summary_manual_user_training.m'
+load('F:\IFCB104\manual\summary\count_biovol_manual_26Feb2018'); %USER
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 
@@ -40,9 +40,9 @@ mdate_val=[mdateTB(ind),y_mat(ind)];
 %save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\need_more_manual_Akashiwo.mat','mdate_val');
 
 %%
-figure('Units','inches','Position',[1 1 6 2],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 5 3],'PaperPositionMode','auto');
 
-h1=plot(mdateTB, y_mat*1000./slope,'k-','Linewidth',1.2); %This adjusts the automated counts by the chosen slope. 
+h1=stem(mdateTB, y_mat*1000./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
 
 % %plots only matching MC
@@ -59,7 +59,7 @@ for i=1:length(yearlist)
 end
 
 hold on
-h3=plot(micros.alex.dn, micros.alex.avg,'bo','Markersize',4,'linewidth',1.2);
+h3=plot(micros.dino.dn, micros.dino.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','b');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -68,7 +68,8 @@ set(gca, 'fontsize', 11, 'fontname', 'Arial')
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca,'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
+set(gca,'yscale','log','ylim',[10 10^4],'ytick',[10,10^2,10^3,10^4],...
+    'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
         datenum('2016-12-01'),datenum('2017-01-01'),...
@@ -87,7 +88,7 @@ hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
-    'Manual classification','Microscopy','Location','North');
+    'Manual classification','Microscopy','Location','NorthOutside');
 set(lh,'fontsize',10)
 hold on
 % set figure parameters
