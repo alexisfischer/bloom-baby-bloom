@@ -1,6 +1,7 @@
-class2do_string = 'Dinophysis'; %USER 
-bin=7;
-slope = Coeffs(bin,2);
+class2do_string = 'Pseudo-nitzschia'; %USER 
+
+path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\';
+load([path 'Coeff_' class2do_string]);
 
 load('F:\IFCB104\manual\summary\count_biovol_manual_26Feb2018'); %USER
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
@@ -42,7 +43,7 @@ mdate_val=[mdateTB(ind),y_mat(ind)];
 %%
 figure('Units','inches','Position',[1 1 5 3],'PaperPositionMode','auto');
 
-h1=stem(mdateTB, y_mat*1000./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
+h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
 
 % %plots only matching MC
@@ -55,11 +56,11 @@ h1=stem(mdateTB, y_mat*1000./slope,'k-','Linewidth',.5,'Marker','none'); %This a
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i)*1000,'r*','Markersize',6,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',4,'linewidth',1.2);
 end
 
 hold on
-h3=plot(micros.dino.dn, micros.dino.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','b');
+h3=plot(micros.pn.dn, micros.pn.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','b');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -68,7 +69,7 @@ set(gca, 'fontsize', 11, 'fontname', 'Arial')
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca,'yscale','log','ylim',[10 10^4],'ytick',[10,10^2,10^3,10^4],...
+set(gca,'ylim',[0 30],'ytick',0:10:30,...
     'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
@@ -78,7 +79,7 @@ set(gca,'yscale','log','ylim',[10 10^4],'ytick',[10,10^2,10^3,10^4],...
         datenum('2017-06-01')],...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');
-ylabel(['\it' num2str(class2do_string) '\rm cells L^{-1}\bf'],...
+ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
     'fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');

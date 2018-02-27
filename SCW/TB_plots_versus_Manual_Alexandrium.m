@@ -54,7 +54,7 @@ figure('Units','inches','Position',[1 1 5 3],'PaperPositionMode','auto');
 A_auto = Alex(1).y_mat*2 + Alex(2).y_mat*4 + Alex(3).y_mat + Alex(4).y_mat*3;
 A_manual = Alex(1).y_mat_manual*2 + Alex(2).y_mat_manual*4 + Alex(3).y_mat_manual + Alex(4).y_mat_manual*3;
 
-h1=stem(mdateTB, A_auto*1000./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
+h1=stem(mdateTB, A_auto./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
 
 % %plots only matching MC
@@ -67,11 +67,11 @@ h1=stem(mdateTB, A_auto*1000./slope,'k-','Linewidth',.5,'Marker','none'); %This 
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(A_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), A_manual(ind_nan,i)*1000,'r*','Markersize',6,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), A_manual(ind_nan,i),'r*','Markersize',4,'linewidth',1.2);
 end
 
 hold on
-h3=plot(micros.alex.dn, micros.alex.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','b');
+h3=plot(micros.alex.dn, micros.alex.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -80,7 +80,7 @@ set(gca, 'fontsize', 11, 'fontname', 'Arial')
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca,'yscale','log','ylim',[10 10^4],'ytick',[10,10^2,10^3,10^4],...
+set(gca,'ylim',[0 12],'ytick',0:4:12,...
     'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
@@ -90,7 +90,7 @@ set(gca,'yscale','log','ylim',[10 10^4],'ytick',[10,10^2,10^3,10^4],...
         datenum('2017-06-01')],...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');
-ylabel(['\it' 'Alexandrium' '\rm cells L^{-1}\bf'],...
+ylabel(['\it' 'Alexandrium' '\rm cells mL^{-1}\bf'],...
     'fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
