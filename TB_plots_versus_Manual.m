@@ -1,13 +1,13 @@
-class2do_string = 'Pseudo-nitzschia'; %USER 
+class2do_string = 'Alexandrium_singlet'; %USER 
 
 path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\';
 load([path 'Coeff_' class2do_string]);
 
-load('F:\IFCB104\manual\summary\count_biovol_manual_26Feb2018'); %USER
-summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
+load('F:\IFCB113\manual\summary\count_biovol_manual_07Mar2018'); %USER
+summary_path = 'F:\IFCB113\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 
-load 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\SCW_microscopydata.mat' %load cell count data
+%load 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\SCW_microscopydata.mat' %load cell count data
 
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
@@ -40,7 +40,7 @@ ind=(find(y_mat)); % find dates associated with nonzero elements
 mdate_val=[mdateTB(ind),y_mat(ind)];
 %save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\need_more_manual_Akashiwo.mat','mdate_val');
 
-%%
+%% SCW
 figure('Units','inches','Position',[1 1 5 3],'PaperPositionMode','auto');
 
 h1=stem(mdateTB, y_mat.*3/slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
@@ -60,6 +60,7 @@ for i=1:length(yearlist)
 end
 
 hold on
+
 h3=plot(micros.pn.dn, micros.pn.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','w');
 
 hold all
@@ -88,12 +89,15 @@ vfill([datenum('2016-11-05'),0,datenum('2017-02-22'),500],[200 200 200]/255,'Fac
 hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
+
 lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
     'Manual classification','Microscopy','Location','NorthOutside');
 set(lh,'fontsize',10)
+
 hold on
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',...
     ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Figs\Manual_automated_SCW_' num2str(class2do_string) '.tif']);
 hold off
+

@@ -1,13 +1,13 @@
 resultpath= 'F:\IFCB104\manual\'; %where manual files are
-urlbase = 'http://128.114.25.154:8888/IFCB104/'; %where your dashboard is
+urlbase = 'http:\\128.114.25.154:8888/IFCB104\'; %where your dashboard is
 outputpath = 'F:\IFCB104\manual\auto_png\';% where you want images to go
 
-load 'F:\IFCB104\manual\D20170605T012724_IFCB104.mat';
-imclass = strmatch('Alexandrium', class2use_manual); %class to export
+load 'F:\IFCB104\manual\D20160804T093210_IFCB104.mat';
+imclass = strmatch('Dinophysis', class2use_manual); %class to export
 
 filelist = dir([resultpath 'D*.mat']);
 class_name=char(class2use_manual(imclass));
-mkdir([outputpath class_name]);s
+mkdir([outputpath class_name]);
 
 for filecount = 1:length(filelist), %this is where you could potentially put filecount=1:10:length(filelist) if you had tons of files.
 
