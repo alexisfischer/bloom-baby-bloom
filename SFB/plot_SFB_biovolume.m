@@ -1,6 +1,7 @@
 
 resultpath = 'F:\IFCB113\class\'; %Where you want the summary file to go
-load ([resultpath 'summary\biovol_size_allcells_27Dec2017']);
+%load ([resultpath 'summary\biovol_size_allcells_07Mar2018']);
+load ([resultpath 'summary\summary_biovol_allTB']);
 
 [filelist] = affix_metadata(filelist);
 

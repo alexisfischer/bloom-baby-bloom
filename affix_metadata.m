@@ -1,6 +1,6 @@
 function [filelist] = affix_metadata(filelist)
 
-[sfb,s]=import_SFB_data_new('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\sfb_raw.csv');
+[sfb,s]=import_SFB_data_new('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv');
 %load('sfb.mat');
 
 %link ifcb timepoints with  phys and chem data, c is the overlap
