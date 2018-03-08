@@ -1,8 +1,10 @@
 clear
 
+% lets you extract biovolume from feature files
+
 resultpath = 'F:\IFCB113\class\'; %Where you want the summary file to go
-roibasepath = 'F:\IFCB113\data\2017ok\'; %Where you raw data is
-feapath = 'F:\IFCB113\features\2017ok\'; %Put in your featurepath byyear
+roibasepath = 'F:\IFCB113\data\2017\'; %Where you raw data is
+feapath = 'F:\IFCB113\features\2017\'; %Put in your featurepath byyear
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath 'D*.csv']);
 

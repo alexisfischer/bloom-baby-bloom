@@ -1,6 +1,6 @@
-function[sfb,s]=import_SFB_data_new(filename)
+function[sfb,s]=loadSFBparameters(filename)
 
-%filename = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\sfb_raw.csv';
+%filename = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
 
 delimiter = ',';
 startRow = 3;
@@ -159,6 +159,6 @@ sfb = struct('dn',Date,'st',StationNumber,'lat',Lat,'long',Long,...
 %% Clear temporary variables
 clearvars filename delimiter startRow formatSpec fileID dataArray ans raw col numericData rawData row regexstr result numbers invalidThousandsSeparator thousandsRegExp R;
 
-save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\sfb','sfb','s');
+save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb','sfb','s');
 
 end

@@ -1,17 +1,20 @@
 %% creates a contour plot of San Francisco Bay
 
-% [sfb,s]=import_SFB_data_new('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\sfb_raw.csv');
-load('sfb.mat');
+[sfb,s]=loadSFBparameters('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv');
+%load('sfb.mat');
 
+%%
 %for i=1:length(s)
+%specify variable
+
 for i=1:8
-   
+
+    var = s(i).sal;    
     yrok = s(i).dn(1);
     lat = s(i).lat; 
     lon = s(i).long; 
-    sal = s(i).sal;
-    ii=~isnan(sal+lat+lon);
-    lonok=lon(ii); latok=lat(ii); vvok=sal(ii);    
+    ii=~isnan(var+lat+lon);
+    lonok=lon(ii); latok=lat(ii); vvok=var(ii);    
 
     % map limits and tics for SFB
     xax = [-122.56 -121.78]; yax=[37.42 38.22];
@@ -20,7 +23,7 @@ for i=1:8
 
     % contour plot 
     x = -122.56:.001:-121.76; y = 37.4:.001:38.22;
-    bathydata = load('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\SFB_bathymetry.mat');
+    bathydata = load('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\SFB_bathymetry.mat');
     xx = bathydata.lon; yy = bathydata.lat;
     F = scatteredInterpolant(lonok,latok,vvok,'nearest','nearest'); %F is a function
     zz = F(xx,yy); %must call scatteredInterp function in order to plot
@@ -61,7 +64,7 @@ for i=1:8
 
     % Set figure parameters
     set(gcf,'color','w');
-    print(gcf,'-dtiff','-r600',['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\' num2str(str) '.tif'])
+    print(gcf,'-dtiff','-r600',['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Figs\' num2str(str) '.tif'])
     hold off
 
 end 

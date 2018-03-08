@@ -1,7 +1,7 @@
 function [metadata] = import_ifcb_metadata()
 
 %% Initialize variables.
-filename = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\list_st_filename.csv';
+filename = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\list_st_filename.csv';
 delimiter = ',';
 startRow = 2;
 
