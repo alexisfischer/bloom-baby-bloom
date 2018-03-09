@@ -1,5 +1,5 @@
 clear;
-load ('F:\IFCB113\class\summary\biovol_size_allcells_27Dec2017','filelist','eqdiam','biovol');
+load ('F:\IFCB113\class\summary\summary_biovol_allTB2017','filelist','eqdiam','biovol');
 load('sfb.mat','sfb');
 
 [f] = prepbiovol4contour(filelist,eqdiam,biovol,sfb);

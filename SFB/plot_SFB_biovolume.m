@@ -3,7 +3,7 @@ resultpath = 'F:\IFCB113\class\'; %Where you want the summary file to go
 %load ([resultpath 'summary\biovol_size_allcells_07Mar2018']);
 load ([resultpath 'summary\summary_biovol_allTB']);
 
-[filelist] = affix_metadata(filelist);
+[filelist] = affix_metadata(filelistTB);
 
 %
 diambins=0:5:40; %decide what kind of size bins you want to look at

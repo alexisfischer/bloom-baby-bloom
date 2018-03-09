@@ -1,10 +1,10 @@
-clear
+% extract biovolume from feature files
 
-% lets you extract biovolume from feature files
+yr = 2018; %specify yr
 
-resultpath = 'F:\IFCB113\class\'; %Where you want the summary file to go
-roibasepath = 'F:\IFCB113\data\2017\'; %Where you raw data is
-feapath = 'F:\IFCB113\features\2017\'; %Put in your featurepath byyear
+resultpath = 'F:\IFCB113\class\summary\'; %Where you want the summary file to go
+roibasepath = ['F:\IFCB113\data\' num2str(yr) '\']; %Where you raw data is
+feapath = ['F:\IFCB113\features\' num2str(yr) '\']; %Put in your featurepath byyear
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath 'D*.csv']);
 
@@ -51,7 +51,6 @@ for filecount = 1:length(filelist) % If you want to do the whole filelist
     minaxis(filecount) = {targets.minaxislength*micron_factor};
 end
 
-
 %Makes a summary folder within the resultpath
 if ~exist([resultpath 'summary'], 'dir')
     mkdir([resultpath 'summary']);
@@ -62,6 +61,6 @@ notes2= 'Eqdiam and axis lengths in micrometers';
 %
 %saves the result file in the summary folder with a name that will be used 
 %every time this is run, but with the date you ran it ammended on the end
-save([resultpath 'summary/biovol_size_allcells_' datestr],...
+save([resultpath 'summary_biovol_allcells' num2str(yr)],...
     'matdate', 'ml_analyzed', 'biovol', 'filelist','eqdiam',...
     'majaxis', 'minaxis', 'notes1', 'notes2');
