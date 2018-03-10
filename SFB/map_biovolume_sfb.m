@@ -1,9 +1,9 @@
-clear;
-load ('F:\IFCB113\class\summary\summary_biovol_allTB2017','filelist','eqdiam','biovol');
+
 load('sfb.mat','sfb');
 
-[f] = prepbiovol4contour(filelist,eqdiam,biovol,sfb);
+%[f] = prepbiovol4contour(filelist,eqdiam,biovol,sfb);
 
+load list_st_filename.mat
 %% contour equivalent spherical diameter in the San Francisco Bay
 
 for i=1:length(f)
@@ -22,7 +22,7 @@ for i=1:length(f)
 
     % contour plot 
     x = -122.56:.001:-121.76; y = 37.4:.001:38.22;
-    bathydata = load('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\SFB_bathymetry.mat');
+    bathydata = load('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\SFB_bathymetry.mat');
     xx = bathydata.lon; yy = bathydata.lat;
     F = scatteredInterpolant(lonok,latok,vvok,'nearest','nearest'); %F is a function
     zz = F(xx,yy); %must call scatteredInterp function in order to plot
@@ -65,7 +65,7 @@ for i=1:length(f)
 
     % Set figure parameters
     set(gcf,'color','w');
-    print(gcf,'-dtiff','-r600',['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\' num2str(str) '.tif'])
+    print(gcf,'-dtiff','-r600',['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Figs\' num2str(str) '.tif'])
     hold off
 
 end 
@@ -88,7 +88,7 @@ for i=1:length(f)
 
     % contour plot 
     x = -122.56:.001:-121.76; y = 37.4:.001:38.22;
-    bathydata = load('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\SFB_bathymetry.mat');
+    bathydata = load('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\SFB_bathymetry.mat');
     xx = bathydata.lon; yy = bathydata.lat;
     F = scatteredInterpolant(lonok,latok,vvok,'nearest','nearest'); %F is a function
     zz = F(xx,yy); %must call scatteredInterp function in order to plot
@@ -132,7 +132,7 @@ for i=1:length(f)
 
     % Set figure parameters
     set(gcf,'color','w');
-    print(gcf,'-dtiff','-r600',['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\' num2str(str) '.tif'])
+    print(gcf,'-dtiff','-r600',['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Figs\' num2str(str) '.tif'])
     hold off
 
 end 

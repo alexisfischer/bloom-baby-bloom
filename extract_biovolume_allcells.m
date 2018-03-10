@@ -1,6 +1,6 @@
 % extract biovolume from feature files
 
-yr = 2018; %specify yr
+yr = 2017; %specify yr
 
 resultpath = 'F:\IFCB113\class\summary\'; %Where you want the summary file to go
 roibasepath = ['F:\IFCB113\data\' num2str(yr) '\']; %Where you raw data is
@@ -37,19 +37,22 @@ for filecount = 1:length(filelist) % If you want to do the whole filelist
     tind = feastruct.data(:,ind);
     ind = strmatch('EquivDiameter', feastruct.colheaders);
     targets.EquivDiameter = feastruct.data(:,ind);
-    ind = strmatch('MajorAxisLength', feastruct.colheaders);
-    targets.majaxislength = feastruct.data(:,ind);
-    ind = strmatch('MinorAxisLength', feastruct.colheaders);
-    targets.minaxislength = feastruct.data(:,ind);
     
     biovol(filecount) = {targets.Biovolume*micron_factor.^3}; %Takes all the biovolumes for that file and makes it a cell array. It then takes each cell array and puts it into a  larger vector ('biovol')....
     %This vector is populated by a cell array from each file once this loop
     %is done. The same is done for each variable below...
     %To access per say the first cell array you would type biovol{1}. 
     eqdiam(filecount) = {targets.EquivDiameter*micron_factor};
-    majaxis(filecount) = {targets.majaxislength*micron_factor};
-    minaxis(filecount) = {targets.minaxislength*micron_factor};
+
 end
+
+bio=biovol';
+biovol_sum=NaN(size(bio));
+for i=1:length(biovol_sum)
+    biovol_sum(i)=sum(bio{i,1});
+end
+
+eqdiam=eqdiam';
 
 %Makes a summary folder within the resultpath
 if ~exist([resultpath 'summary'], 'dir')
@@ -62,5 +65,5 @@ notes2= 'Eqdiam and axis lengths in micrometers';
 %saves the result file in the summary folder with a name that will be used 
 %every time this is run, but with the date you ran it ammended on the end
 save([resultpath 'summary_biovol_allcells' num2str(yr)],...
-    'matdate', 'ml_analyzed', 'biovol', 'filelist','eqdiam',...
-    'majaxis', 'minaxis', 'notes1', 'notes2');
+    'matdate', 'ml_analyzed', 'biovol_sum', 'filelist','eqdiam',...
+    'notes1', 'notes2');

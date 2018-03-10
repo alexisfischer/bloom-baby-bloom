@@ -78,4 +78,4 @@ end
 
 f=rmfield(f,'a');
 
-save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\list_st_filename.mat', 'f');
+save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\list_st_filename.mat', 'f');
