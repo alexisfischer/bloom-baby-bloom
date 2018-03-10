@@ -37,7 +37,15 @@ end
 
 save([path 'biovol_param'],'phyto');
 
+
+%%
+[phys]=loadSFBparameters_v2([path 'sfb_raw_2.csv']);
+
+[~,b,c] = intersect([phyto.matdate],[phys.dn]);
+
+
 %% sort data by date
+
 p(1).a=find([phyto.matdate]==datenum('31-Jul-2017'));
 p(2).a=find([phyto.matdate]==datenum('22-Aug-2017'));
 p(3).a=find([phyto.matdate]==datenum('30-Aug-2017'));
@@ -45,38 +53,28 @@ p(4).a=find([phyto.matdate]==datenum('19-Sep-2017'));
 p(5).a=find([phyto.matdate]==datenum('28-Sep-2017'));
 p(6).a=find([phyto.matdate]==datenum('18-Oct-2017'));
 p(7).a=find([phyto.matdate]==datenum('27-Oct-2017'));
-p(8).a=find([phyto.matdate]==datenum('14-Nov-2017'));
-p(9).a=find([phyto.matdate]==datenum('06-Dec-2017'));
-p(10).a=find([phyto.matdate]==datenum('07-Feb-2018') & [phyto.matdate]== datenum('08-Feb-2018'));
-p(11).a=find([phyto.matdate]==datenum('23-Feb-2018'));
+p(8).a=find([phyto.matdate]==datenum('06-Dec-2017'));
+p(9).a=find([phyto.matdate]>=datenum('07-Feb-2018') & [phyto.matdate]<= datenum('08-Feb-2018'));
+p(10).a=find([phyto.matdate]==datenum('23-Feb-2018'));
 
 % organize station data into structures
 for i=1:length(p)
     p(i).filename=[phyto(p(i).a).filename]'; 
-    p(i).st=[phyto(p(i).a).st]'; 
     p(i).matdate=[phyto(p(i).a).matdate]'; 
+    p(i).dn=datestr(p(i).matdate(1));    
+    p(i).st=[phyto(p(i).a).st]'; 
     p(i).ml_analyzed=[phyto(p(i).a).ml_analyzed]'; 
     p(i).biovol_sum=[phyto(p(i).a).biovol_sum]'; 
 end
 p=rmfield(p,'a');
 save([path 'biovol_param'],'phyto','p');
 
-
-figure;
-
-for i=1:length(p)
-    plot(p(i).st, p(i).biovol_sum);
-    hold on
-    
-end
-
-
-%% attach parameters to structure 
+%% attach SFB parameters to IFCB structure 
 %[sfb,s]=loadSFBparameters([path 'sfb_raw.csv']);
 load('sfb.mat');
 
 % link ifcb timepoints with  phys and chem data, c is the overlap
-[~,b,c] = intersect([phyto.filename],[sfb.ifcb]); %need to add 27 october data to sfb.ifcb
+[~,b,c] = intersect([phyto.matdate],phys.dn);
 lat = sfb.lat(c);
 long = sfb.long(c);
 chl = sfb.chl(c);
@@ -107,3 +105,12 @@ for i=1:length(filename)
     phyto(i).ext = ext(i);    
 end
 
+
+
+figure;
+
+for i=1:length(p)
+    plot(p(i).st, p(i).biovol_sum);
+    hold on
+    
+end
