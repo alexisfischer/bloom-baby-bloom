@@ -120,7 +120,7 @@ for i=1:length(f)
 
     % colorbar
     h=colorbar('east'); 
-    h.Label.String= {'Ave. Biovolume (mg L^-1)'};
+    h.Label.String= {'Ave. Biovolume (\mum^3)'};
     h.TickDirection = 'out';    
     hp=get(h,'pos'); hp(4)=.5*hp(4); hp(3)=.7*hp(3); 
     set(h,'pos',hp,'xaxisloc','top','fontsize',10); 
