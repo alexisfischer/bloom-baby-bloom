@@ -1,10 +1,10 @@
-class2do_string = 'Alexandrium_singlet'; %USER 
+class2do_string = 'Pseudo-nitzschia'; %USER 
 
-path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\';
+path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\';
 load([path 'Coeff_' class2do_string]);
 
-load('F:\IFCB113\manual\summary\count_biovol_manual_07Mar2018'); %USER
-summary_path = 'F:\IFCB113\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
+load('F:\IFCB104\manual\summary\count_biovol_manual_27Feb2018'); %USER
+summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 
 %load 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\SCW_microscopydata.mat' %load cell count data

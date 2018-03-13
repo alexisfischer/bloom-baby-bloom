@@ -1,6 +1,6 @@
-all_files=dir('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\Alexandrium\');
+all_files=dir('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\Alexandrium\');
 all_files(1:2) = [];
-alex_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\Alexandrium\';
+alex_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\Alexandrium\';
 
 for j = 1:length(all_files)
     load([alex_path all_files(j).name]);
@@ -44,9 +44,12 @@ Alex(j).mdateTB=mdateTB;
 Alex(j).y_mat=y_mat;
 Alex(j).mdate_mat_manual=mdate_mat_manual;
 Alex(j).y_mat_manual=y_mat_manual;
-save(['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\Alexandrium_summary'],'Alex');
 
 end
+Alex(5).name = 'All';
+Alex(5).y_mat= Alex(1).y_mat*2 + Alex(2).y_mat*4 + Alex(3).y_mat + Alex(4).y_mat*3;
+
+save(['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\Alexandrium_summary'],'Alex');
 
 %%
 figure('Units','inches','Position',[1 1 5 3],'PaperPositionMode','auto');

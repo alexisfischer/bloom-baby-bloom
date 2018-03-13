@@ -1,6 +1,6 @@
-all_files=dir('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFbay\Data\Alexandrium\');
+all_files=dir('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium\');
 all_files(1:2) = [];
-alex_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFbay\Data\Alexandrium\';
+alex_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium\';
 
 for j = 1:length(all_files)
     load([alex_path all_files(j).name]);
@@ -43,17 +43,26 @@ Alex(j).mdateTB=mdateTB;
 Alex(j).y_mat=y_mat;
 Alex(j).mdate_mat_manual=mdate_mat_manual;
 Alex(j).y_mat_manual=y_mat_manual;
-save(['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFbay\Data\Alexandrium_summary'],'Alex');
-
 end
 
-%%
+Alex(5).name = 'Alexandrium';
+Alex(5).chosen_threshold=chosen_threshold;
+Alex(5).bin=bin;
+Alex(5).slope=slope;
+Alex(5).y_mat= Alex(1).y_mat*2 + Alex(2).y_mat*4 + Alex(3).y_mat + Alex(4).y_mat*3;
+Alex(5).y_mat_manual(:,1)=2*Alex(1).y_mat_manual(:,1)+4*Alex(2).y_mat_manual(:,1)+Alex(3).y_mat_manual(:,1)+3*Alex(4).y_mat_manual(:,1);
+Alex(5).y_mat_manual(:,2)=2*Alex(1).y_mat_manual(:,2)+4*Alex(2).y_mat_manual(:,2)+Alex(3).y_mat_manual(:,2)+3*Alex(4).y_mat_manual(:,2);
+Alex(5).mdateTB=datenum(datestr(Alex(4).mdateTB),'dd-mm-yyyy');
+Alex(5).mdate_mat_manual=Alex(4).mdate_mat_manual;
+Alex(5).filelist=string(filelistTB);
+
+save(['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium_summary'],'Alex');
+
+
+%% plot Alex time series
 figure('Units','inches','Position',[1 1 5 3],'PaperPositionMode','auto');
 
-A_auto = Alex(1).y_mat*2 + Alex(2).y_mat*4 + Alex(3).y_mat + Alex(4).y_mat*3;
-%A_manual = Alex(1).y_mat_manual*2 + Alex(2).y_mat_manual*4 + Alex(3).y_mat_manual + Alex(4).y_mat_manual*3;
-
-h1=stem(mdateTB, A_auto,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
+h1=stem(mdateTB, Alex(5).y_mat,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
 
 % %plots only matching MC
@@ -96,5 +105,5 @@ hold on
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',...
-    ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFbay\Figs\Manual_automated_SCW_Alexandrium.tif']);
+    ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Figs\Manual_automated_SCW_Alexandrium.tif']);
 hold off
