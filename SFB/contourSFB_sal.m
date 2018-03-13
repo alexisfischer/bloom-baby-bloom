@@ -3,9 +3,11 @@
 [sfb,s]=loadSFBparameters('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv');
 %load('sfb.mat');
 
-%%
-%for i=1:length(s)
-%specify variable
+% biovolume= 'F:\IFCB113\class\summary\summary_biovol_allcells';
+% cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
+% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
+% [phyto,p] = compile_biovolume_yrs(biovolume, cruisetime, parameters);
+% 
 
 for i=1:8
 

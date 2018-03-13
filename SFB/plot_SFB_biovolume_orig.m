@@ -45,7 +45,7 @@ for i=1:length(diambins)
     extbin_perml(:,i)=classcount_bin./ml_analyzed_ext_bin; 
 end
 
-%% diameter vs cell/concentration for date
+%% biovolume vs salinity for date
 figure('Units','inches','Position',[1 1 5 4],'PaperPositionMode','auto');
 
 t=colormap(parula);
@@ -53,9 +53,9 @@ t=t(1:64/366:end,:); %There are possibly 366 days in a year, so there need to be
 set(gca, 'colororder', t)
 hold on
 
-for i=1:length(matdate_bin)
-    day=datenum2yearday(matdate_bin(i)); %finds the yearday of that line to plot
-    plot(diambins, daybin_perml(i,:), 'linewidth', 2,'color',t(day,:)) %plots the histogram for that day and the color associated with that day of the year
+for i=1:length(phyto.matdate)
+    day=datenum2yearday(matdate(i)); %finds the yearday of that line to plot
+    plot(sal, biovol_sum(i), 'linewidth', 2,'color',t(day,:)) %plots the histogram for that day and the color associated with that day of the year
     hold on
 end
 

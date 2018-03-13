@@ -4,6 +4,44 @@ cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_f
 parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
 [phyto,p] = compile_biovolume_yrs(biovolume, cruisetime, parameters);
 
+%% biovolume vs cell/concentration for salinity
+figure('Units','inches','Position',[1 1 5 4],'PaperPositionMode','auto');
+
+t=colormap(parula);
+t=t(1:64/366:end,:); %There are possibly 366 days in a year, so there need to be 366 colors to choose from
+%t=t(1:length(phyto),:); %need to be 35 colors to choose from
+set(gca, 'colororder', t)
+hold on
+
+for i=1:(length(phyto)-5)
+    day=datenum2yearday(phyto(i).matdate); %finds the yearday of that line to plot
+    plot(phyto(i).sal,phyto(i).biovol_sum, 'linewidth',2,'color',t(day,:)) %plots the histogram for that day and the color associated with that day of the year
+    hold on
+end
+hold on
+
+xlabel('Salinity (psu)', 'FontSize', 10, 'FontName', 'arial');
+ylabel('Biovolume (\mum^3)', 'FontSize', 10, 'FontName', 'arial');
+%xlim([0 40]); ylim([0 220]);
+% set(gca,'FontSize', 10, 'FontName', 'Arial','xtick',0:10:40,'ytick',0:50:200,...
+%      'TickDir','out')
+%title('All Cells - Salinity','fontsize',12,'fontname','arial');
+
+h=colorbar; caxis([1 35])
+set(h,'fontname','arial','fontsize',10,'linewidth',1,'TickLength',[0.015  0.025]);
+    h.TickDirection = 'out';
+    h.Label.String = 'Salinity (psu)';
+    h.Label.FontSize = 11;
+    h.Label.FontName = 'arial';
+    box on
+    
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',...
+    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\SFbay_biovolume_salinity.tif');
+hold off
+
+
 %% Plot SFB biovolume vs Distance
 figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
 
@@ -39,7 +77,7 @@ hold on
     
     set(gca,'xlim',[-5 150],'xtick',0:50:150,'tickdir','out');    
     xlabel('Distance from Station 36 (km)','fontsize',10,'fontweight','bold');        
-    ylabel('Biovolume (um^3)','fontsize',10,'fontweight','bold');        
+    ylabel('Biovolume (\mum^3)','fontsize',10,'fontweight','bold');        
     hleg = legend(p(1).dn,p(2).dn,p(3).dn,p(4).dn,p(5).dn,p(6).dn,...
         p(7).dn,p(8).dn,p(9).dn,'Location','EastOutside');
     set(hleg,'fontsize',9); 
@@ -86,7 +124,7 @@ hold on
     
     set(gca,'xlim',[-1 35],'xtick',0:5:35,'tickdir','out');    
     xlabel('Salinity (psu)','fontsize',10,'fontweight','bold');        
-    ylabel('Biovolume (um^3)','fontsize',10,'fontweight','bold');        
+    ylabel('Biovolume (\mum^3)','fontsize',10,'fontweight','bold');        
 
     hleg = legend(p(1).dn,p(2).dn,p(3).dn,p(4).dn,p(5).dn,p(6).dn,...
         p(7).dn,p(8).dn,p(9).dn,'Location','EastOutside');
@@ -97,3 +135,4 @@ hold on
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600','C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Figs\Biovolume_Salinity_SFB.tif')
 hold off 
+
