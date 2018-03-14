@@ -1,4 +1,4 @@
-class2do_string = 'Pseudo-nitzschia'; %USER 
+class2do_string = 'Akashiwo'; %USER 
 
 path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\';
 load([path 'Coeff_' class2do_string]);
@@ -61,7 +61,7 @@ end
 
 hold on
 
-h3=plot(micros.pn.dn, micros.pn.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','w');
+%h3=plot(micros.pn.dn, micros.pn.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -70,7 +70,7 @@ set(gca, 'fontsize', 11, 'fontname', 'Arial')
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca,'ylim',[0 40],'ytick',0:10:40,...
+set(gca,'ylim',[0 2500],'ytick',0:500:2500,...
     'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
@@ -90,8 +90,8 @@ hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
-    'Manual classification','Microscopy','Location','NorthOutside');
+lh = legend([h1,h2], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
+    'Manual classification','Location','NorthOutside');
 set(lh,'fontsize',10)
 
 hold on
