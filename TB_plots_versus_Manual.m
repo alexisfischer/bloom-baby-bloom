@@ -1,7 +1,7 @@
-class2do_string = 'Alexandrium_singlet'; %'Akashiwo'
+class2do_string = 'Prorocentrum'; 
 
-path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\';
-load([path 'Coeff_' class2do_string]);
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
+load([resultpath 'Data\Coeff_' class2do_string]);
 
 load('F:\IFCB104\manual\summary\count_biovol_manual_27Feb2018'); %USER
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
@@ -38,7 +38,6 @@ ind2 = strmatch(class2do_string, class2use); %change this for whatever class you
 
 ind=(find(y_mat)); % find dates associated with nonzero elements
 mdate_val=[mdateTB(ind),y_mat(ind)];
-%save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\need_more_manual_Akashiwo.mat','mdate_val');
 
 %% SCW
 figure('Units','inches','Position',[1 1 5 3],'PaperPositionMode','auto');
@@ -70,7 +69,7 @@ set(gca, 'fontsize', 11, 'fontname', 'Arial')
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca,'ylim',[0 20],'ytick',0:5:20,...
+set(gca,'ylim',[0 200],'ytick',0:50:200,...
     'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
@@ -98,6 +97,6 @@ hold on
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',...
-    ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Figs\Manual_automated_SCW_' num2str(class2do_string) '.tif']);
+    [resultpath 'Figs\Manual_automated_SCW_' num2str(class2do_string) '.tif']);
 hold off
 

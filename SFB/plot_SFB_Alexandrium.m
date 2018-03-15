@@ -1,8 +1,9 @@
-alexData='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium_summary';
-cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
-parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 
-[phyto,A] = compile_species(alexData, cruisetime, parameters);
+[phyto,A] = compile_species(...
+    [resultpath 'Data\Alexandrium_summary'],...
+    [resultpath 'Data\st_filename_raw.csv'],...
+    [resultpath 'Data\sfb_raw_2.csv']);
 
 %% Plot SFB Alexandrium vs Distance
 figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
@@ -48,7 +49,7 @@ hold on
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600','C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Figs\Alex_dist36_SFB.tif')
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Alex_dist36_SFB.tif']);
 hold off 
 
 %% Plot SFB Alexandrium vs Salinity
@@ -95,5 +96,5 @@ hold on
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600','C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Figs\Alex_Salinity_SFB.tif')
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Alex_Salinity_SFB.tif']);
 hold off 

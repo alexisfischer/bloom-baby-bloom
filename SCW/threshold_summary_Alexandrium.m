@@ -1,6 +1,9 @@
 class2do_string = 'Alexandrium_singlet'; %USER %'Karenia,pennate_diatom,misc_nano'; %'Guinardia_striata'; %USER
 chosen_threshold = 0.7; %USER
 
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
+%resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
+
 summary_path = 'F:\IFCB104\class\summary\'; %USER
 m = load('F:\IFCB104\manual\summary\count_biovol_manual_27Feb2018'); %USER
 
@@ -66,7 +69,7 @@ end;
 %class2do_string.bin=(chosen_threshold*10+1);
 bin=chosen_threshold*10+1;
 slope = Coeffs(bin,2);
-save(['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\Alexandrium\Coeff_' num2str(class2do_string) ' '],'class2do_string','slope','bin','chosen_threshold');
+save([resultpath 'Data\Alexandrium\Coeff_' num2str(class2do_string) ' '],'class2do_string','slope','bin','chosen_threshold');
 
 %set(gcf,'Units','inches','Position',[1 1 5 5],'PaperPositionMode','auto');
 
@@ -81,7 +84,7 @@ a.Visible = 'off'; % set(a,'Visible','off');
 t1.Visible = 'on'; % set(t1,'Visible','on');
 
 print(gcf,'-dtiff','-r600',...
-    ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Figs\Threshold_range_'  num2str(class2do_string) '.tif']);
+    [resultpath 'Figs\Threshold_range_'  num2str(class2do_string) '.tif']);
 hold off
 
 %%
@@ -164,5 +167,5 @@ t1.Visible = 'on'; % set(t1,'Visible','on');
 
 set(gca, 'fontsize',11);
 print(gcf,'-dtiff','-r600',...
-    ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Figs\Threshold' num2str(chosen_threshold) '_'  num2str(class2do_string) '.tif']);
+    [resultpath 'Figs\Threshold' num2str(chosen_threshold) '_'  num2str(class2do_string) '.tif']);
 hold off
