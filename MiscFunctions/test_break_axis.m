@@ -1,8 +1,5 @@
-clear; clc; close all;
-
+% Make an arbitrary connectivity matrix
 x = rand(1,15) + 4;
 y = rand(1,15) + 4;
 
 plot(x,y);
-
-break_axis()
