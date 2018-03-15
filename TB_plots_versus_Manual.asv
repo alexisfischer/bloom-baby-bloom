@@ -1,4 +1,4 @@
-class2do_string = 'Dinophysis'; 
+class2do_string = 'Pseudo-nitzschia'; 
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\Coeff_' class2do_string]);
@@ -60,7 +60,7 @@ end
 
 hold on
 
-h3=plot(micros.dino.dn, micros.dino.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(micros.pn.dn, micros.pn.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -69,7 +69,7 @@ set(gca, 'fontsize', 11, 'fontname', 'Arial')
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca,'ylim',[0 12],'ytick',0:4:12,...
+set(gca,'ylim',[0 40],'ytick',0:10:30,...
     'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
