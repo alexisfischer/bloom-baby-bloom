@@ -5,9 +5,48 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
     [resultpath 'Data\st_filename_raw.csv'],...
     [resultpath 'Data\sfb_raw_2.csv']);    
 
+%%
+% vs cell/concentration for salinity
+figure('Units','inches','Position',[1 1 5 4],'PaperPositionMode','auto');
+
+t=colormap(parula);
+t=t(1:64/366:end,:); %There are possibly 366 days in a year, so there need to be 366 colors to choose from
+%t=t(1:length(phyto),:); %need to be 35 colors to choose from
+set(gca, 'colororder', t)
+hold on
+
+for i=1:(length(phyto)-5)
+    day=datenum2yearday(phyto(i).matdate); %finds the yearday of that line to plot
+    plot(phyto(i).sal,phyto(i).biovol_sum, 'linewidth',2,'color',t(day,:)) %plots the histogram for that day and the color associated with that day of the year
+    hold on
+end
+hold on
+
+xlabel('Salinity (psu)', 'FontSize', 10, 'FontName', 'arial');
+ylabel('Biovolume (\mum^3)', 'FontSize', 10, 'FontName', 'arial');
+%xlim([0 40]); ylim([0 220]);
+% set(gca,'FontSize', 10, 'FontName', 'Arial','xtick',0:10:40,'ytick',0:50:200,...
+%      'TickDir','out')
+%title('All Cells - Salinity','fontsize',12,'fontname','arial');
+
+h=colorbar; caxis([1 35])
+set(h,'fontname','arial','fontsize',10,'linewidth',1,'TickLength',[0.015  0.025]);
+    h.TickDirection = 'out';
+    h.Label.String = 'Salinity (psu)';
+    h.Label.FontSize = 11;
+    h.Label.FontName = 'arial';
+    box on
+    
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',...
+    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\SFbay_biovolume_salinity.tif');
+hold off
+
+
 %% 
-figure('Units','inches','Position',[1 1 8.5 3],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.16 0.07], [0.05 -.18]);
+figure('Units','inches','Position',[1 1 7 3],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.16 0.07], [0.07 0.03]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
@@ -41,7 +80,7 @@ hold on
     set(h(6),'Color',c6,'Marker','^','MarkerFacecolor',c6);
     set(h(7),'Color',c7,'Marker','p');
     set(h(8),'Color',c8,'Marker','*','Markersize',6);
-    set(h(9),'Color','k','Marker','s','Markersize',7);
+    set(h(9),'Marker','s','Markersize',7);
     
     set(gca,'xlim',[-5 150],'xtick',0:50:150,'tickdir','out');    
     xlabel('Distance from Station 36 (km)','fontsize',10,'fontweight','bold');        
@@ -79,17 +118,14 @@ hold on
     set(h(6),'Color',c6,'Marker','^','MarkerFacecolor',c6);
     set(h(7),'Color',c7,'Marker','p');
     set(h(8),'Color',c8,'Marker','*','Markersize',6);
-    set(h(9),'Color','k','Marker','s','Markersize',7);
+    set(h(9),'Marker','s','Markersize',7);
     
     set(gca,'xlim',[-1 35],'xtick',0:5:35,'tickdir','out','yticklabel',{});    
     xlabel('Salinity (psu)','fontsize',10,'fontweight','bold');        
-hold on
 
-%legend
-hSub=subplot(1,3,3);
-h=plot(1,nan,'ko',1,nan,'ko',1,nan,'ko',1,nan,'ko',1,nan,'ko',...
-    1,nan,'ko',1,nan,'ko',1,nan,'ko',1,nan,'ko'); 
-set(hSub, 'Visible', 'off');
+
+hSub = subplot(1,3,3);
+h=plot(1, nan, 1, nan, 1, nan, 1, nan, 1, nan, 1, nan,1, nan, 1, nan, 1, nan,'r'); set(hSub, 'Visible', 'off');
     set(h(1),'Color',c1,'Marker','o');
     set(h(2),'Color',c2,'Marker','h','markerfacecolor',c2);
     set(h(3),'Color',c3,'Marker','d');
@@ -98,13 +134,14 @@ set(hSub, 'Visible', 'off');
     set(h(6),'Color',c6,'Marker','^','MarkerFacecolor',c6);
     set(h(7),'Color',c7,'Marker','p');
     set(h(8),'Color',c8,'Marker','*','Markersize',6);
-    set(h(9),'Color','k','Marker','s','Markersize',7);
+    set(h(9),'Marker','s','Markersize',7);
 
-    hleg=legend(hSub,p(1).dn,p(2).dn,p(3).dn,p(4).dn,p(5).dn,p(6).dn,...
-        p(7).dn,p(8).dn,p(9).dn,'Location','West');
-    set(hleg,'fontsize',9); 
+    legend(hSub,p(1).dn,p(2).dn,p(3).dn,p(4).dn,p(5).dn,p(6).dn,...
+        p(7).dn,p(8).dn,p(9).dn,'Location','NorthWest');
+    set(hleg,'fontsize',8); 
     legend boxoff
 
+    
     % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[resultpath 'Figs\Biovolume_Sal_Dist_SFB.tif']);

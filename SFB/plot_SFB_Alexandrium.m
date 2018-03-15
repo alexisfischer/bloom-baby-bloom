@@ -6,13 +6,13 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
     [resultpath 'Data\sfb_raw_2.csv']);
 
 %%
-figure('Units','inches','Position',[1 1 7 3],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.16 0.05], [0.07 0.03]);
+figure('Units','inches','Position',[1 1 8.5 3],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.16 0.07], [0.05 -.18]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
 % vs Distance from 36
-subplot(1,2,1);
+subplot(1,3,1);
 h=plot(...
     A(1).d36,A(1).y_mat,'ko',...
     A(2).d36,A(2).y_mat,'ko',...
@@ -50,7 +50,7 @@ hold on
 hold on
 
 % vs Salinity
-subplot(1,2,2);
+subplot(1,3,2);
 h=plot(...
     A(1).sal,A(1).y_mat,'ko',...
     A(2).sal,A(2).y_mat,'ko',...
@@ -83,9 +83,26 @@ hold on
     
     set(gca,'xlim',[-1 35],'xtick',0:5:35,'tickdir','out','yticklabel',{});    
     xlabel('Salinity (psu)','fontsize',10,'fontweight','bold');        
-    hleg = legend(A(1).dn,A(2).dn,A(3).dn,A(4).dn,A(5).dn,A(6).dn,...
-        A(7).dn,A(8).dn,A(9).dn,'Location','NorthWest');
-    set(hleg,'fontsize',8); 
+hold on
+
+%legend
+hSub=subplot(1,3,3);
+h=plot(1,nan,'ko',1,nan,'ko',1,nan,'ko',1,nan,'ko',1,nan,'ko',...
+    1,nan,'ko',1,nan,'ko',1,nan,'ko',1,nan,'ko'); 
+set(hSub, 'Visible', 'off');
+    set(h(1),'Color',c1,'Marker','o');
+    set(h(2),'Color',c2,'Marker','h','markerfacecolor',c2);
+    set(h(3),'Color',c3,'Marker','d');
+    set(h(4),'Color',c4,'Marker','o','MarkerFaceColor',c4);
+    set(h(5),'Color',c5,'Marker','v');
+    set(h(6),'Color',c6,'Marker','^','MarkerFacecolor',c6);
+    set(h(7),'Color',c7,'Marker','p');
+    set(h(8),'Color',c8,'Marker','*','Markersize',6);
+    set(h(9),'Color','k','Marker','s','Markersize',7);
+
+    hleg=legend(hSub,p(1).dn,p(2).dn,p(3).dn,p(4).dn,p(5).dn,p(6).dn,...
+        p(7).dn,p(8).dn,p(9).dn,'Location','West');
+    set(hleg,'fontsize',9); 
     legend boxoff
 
 % set figure parameters
