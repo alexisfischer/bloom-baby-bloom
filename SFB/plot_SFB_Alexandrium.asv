@@ -5,14 +5,18 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
     [resultpath 'Data\st_filename_raw.csv'],...
     [resultpath 'Data\sfb_raw_2.csv']);
 
-%%
-figure('Units','inches','Position',[1 1 7 3],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.16 0.05], [0.07 0.03]);
+%% Plot SFB Alexandrium vs Distance
+figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
+
+subplot = @(m,n,p) subtightplot (m, n, p, [0.07 0.07], [0.07 0.04], [0.12 0.03]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-% vs Distance from 36
-subplot(1,2,1);
+% toxicity
+subplot(2,1,1);
+
+
+
 h=plot(...
     A(1).d36,A(1).y_mat,'ko',...
     A(2).d36,A(2).y_mat,'ko',...
@@ -45,12 +49,21 @@ hold on
     
     set(gca,'xlim',[-5 150],'xtick',0:50:150,'tickdir','out');    
     xlabel('Distance from Station 36 (km)','fontsize',10,'fontweight','bold');        
-    ylabel(['\it' 'Alexandrium' '\rm\bf' ' (cells mL^{-1})'],...
+    ylabel(['\it' 'Alexandrium' '\rm cells mL^{-1}\bf'],...
     'fontsize',10,'fontweight','bold'); 
-hold on
+    hleg = legend(A(1).dn,A(2).dn,A(3).dn,A(4).dn,A(5).dn,A(6).dn,...
+        A(7).dn,A(8).dn,A(9).dn,'Location','EastOutside');
+    set(hleg,'fontsize',9); 
+    legend boxoff
 
-% vs Salinity
-subplot(1,2,2);
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Alex_dist36_SFB.tif']);
+hold off 
+
+%% Plot SFB Alexandrium vs Salinity
+figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
+
 h=plot(...
     A(1).sal,A(1).y_mat,'ko',...
     A(2).sal,A(2).y_mat,'ko',...
@@ -81,14 +94,16 @@ hold on
     set(h(8),'Color',c8,'Marker','*','Markersize',6);
     set(h(9),'Marker','s','Markersize',7);
     
-    set(gca,'xlim',[-1 35],'xtick',0:5:35,'tickdir','out','yticklabel',{});    
+    set(gca,'xlim',[-1 35],'xtick',0:5:35,'tickdir','out');    
     xlabel('Salinity (psu)','fontsize',10,'fontweight','bold');        
+    ylabel(['\it' 'Alexandrium' '\rm cells mL^{-1}\bf'],...
+    'fontsize',10,'fontweight','bold');  
     hleg = legend(A(1).dn,A(2).dn,A(3).dn,A(4).dn,A(5).dn,A(6).dn,...
-        A(7).dn,A(8).dn,A(9).dn,'Location','NorthWest');
-    set(hleg,'fontsize',8); 
+        A(7).dn,A(8).dn,A(9).dn,'Location','EastOutside');
+    set(hleg,'fontsize',9); 
     legend boxoff
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs\Alex_Sal_Dist_SFB.tif']);
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Alex_Salinity_SFB.tif']);
 hold off 
