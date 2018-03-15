@@ -86,7 +86,7 @@ for i=1:length(yearlist)
 end
 
 hold on
-h3=plot(micros.alex.dn, micros.alex.avg./1000,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(mcr.alexandrium.dn, mcr.alexandrium.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
