@@ -1,4 +1,4 @@
-class2do_string = 'Dinophysis'; 
+class2do_string = 'Pseudo-nitzschia'; 
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\Coeff_' class2do_string]);
@@ -55,12 +55,12 @@ h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjust
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',4,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',5,'linewidth',1.2);
 end
 
 hold on
 
-h3=plot(micros.dino.dn, micros.dino.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(micros.pn.dn, micros.pn.avg./1000,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -69,7 +69,7 @@ set(gca, 'fontsize', 11, 'fontname', 'Arial')
 set(gcf,'units','inches')
 set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
 set(gcf,'color','w')
-set(gca,'ylim',[0 12],'ytick',0:4:12,...
+set(gca,'ylim',[0 30],'ytick',0:10:30,...
     'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
@@ -89,8 +89,8 @@ hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
-    'Manual classification','Location','NorthOutside');
+lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
+    'Manual classification','Microscopy','Location','NorthOutside');
 set(lh,'fontsize',10)
 
 hold on
