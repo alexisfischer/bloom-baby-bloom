@@ -82,11 +82,11 @@ h1=stem(mdateTB, Alex(5).y_mat,'k-','Linewidth',.5,'Marker','none'); %This adjus
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(Alex(5).y_mat_manual(:,i)));
-    h2=plot(Alex(5).mdate_mat_manual(ind_nan,i), Alex(5).y_mat_manual(ind_nan,i),'r*','Markersize',4,'linewidth',1.2);
+    h2=plot(Alex(5).mdate_mat_manual(ind_nan,i), Alex(5).y_mat_manual(ind_nan,i),'r*','Markersize',5,'linewidth',1.2);
 end
 
 hold on
-h3=plot(micros.alex.dn, micros.alex.avg./1000,'bo','Markersize',3,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(micros.alex.dn, micros.alex.avg./1000,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -103,7 +103,7 @@ set(gca,'ylim',[0 12],'ytick',0:4:12,...
         datenum('2017-02-01'),datenum('2017-03-01'),...
         datenum('2017-04-01'),datenum('2017-05-01'),...
         datenum('2017-06-01')],...
-        'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan',...
+        'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');
 ylabel(['\it' 'Alexandrium' '\rm cells mL^{-1}\bf'],...
     'fontsize',12, 'fontname', 'Arial');    
@@ -114,7 +114,7 @@ vfill([datenum('2016-11-05'),0,datenum('2017-02-22'),500],[200 200 200]/255,'Fac
 hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
-lh = legend([h1,h2,h3],'Automated classification',...
+lh = legend([h1,h2,h3],'Automated classification (0.7Thr)',...
     'Manual classification','Microscopy','Location','NorthOutside');
 set(lh,'fontsize',10)
 hold on
