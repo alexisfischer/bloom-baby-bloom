@@ -114,8 +114,8 @@ vfill([datenum('2016-11-05'),0,datenum('2017-02-22'),500],[200 200 200]/255,'Fac
 hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
-lh = legend([h1,h2,h3],'Automated classification (0.7Thr)',...
-    'Manual classification','Microscopy','Location','NorthOutside');
+lh = legend([h1,h2,h3],'Automated classification (0.7)',...
+    'Manual classification','Microscopy','Location','North');
 set(lh,'fontsize',10)
 hold on
 % set figure parameters

@@ -1,4 +1,4 @@
-class2do_string = 'Pseudo-nitzschia'; 
+class2do_string = 'Akashiwo'; 
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\Coeff_' class2do_string]);
@@ -88,8 +88,8 @@ hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
-    'Manual classification','Microscopy','Location','NorthOutside');
+lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
+    'Manual classification','Microscopy','Location','North');
 set(lh,'fontsize',10)
 
 hold on
@@ -148,8 +148,8 @@ hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
-    'Manual classification','Microscopy','Location','NorthOutside');
+lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
+    'Manual classification','Microscopy','Location','North');
 set(lh,'fontsize',10)
 
 hold on
@@ -208,8 +208,8 @@ hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
-    'Manual classification','Microscopy','Location','NorthOutside');
+lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
+    'Manual classification','Microscopy','Location','North');
 set(lh,'fontsize',10)
 
 hold on
@@ -268,8 +268,8 @@ hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) 'Thr)'],...
-    'Manual classification','Microscopy','Location','NorthOutside');
+lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
+    'Manual classification','Microscopy','Location','North');
 set(lh,'fontsize',10)
 
 hold on
