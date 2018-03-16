@@ -1,8 +1,8 @@
 function [phys,s] = compile_physicalparameters(parameters)
 
-%parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
+%parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
 
-[phys]=loadSFBparameters_v2(parameters);
+[phys]=loadSFBparameters(parameters);
 
 %% sort data by survey dates
 s(1).a=find([phys.dn]==datenum('31-Jul-2017'));

@@ -2,7 +2,7 @@ function [phyto,p] = compile_biovolume_yrs(biovolume,cruisetime,parameters)
 
 % biovolume= 'F:\IFCB113\class\summary\summary_biovol_allcells';
 % cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
-% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
+% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
 
 %% compile biovolume multiple years SFB
 
@@ -43,7 +43,7 @@ end
 
 %% add sfb parameters to IFCB dataset
 
-[phys]=loadSFBparameters_v2(parameters);
+[phys]=loadSFBparameters(parameters);
 
 [~,~,c] = intersect([phyto.filename],[phys.filename]);
 
