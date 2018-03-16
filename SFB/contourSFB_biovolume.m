@@ -3,12 +3,11 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 
 [phyto,p] = compile_biovolume_yrs(biovolume,...
     [resultpath 'Data\st_filename_raw.csv'],...
-    [resultpath 'Data\sfb_raw_2.csv']);    
+    [resultpath 'Data\sfb_raw.csv']);    
 
 %% contour biovolume in the San Francisco Bay
 
 for i=1:(length(p)-1)
-
     yrok = p(i).dn;
     lat = p(i).lat; 
     lon = p(i).lon; 
@@ -58,7 +57,7 @@ for i=1:(length(p)-1)
 
     % colorbar
     h=colorbar('east'); 
-    h.Label.String= {'Biovolume (\mum^3)'};
+    h.Label.String= {'Biomass (\mum^3 mL^{-1})'};
     h.TickDirection = 'out';    
     hp=get(h,'pos'); hp(4)=.5*hp(4); hp(3)=.7*hp(3); 
     set(h,'pos',hp,'xaxisloc','top','fontsize',10); 
@@ -69,7 +68,6 @@ for i=1:(length(p)-1)
     str=['Biovol_' datestr(yrok,'ddmmmyyyy') '_contour'];
 
     % Set figure parameters
-    set(gcf,'color','w');
     print(gcf,'-dtiff','-r600',[resultpath 'Figs\' num2str(str) '.tif'])
     hold off
 
