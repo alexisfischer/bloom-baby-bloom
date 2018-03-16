@@ -3,8 +3,8 @@ function [Latitude,Longitude] = match_st_lat_lon(stdata)
 
 load ('st_lat_lon.mat','st','lat','lon');
 
-Latitude=zeros*stdata;
-Longitude=zeros*stdata;
+Latitude=NaN*stdata;
+Longitude=NaN*stdata;
 
 for i=1:length(stdata)
     for j=1:length(st)

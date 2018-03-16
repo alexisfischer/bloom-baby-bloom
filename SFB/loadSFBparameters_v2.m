@@ -1,6 +1,6 @@
 function[phys]=loadSFBparameters_v2(filename)
 
-filename = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
+%filename = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
 delimiter = ',';
 startRow = 3;
 
@@ -115,9 +115,8 @@ for i=1:length(Date)
     phys(i).dn=Date(i);
     phys(i).filename=IFCB(i);
     phys(i).st=StationNumber(i);
-    phys(i).st=StationNumber(i);
-    phys(i).st=StationNumber(i);
-    
+    phys(i).lat=Latitude(i);
+    phys(i).lon=Longitude(i);
     phys(i).d36=Distancefrom36(i);    
     phys(i).sal=Salinity(i);    
     phys(i).chl=CalculatedChlorophyll(i);

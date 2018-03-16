@@ -1,20 +1,53 @@
-%% creates a contour plot of San Francisco Bay
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 
-[sfb,s]=loadSFBparameters('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv');
-%load('sfb.mat');
+[phys,s] = compile_physicalparameters([resultpath 'Data\sfb_raw_2.csv']);
 
-% biovolume= 'F:\IFCB113\class\summary\summary_biovol_allcells';
-% cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
-% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
-% [phyto,p] = compile_biovolume_yrs(biovolume, cruisetime, parameters);
+%% contours salinity, chlorophyll, nitrogen, or temperature
+
+%uncomment variable to plot
+
+% str='Sal';
+% label='Salinity (psu)';
+% ccon=0:.5:35;
+% cax=[0 35];    
+
+% str='Chl';
+% label='Chlorophyll (\mug L^{-1})';
+% cax=[0 12];
+% ccon=0:.5:12;
 % 
+% str='Temp';
+% label='Temperature (^oC)';
+% cax=[10 22];
+% ccon=10:.5:22;
+% 
+% str='SPM';
+% label='Suspended Sediments (mg L^{-1})';   
+% cax=[0 400];
+% ccon=0:100:400;
+%         
+% str='Ammonium';
+% label='Ammonium (\muM)';   
+% cax=[0 20];
+% ccon=0:.5:20;    
 
-for i=1:8
+str='Nitrate+Nitrite';
+label='Nitrate+Nitrite (\muM)';
+ccon=10:1:100;
+cax=[10 100];    
 
-    var = s(i).sal;    
-    yrok = s(i).dn(1);
+for i=1:length(s)
+    
+%     var = s(i).sal;  
+%     var = s(i).chl;    
+%     var = s(i).temp;    
+%     var = s(i).spm;    
+%     var = s(i).amm;    
+    var = s(i).nina;    
+    
+    yrok = datenum(s(i).dn);
     lat = s(i).lat; 
-    lon = s(i).long; 
+    lon = s(i).lon; 
     ii=~isnan(var+lat+lon);
     lonok=lon(ii); latok=lat(ii); vvok=var(ii);    
 
@@ -25,18 +58,16 @@ for i=1:8
 
     % contour plot 
     x = -122.56:.001:-121.76; y = 37.4:.001:38.22;
-    bathydata = load('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\SFB_bathymetry.mat');
+    bathydata = load([resultpath 'Data\SFB_bathymetry.mat']);
     xx = bathydata.lon; yy = bathydata.lat;
     F = scatteredInterpolant(lonok,latok,vvok,'nearest','nearest'); %F is a function
     zz = F(xx,yy); %must call scatteredInterp function in order to plot
     zz(bathydata.bathy==-9999) = nan;
-    ccon=0:.5:40;
 
     fig1 = figure('Units','inches','Position',[1 1 6 6],'PaperPositionMode','auto'); clf;
     axes1 = axes('Parent',fig1);
     [C,h]=contour(xx,yy,zz,ccon); h.Fill='on';
     set(axes1, 'color', [0.83 0.816 0.78])
-    cax=[0 35];
     caxis(cax); hold on;
     set(gca,'xtick',xtic,'ytick',ytic,'fontsize',10,'TickDir','out');
     dasp(41); xlim(xax); ylim(yax);
@@ -50,23 +81,27 @@ for i=1:8
     coastline_SFB('k-'); 
 
     % add station locations
-    plot(lon,lat,'ko','markerfacecolor','w','markersize',5);
+    plot(lon,lat,'ko','markerfacecolor','w','markersize',12,'linewidth',.5);
     xlim(xax); ylim(yax);
+    labels = num2str(s(i).st,'%d'); 
+    text(lon,lat,labels,'horizontal','center','vertical','middle',...
+        'fontsize',8,'color','k');
     axis off; 
 
     % colorbar
-    h=colorbar('east'); h.Label.String='Salinity [psu]';
+    h=colorbar('east'); 
     h.TickDirection = 'out';    
+    h.Label.String = label;
     hp=get(h,'pos'); hp(4)=.5*hp(4); hp(3)=.6*hp(3); 
     set(h,'pos',hp,'xaxisloc','top','fontsize',11); 
     hold on;
 
     title(textsurv,'fontsize',14);
-    str=['SFB_sal_' datestr(yrok,'ddmmmyyyy') '_contour'];
 
     % Set figure parameters
     set(gcf,'color','w');
-    print(gcf,'-dtiff','-r600',['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Figs\' num2str(str) '.tif'])
+    print(gcf,'-dtiff','-r600',...
+        [resultpath 'Figs\' num2str(str) '_contour_' datestr(yrok,'ddmmmyyyy') '.tif'])
     hold off
 
 end 

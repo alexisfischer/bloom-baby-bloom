@@ -1,8 +1,8 @@
 function [phyto,p] = compile_biovolume_yrs(biovolume,cruisetime,parameters)
 
-biovolume= 'F:\IFCB113\class\summary\summary_biovol_allcells';
-cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
-parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
+% biovolume= 'F:\IFCB113\class\summary\summary_biovol_allcells';
+% cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
+% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
 
 %% compile biovolume multiple years SFB
 
@@ -48,6 +48,8 @@ end
 [~,~,c] = intersect([phyto.filename],[phys.filename]);
 
 for i=1:length(c)
+    phyto(i).lat=phys(c(i)).lat;
+    phyto(i).lon=phys(c(i)).lon;
     phyto(i).chl=phys(c(i)).chl;
     phyto(i).d36=phys(c(i)).d36;
     phyto(i).temp=phys(c(i)).temp;
@@ -61,7 +63,6 @@ for i=1:length(c)
     phyto(i).sil=phys(c(i)).sil;        
 end
 
-
 %% sort data by survey dates
 p(1).a=find([phyto.matdate]==datenum('31-Jul-2017'));
 p(2).a=find([phyto.matdate]==datenum('22-Aug-2017'));
@@ -74,12 +75,14 @@ p(8).a=find([phyto.matdate]==datenum('06-Dec-2017'));
 p(9).a=find([phyto.matdate]>=datenum('07-Feb-2018') & [phyto.matdate]<= datenum('08-Feb-2018'));
 p(10).a=find([phyto.matdate]==datenum('23-Feb-2018'));
 
-% organize station data into structures
+% organize station data into structures based on survey date
 for i=1:length(p)
     p(i).filename=[phyto(p(i).a).filename]'; 
     p(i).matdate=[phyto(p(i).a).matdate]'; 
     p(i).dn=datestr(p(i).matdate(1));    
     p(i).st=[phyto(p(i).a).st]'; 
+    p(i).lat=[phyto(p(i).a).lat]'; 
+    p(i).lon=[phyto(p(i).a).lon]';     
     p(i).ml_analyzed=[phyto(p(i).a).ml_analyzed]'; 
     p(i).biovol_sum=[phyto(p(i).a).biovol_sum]'; 
     p(i).chl=[phyto(p(i).a).chl]';
