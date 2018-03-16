@@ -69,7 +69,7 @@ save([resultpath 'Data\Alexandrium_summary'],'Alex');
 %% plot Santa Cruz Wharf
 load 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\SCW_microscopydata.mat' %load cell count data
 
-figure('Units','inches','Position',[1 1 7 2.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 h1=stem(mdateTB, Alex(5).y_mat,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 
 % %plots only matching MC
@@ -102,7 +102,7 @@ set(gca,'ylim',[0 12],'ytick',0:4:12,...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');
 ylabel(['\it' 'Alexandrium' '\rm cells mL^{-1}\bf'],...
-    'fontsize',13, 'fontname', 'Arial');    
+    'fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
@@ -112,7 +112,7 @@ vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'Fac
 hold on
 lh = legend([h1,h2,h3],'Automated classification (0.7)',...
     'Manual classification','Microscopy','Location','North');
-set(lh,'fontsize',10)
+set(lh,'fontsize',9)
 hold on
 % set figure parameters
 set(gcf,'color','w');

@@ -1,4 +1,4 @@
-class2do_string = 'Pseudo-nitzschia'; 
+class2do_string = 'Akashiwo'; 
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\Coeff_' class2do_string]);
@@ -40,7 +40,7 @@ ind=(find(y_mat)); % find dates associated with nonzero elements
 mdate_val=[mdateTB(ind),y_mat(ind)];
 
 %% Akashiwo
-figure('Units','inches','Position',[1 1 7 2.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 
 h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
@@ -75,7 +75,7 @@ set(gca,'ylim',[0 800],'ytick',0:200:800,...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');    
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
-        'fontsize',13, 'fontname', 'Arial');    
+        'fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
@@ -86,7 +86,7 @@ hold on
 
 lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
     'Manual classification','Microscopy','Location','North');
-set(lh,'fontsize',10)
+set(lh,'fontsize',9)
 
 hold on
 % set figure parameters
@@ -96,7 +96,7 @@ print(gcf,'-dtiff','-r600',...
 hold off
 
 %% Dinophysis
-figure('Units','inches','Position',[1 1 7 2.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 
 h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
@@ -131,7 +131,7 @@ set(gca,'ylim',[0 12],'ytick',0:4:12,...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');    
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
-        'fontsize',13, 'fontname', 'Arial');    
+        'fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
@@ -142,7 +142,7 @@ hold on
 
 lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
     'Manual classification','Microscopy','Location','North');
-set(lh,'fontsize',10)
+set(lh,'fontsize',9)
 
 hold on
 % set figure parameters
@@ -152,7 +152,7 @@ print(gcf,'-dtiff','-r600',...
 hold off
 
 %% Prorocentrum
-figure('Units','inches','Position',[1 1 7 2.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 
 h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
@@ -187,7 +187,7 @@ set(gca,'ylim',[0 200],'ytick',0:50:200,...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');    
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
-        'fontsize',13, 'fontname', 'Arial');    
+        'fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
@@ -198,7 +198,7 @@ hold on
 
 lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
     'Manual classification','Microscopy','Location','North');
-set(lh,'fontsize',10)
+set(lh,'fontsize',9)
 
 hold on
 % set figure parameters
@@ -208,7 +208,7 @@ print(gcf,'-dtiff','-r600',...
 hold off
 
 %% Pseudo-nitzschia
-figure('Units','inches','Position',[1 1 7 2.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 
 h1=stem(mdateTB, 4*y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 %plot(mdateTB(:), classcountTB_above_thre(:,6)/.65*1000,'k-') %This adjusts the automated counts by the chosen slope. 
@@ -243,7 +243,7 @@ set(gca,'ylim',[0 60],'ytick',0:20:60,...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');    
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
-        'fontsize',13, 'fontname', 'Arial');    
+        'fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
@@ -254,7 +254,7 @@ hold on
 
 lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
     'Manual classification','Microscopy','Location','North');
-set(lh,'fontsize',10)
+set(lh,'fontsize',9)
 
 hold on
 % set figure parameters
