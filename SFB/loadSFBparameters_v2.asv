@@ -107,7 +107,19 @@ Silicate = cell2mat(rawNumericColumns(:, 13));
 
 Date=datenum(Date);
 
-[Latitude,Longitude] = match_st_lat_lon(StationNumber);
+load st_lat_lon.mat;
+
+Latitude=zeros*StationNumber;
+Longitude=zeros*StationNumber;
+
+for i=1:length(StationNumber)
+    for j=1:length(st)
+        if StationNumber(i) == st(j)
+            Latitude(i) = lat(j);
+        else
+        end
+    end
+end
 
 
 %%
@@ -115,9 +127,6 @@ for i=1:length(Date)
     phys(i).dn=Date(i);
     phys(i).filename=IFCB(i);
     phys(i).st=StationNumber(i);
-    phys(i).st=StationNumber(i);
-    phys(i).st=StationNumber(i);
-    
     phys(i).d36=Distancefrom36(i);    
     phys(i).sal=Salinity(i);    
     phys(i).chl=CalculatedChlorophyll(i);
