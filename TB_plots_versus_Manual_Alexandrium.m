@@ -69,7 +69,7 @@ save([resultpath 'Data\Alexandrium_summary'],'Alex');
 %% plot Santa Cruz Wharf
 load 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\SCW_microscopydata.mat' %load cell count data
 
-figure('Units','inches','Position',[1 1 5 3],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 7 2.5],'PaperPositionMode','auto');
 h1=stem(mdateTB, Alex(5).y_mat,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 
 % %plots only matching MC
@@ -91,10 +91,6 @@ h3=plot(mcr.alexandrium.dn, mcr.alexandrium.avg,'bo','Markersize',4,'linewidth',
 hold all
 datetick,set(gca, 'xgrid', 'on')
 
-set(gca, 'fontsize', 11, 'fontname', 'Arial')
-set(gcf,'units','inches')
-set(gcf,'position',[5 6 8 3],'paperposition', [-0.5 3 12 4]);
-set(gcf,'color','w')
 set(gca,'ylim',[0 12],'ytick',0:4:12,...
     'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
@@ -106,7 +102,7 @@ set(gca,'ylim',[0 12],'ytick',0:4:12,...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
         'Feb','Mar','Apr','May','Jun'},'tickdir','out');
 ylabel(['\it' 'Alexandrium' '\rm cells mL^{-1}\bf'],...
-    'fontsize',12, 'fontname', 'Arial');    
+    'fontsize',13, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
