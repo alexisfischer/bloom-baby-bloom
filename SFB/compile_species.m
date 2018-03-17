@@ -2,7 +2,7 @@ function [phyto,A] = compile_species(alexData,cruisetime,parameters)
 
 % alexData='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium_summary';
 % cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
-% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
+% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
 
 %% add station #s to Alexandrium data 
 load(alexData);
@@ -20,10 +20,12 @@ for i=1:length(filename)
 end
 
 %% add sfb parameters to IFCB dataset
-[phys]=loadSFBparameters_v2(parameters);
+[phys]=loadSFBparameters(parameters);
 [~,~,c] = intersect([phyto.filename],[phys.filename]);
 
 for i=1:length(c)
+    phyto(i).lat=phys(c(i)).lat;
+    phyto(i).lon=phys(c(i)).lon;
     phyto(i).chl=phys(c(i)).chl;
     phyto(i).d36=phys(c(i)).d36;
     phyto(i).temp=phys(c(i)).temp;
@@ -55,6 +57,8 @@ for i=1:length(A)
     A(i).matdate=[phyto(A(i).a).matdate]'; 
     A(i).dn=datestr(A(i).matdate(1));    
     A(i).st=[phyto(A(i).a).st]'; 
+    A(i).lat=[phyto(A(i).a).lat]'; 
+    A(i).lon=[phyto(A(i).a).lon]';       
     A(i).y_mat=[phyto(A(i).a).y_mat]'; 
     A(i).chl=[phyto(A(i).a).chl]';
     A(i).d36=[phyto(A(i).a).d36]';    

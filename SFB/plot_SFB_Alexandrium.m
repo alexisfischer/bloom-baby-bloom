@@ -3,9 +3,81 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 [phyto,A] = compile_species(...
     [resultpath 'Data\Alexandrium_summary'],...
     [resultpath 'Data\st_filename_raw.csv'],...
-    [resultpath 'Data\sfb_raw_2.csv']);
+    [resultpath 'Data\sfb_raw.csv']);
 
-%%
+%% contour Alexandrium
+
+str='Alexandrium';
+label='Alexandrium (cells mL^{-1})';
+ccon=0:.5:6;
+cax=[0 6];    
+
+for i=1:(length(A)-1)
+    
+    var = A(i).y_mat;    
+    
+    yrok = datenum(A(i).dn);
+    lat = A(i).lat; 
+    lon = A(i).lon; 
+    ii=~isnan(var+lat+lon);
+    lonok=lon(ii); latok=lat(ii); vvok=var(ii);    
+
+    % map limits and tics for SFB
+    xax = [-122.56 -121.78]; yax=[37.42 38.22];
+    xtic = -122.5:.2:-121.8; ytic=37.5:.1:38.2;  
+    textsurv={datestr(yrok,'dd-mmm-yyyy')};
+
+    % contour plot 
+    x = -122.56:.001:-121.76; y = 37.4:.001:38.22;
+    bathydata = load([resultpath 'Data\SFB_bathymetry.mat']);
+    xx = bathydata.lon; yy = bathydata.lat;
+    F = scatteredInterpolant(lonok,latok,vvok,'nearest','nearest'); %F is a function
+    zz = F(xx,yy); %must call scatteredInterp function in order to plot
+    zz(bathydata.bathy==-9999) = nan;
+
+    fig1 = figure('Units','inches','Position',[1 1 6 6],'PaperPositionMode','auto'); clf;
+    axes1 = axes('Parent',fig1);
+    [C,h]=contour(xx,yy,zz,ccon); h.Fill='on';
+    set(axes1, 'color', [0.83 0.816 0.78])
+    caxis(cax); hold on;
+    set(gca,'xtick',xtic,'ytick',ytic,'fontsize',10,'TickDir','out');
+    dasp(41); xlim(xax); ylim(yax);
+    hp=get(gca,'pos');
+
+    axes('pos',hp,'color','none'); axis off;
+    dasp(41); xlim(xax); ylim(yax);
+    caxis(cax); hold on;
+
+    % plots outline of sfb
+    coastline_SFB('k-'); 
+
+    % add station locations
+    plot(lon,lat,'ko','markerfacecolor','w','markersize',12,'linewidth',.5);
+    xlim(xax); ylim(yax);
+    labels = num2str(A(i).st,'%d'); 
+    text(lon,lat,labels,'horizontal','center','vertical','middle',...
+        'fontsize',8,'color','k');
+    axis off; 
+
+    % colorbar
+    h=colorbar('east'); 
+    h.TickDirection = 'out';    
+    h.Label.String = label;
+    hp=get(h,'pos'); hp(4)=.5*hp(4); hp(3)=.6*hp(3); 
+    set(h,'pos',hp,'xaxisloc','top','fontsize',11); 
+    hold on;
+
+    title(textsurv,'fontsize',14);
+
+    % Set figure parameters
+    set(gcf,'color','w');
+    print(gcf,'-dtiff','-r600',...
+        [resultpath 'Figs\' num2str(str) '_contour_' datestr(yrok,'ddmmmyyyy') '.tif'])
+    hold off
+
+end 
+
+%% Plot Alexandrium vs Distance from st36 and salinity
 figure('Units','inches','Position',[1 1 8.5 3],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.16 0.07], [0.05 -.18]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
