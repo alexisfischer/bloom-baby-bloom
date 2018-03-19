@@ -3,6 +3,8 @@
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 %resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 
+load([resultpath 'Data\rai_data']);
+
 all_files=dir([resultpath 'Data\Alexandrium\']);
 all_files(1:2) = [];
 
@@ -69,7 +71,37 @@ save([resultpath 'Data\Alexandrium_summary'],'Alex');
 %% plot Santa Cruz Wharf
 load 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\SCW_microscopydata.mat' %load cell count data
 
-figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.07 0.04], [0.12 0.03]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+
+% rai
+subplot(2,1,1) 
+sz=linspace(1,150,100); 
+A=r(12).species';
+A(A<=.01)=.01; %replace values <0 with 0.01       
+Asz=zeros(length(A),1); %preallocate space   
+for j=1:length(Asz)  % define sizes according to cyst abundance
+     Asz(j)=sz(round(A(j)*length(sz)));
+end
+h4=scatter(r(13).dn',ones(size(r(13).dn')),Asz,'b','filled');
+hold on
+
+set(gca,'ylim',[0 10],'Visible','off',...
+    'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
+    'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
+    datenum('2016-10-01'),datenum('2016-11-01'),...
+    datenum('2016-12-01'),datenum('2017-01-01'),...
+    datenum('2017-02-01'),datenum('2017-03-01'),...
+    datenum('2017-04-01'),datenum('2017-05-01'),...
+    datenum('2017-06-01')],...
+    'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
+    'Feb','Mar','Apr','May','Jun'},...
+    'YTickLabel',{},'XTickLabel',{},'tickdir','out');  
+hold on
+
+subplot(2,1,2);
 h1=stem(mdateTB, Alex(5).y_mat,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 
 % %plots only matching MC
@@ -110,9 +142,10 @@ vfill([datenum('2016-11-05'),0,datenum('2017-02-22'),500],[200 200 200]/255,'Fac
 hold on
 vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
-lh = legend([h1,h2,h3],'Automated classification (0.7)',...
-    'Manual classification','Microscopy','Location','North');
-set(lh,'fontsize',9)
+lh = legend([h1,h2,h3,h4], ['Automated classification (' num2str(threlist(bin)) ')'],...
+    'Manual classification','Microscopy','Relative abundance index');
+set(lh,'fontsize',9,'Position',[0.4101562530653 0.621961804895869 0.27213541053546 0.18098957836628]);
+
 hold on
 % set figure parameters
 set(gcf,'color','w');

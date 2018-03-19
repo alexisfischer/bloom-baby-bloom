@@ -9,14 +9,14 @@ color=flipud(autumn); % define colors
 colormap(color);    
  
 for i=1:length(r)
-    sz=linspace(1,120,100); 
+    sz=linspace(1,150,100); 
     A=r(i).species';
     A(A<=.01)=.01; %replace values <0 with 0.01       
     Asz=zeros(length(A),1); %preallocate space   
     for j=1:length(Asz)  % define sizes according to cyst abundance
          Asz(j)=sz(round(A(j)*length(sz)));
     end
-    scatter(r(i).dn',i*ones(size(r(i).dn')),Asz,'r','filled');
+    scatter(r(i).dn',i*ones(size(r(i).dn')),Asz,'b','filled');
     hold on
 end
 
@@ -36,5 +36,5 @@ set(gca,'ylim',[0 13],'ytick',0:1:13,...
     % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',...
-    '~/Documents/MATLAB/bloom-baby-bloom/SCW/Figs/RAI_2016-present.tif')
+    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Figs\RAI_2016-present.tif')
 hold off 
