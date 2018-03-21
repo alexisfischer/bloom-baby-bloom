@@ -3,41 +3,45 @@
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\RAI_SCW']);
 
-%% old one
-% load rai_data.mat;
+
+It looks like it starts late on October 19 (T210557 is the first place I see it) and 
+runs until October 27. There is a bead run at T183340 and it clears up after that.
 
 %%
 
-figure('Units','inches','Position',[1 1 7 3],'PaperPositionMode','auto');        
+figure('Units','inches','Position',[1 1 8 3],'PaperPositionMode','auto');        
 
 color=flipud(autumn); % define colors
 colormap(color);    
- 
+
+
 for i=1:length(r)
     sz=linspace(1,150,100); 
     A=r(i).rai';
     ii=~isnan(A); %which values are not NaNs
     Aok=A(ii);
-    Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
+    iii=any(A,2);
+    Aook=Aok(iii);
+   % Aok(Aok<=0)=.01; %replace values <0 with 0.01       
     Asz=zeros(length(Aok),1); %preallocate space   
     for j=1:length(Asz)  % define sizes according to cyst abundance
          Asz(j)=sz(round(Aok(j)*length(sz)));
     end
-    scatter(r(i).dn(ii)',ones(size(Asz)),Asz,'m','filled');
+    scatter(r(i).dn(ii)',i*ones(size(Asz)),Asz,'m','filled');
     hold on    
-end
+end  
 
 datetick,set(gca, 'xgrid', 'on')
 set(gca,'ylim',[0 13],'ytick',0:1:13,...
-    'xlim',[datenum('2016-08-01') datenum('2017-06-30')],...
+    'xlim',[datenum('2016-08-01') datenum('2017-07-31')],...
         'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
         datenum('2016-10-01'),datenum('2016-11-01'),...
         datenum('2016-12-01'),datenum('2017-01-01'),...
         datenum('2017-02-01'),datenum('2017-03-01'),...
         datenum('2017-04-01'),datenum('2017-05-01'),...
-        datenum('2017-06-01')],...
+        datenum('2017-06-01'),datenum('2017-07-01')],...
         'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
-        'Feb','Mar','Apr','May','Jun'},...
+        'Feb','Mar','Apr','May','Jun','Jul'},...
         'YTickLabel',['0', {r.name}],'tickdir','out');   
     
     % set figure parameters

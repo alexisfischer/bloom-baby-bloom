@@ -1,4 +1,4 @@
-class2do_string = 'Pseudo-nitzschia'; 
+class2do_string = 'Dinophysis'; 
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\Coeff_' class2do_string]);
@@ -53,12 +53,13 @@ sz=linspace(1,150,100);
 A=r(13).rai';
 ii=~isnan(A); %which values are not NaNs
 Aok=A(ii);
-Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(Aok),1); %preallocate space   
+iii=find(Aok);
+Aook=Aok(iii);
+Asz=zeros(length(Aook),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(Aok(j)*length(sz)));
+     Asz(j)=sz(round(Aook(j)*length(sz)));
 end
-h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
+h4=scatter(r(13).dn(iii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...
@@ -140,12 +141,13 @@ sz=linspace(1,150,100);
 A=r(11).rai';
 ii=~isnan(A); %which values are not NaNs
 Aok=A(ii);
-Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(Aok),1); %preallocate space   
+iii=find(Aok);
+Aook=Aok(iii);
+Asz=zeros(length(Aook),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(Aok(j)*length(sz)));
+     Asz(j)=sz(round(Aook(j)*length(sz)));
 end
-h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
+h4=scatter(r(13).dn(iii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...
@@ -227,12 +229,13 @@ sz=linspace(1,150,100);
 A=r(10).rai'; 
 ii=~isnan(A); %which values are not NaNs
 Aok=A(ii);
-Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(Aok),1); %preallocate space   
+iii=find(Aok);
+Aook=Aok(iii);
+Asz=zeros(length(Aook),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(Aok(j)*length(sz)));
+     Asz(j)=sz(round(Aook(j)*length(sz)));
 end
-h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
+h4=scatter(r(13).dn(iii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...
@@ -314,12 +317,13 @@ sz=linspace(1,150,100);
 A=r(5).rai';
 ii=~isnan(A); %which values are not NaNs
 Aok=A(ii);
-Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(Aok),1); %preallocate space   
+iii=find(Aok);
+Aook=Aok(iii);
+Asz=zeros(length(Aook),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(Aok(j)*length(sz)));
+     Asz(j)=sz(round(Aook(j)*length(sz)));
 end
-h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
+h4=scatter(r(13).dn(iii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...

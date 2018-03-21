@@ -1,30 +1,23 @@
-
-
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\RAI_SCW']);
 
-%% old one
-% load rai_data.mat;
 
 %%
 
 figure('Units','inches','Position',[1 1 8 3],'PaperPositionMode','auto');        
-
-color=flipud(autumn); % define colors
-colormap(color);    
-
 
 for i=1:length(r)
     sz=linspace(1,150,100); 
     A=r(i).rai';
     ii=~isnan(A); %which values are not NaNs
     Aok=A(ii);
-    Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
-    Asz=zeros(length(Aok),1); %preallocate space   
+    iii=find(Aok);
+    Aook=Aok(iii);
+    Asz=zeros(length(Aook),1); %preallocate space   
     for j=1:length(Asz)  % define sizes according to cyst abundance
-         Asz(j)=sz(round(Aok(j)*length(sz)));
+         Asz(j)=sz(round(Aook(j)*length(sz)));
     end
-    scatter(r(i).dn(ii)',i*ones(size(Asz)),Asz,'m','filled');
+    scatter(r(i).dn(iii)',i*ones(size(Asz)),Asz,'m','filled');
     hold on    
 end  
 
