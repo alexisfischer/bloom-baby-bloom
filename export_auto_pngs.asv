@@ -21,9 +21,9 @@ for filecount = 1:length(filelist) %this is where you could potentially put file
         pngnumber=num2str(classlist(roi_ind(i),1));
     pngname = [filename(1:24) '_' pngnumber];
         image = get_image([urlbase pngname]);
-        if length(image) > 0
+        if length(image) > 0,
             imwrite(image, [outputpath class_name '\' pngname '.png'], 'png');
-        end
-    end
+        end;
+    end;
   end
     

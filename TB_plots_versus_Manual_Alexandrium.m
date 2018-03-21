@@ -3,7 +3,7 @@
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 %resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 
-load([resultpath 'Data\rai_data']);
+load([resultpath 'Data\RAI_SCW']);
 
 all_files=dir([resultpath 'Data\Alexandrium\']);
 all_files(1:2) = [];
@@ -79,13 +79,15 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.07 0.04], [0.12 0.03])
 % rai
 subplot(2,1,1) 
 sz=linspace(1,150,100); 
-A=r(12).species';
-A(A<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(A),1); %preallocate space   
+A=r(12).rai';
+ii=~isnan(A); %which values are not NaNs
+Aok=A(ii);
+Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
+Asz=zeros(length(Aok),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(A(j)*length(sz)));
+     Asz(j)=sz(round(Aok(j)*length(sz)));
 end
-h4=scatter(r(13).dn',ones(size(r(13).dn')),Asz,'b','filled');
+h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...
@@ -114,11 +116,11 @@ h1=stem(mdateTB, Alex(5).y_mat,'k-','Linewidth',.5,'Marker','none'); %This adjus
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(Alex(5).y_mat_manual(:,i)));
-    h2=plot(Alex(5).mdate_mat_manual(ind_nan,i), Alex(5).y_mat_manual(ind_nan,i),'r*','Markersize',5,'linewidth',1.2);
+    h2=plot(Alex(5).mdate_mat_manual(ind_nan,i), Alex(5).y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
 end
 
 hold on
-h3=plot(mcr.alexandrium.dn, mcr.alexandrium.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(mcr.alexandrium.dn, mcr.alexandrium.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')

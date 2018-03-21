@@ -1,4 +1,4 @@
-class2do_string = 'Prorocentrum'; 
+class2do_string = 'Pseudo-nitzschia'; 
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\Coeff_' class2do_string]);
@@ -7,7 +7,7 @@ load('F:\IFCB104\manual\summary\count_biovol_manual_27Feb2018'); %USER
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 
-load([resultpath 'Data\rai_data']);
+load([resultpath 'Data\RAI_SCW']);
 
 load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
 
@@ -50,13 +50,15 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.07 0.04], [0.12 0.03])
 % rai
 subplot(2,1,1) 
 sz=linspace(1,150,100); 
-A=r(13).species';
-A(A<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(A),1); %preallocate space   
+A=r(13).rai';
+ii=~isnan(A); %which values are not NaNs
+Aok=A(ii);
+Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
+Asz=zeros(length(Aok),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(A(j)*length(sz)));
+     Asz(j)=sz(round(Aok(j)*length(sz)));
 end
-h4=scatter(r(13).dn',ones(size(r(13).dn')),Asz,'b','filled');
+h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...
@@ -86,12 +88,12 @@ h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjust
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',5,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
 end
 
 hold on
 
-h3=plot(mcr.akashiwo.dn, mcr.akashiwo.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(mcr.akashiwo.dn, mcr.akashiwo.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -135,13 +137,15 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.07 0.04], [0.12 0.03])
 % rai
 subplot(2,1,1) 
 sz=linspace(1,150,100); 
-A=r(11).species';
-A(A<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(A),1); %preallocate space   
+A=r(11).rai';
+ii=~isnan(A); %which values are not NaNs
+Aok=A(ii);
+Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
+Asz=zeros(length(Aok),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(A(j)*length(sz)));
+     Asz(j)=sz(round(Aok(j)*length(sz)));
 end
-h4=scatter(r(13).dn',ones(size(r(13).dn')),Asz,'b','filled');
+h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...
@@ -171,12 +175,12 @@ h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjust
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',5,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
 end
 
 hold on
 
-h3=plot(mcr.dinophysis.dn, mcr.dinophysis.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(mcr.dinophysis.dn, mcr.dinophysis.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -220,13 +224,15 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.07 0.04], [0.12 0.03])
 % rai
 subplot(2,1,1) 
 sz=linspace(1,150,100); 
-A=r(10).species';
-A(A<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(A),1); %preallocate space   
+A=r(10).rai'; 
+ii=~isnan(A); %which values are not NaNs
+Aok=A(ii);
+Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
+Asz=zeros(length(Aok),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(A(j)*length(sz)));
+     Asz(j)=sz(round(Aok(j)*length(sz)));
 end
-h4=scatter(r(13).dn',ones(size(r(13).dn')),Asz,'b','filled');
+h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...
@@ -256,12 +262,12 @@ h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjust
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',5,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
 end
 
 hold on
 
-h3=plot(mcr.prorocentrum.dn, mcr.prorocentrum.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(mcr.prorocentrum.dn, mcr.prorocentrum.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
@@ -305,13 +311,15 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.07 0.04], [0.12 0.03])
 % rai
 subplot(2,1,1) 
 sz=linspace(1,150,100); 
-A=r(5).species';
-A(A<=.01)=.01; %replace values <0 with 0.01       
-Asz=zeros(length(A),1); %preallocate space   
+A=r(5).rai';
+ii=~isnan(A); %which values are not NaNs
+Aok=A(ii);
+Aok(Aok<=.01)=.01; %replace values <0 with 0.01       
+Asz=zeros(length(Aok),1); %preallocate space   
 for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(A(j)*length(sz)));
+     Asz(j)=sz(round(Aok(j)*length(sz)));
 end
-h4=scatter(r(13).dn',ones(size(r(13).dn')),Asz,'b','filled');
+h4=scatter(r(13).dn(ii)',ones(size(Asz)),Asz,'m','filled');
 hold on
 
 set(gca,'ylim',[0 10],'Visible','off',...
@@ -341,12 +349,12 @@ h1=stem(mdateTB, 4*y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adju
 hold on
 for i=1:length(yearlist)
     ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',5,'linewidth',1.2);
+    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
 end
 
 hold on
 
-h3=plot(mcr.pseudonitzschia.dn, mcr.pseudonitzschia.avg,'bo','Markersize',4,'linewidth',1.2,'markerfacecolor','w');
+h3=plot(mcr.pseudonitzschia.dn, mcr.pseudonitzschia.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
 
 hold all
 datetick,set(gca, 'xgrid', 'on')
