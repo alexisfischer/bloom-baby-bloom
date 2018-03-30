@@ -1,4 +1,4 @@
-class2do_string = 'Pseudo-nitzschia'; 
+class2do_string = 'Prorocentrum'; 
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\Coeff_' class2do_string]);
