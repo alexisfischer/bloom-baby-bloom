@@ -29,8 +29,8 @@ minaxis = classcount;
 ml_analyzed = NaN(length(filelist),1);
 
 %Loops over each file and pulls out, the parameters you want
-%for filecount = 1:length(filelist) % If you want to do the whole filelist
-for filecount = 112:317 %If you want to use it on only a subset, look at the filelist variable and find what numbers your files of interest are
+for filecount = 1:length(filelist) % If you want to do the whole filelist
+%for filecount = 112:317 %If you want to use it on only a subset, look at the filelist variable and find what numbers your files of interest are
 %    filename = filelist(filecount).newname;
 
     filename = filelist(filecount).name;

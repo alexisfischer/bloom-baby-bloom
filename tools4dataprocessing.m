@@ -1,28 +1,38 @@
 %% IFCB113 - Extract blobs and features and apply classifier
 
 start_blob_batch_user_training('F:\IFCB113\data\2016\','F:\IFCB113\blobs\2016\',true)
+start_blob_batch_user_training('F:\IFCB113\data\2017\','F:\IFCB113\blobs\2017\',true)
+start_blob_batch_user_training('F:\IFCB113\data\2018\','F:\IFCB113\blobs\2018\',true)
+
 start_feature_batch_user_training('F:\IFCB113\data\2016\',...
     'F:\IFCB113\blobs\2016\','F:\IFCB113\features\2016\',true)
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
-    'F:\IFCB113\features\2016\','F:\IFCB113\class\class2016_v1\')
-
-start_blob_batch_user_training('F:\IFCB113\data\2017\','F:\IFCB113\blobs\2017\',true)
 start_feature_batch_user_training('F:\IFCB113\data\2017\',...
     'F:\IFCB113\blobs\2017\','F:\IFCB113\features\2017\',true)
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
-    'F:\IFCB113\features\2017\','F:\IFCB113\class\class2017_v1\')
-
-start_blob_batch_user_training('F:\IFCB113\data\2018\','F:\IFCB113\blobs\2018\',true)
 start_feature_batch_user_training('F:\IFCB113\data\2018\',...
     'F:\IFCB113\blobs\2018\','F:\IFCB113\features\2018\',true)
+
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
+    'F:\IFCB113\features\2016\','F:\IFCB113\class\class2016_v1\')
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
+    'F:\IFCB113\features\2017\','F:\IFCB113\class\class2017_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
     'F:\IFCB113\features\2018\','F:\IFCB113\class\class2018_v1\')
+
+%% Summarize random forest classification results by class
+countcells_allTBnew_user_training(...
+    'F:\IFCB113\class\classxxxx_v1\','F:\IFCB113\data\', 2017:2018)
+
+countcells_allTB_class_by_thre_user_v2('Akashiwo');
+countcells_allTB_class_by_thre_user_v2('Alexandrium_singlet');
+countcells_allTB_class_by_thre_user_v2('Dinophysis');
+countcells_allTB_class_by_thre_user_v2('Prorocentrum');
+countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
 
 %% IFCB104 - Extract blobs and features and apply classifier
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
-start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
+%start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
 
 % problematic: D20180309T110204_IFCB104_blobs_v2.zip
 %
@@ -32,16 +42,16 @@ start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',
 %     'F:\IFCB104\blobs\2016\','F:\IFCB104\features\2016\',true)
 % start_feature_batch_user_training('F:\IFCB104\data\2017\',...
 %     'F:\IFCB104\blobs\2017\','F:\IFCB104\features\2017\',true)
-start_feature_batch_user_training('F:\IFCB104\data\2018\',...
-    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
+%start_feature_batch_user_training('F:\IFCB104\data\2018\',...
+%    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
 
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
     'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
     'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 
 % Summarize random forest classification results by class
@@ -49,36 +59,33 @@ countcells_allTBnew_user_training(...
     'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\', 2015:2018)
 
 countcells_allTB_class_by_thre_user_v2('Akashiwo');
-countcells_allTB_class_by_thre_user_v2('Alexandrium_singlet');
+countcells_allTB_class_by_thre_user_v2('Alexandrium_singlet');s
 countcells_allTB_class_by_thre_user_v2('Dinophysis');
 countcells_allTB_class_by_thre_user_v2('Prorocentrum');
 countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
+
+biovolume_summary_manual_user_training;
 
 %% Compile features for the training set
 
 manualpath = 'F:\IFCB104\manual\'; % manual annotation file location
 feapath_base = 'F:\IFCB104\features\'; %feature file location, assumes \yyyy\ organization
-maxn = 500; %maximum number of images per class to include
-minn = 50; %minimum number for inclusion
-class2skip = {'unclassified' 'Noctiluca' 'Phaeocystis' 'Polykrikos' 'Pyrocystis'...
-     'DinoMix' 'FlagMix' 'Beads','Detritus','small_misc' 'bubbles' 'Karenia'...
-     'Alexandrium_doublet' 'Alexandrium_triplet' 'Alexandrium_quad'};
- 
-class2group = {{'Cryptophyte' 'NanoP_less10'} {'Myrionecta' 'Ciliates'}...
-    {'Asterionellopsis' 'Bacteriastrum' 'Chaetoceros' 'Corethron'...
-    'Ditylum' 'Entomoneis' 'Eucampia' 'Fragilariopsis' 'Helicotheca'...
-    'Hemiaulus' 'Leptocylindrus' 'Licmophora' 'Lithodesmium' 'Navicula'...
-    'Odontella' 'Paralia' 'Pleurosigma' 'Skeletonema' 'Thalassionema' ...
-    'Thalassiosira' 'Tropidoneis' 'Centric' 'Det_Cer_Lau' 'Cyl_Nitz' ...
-    'Guin_Dact' 'Lio_Thal' 'Steph_Melo' 'Rhiz_Prob' 'Centric<10'...
-    'Pennate' 'Boreadinium' 'Pyramimonas' 'Torodinium' 'Oxyp_Oxyt'}}; %use nested cells for multiple groups of 2 or more classes 
+maxn = 2000; %maximum number of images per class to include
+minn = 30; %minimum number for inclusion
+class2skip = {'unclassified' 'Alexandrium_doublet' 'Alexandrium_triplet'...
+    'Alexandrium_quad' 'Bacteriastrum' 'Fragilariopsis' 'Hemiaulus' ...
+    'Leptocylindrus' 'Licmophora' 'Lithodesmium' 'Navicula' 'Paralia' ...
+    'Tropidoneis' 'Cyl_Nitz' 'Lio_Thal' 'Steph_Melo' 'Centric<10'...
+    'Boreadinium' 'Gyrodinium' 'Noctiluca' 'Phaeocystis' 'Polykrikos'...
+    'Pyramimonas' 'Pyrocystis' 'Torodinium' 'Oxyp_Oxyt' 'Beads' ...
+    'small_misc' 'bubbles'};
 
-compile_train_features_user_training(manualpath,feapath_base,maxn,minn,class2skip,class2group);
+compile_train_features_user_training(manualpath,feapath_base,maxn,minn,class2skip);
 
 %% Train (make) the classifier
 
 result_path = 'F:\IFCB104\manual\summary\'; %USER location of training file and classifier output
-train_filename = 'UserExample_Train_23Mar2018'; %USER what file contains your training features
+train_filename = 'UserExample_Train_30Mar2018'; %USER what file contains your training features
 result_str = 'UserExample_Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
