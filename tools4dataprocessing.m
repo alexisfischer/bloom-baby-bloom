@@ -58,13 +58,14 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 countcells_allTBnew_user_training(...
     'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\', 2015:2018)
 
+biovolume_summary_manual('F:\IFCB104\manual\','F:\IFCB104\data\',...
+    'F:\IFCB104\features\XXXX\');
+
 countcells_allTB_class_by_thre_user_v2('Akashiwo');
-countcells_allTB_class_by_thre_user_v2('Alexandrium_singlet');s
+countcells_allTB_class_by_thre_user_v2('Alexandrium_singlet');
 countcells_allTB_class_by_thre_user_v2('Dinophysis');
 countcells_allTB_class_by_thre_user_v2('Prorocentrum');
 countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
-
-biovolume_summary_manual_user_training;
 
 %% Compile features for the training set
 
