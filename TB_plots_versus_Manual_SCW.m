@@ -42,7 +42,7 @@ mdate_val=[mdateTB(ind),y_mat(ind)];
 
 %% Akashiwo
 figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.07 0.04], [0.12 0.03]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.07], [0.07 0.04], [0.12 0.03]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 

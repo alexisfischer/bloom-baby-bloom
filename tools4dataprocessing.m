@@ -28,14 +28,14 @@ countcells_allTB_class_by_thre_user_v2('Dinophysis');
 countcells_allTB_class_by_thre_user_v2('Prorocentrum');
 countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
 
-%% IFCB104 - Extract blobs and features and apply classifier
+%% IFCB104 - Apply and evaluate classifier
+% Extract blobs
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
 
-% problematic: D20180309T110204_IFCB104_blobs_v2.zip
-%
+% Extract features
 % start_feature_batch_user_training('F:\IFCB104\data\2015\',...
 %     'F:\IFCB104\blobs\2015\','F:\IFCB104\features\2015\',true)
 % start_feature_batch_user_training('F:\IFCB104\data\2016\',...
@@ -45,6 +45,7 @@ countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
 %start_feature_batch_user_training('F:\IFCB104\data\2018\',...
 %    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
 
+% Apply classifier
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
@@ -58,14 +59,20 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 countcells_allTBnew_user_training(...
     'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\', 2015:2018)
 
+% Summarize biovolume from forest classification results by class
 biovolume_summary_manual('F:\IFCB104\manual\','F:\IFCB104\data\',...
     'F:\IFCB104\features\XXXX\');
 
-countcells_allTB_class_by_thre_user_v2('Akashiwo');
-countcells_allTB_class_by_thre_user_v2('Alexandrium_singlet');
-countcells_allTB_class_by_thre_user_v2('Dinophysis');
-countcells_allTB_class_by_thre_user_v2('Prorocentrum');
-countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
+% Summarize counts for thresholds 0.1 to 1 for the specified class
+yrrange = 2015:2018;
+classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
+out_path = 'F:\IFCB104\class\summary\'; 
+in_dir = 'F:\IFCB104\data\';
+countcells_allTB_class_by_thre('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class_by_thre('Alexandrium_singlet', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class_by_thre('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class_by_thre('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class_by_thre('Pseudo-nitzschia', yrrange, classpath_generic, out_path, in_dir)
 
 %% Compile features for the training set
 

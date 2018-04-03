@@ -1,12 +1,13 @@
-function [ ] = countcells_allTB_class_by_thre(class2do_string,classpath_generic,out_path,in_dir)
+function [ ] = countcells_allTB_class_by_thre(class2do_string,yrrange,classpath_generic,out_path,in_dir)
 
-%class2do_string = 'Pseudo-nitzschia'; %USER s
+%class2do_string = 'Pseudo-nitzschia'; %USER 
+% yrrange = 2015:2018;
 % classpath_generic = 'F:\IFCB104\class\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
 % out_path = 'F:\IFCB104\class\summary\'; %USER where to store the results
 % in_dir = 'F:\IFCB104\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
 
 classfiles = [];
-for yr = 2015:2018 %2014:2015 %USER
+for yr = yrrange %2014:2015 %USER
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
     temp = dir([classpath 'D*.mat']);
     pathall = repmat(classpath, length(temp),1);
