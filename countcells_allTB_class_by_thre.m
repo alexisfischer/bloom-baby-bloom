@@ -1,4 +1,6 @@
 function [ ] = countcells_allTB_class_by_thre(class2do_string,yrrange,classpath_generic,out_path,in_dir)
+% Gives you a summary file of counts for thresholds 0.1 to 1 for the specified class
+% Alexis Fischer, April 2018
 
 %class2do_string = 'Pseudo-nitzschia'; %USER 
 % yrrange = 2015:2018;
@@ -13,7 +15,7 @@ for yr = yrrange %2014:2015 %USER
     pathall = repmat(classpath, length(temp),1);
     classfiles = [classfiles; cellstr([pathall char(temp.name)])];
     clear temp pathall classpath
-end;
+end
 
 temp = char(classfiles);
 ind = length(classpath_generic)+1;
@@ -57,7 +59,7 @@ classcountTB_above_thre = NaN(length(classfiles),length(threlist));
         [classcountTB_above_thre(filecount,:), class2useTB, roiid_list] = summarize_TBclassMVCO_threshlist(classfiles{filecount}, threlist, class2do);
         %[classcount(filecount,:), classcount_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:), class2useTB, roiid_list] = summarize_TBclassMVCO(classfiles{filecount}, adhocthresh, iclass);
         roiids{filecount} = roiid_list;
-    end;
+    end
 %%
 
 ml_analyzedTB = ml_analyzed;
