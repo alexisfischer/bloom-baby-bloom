@@ -1,0 +1,62 @@
+
+[AKA]=summarize_Man_Auto_TB('Akashiwo');
+[ALE]=summarize_Man_Auto_TB('Alexandrium_singlet');
+[DIN]=summarize_Man_Auto_TB('Dinophysis');
+[PRO]=summarize_Man_Auto_TB('Prorocentrum');
+[PSE]=summarize_Man_Auto_TB('Pseudo-nitzschia');
+
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
+load([resultpath 'Data\RAI_SCW']);
+load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
+
+
+%% Spring 2018 Prorocentrum and Akashiwo
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
+
+h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ro-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+hold on
+h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'b^-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+hold on
+
+datetick('x','m')
+set(gca,'xgrid', 'on','ylim',[0 34],'ytick',0:10:30,...
+    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],'tickdir','out');    
+ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
+hold on
+vfill([datenum('2018-01-28'),0,datenum('2018-02-01'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+vfill([datenum('2018-02-09'),0,datenum('2018-02-15'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+hold on
+
+lh = legend([h1,h2],'Akashiwo','Prorocentrum');
+
+hold on
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Win-Spr2018.tif']);
+hold off
+
+%% Fall 2016 Prorocentrum and Akashiwo
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
+
+h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ro-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+hold on
+h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'b^-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+hold on
+
+datetick('x','m')
+set(gca,'xgrid', 'on','ylim',[0 410],'ytick',0:100:400,...
+    'xlim',[datenum('2016-08-08') datenum('2016-11-05')],'tickdir','out');    
+ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
+hold on
+vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+vfill([datenum('2016-10-20'),0,datenum('2016-10-26'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+hold on
+
+lh = legend([h1,h2],'Akashiwo','Prorocentrum','location','nw');
+
+hold on
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Fall2016.tif']);
+hold off

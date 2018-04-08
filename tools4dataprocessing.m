@@ -29,11 +29,13 @@ countcells_allTB_class_by_thre_user_v2('Prorocentrum');
 countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
 
 %% IFCB104 - Apply and evaluate classifier
+%sort_data_into_folders;
+
 % Extract blobs
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
-%start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
+start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
 
 % Extract features
 % start_feature_batch_user_training('F:\IFCB104\data\2015\',...
@@ -42,16 +44,16 @@ countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
 %     'F:\IFCB104\blobs\2016\','F:\IFCB104\features\2016\',true)
 % start_feature_batch_user_training('F:\IFCB104\data\2017\',...
 %     'F:\IFCB104\blobs\2017\','F:\IFCB104\features\2017\',true)
-%start_feature_batch_user_training('F:\IFCB104\data\2018\',...
-%    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
+start_feature_batch_user_training('F:\IFCB104\data\2018\',...
+   'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
 
 % Apply classifier
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
-    'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
-    'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
-    'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
+%     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
+%     'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
+%     'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_30Mar2018',...
     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 
