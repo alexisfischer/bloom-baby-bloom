@@ -9,81 +9,23 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\RAI_SCW']);
 load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
 
-%% Akashiwo
-figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.05], [0.07 0.04], [0.12 0.03]);
-%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
-%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-class2do_string='Akashiwo';
-
-subplot(2,1,1); %RAI 
-sz=linspace(1,150,100); 
-A=r(13).rai';
-ii=~isnan(A); Aok=A(ii);
-iii=find(Aok); Aook=Aok(iii);
-Asz=zeros(length(Aook),1); %preallocate space   
-for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(Aook(j)*length(sz)));
-end
-h4=scatter(r(13).dn(iii)',ones(size(Asz)),Asz,'m','filled');
-hold on
-
-set(gca,'ylim',[0 10],'Visible','off',...
-    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
-    'YTickLabel',{},'XTickLabel',{},'tickdir','out');  
-hold on
-
-subplot(2,1,2); 
-%classifier
-h1=stem(AKA.mdateTB, AKA.y_mat./AKA.slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
-hold on
-
-%manual
-for i=1:length(AKA.yearlist)
-    ind_nan=find(~isnan(AKA.y_mat_manual(:,i)));
-    h2=plot(AKA.mdate_mat_manual(ind_nan,i), AKA.y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
-end
-hold on
-
-%microscopy
-plot(mcr.akashiwo.dn, mcr.akashiwo.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
-hold all
-
-datetick('x','m')
-set(gca,'xgrid', 'on','ylim',[0 80],'ytick',0:20:80,...
-    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],'tickdir','out');    
-ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
-        'fontsize',12, 'fontname', 'Arial');    
-hold on
-vfill([datenum('2018-01-28'),0,datenum('2018-02-01'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
-vfill([datenum('2018-02-09'),0,datenum('2018-02-15'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
-vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
-hold on
-
-lh = legend([h1,h2,h3,h4], 'Automated classification',...
-    'Manual classification','Microscopy','Relative abundance index');
-set(lh,'fontsize',9,'Position',[0.4101562530653 0.621961804895869 0.27213541053546 0.18098957836628]);
-
-hold on
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs\Win-Spr2018_' num2str(class2do_string) '.tif']);
-hold off
-
-%% Prorocentrum and Akashiwo
+%% Spring 2018 Prorocentrum and Akashiwo
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 
-h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ro-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
-h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'b^-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'k^-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
-h3=plot(DIN.dn_auto,DIN.y_auto./DIN.slope,'m^-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h3=plot(PSE.dn_auto,PSE.y_auto./PSE.slope,'k^-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+set(h1,'color',[102,194,165]/255);
+set(h2,'color',[102,194,165]/255);
+set(h3,'color',[102,194,165]/255);
 
-hold on
-
+252,141,98
+141,160,203
 datetick('x','m')
-set(gca,'xgrid', 'on','ylim',[0 35],'ytick',0:5:35,...
+set(gca,'xgrid', 'on','ylim',[0 34],'ytick',0:10:30,...
     'xlim',[datenum('2018-01-18') datenum('2018-05-01')],'tickdir','out');    
 ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
@@ -92,10 +34,35 @@ vfill([datenum('2018-02-09'),0,datenum('2018-02-15'),500],[200 200 200]/255,'Fac
 vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2],'Akashiwo','Prorocentrum');
+lh = legend([h1,h2,h3],'Akashiwo','Prorocentrum','Pseudo-nitzschia');
 
 hold on
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[resultpath 'Figs\Win-Spr2018.tif']);
+hold off
+
+%% Fall 2016 Prorocentrum and Akashiwo
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
+
+h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ro-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+hold on
+h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'b^-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+hold on
+
+datetick('x','m')
+set(gca,'xgrid', 'on','ylim',[0 410],'ytick',0:100:400,...
+    'xlim',[datenum('2016-08-08') datenum('2016-11-05')],'tickdir','out');    
+ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
+hold on
+vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+vfill([datenum('2016-10-20'),0,datenum('2016-10-26'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+hold on
+
+lh = legend([h1,h2],'Akashiwo','Prorocentrum','location','nw');
+
+hold on
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Fall2016.tif']);
 hold off
