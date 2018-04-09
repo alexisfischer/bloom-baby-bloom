@@ -1,13 +1,105 @@
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-load([resultpath 'Data\RAI_SCW']);
+% resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
+% load([resultpath 'Data\RAI_SCW.mat']);
 
+resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
+load([resultpath 'Data/RAI_SCW.mat']);
 
 %%
+[r] = import_RAI();
+
+%% Seasonality individual species
+
+% class2do_string = 'Dinoflagellates';
+% A=r(15).rai; ii=find(A); Aok=A(ii); y = Aok;
+% x = r(15).dn(ii);
+
+class2do_string = 'Diatoms';
+A=r(16).rai; ii=find(A); Aok=A(ii); y = Aok;
+x = r(16).dn(ii);
+
+% class2do_string = 'Akashiwo';
+% A=r(13).rai; ii=find(A); Aok=A(ii); y = Aok;
+% x = r(13).dn(ii);
+
+% class2do_string = 'Ceratium';
+% A=r(9).rai; ii=find(A); Aok=A(ii); y = Aok;
+% x = r(9).dn(ii);
+
+% class2do_string = 'Dinophysis';
+% A=r(11).rai; ii=find(A); Aok=A(ii); y = Aok;
+% x = r(11).dn(ii);
+
+% class2do_string = 'Prorocentrum';
+% A=r(10).rai; ii=find(A); Aok=A(ii); y = Aok;
+% x = r(10).dn(ii);
+% 
+% class2do_string = 'Pseudo-nitzschia';
+% A=r(5).rai; ii=find(A); Aok=A(ii); y = Aok;
+% x = r(5).dn(ii);
+
+[ mdate_mat, y_mat, yearlist, yd ] = timeseries2ydmat( x, y ); %takes a timeseries and makes it into a year x day matrix
+
+figure;
+[ y_wkmat, mdate_wkmat, yd_wk ] = ydmat2weeklymat( y_mat, yearlist ); %takes a year x day matrix and makes it a year x 2 week matrix
+pcolor([yd_wk ;yd_wk(end)+7],[yearlist(1:12) yearlist(12)+1],[[y_wkmat(:,1:12)';zeros(1,52)] zeros(13,1)]) %for just 2006:2014
+caxis([0 0.9])
+colormap(flipud(hot));
+
+ylabel('Year', 'fontsize',14, 'fontname', 'arial');
+xlabel('Month', 'fontsize',14, 'fontname', 'arial');
+
+title(num2str(class2do_string), 'fontsize',16, 'fontname', 'arial','fontweight','bold');
+
+set(gca,'ylim',[2009 2019],'tickdir','out');
+h=colorbar;
+set(get(h,'ylabel'),'string','RAI','fontsize',14,'fontname','arial');
+ h.TickDirection = 'out';
+datetick('x',4)
+axis square
+shading flat
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Seasonality_RAI_' num2str(class2do_string) '_2008-2018.tif']);
+hold off
+
+%% Seasonality 2016 together
+figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');        
+
+for i=1:13
+    A=r(i).rai; ii=find(A); Aok=A(ii); y = Aok;
+    x = r(i).dn(ii);
+    [ mdate_mat, y_mat, yearlist, yd ] = timeseries2ydmat(x,y); %takes a timeseries and makes it into a year x day matrix
+    [ y_wkmat, mdate_wkmat, yd_wk ] = ydmat2weeklymat( y_mat, yearlist ); %takes a year x day matrix and makes it a year x 1 week matrix
+    pcolor([yd_wk ;yd_wk(end)+7],[i i+1],[[y_wkmat(:,10)';zeros(1,52)] zeros(2,1)]); 
+    hold on
+end
+
+caxis([0 0.6])
+colormap(flipud(hot));
+xlabel('Month', 'fontsize',14, 'fontname', 'arial');
+
+set(gca,'ylim',[1 14],'ytick',1:1:14,'fontsize',13,'tickdir','out',...
+    'YTickLabel',[' ',flipud({r(1:13).name})]);
+h=colorbar;
+set(get(h,'ylabel'),'string','RAI','fontsize',13,'fontname','arial');
+ h.TickDirection = 'out';
+datetick('x',4)
+axis square
+shading flat
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Seasonality_RAI_group_compare_2016.tif']);
+hold off
+
+
+%% RAI for select species by circle size
 
 figure('Units','inches','Position',[1 1 8 3],'PaperPositionMode','auto');        
 
-for i=1:length(r)
-    sz=linspace(1,150,100); 
+for i=1:13
+    sz=linspace(0,100,50); 
     A=r(i).rai';
     ii=~isnan(A); %which values are not NaNs
     Aok=A(ii);
@@ -21,21 +113,51 @@ for i=1:length(r)
     hold on    
 end  
 
-datetick,set(gca, 'xgrid', 'on')
-set(gca,'ylim',[0 13],'ytick',0:1:13,...
-    'xlim',[datenum('2016-08-01') datenum('2017-07-31')],...
-        'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
-        datenum('2016-10-01'),datenum('2016-11-01'),...
-        datenum('2016-12-01'),datenum('2017-01-01'),...
-        datenum('2017-02-01'),datenum('2017-03-01'),...
-        datenum('2017-04-01'),datenum('2017-05-01'),...
-        datenum('2017-06-01'),datenum('2017-07-01')],...
-        'XTickLabel',{'Aug','Sep','Oct','Nov','Dec','Jan17',...
-        'Feb','Mar','Apr','May','Jun','Jul'},...
+datetick('x','yyyy')
+set(gca,'xgrid', 'on','ylim',[0 13],'ytick',0:1:13,...
+    'xlim',[datenum('2007-09-01') datenum('2018-03-01')],...
         'YTickLabel',['0', {r.name}],'tickdir','out');   
     
     % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',...
-    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Figs\RAI_2016-present.tif')
-hold off 
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\RAI_2007-2018.tif']);
+hold off
+
+%% diatoms vs. dinos dot RAI plot
+figure('Units','inches','Position',[1 1 8 1],'PaperPositionMode','auto');        
+
+
+%dinoflagellate
+    sz=linspace(1,70,100); 
+    A=r(15).rai';
+    ii=~isnan(A); Aok=A(ii);
+    iii=find(Aok); Aook=Aok(iii);
+    Aook(Aook>1)=1;
+    Asz=zeros(length(Aook),1); 
+    for j=1:length(Asz)  
+         Asz(j)=sz(round(Aook(j)*length(sz)));
+    end
+    scatter(r(15).dn(iii)',15*ones(size(Asz)),Asz,'r','filled');
+    hold on    
+%diatoms
+    sz=linspace(1,50,100); 
+    A=r(16).rai';
+    ii=~isnan(A); Aok=A(ii);
+    iii=find(Aok); Aook=Aok(iii);
+    Aook(Aook>1)=1;
+    Asz=zeros(length(Aook),1); 
+    for j=1:length(Asz)  
+         Asz(j)=sz(round(Aook(j)*length(sz)));
+    end
+    scatter(r(15).dn(iii)',16*ones(size(Asz)),Asz,'b','filled');
+    hold on        
+
+datetick('x','yyyy')
+set(gca,'xgrid', 'on','ylim',[14 16],'ytick',14:1:16,...
+    'xlim',[datenum('2008-01-01') datenum('2018-03-01')],...
+        'YTickLabel',['0',{'Dinoflagellates','Diatoms'}],'tickdir','out');   
+    
+    % set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\RAI_Dino_Diat_2007-2018.tif']);
+hold off

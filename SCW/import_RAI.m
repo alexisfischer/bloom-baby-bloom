@@ -13,7 +13,7 @@ function [r] = import_RAI()
 
 %% Import the data
 [~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_classifier/Jenny_Relative Abundance_180314.xls','JL SCW RAI');
-raw = raw(4:end,[5:7,10:12,14,22,24,33,35,56:57,61]);
+raw = raw(4:end,[5:7,10:12,14,22,24,33,35,56:57,61,76,81]);
 raw(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),raw)) = {''};
 
 %% Replace non-numeric cells with NaN
@@ -38,6 +38,8 @@ COSC = data(:,11);
 PN = data(:,12);
 RHIZO = data(:,13);
 THALSI = data(:,14);
+dflag = data(:,15);
+diat = data(:,16);
 
 r(1).name='THALSI'; r(1).count=THALSI;
 r(2).name='RHIZO'; r(2).count=RHIZO;
@@ -53,6 +55,8 @@ r(11).name='DINO'; r(11).count=DINO;
 r(12).name='ALEX'; r(12).count=ALEX;
 r(13).name='AKA'; r(13).count=AKA;
 r(14).name='sum'; r(14).count=sum([r.count],2);
+r(15).name='dflag'; r(15).rai=dflag./100;
+r(16).name='diat'; r(16).rai=diat./100;
 
 for i=1:13
     for j=1:length(r(14).count)
@@ -61,7 +65,6 @@ for i=1:13
     r(i).rai=r(i).rai';
 end
 
-r.rai
 r(1).dn=dn;
 r(2).dn=dn;
 r(3).dn=dn;
@@ -76,7 +79,9 @@ r(11).dn=dn;
 r(12).dn=dn;
 r(13).dn=dn;
 r(14).dn=dn;
+r(15).dn=dn;
+r(16).dn=dn;
 
-save('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/RAI_SCW','r');
+save('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/RAI_SCW','r');
 
 end
