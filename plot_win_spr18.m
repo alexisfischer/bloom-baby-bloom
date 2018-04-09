@@ -40,27 +40,33 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[resultpath 'Figs\Win-Spr2018.tif']);
 hold off
 
-%% Fall 2016 Prorocentrum and Akashiwo
+%% Fall 2016 Akashiwo, Pro, Dino
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 
-h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
-h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'k^-','Linewidth',.5,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'k^-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+hold on
+h3=plot(DIN.dn_auto,DIN.y_auto./DIN.slope,'k*-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
 
 set(h1,'color',[252,141,98]/255);
 set(h2,'color',[102,194,165]/255);
+set(h3,'color',[141,160,203]/255);
 
 datetick('x','m')
 set(gca,'xgrid', 'on','ylim',[0 410],'ytick',0:100:400,...
-    'xlim',[datenum('2016-08-08') datenum('2016-11-05')],'tickdir','out');    
+    'xlim',[datenum('2016-08-01') datenum('2016-11-06')],...
+    'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
+    datenum('2016-10-01'),datenum('2016-11-01')],...
+    'XTickLabel',{'Aug','Sep','Oct','Nov'},'tickdir','out');    
 ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 vfill([datenum('2016-10-20'),0,datenum('2016-10-26'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2],'Akashiwo','Prorocentrum','location','nw');
+lh = legend([h1,h2,h3],'Akashiwo','Prorocentrum','Dinophysis','location','nw');
 
 hold on
 % set figure parameters
