@@ -1,6 +1,8 @@
 
 [AKA]=summarize_Man_Auto_TB('Akashiwo');
 [ALE]=summarize_Man_Auto_TB('Alexandrium_singlet');
+%[CER]=summarize_Man_Auto_TB('Ceratium');
+[CHA]=summarize_Man_Auto_TB('Chaetoceros');
 [DIN]=summarize_Man_Auto_TB('Dinophysis');
 [PRO]=summarize_Man_Auto_TB('Prorocentrum');
 [PSE]=summarize_Man_Auto_TB('Pseudo-nitzschia');
@@ -10,20 +12,30 @@ load([resultpath 'Data\RAI_SCW']);
 load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
 
 
-%% Spring 2018 Prorocentrum and Akashiwo
+%% Spring 2018 Akashiwo, Chaetoceros, Prorocentrum, Pseudo-nitzschia
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 
-h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
-h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'k^-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'kd-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
-h3=plot(PSE.dn_auto,PSE.y_auto./PSE.slope,'k*-','Linewidth',1,'markersize',4); %This adjusts the automated counts by the chosen slope. 
-set(h1,'color',[252,141,98]/255);
-set(h2,'color',[102,194,165]/255);
-set(h3,'color',[141,160,203]/255);
+h3=plot(PSE.dn_auto,PSE.y_auto./PSE.slope,'k^-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+hold on
+h4=plot(CHA.dn_auto,CHA.y_auto./CHA.slope,'ks-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+hold on
+
+set(h1,'color',[166,97,26]/255);
+set(h2,'color',[223,194,125]/255);
+set(h3,'color',[128,205,193]/255);
+set(h4,'color',[1,133,113]/255);
 
 datetick('x','m')
 set(gca,'xgrid', 'on','ylim',[0 34],'ytick',0:10:30,...
+    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],'tickdir','out');    
+ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
+hold on
+     
+set(gca,'xgrid', 'on','ylim',[0 50],'ytick',0:10:50,...
     'xlim',[datenum('2018-01-18') datenum('2018-05-01')],'tickdir','out');    
 ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
@@ -32,7 +44,7 @@ vfill([datenum('2018-02-09'),0,datenum('2018-02-15'),500],[200 200 200]/255,'Fac
 vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2,h3],'Akashiwo','Prorocentrum','Pseudo-nitzschia');
+lh = legend([h1,h2,h3,h4],'Akashiwo','Prorocentrum','Pseudo-nitzschia','Chaetoceros');
 
 hold on
 % set figure parameters
@@ -43,23 +55,28 @@ hold off
 %% Fall 2016 Akashiwo, Pro, Dino
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 
-h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
-h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'k^-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'kd-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
-h3=plot(DIN.dn_auto,DIN.y_auto./DIN.slope,'k*-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
+h3=plot(DIN.dn_auto,DIN.y_auto./DIN.slope,'k*-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
 
-set(h1,'color',[252,141,98]/255);
-set(h2,'color',[102,194,165]/255);
-set(h3,'color',[141,160,203]/255);
+set(h1,'color',[166,97,26]/255);
+set(h2,'color',[223,194,125]/255);
 
 datetick('x','m')
 set(gca,'xgrid', 'on','ylim',[0 410],'ytick',0:100:400,...
-    'xlim',[datenum('2016-08-01') datenum('2016-11-06')],...
-    'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
-    datenum('2016-10-01'),datenum('2016-11-01')],...
-    'XTickLabel',{'Aug','Sep','Oct','Nov'},'tickdir','out');    
+    'xlim',[datenum('2016-08-01') datenum('2016-11-06')],'tickdir','out');    
+ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
+hold on
+
+% set(gca,'xgrid', 'on','ylim',[0 410],'ytick',0:100:400,...
+%     'xlim',[datenum('2016-08-01') datenum('2016-11-06')],...
+%     'xtick',datenum('2016-08-06'):14:datenum('2016-11-06'),...
+%      'XTickLabel',{datestr(datenum('2016-08-06'):14:datenum('2016-11-06'),'dd-mmm')},...
+%      'tickdir','out');    
+     
 ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');

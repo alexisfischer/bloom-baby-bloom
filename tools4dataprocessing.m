@@ -18,16 +18,6 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_23Mar2018',...
     'F:\IFCB113\features\2018\','F:\IFCB113\class\class2018_v1\')
 
-%% Summarize random forest classification results by class
-countcells_allTBnew_user_training(...
-    'F:\IFCB113\class\classxxxx_v1\','F:\IFCB113\data\', 2017:2018)
-
-countcells_allTB_class_by_thre_user_v2('Akashiwo');
-countcells_allTB_class_by_thre_user_v2('Alexandrium_singlet');
-countcells_allTB_class_by_thre_user_v2('Dinophysis');
-countcells_allTB_class_by_thre_user_v2('Prorocentrum');
-countcells_allTB_class_by_thre_user_v2('Pseudo-nitzschia');
-
 %% IFCB104 - Apply and evaluate classifier
 %sort_data_into_folders;
 
@@ -72,6 +62,8 @@ out_path = 'F:\IFCB104\class\summary\';
 in_dir = 'F:\IFCB104\data\';
 countcells_allTB_class_by_thre('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class_by_thre('Alexandrium_singlet', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class_by_thre('Ceratium', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class_by_thre('Chaetoceros', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class_by_thre('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class_by_thre('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class_by_thre('Pseudo-nitzschia', yrrange, classpath_generic, out_path, in_dir)

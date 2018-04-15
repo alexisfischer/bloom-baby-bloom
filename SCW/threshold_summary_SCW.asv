@@ -4,7 +4,7 @@ m = load('F:\IFCB104\manual\summary\count_biovol_manual_30Mar2018'); %USER
 
 class2do_string = 'Chaetoceros';
 chosen_threshold = 0.5;
-hi=300;
+hi=500;
 
 % class2do_string = 'Alexandrium_singlet';
 % chosen_threshold = 0.6;

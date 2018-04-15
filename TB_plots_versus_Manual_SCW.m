@@ -40,31 +40,11 @@ ind2 = strmatch(class2do_string, class2use); %change this for whatever class you
 ind=(find(y_mat)); % find dates associated with nonzero elements
 mdate_val=[mdateTB(ind),y_mat(ind)];
 
-%% Akashiwo
-figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.05], [0.07 0.04], [0.12 0.03]);
+%% Akashiwo (just Autumn 2016)
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(2,1,1); %RAI 
-sz=linspace(1,150,100); 
-A=r(13).rai';
-ii=~isnan(A); Aok=A(ii);
-iii=find(Aok); Aook=Aok(iii);
-Asz=zeros(length(Aook),1); %preallocate space   
-for j=1:length(Asz)  % define sizes according to cyst abundance
-     Asz(j)=sz(round(Aook(j)*length(sz)));
-end
-h4=scatter(r(13).dn(iii)',ones(size(Asz)),Asz,'m','filled');
-hold on
-
-set(gca,'ylim',[0 10],'Visible','off',...
-    'xlim',[datenum('2016-08-01') datenum('2018-05-01')],...
-    'YTickLabel',{},'XTickLabel',{},'tickdir','out');  
-hold on
-
-subplot(2,1,2); 
-%classifier
 h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 hold on
 
@@ -76,26 +56,28 @@ end
 hold on
 
 %microscopy
-plot(mcr.akashiwo.dn, mcr.akashiwo.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
+h3=plot(mcr.akashiwo.dn, mcr.akashiwo.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
 hold all
 
 datetick('x','m')
 set(gca,'xgrid', 'on','ylim',[0 800],'ytick',0:200:800,...
-    'xlim',[datenum('2016-08-01') datenum('2018-05-01')],'tickdir','out');    
+    'xlim',[datenum('2016-08-01') datenum('2016-11-06')],'tickdir','out');    
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
         'fontsize',12, 'fontname', 'Arial');    
+    hold on
+ 
 hold on
 vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 vfill([datenum('2016-10-20'),0,datenum('2016-10-26'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
-vfill([datenum('2016-11-05'),0,datenum('2017-02-22'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
-vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
-vfill([datenum('2017-06-23'),0,datenum('2018-01-17'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
-vfill([datenum('2018-03-02'),0,datenum('2018-03-05'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+%vfill([datenum('2016-11-05'),0,datenum('2017-02-22'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+%vfill([datenum('2017-03-28'),0,datenum('2017-04-20'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+%vfill([datenum('2017-06-23'),0,datenum('2018-01-17'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+%vfill([datenum('2018-03-02'),0,datenum('2018-03-05'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2,h3,h4], ['Automated classification (' num2str(threlist(bin)) ')'],...
-    'Manual classification','Microscopy','Relative abundance index');
-set(lh,'fontsize',9,'Position',[0.4101562530653 0.621961804895869 0.27213541053546 0.18098957836628]);
+lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
+    'Manual classification','Microscopy');
+set(lh,'fontsize',9,'Location','NorthWest');
 
 hold on
 % set figure parameters
