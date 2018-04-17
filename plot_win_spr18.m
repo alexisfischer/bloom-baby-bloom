@@ -1,7 +1,7 @@
 
 [AKA]=summarize_Man_Auto_TB('Akashiwo');
 [ALE]=summarize_Man_Auto_TB('Alexandrium_singlet');
-%[CER]=summarize_Man_Auto_TB('Ceratium');
+[CER]=summarize_Man_Auto_TB('Ceratium');
 [CHA]=summarize_Man_Auto_TB('Chaetoceros');
 [DIN]=summarize_Man_Auto_TB('Dinophysis');
 [PRO]=summarize_Man_Auto_TB('Prorocentrum');
@@ -11,6 +11,43 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\RAI_SCW']);
 load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
 
+%% Akashiwo Fall 2016 Automated vs. Manual vs. Microscopy
+figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
+
+%automatic
+h1=stem(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+hold on
+
+%manual
+for i=1:length(AKA.yearlist)
+    ind_nan=find(~isnan(AKA.y_man(:,i)));
+    h2=plot(AKA.dn_man(ind_nan,i), AKA.y_man(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
+end
+hold on
+
+%microscopy
+h3=plot(mcr.akashiwo.dn, mcr.akashiwo.avg,'b^','Markersize',3,'linewidth',1,'markerfacecolor','w');
+hold all
+
+datetick('x','m')
+set(gca,'xgrid', 'on','ylim',[0 800],'ytick',0:200:800,...
+    'xlim',[datenum('2016-08-01') datenum('2016-11-06')],'tickdir','out');    
+ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
+hold on
+     
+ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
+hold on
+vfill([datenum('2016-09-14'),0,datenum('2016-09-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+vfill([datenum('2016-10-20'),0,datenum('2016-10-26'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+hold on
+
+lh = legend([h1,h2,h3], ['Automated classification (' num2str(threlist(bin)) ')'],...
+    'Manual classification','Microscopy');
+hold on
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Akashiwo_Fall2016.tif']);
+hold off
 
 %% Spring 2018 Akashiwo, Chaetoceros, Prorocentrum, Pseudo-nitzschia
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');

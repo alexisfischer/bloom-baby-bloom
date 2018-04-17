@@ -2,14 +2,18 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 summary_path = 'F:\IFCB104\class\summary\'; %USER
 m = load('F:\IFCB104\manual\summary\count_biovol_manual_30Mar2018'); %USER
 
-class2do_string = 'Chaetoceros';
+class2do_string = 'Ceratium';
 chosen_threshold = 0.5;
-hi=300;
+hi=60;
 
 % class2do_string = 'Alexandrium_singlet';
 % chosen_threshold = 0.6;
 % hi=20;
 % 
+% class2do_string = 'Chaetoceros';
+% chosen_threshold = 0.5;
+% hi=300;
+
 % class2do_string = 'Dinophysis';
 % chosen_threshold = 0.7; 
 % hi=60; 
@@ -161,7 +165,7 @@ handle_3=subplot(2,2,3); plot(threlist, Coeffs(:,1), '.-','linewidth',1.5),...
     xlabel('threshold score','fontsize',12,'fontname','arial'),...
     ylabel('y-intercept','fontsize',12,'fontname','arial'),...
     line([chosen_threshold chosen_threshold],[-2 4], 'color', 'g','linewidth',1.5)
-    set(handle_3,'ylim',[0 2],'xlim',[0 1],'fontsize',12,'fontname','arial','TickDir','out')
+    set(handle_3,'ylim',[0 1],'xlim',[0 1],'fontsize',12,'fontname','arial','TickDir','out')
 
 handle_4=subplot(2,2,4); plot(threlist, Coeffs(:,2), '.-','linewidth',1.5),...
     xlabel('threshold score','fontsize',12,'fontname','arial'),...
