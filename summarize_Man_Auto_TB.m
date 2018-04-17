@@ -54,6 +54,8 @@ X.dn_auto=newmat;
 X.y_auto=newy;
 X.dn_man=mdate_mat_manual;
 X.y_man=y_mat_manual;
+%X.dn_man=[mdate_mat_manual(:,1);mdate_mat_manual(:,2);mdate_mat_manual(:,3);mdate_mat_manual(:,4)];
+%X.y_man=[y_mat_manual(:,1);y_mat_manual(:,2);y_mat_manual(:,3);y_mat_manual(:,4)];
 X.slope=slope;
 X.yearlist=yearlist;
 
