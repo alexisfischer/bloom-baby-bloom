@@ -10,6 +10,8 @@
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\RAI_SCW']);
 load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
+load([resultpath 'Data/WeeklySampling_SCW.mat']);
+
 
 %% Akashiwo Fall 2016 Automated vs. Manual vs. Microscopy
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
@@ -30,7 +32,7 @@ h3=plot(mcr.akashiwo.dn, mcr.akashiwo.avg,'b^','Markersize',3,'linewidth',1,'mar
 hold all
 
 datetick('x','m')
-set(gca,'xgrid', 'on','ylim',[0 40],'ytick',0:100:400,...
+set(gca,'xgrid', 'on','ylim',[0 800],'ytick',0:200:800,...
     'xlim',[datenum('2016-08-01') datenum('2016-11-06')],'tickdir','out');    
 ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
@@ -50,8 +52,22 @@ print(gcf,'-dtiff','-r600',[resultpath 'Figs\Akashiwo_Fall2016.tif']);
 hold off
 
 %% Spring 2018 Akashiwo, Chaetoceros, Prorocentrum, Pseudo-nitzschia
-figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.07 0.04], [0.12 0.03]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
+subplot(2,1,1); 
+
+plot(a.dn,a.temp,'b-');
+set(gca,'xgrid','on','ylim',[11 17],...
+    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
+    'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),datenum('2018-05-01')],'tickdir','out');    
+ylabel('Temperature (^oC)','fontsize',12, 'fontname', 'Arial');    
+%datetick('x','m')
+hold on
+
+subplot(2,1,2); 
 h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
 h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'kd-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
@@ -67,15 +83,11 @@ set(h3,'color',[128,205,193]/255);
 set(h4,'color',[1,133,113]/255);
 
 datetick('x','m')
-set(gca,'xgrid', 'on','ylim',[0 34],'ytick',0:10:30,...
-    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],'tickdir','out');    
-ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
-hold on
-     
 set(gca,'xgrid', 'on','ylim',[0 50],'ytick',0:10:50,...
     'xlim',[datenum('2018-01-18') datenum('2018-05-01')],'tickdir','out');    
 ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
+
 vfill([datenum('2018-01-28'),0,datenum('2018-02-01'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 vfill([datenum('2018-02-09'),0,datenum('2018-02-15'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');

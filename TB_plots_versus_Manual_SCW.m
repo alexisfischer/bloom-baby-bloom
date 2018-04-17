@@ -42,8 +42,6 @@ mdate_val=[mdateTB(ind),y_mat(ind)];
 
 %% Akashiwo (just Autumn 2016)
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
-%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
-%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
 h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
 hold on
