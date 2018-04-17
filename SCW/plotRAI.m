@@ -3,23 +3,128 @@
 
 resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load([resultpath 'Data/RAI_SCW.mat']);
+load([resultpath 'Data/WeeklySampling_SCW.mat']);
 
 %%
 [r] = import_RAI();
+[a] = import_weeklysampling();
 
-%% Seasonality individual species
+%% Seasonality 2012-2019 dinoflagellates and diatoms with Chlorophyll Threshold
+
+class2do_string = 'Dinoflagellates';
+i=find(a.chl>=3); dnchl=a.dn(i); %find the dates with chlorophyll exceeding a threshold
+for i=1:length(dnchl) %find corresponding dates in rai dataset
+    for j=1:length(r(15).dn)
+        if dnchl(i) == r(15).dn(j)
+            dnk(i) = r(15).dn(j);
+            rk(i) = r(15).rai(j);           
+        else
+        end
+    end
+end
+ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
+
+% class2do_string = 'Diatoms';
+% i=find(a.chl>=4); dnchl=a.dn(i); %find the dates with chlorophyll exceeding a threshold
+% for i=1:length(dnchl) %find corresponding dates in rai dataset
+%     for j=1:length(r(16).dn)
+%         if dnchl(i) == r(16).dn(j)
+%             dnk(i) = r(16).dn(j);
+%             rk(i) = r(16).rai(j);           
+%         else
+%         end
+%     end
+% end
+% ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
+
+[~,y_mat,yearlist,~]=timeseries2ydmat(dnok,rok); %takes a timeseries and makes it into a year x day matrix
+
+figure;
+[y_wkmat,~,yd_wk]=ydmat2weeklymat(y_mat,yearlist); %takes a year x day matrix and makes it a year x 2 week matrix
+pcolor([yd_wk ;yd_wk(end)+7],[yearlist(1:8) yearlist(8)+1],[[y_wkmat(:,1:8)';zeros(1,52)] zeros(9,1)]) %for just 2006:2014
+caxis([0 0.6]) %RAI
+colormap(flipud(hot));
+
+ylabel('Year', 'fontsize',14, 'fontname', 'arial');
+xlabel('Month', 'fontsize',14, 'fontname', 'arial');
+
+title(num2str(class2do_string), 'fontsize',16, 'fontname', 'arial','fontweight','bold');
+
+set(gca,'ylim',[2012 2019],'tickdir','out');
+h=colorbar;
+set(get(h,'ylabel'),'string','Temperature (^oC)','fontsize',14,'fontname','arial');
+% set(get(h,'ylabel'),'string','Chlorophyll (mg m^{-3})','fontsize',14,'fontname','arial');
+%set(get(h,'ylabel'),'string','RAI','fontsize',14,'fontname','arial');
+ h.TickDirection = 'out';
+datetick('x',4)
+axis square
+shading flat
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Seasonality_RAI_ChlThr_' num2str(class2do_string) '_2012-2019.tif']);
+hold off
+
+%% Seasonality 2012-2019 Chlorophyll, Temperature
+
+param_string = 'Silicate';
+ii=find(a.SilicateuM); rok=a.SilicateuM(ii); dnok=a.dn(ii); %remove NaNs
+
+% param_string = 'Nitrate';
+% ii=find(a.NitrateuM); rok=a.NitrateuM(ii); dnok=a.dn(ii); %remove NaNs
+
+% param_string = 'Temperature';
+% ii=find(a.temp); rok=a.temp(ii); dnok=a.dn(ii); %remove NaNs
+
+% param_string = 'Chlorophyll';
+% ii=find(a.chl); rok=a.chl(ii); dnok=a.dn(ii); %remove NaNs
+
+[~,y_mat,yearlist,~]=timeseries2ydmat(dnok,rok); %takes a timeseries and makes it into a year x day matrix
+
+figure;
+[y_wkmat,~,yd_wk]=ydmat2weeklymat(y_mat,yearlist); %takes a year x day matrix and makes it a year x 2 week matrix
+pcolor([yd_wk ;yd_wk(end)+7],[yearlist(1:8) yearlist(8)+1],[[y_wkmat(:,1:8)';zeros(1,52)] zeros(9,1)]) %for just 2006:2014
+caxis([0 50]) %Silicate
+%caxis([0 20]) %Nitrate
+%caxis([5 20]) %Temperature
+%caxis([0 30]) %Chlorophyll
+
+colormap(flipud(hot));
+
+ylabel('Year', 'fontsize',14, 'fontname', 'arial');
+xlabel('Month', 'fontsize',14, 'fontname', 'arial');
+
+title(num2str(param_string), 'fontsize',16, 'fontname', 'arial','fontweight','bold');
+
+set(gca,'ylim',[2012 2019],'tickdir','out');
+h=colorbar;
+set(get(h,'ylabel'),'string','Silicate (uM)','fontsize',14,'fontname','arial');
+%set(get(h,'ylabel'),'string','Nitrate (uM)','fontsize',14,'fontname','arial');
+%set(get(h,'ylabel'),'string','Temperature (^oC)','fontsize',14,'fontname','arial');
+% set(get(h,'ylabel'),'string','Chlorophyll (mg m^{-3})','fontsize',14,'fontname','arial');
+ h.TickDirection = 'out';
+datetick('x',4)
+axis square
+shading flat
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Seasonality_' num2str(param_string) '_2012-2019.tif']);
+hold off
+
+%% Seasonality 2009-2017 individual species
 
 % class2do_string = 'Dinoflagellates';
 % A=r(15).rai; ii=find(A); Aok=A(ii); y = Aok;
 % x = r(15).dn(ii);
 
-class2do_string = 'Diatoms';
-A=r(16).rai; ii=find(A); Aok=A(ii); y = Aok;
-x = r(16).dn(ii);
+% class2do_string = 'Diatoms';
+% A=r(16).rai; ii=find(A); Aok=A(ii); y = Aok;
+% x = r(16).dn(ii);
 
-% class2do_string = 'Akashiwo';
-% A=r(13).rai; ii=find(A); Aok=A(ii); y = Aok;
-% x = r(13).dn(ii);
+class2do_string = 'Akashiwo';
+A=r(13).rai; ii=find(A); Aok=A(ii); y = Aok;
+x = r(13).dn(ii);
 
 % class2do_string = 'Ceratium';
 % A=r(9).rai; ii=find(A); Aok=A(ii); y = Aok;
@@ -42,7 +147,7 @@ x = r(16).dn(ii);
 figure;
 [ y_wkmat, mdate_wkmat, yd_wk ] = ydmat2weeklymat( y_mat, yearlist ); %takes a year x day matrix and makes it a year x 2 week matrix
 pcolor([yd_wk ;yd_wk(end)+7],[yearlist(1:12) yearlist(12)+1],[[y_wkmat(:,1:12)';zeros(1,52)] zeros(13,1)]) %for just 2006:2014
-caxis([0 0.9])
+caxis([0 0.6])
 colormap(flipud(hot));
 
 ylabel('Year', 'fontsize',14, 'fontname', 'arial');
@@ -50,7 +155,7 @@ xlabel('Month', 'fontsize',14, 'fontname', 'arial');
 
 title(num2str(class2do_string), 'fontsize',16, 'fontname', 'arial','fontweight','bold');
 
-set(gca,'ylim',[2009 2019],'tickdir','out');
+set(gca,'ylim',[2009 2017],'tickdir','out');
 h=colorbar;
 set(get(h,'ylabel'),'string','RAI','fontsize',14,'fontname','arial');
  h.TickDirection = 'out';
@@ -63,7 +168,7 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[resultpath 'Figs\Seasonality_RAI_' num2str(class2do_string) '_2008-2018.tif']);
 hold off
 
-%% Seasonality 2016 together
+%% Seasonality 2016 all species
 figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');        
 
 for i=1:13
