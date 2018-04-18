@@ -1,0 +1,85 @@
+%% M1 data
+
+% dn_M=datenum(YY2,MM2,DD2);
+% w_M=WDIR;
+% s_M=WSP;
+% 
+% dn_M=flip(dn_M);
+% w_M=flip(w_M);
+% s_M=flip(s_M);
+% 
+% dn_J=datenum(YY,MM,DD);
+% w_J=WDI;
+% s_J=RWSP;
+% 
+% dn=[dn_J;dn_M];
+% wdir=[w_J;w_M];
+% wsp=[s_J;s_M];
+% [~,WDIR,~] = ts_aggregation(dn,wdir,1,'day',@mean);
+% [DN,WSP,~] = ts_aggregation(dn,wsp,1,'day',@mean);
+
+WSP=WSP*0.514444; %convert from knots to m/s
+U=0*WSP;
+V=0*WSP;
+for i=1:length(WSP)
+    U(i)=-WSP(i)*sin(WDIR(i)*pi/180);
+    V(i)=-WSP(i)*cos(WDIR(i)*pi/180);
+end
+
+M1.U=U;
+M1.V=V;
+M1.DN=DN;
+
+%% SCW
+[~,wdir,~] = ts_aggregation(TIME,WINDDIR,1,'day',@mean);
+[dn,wsp,~] = ts_aggregation(TIME,WINDSPEED,1,'day',@mean);
+
+wsp=wsp*0.44704; %convert from mph to m/s
+U=0*wsp;
+V=0*wsp;
+for i=1:length(wsp)
+    U(i)=-wsp(i)*sin(wdir(i)*pi/180);
+    V(i)=-wsp(i)*cos(wdir(i)*pi/180);
+end
+
+SC.U=U;
+SC.V=V;
+SC.DN=dn;
+
+%%
+resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
+load([resultpath 'Data/wind_M1_2018']);
+load([resultpath 'Data/wind_SCW_2018']);
+
+%% plot Wind for SCW and M1
+
+load([resultpath 'Data/wind_SCW_M1_2018']);
+
+figure('Units','inches','Position',[1 1 8 5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.08 0.05], [0.12 0.03]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+
+subplot(2,1,1); %SCW data
+
+quiver(SC.DN,0*SC.DN,SC.U,SC.V,'ShowArrowHead','off');
+datetick('x','m');
+set(gca,'xgrid', 'on','ylim',[-8 8],'ytick',-8:4:8,...
+    'xlim',[datenum('2018-01-01') datenum('2018-05-01')],...
+    'tickdir','out','xticklabel',{}); 
+ylabel('Wind (ms^{-1})','fontsize',12, 'fontname', 'Arial');    
+title('SCW','fontsize',12, 'fontname', 'Arial');    
+hold on
+
+subplot(2,1,2); %M1 data
+quiver(M1.DN,0*M1.DN,M1.U,M1.V,'ShowArrowHead','off');
+datetick('x','m');
+set(gca,'xgrid', 'on','ylim',[-8 8],'ytick',-8:4:8,...
+    'xlim',[datenum('2018-01-01') datenum('2018-05-01')],'tickdir','out'); 
+ylabel('Wind (ms^{-1})','fontsize',12, 'fontname', 'Arial');    
+title('M1 buoy','fontsize',12, 'fontname', 'Arial');   
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Wind_M1_SCW_2018.tif']);
+hold off
