@@ -147,14 +147,8 @@ for i=1:4;
     end    
 end
     
-% if plot_flag==1 
-%     x_vector=min(x):(max(x)-min(x))/100:max(x);
-%     plot(x,y,'k.',x_vector,f(param(isnan(fixed_params)),x_vector),'r-')
-%     xlim([min(x) max(x)])
-
 if plot_flag==1 
     x_vector=min(x):(max(x)-min(x))/100:max(x);
-    plot(x,y,'ok',x_vector,f(param(isnan(fixed_params)),x_vector),'r-',...
-        'MarkerSize',3,'MarkerFaceColor','k','LineWidth',1)
+    plot(x,y,'k.',x_vector,f(param(isnan(fixed_params)),x_vector),'r-')
     xlim([min(x) max(x)])
 end

@@ -1,107 +1,8 @@
-%%
 resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load([resultpath 'Data/wind_SCW_M1_2016_2018']);
-%% M1 data
+load([resultpath 'Data/WeeklySampling_SCW.mat']);
 
-%2018 import
-TIME=datenum([YY;YY1;YY2],[MM;MM1;MM2],[DD;DD1;DD2]);
-WINDDIR=[WDI;WDI1;WDI2];
-WINDSPEED=[RWSP;RWSP1;RWSP2];
-TEMP=[WTMP;WTMP1;WTMP2];
-
-for i=1:length(TEMP)
-    if TEMP(i) == 999
-        TEMP(i) = NaN;
-    end
-    if WINDDIR(i) == 999
-        WINDDIR(i) = NaN;        
-    end
-    if WINDSPEED(i) == 999
-        WINDSPEED(i) = NaN;        
-    end    
-end
-
-[~,wdir,~] = ts_aggregation(TIME,WINDDIR,1,'day',@mean);
-[~,wsp,~] = ts_aggregation(TIME,WINDSPEED,1,'day',@mean);
-[dn,t,~] = ts_aggregation(TIME,TEMP,1,'day',@mean);
-
-U=0*wsp;
-V=0*wsp;
-for i=1:length(wsp)
-    U(i)=-wsp(i)*sin(wdir(i)*pi/180);
-    V(i)=-wsp(i)*cos(wdir(i)*pi/180);
-end
-
-for i=1:length(t)
-    if t(i) == 0
-        t(i) = NaN;
-    end 
-end
-
-M1(3).yr=2018;
-M1(3).DN=dn;
-M1(3).U=U;
-M1(3).V=V;
-M1(3).T=t;
-
-%% M1 2016 and 2017 import
-TIME=datenum(YY,MM,DD);
-WINDDIR=WDI;
-WINDSPEED=RWSP;
-TEMP=WTMP;
-    
-for i=1:length(TEMP)
-    if TEMP(i) == 999
-        TEMP(i) = NaN;
-    end
-    if WINDDIR(i) == 999
-        WINDDIR(i) = NaN;        
-    end
-    if WINDSPEED(i) == 999
-        WINDSPEED(i) = NaN;        
-    end    
-end
-
-[~,wdir,~] = ts_aggregation(TIME,WINDDIR,1,'day',@mean);
-[~,wsp,~] = ts_aggregation(TIME,WINDSPEED,1,'day',@mean);
-[dn,t,~] = ts_aggregation(TIME,TEMP,1,'day',@mean);
-
-U=0*wsp;
-V=0*wsp;
-for i=1:length(wsp)
-    U(i)=-wsp(i)*sin(wdir(i)*pi/180);
-    V(i)=-wsp(i)*cos(wdir(i)*pi/180);
-end
-
-for i=1:length(t)
-    if t(i) == 0
-        t(i) = NaN;
-    end 
-end
-
-M1(1).yr=2016;
-M1(1).DN=dn;
-M1(1).U=U;
-M1(1).V=V;
-M1(2).T=t;
-
-%% SCW
-[~,wdir,~] = ts_aggregation(TIME,WINDDIR,1,'day',@mean);
-[dn,wsp,~] = ts_aggregation(TIME,WINDSPEED,1,'day',@mean);
-
-wsp=wsp*0.44704; %convert from mph to m/s
-U=0*wsp;
-V=0*wsp;
-for i=1:length(wsp)
-    U(i)=-wsp(i)*sin(wdir(i)*pi/180);
-    V(i)=-wsp(i)*cos(wdir(i)*pi/180);
-end
-
-SC(2).yr=2017;
-SC(2).DN=dn;
-SC(2).U=U;
-SC(2).V=V;
-
+%%
 
 %% plots 2018 Wind for SCW and M1
 
@@ -136,13 +37,13 @@ hold off
 
 %% plots 2016-2018 Wind for SCW
 
-figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.08 0.05], [0.12 0.03]);
+figure('Units','inches','Position',[1 1 8 10],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.08 0.05], [0.12 0.03]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(3,1,1); %2016
-quiver(SC(1).DN,0*SC(1).DN,SC(1).U,SC(1).V,'ShowArrowHead','off');
+subplot(6,1,1); %2016
+quiver(SC(1).DN,0*SC(1).DN,SC(1).U,SC(1).V,'ShowArrowHead','off','Color','k');
 datetick('x','m');
 set(gca,'xgrid', 'on','ylim',[-14 14],'ytick',-10:10:10,...
     'xlim',[datenum('2016-01-01') datenum('2016-05-01')],...
@@ -151,8 +52,18 @@ ylabel('Wind (m s^{-1})','fontsize',12, 'fontname', 'Arial');
 title('2016 - SCW','fontsize',12, 'fontname', 'Arial');    
 hold on
 
-subplot(3,1,2); %2017
-quiver(SC(2).DN,0*SC(2).DN,SC(2).U,SC(2).V,'ShowArrowHead','off');
+subplot(6,1,2); %2016 temp
+plot(a.dn,a.temp,'bo-','Markersize',3);
+set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:2:16,...
+    'xlim',[datenum('2016-01-01') datenum('2016-05-01')],...
+    'xtick',[datenum('2016-01-01'),datenum('2016-02-01'),...
+    datenum('2016-03-01'),datenum('2016-04-01'),...
+    datenum('2016-05-01')],'tickdir','out','xticklabel',{}); 
+ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
+hold on
+
+subplot(6,1,3); %2017
+quiver(SC(2).DN,0*SC(2).DN,SC(2).U,SC(2).V,'ShowArrowHead','off','Color','k');
 datetick('x','m');
 set(gca,'xgrid', 'on','ylim',[-14 14],'ytick',-10:10:10,...
     'xlim',[datenum('2017-01-01') datenum('2017-05-01')],...
@@ -161,14 +72,35 @@ ylabel('Wind (m s^{-1})','fontsize',12, 'fontname', 'Arial');
 title('2017 - SCW','fontsize',12, 'fontname', 'Arial');    
 hold on
 
-subplot(3,1,3); %2018
-quiver(SC(3).DN,0*SC(3).DN,SC(3).U,SC(3).V,'ShowArrowHead','off');
+subplot(6,1,4); %2017 temp
+plot(a.dn,a.temp,'bo-','Markersize',3);
+set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:2:16,...
+    'xlim',[datenum('2017-01-01') datenum('2017-05-01')],...
+    'xtick',[datenum('2017-01-01'),datenum('2017-02-01'),...
+    datenum('2017-03-01'),datenum('2017-04-01'),...
+    datenum('2017-05-01')],'tickdir','out','xticklabel',{}); 
+ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
+hold on
+
+subplot(6,1,5); %2018
+quiver(SC(3).DN,0*SC(3).DN,SC(3).U,SC(3).V,'ShowArrowHead','off','Color','k');
 datetick('x','m');
 set(gca,'xgrid', 'on','ylim',[-14 14],'ytick',-10:10:10,...
     'xlim',[datenum('2018-01-01') datenum('2018-05-01')],...
-    'tickdir','out'); 
+    'tickdir','out','xticklabel',{}); 
 ylabel('Wind (m s^{-1})','fontsize',12, 'fontname', 'Arial');    
 title('2018 - SCW','fontsize',12, 'fontname', 'Arial');    
+hold on
+
+subplot(6,1,6); %2018 temp
+plot(a.dn,a.temp,'bo-','Markersize',3);
+set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:2:16,...
+    'xlim',[datenum('2018-01-01') datenum('2018-05-01')],...
+    'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),...
+    datenum('2018-05-01')],...
+    'Xticklabel',{'Jan','Feb','Mar','Apr','May'},'tickdir','out');      
+ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
 hold on
 
 % set figure parameters
@@ -178,7 +110,7 @@ hold off
 
 %% plots 2016-2018 Wind for M1
 
-figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 8 6.4],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.08 0.05], [0.12 0.03]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
@@ -202,7 +134,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.08 0.05], [0.12 0.03])
 % ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
 % hold on
 
-subplot(6,1,3); %2017 wind
+subplot(4,1,1); %2017 wind
 quiver(M1(2).DN,0*M1(2).DN,M1(2).U,M1(2).V,'ShowArrowHead','off','Color','k');
 datetick('x','m');
 set(gca,'xgrid', 'on','ylim',[-14 14],'ytick',-10:10:10,...
@@ -212,16 +144,16 @@ ylabel('Wind (m s^{-1})','fontsize',12, 'fontname', 'Arial');
 title('2017 - M1','fontsize',12, 'fontname', 'Arial');    
 hold on
 
-subplot(6,1,4); %2017 temp
+subplot(4,1,2); %2017 temp
 plot(M1(2).DN,M1(2).T,'b-');
 datetick('x','m');
-set(gca,'xgrid', 'on','ylim',[10 15],'ytick',10:2:14,...
+set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:2:16,...
     'xlim',[datenum('2017-01-01') datenum('2017-05-01')],...
     'tickdir','out','xticklabel',{}); 
 ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
 hold on
 
-subplot(6,1,5); %2018 wind
+subplot(4,1,3); %2018 wind
 quiver(M1(3).DN,0*M1(3).DN,M1(3).U,M1(3).V,'ShowArrowHead','off','Color','k');
 datetick('x','m');
 set(gca,'xgrid', 'on','ylim',[-14 14],'ytick',-10:10:10,...
@@ -231,16 +163,19 @@ ylabel('Wind (m s^{-1})','fontsize',12, 'fontname', 'Arial');
 title('2018 - M1','fontsize',12, 'fontname', 'Arial');    
 hold on
 
-subplot(6,1,6); %2018 temp
+subplot(4,1,4); %2018 temp
 plot(M1(3).DN,M1(3).T,'b-');
 datetick('x','m');
-set(gca,'xgrid', 'on','ylim',[10 15],'ytick',10:2:14,...
+set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:2:16,...
     'xlim',[datenum('2018-01-01') datenum('2018-05-01')],...
-    'tickdir','out'); 
+    'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),...
+    datenum('2018-05-01')],...
+    'Xticklabel',{'Jan','Feb','Mar','Apr','May'},'tickdir','out');   
 ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
 hold on
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs\Wind_M1_2016_2018.tif']);
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Wind_M1_2017_2018.tif']);
 hold off
