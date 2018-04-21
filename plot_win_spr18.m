@@ -11,7 +11,7 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\RAI_SCW']);
 load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
 load([resultpath 'Data\WeeklySampling_SCW.mat']);
-load([resultpath 'Data\wind_SCW_M1_2018']);
+load([resultpath 'Data\wind_SCW_M1_2016_2018']);
 
 %% Akashiwo Fall 2016 Automated vs. Manual vs. Microscopy
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
@@ -58,39 +58,34 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.07 0.04], [0.12 0.03])
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(4,1,1); 
-plot(a.dn,a.temp,'k-');
-set(gca,'xgrid','on','ylim',[11 17],...
-    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
-    'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),...
-    datenum('2018-04-01'),datenum('2018-05-01')],...
-    'Xticklabel',{},'tickdir','out');    
-ylabel('Temperature (^oC)','fontsize',12, 'fontname', 'Arial');    
-%datetick('x','m')
-hold on
-
-subplot(4,1,2); %M1 wind
-quiver(M1.DN,0*M1.DN,M1.U,M1.V,'ShowArrowHead','off');
+subplot(4,1,1); %wind
+quiver(SC(3).DN,0*SC(3).DN,SC(3).U,SC(3).V,'ShowArrowHead','off','Color','k');
 datetick('x','m');
-set(gca,'xgrid', 'on','ylim',[-8 8],'ytick',-8:4:8,...
+set(gca,'xgrid', 'on','ylim',[-8 8],'ytick',-8:8:8,...
     'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
-    'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),...
-    datenum('2018-04-01'),datenum('2018-05-01')],...
-    'xticklabel',{},'tickdir','out'); 
-ylabel('Wind (ms^{-1})','fontsize',12, 'fontname', 'Arial');    
-title('M1 buoy','fontsize',12, 'fontname', 'Arial');  
-hold on
-
-subplot(4,1,3); %SCW wind
-quiver(SC.DN,0*SC.DN,SC.U,SC.V,'ShowArrowHead','off');
-datetick('x','m');
-set(gca,'xgrid', 'on','ylim',[-8 8],'ytick',-8:4:8,...
-    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
-    'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),...
-    datenum('2018-04-01'),datenum('2018-05-01')],...    
     'tickdir','out','xticklabel',{}); 
-ylabel('Wind (ms^{-1})','fontsize',12, 'fontname', 'Arial');    
-title('SCW','fontsize',12, 'fontname', 'Arial');    
+ylabel('Wind (m s^{-1})','fontsize',12, 'fontname', 'Arial');    
+title('2018 - SCW','fontsize',12, 'fontname', 'Arial');    
+hold on
+
+subplot(4,1,2); %temp
+plot(a.dn,a.temp,'o-','Markersize',3,'color',[0,0.4470,0.7410]);
+set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:2:16,...
+    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
+    'xtick',[datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),...
+    datenum('2018-05-01')],'xticklabel',{},'tickdir','out');      
+ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
+hold on
+
+subplot(4,1,3);
+plot(a.dn,a.chl,'o-','Markersize',3,'color',[0.8500,0.3250,0.0980]);
+set(gca,'xgrid', 'on','ylim',[0 15],'ytick',0:5:15,...
+    'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
+    'xtick',[datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),...
+    datenum('2018-05-01')],'xticklabel',{},'tickdir','out');      
+ylabel('Chl (mg m^{-3})','fontsize',12, 'fontname', 'Arial');    
 hold on
 
 subplot(4,1,4); 
@@ -98,23 +93,22 @@ h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1.2,'markersize',4);
 hold on
 h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'kd-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
-h3=plot(PSE.dn_auto,PSE.y_auto./PSE.slope,'k^-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+h3=plot(CHA.dn_auto,CHA.y_auto./CHA.slope,'ks-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
-h4=plot(CHA.dn_auto,CHA.y_auto./CHA.slope,'ks-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+h4=plot(PSE.dn_auto,PSE.y_auto./PSE.slope,'k^-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
 hold on
 
-set(h1,'color',[166,97,26]/255);
-set(h2,'color',[223,194,125]/255);
-set(h3,'color',[128,205,193]/255);
-set(h4,'color',[1,133,113]/255);
+set(h1,'color',[0.6350,0.0780,0.1840],'Markerfacecolor',[0.6350,0.0780,0.1840]);
+set(h2,'color',[0.4940,0.1840,0.5560]);
+set(h3,'color',[0.3010,0.7450,0.9330],'markerfacecolor',[0.3010,0.7450,0.9330]);
+set(h4,'color',[0.4660,0.6740,0.1880]);
 
-%datetick('x','m')
 set(gca,'xgrid', 'on','ylim',[0 50],'ytick',0:10:50,...
     'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
     'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),...
     datenum('2018-04-01'),datenum('2018-05-01')],...
     'Xticklabel',{'Feb','Mar','Apr','May'},'tickdir','out');      
-ylabel('cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
+ylabel('Cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
 
 vfill([datenum('2018-01-28'),0,datenum('2018-02-01'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
@@ -122,7 +116,7 @@ vfill([datenum('2018-02-09'),0,datenum('2018-02-15'),500],[200 200 200]/255,'Fac
 vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
 
-lh = legend([h1,h2,h3,h4],'Akashiwo','Prorocentrum','Pseudo-nitzschia','Chaetoceros');
+lh = legend([h1,h2,h3,h4],'Akashiwo','Prorocentrum','Chaetoceros','Pseudo-nitzschia');
 
 hold on
 % set figure parameters
