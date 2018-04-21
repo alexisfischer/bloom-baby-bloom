@@ -79,7 +79,7 @@ ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');
 hold on
 
 subplot(4,1,3);
-plot(a.dn,a.chl,'o-','Markersize',3,'color',[0.8500,0.3250,0.0980]);
+plot(a.dn,a.chl,'*-','Markersize',3,'color',[0.8500,0.3250,0.0980]);
 set(gca,'xgrid', 'on','ylim',[0 15],'ytick',0:5:15,...
     'xlim',[datenum('2018-01-18') datenum('2018-05-01')],...
     'xtick',[datenum('2018-02-01'),...
@@ -89,18 +89,18 @@ ylabel('Chl (mg m^{-3})','fontsize',12, 'fontname', 'Arial');
 hold on
 
 subplot(4,1,4); 
-h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
-h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'kd-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'kd-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
-h3=plot(CHA.dn_auto,CHA.y_auto./CHA.slope,'ks-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+h3=plot(CHA.dn_auto,CHA.y_auto./CHA.slope,'ko-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
-h4=plot(PSE.dn_auto,PSE.y_auto./PSE.slope,'k^-','Linewidth',1.2,'markersize',4); %This adjusts the automated counts by the chosen slope. 
+h4=plot(PSE.dn_auto,PSE.y_auto./PSE.slope,'k^-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
 
 set(h1,'color',[0.6350,0.0780,0.1840],'Markerfacecolor',[0.6350,0.0780,0.1840]);
-set(h2,'color',[0.4940,0.1840,0.5560]);
-set(h3,'color',[0.3010,0.7450,0.9330],'markerfacecolor',[0.3010,0.7450,0.9330]);
+set(h2,'color',[0.4940,0.1840,0.5560],'markerfacecolor',[0.4940,0.1840,0.5560]);
+set(h3,'color',[0.3010,0.7450,0.9330]);
 set(h4,'color',[0.4660,0.6740,0.1880]);
 
 set(gca,'xgrid', 'on','ylim',[0 50],'ytick',0:10:50,...
