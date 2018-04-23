@@ -5,33 +5,32 @@ load([resultpath 'Data/wind_SCW_M1_2016_2018']);
 %% M1 data
 
 %2018 import
-TIME=datenum([YY;YY1;YY2],[MM;MM1;MM2],[DD;DD1;DD2]);
-WINDDIR=[WDI;WDI1;WDI2];
-WINDSPEED=[RWSP;RWSP1;RWSP2];
-%TEMP=[WTMP;WTMP1;WTMP2];
+DN=datenum([YY;YY1;YY2],[MM;MM1;MM2],[DD;DD1;DD2]);
+Dir=[WDI;WDI1;WDI2];
+Mag=[RWSP;RWSP1;RWSP2];
+TEMP=[WTMP;WTMP1;WTMP2];
 
-for i=1:length(TIME)
-%     if TEMP(i) == 999
-%         TEMP(i) = NaN;
-%     end
-    if WINDDIR(i) == 999
-        WINDDIR(i) = NaN;        
+for i=1:length(DN)
+    if Dir(i) == 999
+        Dir(i) = NaN;        
     end
-    if WINDSPEED(i) == 999
-        WINDSPEED(i) = NaN;        
+    if Mag(i) == 999
+        Mag(i) = NaN;        
     end    
 end
 
-u=0*WINDDIR;
-v=0*WINDDIR;
-for i=1:length(u)
-    u(i)=-WINDSPEED(i)*sin(WINDDIR(i)*pi/180);
-    v(i)=-WINDSPEED(i)*cos(WINDDIR(i)*pi/180);
-end
+[U,V] = UVfromDM(Dir,Mag);
 
-[~,U,~] = ts_aggregation(TIME,u,1,'day',@mean);
-[dn,V,~] = ts_aggregation(TIME,v,1,'day',@mean);
-% [dn,t,~] = ts_aggregation(TIME,TEMP,1,'day',@mean);
+% u=0*WINDDIR;
+% v=0*WINDDIR;
+% for i=1:length(u)
+%     u(i)=-WINDSPEED(i)*sin(WINDDIR(i)*pi/180);
+%     v(i)=-WINDSPEED(i)*cos(WINDDIR(i)*pi/180);
+% end
+% 
+% [~,U,~] = ts_aggregation(TIME,u,1,'day',@mean);
+% [dn,V,~] = ts_aggregation(TIME,v,1,'day',@mean);
+% % [dn,t,~] = ts_aggregation(TIME,TEMP,1,'day',@mean);
 
 % for i=1:length(t)
 %     if t(i) == 0
@@ -39,68 +38,64 @@ end
 %     end 
 % end
 
+Um=pl66tn(U);
+Vm=pl66tn(U);
+ 
 M1(3).yr=2018;
-M1(3).DN=TIME;
-M1(3).dn=dn;
-M1(3).U=u;
-M1(3).V=v;
-%M1(3).T=t;
+M1(3).DN=DN;
+M1(3).Dir=Dir;
+M1(3).Mag=Mag;
+M1(3).U=U;
+M1(3).V=V;
+M1(3).Um=Um;
+M1(3).Vm=Vm;
+M1(2).T=WTMP;
 
-%% M1 2017 import
-TIME=datenum(YY,MM,DD);
-WINDDIR=WDI;
-WINDSPEED=RWSP;
-%TEMP=WTMP;
+M1(1).dn=[datenum('2016-01-01'):datenum('2016-12-30')]';
+M1(2).dn=[datenum('2017-01-01'):datenum('2017-12-30')]';
+M1(3).dn=[datenum('2018-01-01'):datenum('2018-03-31')]';
+
+
+%% M1 other year import
+DN=datenum(YY,MM,DD);
+Dir=WDI;
+Mag=RWSP;
     
-for i=1:length(TIME)
-%     if TEMP(i) == 999
-%         TEMP(i) = NaN;
-%     end
-    if WINDDIR(i) == 999
-        WINDDIR(i) = NaN;        
+for i=1:length(DN)
+    if Dir(i) == 999
+        Dir(i) = NaN;        
     end
-    if WINDSPEED(i) == 999
-        WINDSPEED(i) = NaN;        
+    if Mag(i) == 999
+        Mag(i) = NaN;        
     end    
 end
 
-u=0*WINDDIR;
-v=0*WINDDIR;
-for i=1:length(u)
-    u(i)=-WINDSPEED(i)*sin(WINDDIR(i)*pi/180);
-    v(i)=-WINDSPEED(i)*cos(WINDDIR(i)*pi/180);
-end
+[U,V] = UVfromDM(Dir,Mag);
 
-[~,U,~] = ts_aggregation(TIME,u,1,'day',@mean);
-[dn,V,~] = ts_aggregation(TIME,v,1,'day',@mean);
-%[dn,t,~] = ts_aggregation(TIME,TEMP,1,'day',@mean);
+% [~,Um,~] = ts_aggregation(DN,U,1,'day',@mean);
+% [dn,Vm,~] = ts_aggregation(DN,V,1,'day',@mean);
 
-% for i=1:length(t)
-%     if t(i) == 0
-%         t(i) = NaN;
-%     end 
-% end
-
-%M1(2).yr=2017;
-M1(2).DN=TIME;
-M1(2).dn=dn;
-M1(2).U=u;
-M1(2).V=v;
-%M1(3).T=t;
+Um=pl66tn(U);
+Vm=pl66tn(U);
+ 
+M1(2).yr=2017;
+M1(2).DN=DN;
+M1(2).Dir=Dir;
+M1(2).Mag=Mag;
+M1(2).U=U;
+M1(2).V=V;
+M1(2).Um=Um;
+M1(2).Vm=Vm;
 
 %% SCW
-WINDSPEED=WINDSPEED*0.44704; %convert from mph to m/s
-u=0*WINDSPEED;
-v=0*WINDSPEED;
-for i=1:length(WINDSPEED)
-    u(i)=-WINDSPEED(i)*sin(WINDDIR(i)*pi/180);
-    v(i)=-WINDSPEED(i)*cos(WINDDIR(i)*pi/180);
-end
+Mag=WINDSPEED*0.44704; %convert from mph to m/s
+Dir=WINDDIR;
+DN=TIME;
+[U,V] = UVfromDM(Dir,Mag);
 
-[~,U,~] = ts_aggregation(TIME,u,1,'day',@mean);
-[dn,V,~] = ts_aggregation(TIME,v,1,'day',@mean);
-
-SC(2).yr=2017;
-SC(2).DN=dn;
-SC(2).U=U;
-SC(2).V=V;
+SC(3).yr=2018;
+SC(3).DN=DN;
+SC(3).Dir=Dir;
+SC(3).Mag=Mag;
+SC(3).U=U;
+SC(3).V=V;
