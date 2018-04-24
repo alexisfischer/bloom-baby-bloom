@@ -63,9 +63,9 @@ subplot(4,1,1); %wind
 [V,DN]=plfilt(SC(3).V,SC(3).DN);
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-ax1=datenum('2018-01-18');
-ax2=datenum('2018-05-01');
-stick(time,u,v,ax1,ax2,'2018');
+xax1=datenum('2018-01-18'); xax2=datenum('2018-05-01');
+yax1=-5; yax2=5;
+stick(time,u,v,xax1,xax2,yax1,yax2,'2018');
 
 subplot(4,1,2); %temp
 plot(a.dn,a.temp,'o-','Markersize',3,'color',[0,0.4470,0.7410]);
@@ -129,9 +129,9 @@ subplot(4,1,1); %wind
 [V,DN]=plfilt(SC(1).V,SC(1).DN);
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-ax1=datenum('2016-08-01');
-ax2=datenum('2016-11-06');
-stick(time,u,v,ax1,ax2,'2016');
+xax1=datenum('2016-08-01'); xax2=datenum('2016-11-06');
+yax1=-5; yax2=5;
+stick(time,u,v,xax1,xax2,yax1,yax2,'2016');
 
 subplot(4,1,2); %temp
 plot(a.dn,a.temp,'o-','Markersize',3,'color',[0,0.4470,0.7410]);

@@ -1,7 +1,7 @@
-function stick(time,u,v,ax1,ax2,subtitle)
+function stick(time,u,v,xax1,xax2,yax1,yax2,subtitle)
 
 n = length(time);
-ax = [ax1 ax2 -10 10]; %edit the +/-10 values if your speed max is > 10 m/s or min is < 10 m/s
+ax = [xax1 xax2 yax1 yax2]; %edit the +/-10 values if your speed max is > 10 m/s or min is < 10 m/s
 pos = get(gca,'Position');
 pap = get(gcf,'PaperPosition');
 hwratio = (pos(4)*pap(4))/(pos(3)*pap(3));
@@ -19,7 +19,7 @@ end
 plot(vec(:,1),vec(:,2),'Color','k');
 datetick('x','m');
 axis(ax);
-set(gca,'xgrid', 'on','xticklabel',{},'ytick',-10:10:10,'tickdir','out');
+set(gca,'xgrid', 'on','xticklabel',{},'tickdir','out');
 ylabel('Wind (m s^{-1})','fontsize',12, 'fontname', 'Arial');    
 title(subtitle,'fontsize',12, 'fontname', 'Arial');    
 hold on
