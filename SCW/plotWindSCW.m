@@ -4,8 +4,8 @@ load([resultpath 'Data/WeeklySampling_SCW.mat']);
 
 %% plots 2018 Wind for SCW and M1
 
-figure('Units','inches','Position',[1 1 8 5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.08 0.05], [0.12 0.03]);
+figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.07 0.07], [0.08 0.06], [0.09 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
@@ -15,7 +15,7 @@ subplot(2,1,1); %SCW data
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
 xax1=datenum('2018-01-01'); xax2=datenum('2018-05-01');
-yax1=-10; yax2=10;
+yax1=-2; yax2=2;
 stick(time,u,v,xax1,xax2,yax1,yax2,'2018 - SCW');
 
 subplot(2,1,2); %M1 data
@@ -49,7 +49,7 @@ subplot(6,1,1); %2016
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
 xax1=datenum('2016-01-01'); xax2=datenum('2016-05-01');
-yax1=-10; yax2=10;
+yax1=-3; yax2=3;
 stick(time,u,v,xax1,xax2,yax1,yax2,'2016 - SCW');
 
 subplot(6,1,2); %2016 temp
@@ -78,7 +78,7 @@ subplot(6,1,3); %2017
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
 xax1=datenum('2017-01-01'); xax2=datenum('2017-05-01');
-yax1=-10; yax2=10;
+yax1=-3; yax2=3;
 stick(time,u,v,xax1,xax2,yax1,yax2,'2017 - SCW');
 
 subplot(6,1,4); %2017 temp
@@ -106,7 +106,7 @@ subplot(6,1,5); %2018
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
 xax1=datenum('2018-01-01'); xax2=datenum('2018-05-01');
-yax1=-10; yax2=10;
+yax1=-3; yax2=3;
 stick(time,u,v,xax1,xax2,yax1,yax2,'2018 - SCW');
 
 subplot(6,1,6); %2018 temp
