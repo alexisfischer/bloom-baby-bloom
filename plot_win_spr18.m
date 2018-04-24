@@ -128,7 +128,7 @@ hold off
 
 %% Fall 2016 Akashiwo and Pro
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.07 0.04], [0.12 0.03]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.07 0.04], [0.12 0.1]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
@@ -153,7 +153,7 @@ stick(time,u,v,xax1,xax2,yax1,yax2,'SCW');
 subplot(4,1,3); 
 yyaxis left
 plot(a.dn,a.temp,'ko--','Markersize',3);
-set(gca,'xgrid', 'on','ylim',[11 17],'ytick',10:2:16,'xlim',[xax1 xax2],...
+set(gca,'xgrid', 'on','ylim',[13 18],'ytick',10:2:18,'xlim',[xax1 xax2],...
     'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),datenum('2016-10-01'),...
     datenum('2016-11-01')],'Xticklabel',{},'tickdir','out','ycolor','k');      
 ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial','Color','k');    
@@ -161,7 +161,7 @@ hold on
 
 yyaxis right
 plot(a.dn,a.chl,'*-','Markersize',3,'color',[0.8500,0.3250,0.0980]);
-set(gca,'xgrid', 'on','ylim',[0 15],'ytick',0:5:15,'xlim',[xax1 xax2],...
+set(gca,'xgrid', 'on','ylim',[0 150],'ytick',0:50:150,'xlim',[xax1 xax2],...
     'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),datenum('2016-10-01'),...
     datenum('2016-11-01')],'xticklabel',{},'tickdir','out');      
 ylabel('Chl (mg m^{-3})','fontsize',12, 'fontname', 'Arial');    
