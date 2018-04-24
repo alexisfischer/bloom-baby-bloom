@@ -64,14 +64,14 @@ subplot(4,1,1); %wind
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
 xax1=datenum('2018-01-18'); xax2=datenum('2018-05-01');
-yax1=-3; yax2=3;
+yax1=-2; yax2=2;
 stick(time,u,v,xax1,xax2,yax1,yax2,'2018');
 
 subplot(4,1,2); %temp
 plot(a.dn,a.temp,'o-','Markersize',3,'color',[0,0.4470,0.7410]);
 set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:2:16,'xlim',[xax1 xax2],...
     'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),datenum('2018-04-01'),...
-    datenum('2018-05-01')],'xticklabel',{},'tickdir','out');      
+    datenum('2018-05-01')],'Xticklabel',{},'tickdir','out');      
 ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
 hold on
 
@@ -83,7 +83,7 @@ set(gca,'xgrid', 'on','ylim',[0 15],'ytick',0:5:15,'xlim',[xax1 xax2],...
 ylabel('Chl (mg m^{-3})','fontsize',12, 'fontname', 'Arial');    
 hold on
 
-subplot(4,1,4); 
+subplot(4,1,4); %IFCB
 h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
 hold on
 h2=plot(PRO.dn_auto,PRO.y_auto./PRO.slope,'kd-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
@@ -109,10 +109,8 @@ vfill([datenum('2018-01-28'),0,datenum('2018-02-01'),500],[200 200 200]/255,'Fac
 vfill([datenum('2018-02-09'),0,datenum('2018-02-15'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
-
 legend([h1,h2,h3,h4],'Akashiwo','Prorocentrum','Chaetoceros','Pseudo-nitzschia');
 
-hold on
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[resultpath 'Figs\Win-Spr2018.tif']);
@@ -130,7 +128,7 @@ subplot(4,1,1); %wind
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
 xax1=datenum('2016-08-01'); xax2=datenum('2016-11-06');
-yax1=-3; yax2=3;
+yax1=-2; yax2=2;
 stick(time,u,v,xax1,xax2,yax1,yax2,'2016');
 
 subplot(4,1,2); %temp
