@@ -132,30 +132,38 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.07 0.04], [0.12 0.03])
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(4,1,1); %wind
+subplot(4,1,1); %M1 wind
+[U,~]=plfilt(M1(1).U,M1(1).DN);
+[V,DN]=plfilt(M1(1).V,M1(1).DN);
+[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+xax1=datenum('2016-08-01'); xax2=datenum('2016-11-06');
+yax1=-10; yax2=10;
+stick(time,u,v,xax1,xax2,yax1,yax2,'M2');
+
+subplot(4,1,2); %SCW wind
 [U,~]=plfilt(SC(1).U,SC(1).DN);
 [V,DN]=plfilt(SC(1).V,SC(1).DN);
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
 xax1=datenum('2016-08-01'); xax2=datenum('2016-11-06');
 yax1=-2; yax2=2;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2016');
+stick(time,u,v,xax1,xax2,yax1,yax2,'SCW');
 
-subplot(4,1,2); %temp
-plot(a.dn,a.temp,'o-','Markersize',3,'color',[0,0.4470,0.7410]);
-set(gca,'xgrid', 'on','ylim',[13 18],'ytick',14:2:18,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
-    datenum('2016-10-01'),datenum('2016-11-01')],...    
-    'xticklabel',{},'tickdir','out');    
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
+subplot(4,1,3); 
+yyaxis left
+plot(a.dn,a.temp,'ko--','Markersize',3);
+set(gca,'xgrid', 'on','ylim',[11 17],'ytick',10:2:16,'xlim',[xax1 xax2],...
+    'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),datenum('2016-10-01'),...
+    datenum('2016-11-01')],'Xticklabel',{},'tickdir','out','ycolor','k');      
+ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial','Color','k');    
 hold on
 
-subplot(4,1,3); %Chl
+yyaxis right
 plot(a.dn,a.chl,'*-','Markersize',3,'color',[0.8500,0.3250,0.0980]);
-set(gca,'xgrid', 'on','ylim',[0 150],'ytick',0:50:150,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
-    datenum('2016-10-01'),datenum('2016-11-01')],...    
-    'xticklabel',{},'tickdir','out');      
+set(gca,'xgrid', 'on','ylim',[0 15],'ytick',0:5:15,'xlim',[xax1 xax2],...
+    'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),datenum('2016-10-01'),...
+    datenum('2016-11-01')],'xticklabel',{},'tickdir','out');      
 ylabel('Chl (mg m^{-3})','fontsize',12, 'fontname', 'Arial');    
 hold on
 
