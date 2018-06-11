@@ -74,6 +74,11 @@ p(7).a=find([phyto.matdate]==datenum('27-Oct-2017'));
 p(8).a=find([phyto.matdate]==datenum('06-Dec-2017'));
 p(9).a=find([phyto.matdate]>=datenum('07-Feb-2018') & [phyto.matdate]<= datenum('08-Feb-2018'));
 p(10).a=find([phyto.matdate]==datenum('23-Feb-2018'));
+p(11).a=find([phyto.matdate]==datenum('09-Mar-2018'));
+p(12).a=find([phyto.matdate]==datenum('15-Mar-2018'));
+p(13).a=find([phyto.matdate]==datenum('26-Mar-2018'));
+p(14).a=find([phyto.matdate]==datenum('09-Apr-2018'));
+% p(15).a=find([phyto.matdate]==datenum('07-May-2018'));
 
 % organize station data into structures based on survey date
 for i=1:length(p)

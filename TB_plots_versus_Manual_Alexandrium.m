@@ -1,9 +1,8 @@
 %% code to plot both SFB and SCW here. Cannot plot both at same time.
 
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-%resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 
-load([resultpath 'Data\RAI_SCW']);
+%load([resultpath 'Data\RAI_SCW']);
 
 all_files=dir([resultpath 'Data\Alexandrium\']);
 all_files(1:2) = [];
@@ -11,11 +10,9 @@ all_files(1:2) = [];
 for j = 1:length(all_files)
     load([resultpath 'Data\Alexandrium\' all_files(j).name]);
         
-load('F:\IFCB104\manual\summary\count_biovol_manual_27Feb2018'); %USER
-% load('F:\IFCB113\manual\summary\count_biovol_manual_07Mar2018'); %USER
+load('F:\IFCB113\manual\summary\count_biovol_manual_11Jun2018'); %USER
 
-summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all 
-% summary_path = 'F:\IFCB113\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
+summary_path = 'F:\IFCB113\class\summary\'; %load automated count file with all 
 
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 

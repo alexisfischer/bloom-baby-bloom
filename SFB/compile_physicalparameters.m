@@ -14,7 +14,12 @@ s(6).a=find([phys.dn]==datenum('18-Oct-2017'));
 s(7).a=find([phys.dn]==datenum('27-Oct-2017'));
 s(8).a=find([phys.dn]==datenum('06-Dec-2017'));
 s(9).a=find([phys.dn]>=datenum('07-Feb-2018') & [phys.dn]<= datenum('08-Feb-2018'));
-%s(10).a=find([phys.dn]==datenum('23-Feb-2018'));
+s(10).a=find([phys.dn]==datenum('23-Feb-2018'));
+s(11).a=find([phys.dn]==datenum('09-Mar-2018'));
+s(12).a=find([phys.dn]==datenum('15-Mar-2018'));
+s(13).a=find([phys.dn]==datenum('26-Mar-2018'));
+s(14).a=find([phys.dn]==datenum('09-Apr-2018'));
+% s(15).a=find([phys.dn]==datenum('07-May-2018'));
 
 % organize station data into structures based on survey date
 for i=1:length(s)

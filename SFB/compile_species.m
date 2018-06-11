@@ -1,19 +1,20 @@
 function [phyto,A] = compile_species(alexData,cruisetime,parameters)
 
-% alexData='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium_summary';
-% cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
-% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
+%alexData='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium_summary';
+%cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
+%parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
 
 %% add station #s to Alexandrium data 
 load(alexData);
 [st,filename] = import_IFCB_stations(cruisetime);
 
-[~,~,c] = intersect(filename,Alex(5).filelist);
-matdate=Alex(5).mdateTB(c);
-y_mat=Alex(5).y_mat(c);
+[~,~,c] = intersect(filename,Alex(1).filelist);
+matdate=Alex(1).mdateTB(c);
+y_mat=Alex(1).y_mat(c);
+fname=Alex(1).filelist(c);
 
-for i=1:length(filename)
-    phyto(i).filename=filename(i);
+for i=1:length(fname)
+    phyto(i).filename=fname(i);
     phyto(i).st=st(i);
     phyto(i).matdate=matdate(i);
     phyto(i).y_mat=y_mat(i);    
@@ -50,6 +51,11 @@ A(7).a=find([phyto.matdate]==datenum('27-Oct-2017'));
 A(8).a=find([phyto.matdate]==datenum('06-Dec-2017'));
 A(9).a=find([phyto.matdate]>=datenum('07-Feb-2018') & [phyto.matdate]<= datenum('08-Feb-2018'));
 A(10).a=find([phyto.matdate]==datenum('23-Feb-2018'));
+A(11).a=find([phyto.matdate]==datenum('09-Mar-2018'));
+A(12).a=find([phyto.matdate]==datenum('15-Mar-2018'));
+A(13).a=find([phyto.matdate]==datenum('26-Mar-2018'));
+A(14).a=find([phyto.matdate]==datenum('09-Apr-2018'));
+A(15).a=find([phyto.matdate]==datenum('18-Apr-2018'));
 
 % organize station data into structures
 for i=1:length(A)

@@ -29,10 +29,9 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_08May2018',...
     'F:\IFCB113\features\2018\','F:\IFCB113\class\class2018_v1\')
 
-%%
 % Summarize random forest classification results by class
 countcells_allTBnew_user_training(...
-    'F:\IFCB113\class\classxxxx_v1\','F:\IFCB113\data\', 2016:2018)
+    'F:\IFCB113\class\classxxxx_v1\','F:\IFCB113\data\', 2017:2018)
 
 % Summarize biovolume from forest classification results by class
 biovolume_summary_manual('F:\IFCB113\manual\','F:\IFCB113\data\',...
