@@ -1,6 +1,6 @@
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 
-[phys,s] = compile_physicalparameters([resultpath 'Data\sfb_raw_2.csv']);
+[phys,s] = compile_physicalparameters([resultpath 'Data\sfb_raw.csv']);
 
 %% contours salinity, chlorophyll, nitrogen, or temperature
 
