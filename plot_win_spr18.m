@@ -63,7 +63,7 @@ subplot(4,1,1); %M1 wind
 [V,DN]=plfilt(M1(3).V,M1(3).DN);
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2018-01-18'); xax2=datenum('2018-05-01');
+xax1=datenum('2018-01-18'); xax2=datenum('2018-07-01');
 yax1=-10; yax2=10;
 stick(time,u,v,xax1,xax2,yax1,yax2,'M1');
 
@@ -72,7 +72,7 @@ subplot(4,1,2); %SCW wind
 [V,DN]=plfilt(SC(3).V,SC(3).DN);
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2018-01-18'); xax2=datenum('2018-05-01');
+xax1=datenum('2018-01-18'); xax2=datenum('2018-07-01');
 yax1=-2; yax2=2;
 stick(time,u,v,xax1,xax2,yax1,yax2,'SCW');
 
@@ -81,7 +81,7 @@ yyaxis left
 plot(a.dn,a.temp,'ko--','Markersize',3);
 set(gca,'xgrid', 'on','ylim',[11 17],'ytick',10:2:16,'xlim',[xax1 xax2],...
     'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),datenum('2018-04-01'),...
-    datenum('2018-05-01')],'Xticklabel',{},'tickdir','out','ycolor','k');      
+    datenum('2018-05-01'),datenum('2018-06-01'),datenum('2018-07-01')],'Xticklabel',{},'tickdir','out','ycolor','k');      
 ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial','Color','k');    
 hold on
 
@@ -89,7 +89,7 @@ yyaxis right
 plot(a.dn,a.chl,'*-','Markersize',3,'color',[0.8500,0.3250,0.0980]);
 set(gca,'xgrid', 'on','ylim',[0 15],'ytick',0:5:15,'xlim',[xax1 xax2],...
     'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),datenum('2018-04-01'),...
-    datenum('2018-05-01')],'xticklabel',{},'tickdir','out');      
+    datenum('2018-05-01'),datenum('2018-06-01'),datenum('2018-07-01')],'xticklabel',{},'tickdir','out');      
 ylabel('Chl (mg m^{-3})','fontsize',12, 'fontname', 'Arial');    
 hold on
 
@@ -108,18 +108,20 @@ set(h2,'color',[0.4940,0.1840,0.5560],'markerfacecolor',[0.4940,0.1840,0.5560]);
 set(h3,'color',[0.3010,0.7450,0.9330]);
 set(h4,'color',[0.4660,0.6740,0.1880]);
 
-set(gca,'xgrid', 'on','ylim',[0 50],'ytick',0:20:40,'xlim',[xax1 xax2],...
+set(gca,'xgrid', 'on','ylim',[0 100],'ytick',0:50:100,'xlim',[xax1 xax2],...
     'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),...
-    datenum('2018-04-01'),datenum('2018-05-01')],...
-    'Xticklabel',{'Feb','Mar','Apr','May'},'tickdir','out');      
+    datenum('2018-04-01'),datenum('2018-05-01'),datenum('2018-06-01'),datenum('2018-07-01')],...
+    'Xticklabel',{'Feb','Mar','Apr','May','Jun','Jul'},'tickdir','out');      
 ylabel('Cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
 
 vfill([datenum('2018-01-28'),0,datenum('2018-02-01'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 vfill([datenum('2018-02-09'),0,datenum('2018-02-15'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+vfill([datenum('2018-04-14'),0,datenum('2018-04-17'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
+vfill([datenum('2018-04-28'),0,datenum('2018-05-11'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
-legend([h1,h2,h3,h4],'Akashiwo','Prorocentrum','Chaetoceros','Pseudo-nitzschia');
+legend([h1,h2,h3,h4],'Akashiwo','Prorocentrum','Chaetoceros','Pseudo-nitzschia','location','N');
 
 % set figure parameters
 set(gcf,'color','w');

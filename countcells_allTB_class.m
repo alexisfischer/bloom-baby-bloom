@@ -1,4 +1,4 @@
-function [ ] = countcells_allTB_class_by_thre(class2do_string,yrrange,classpath_generic,out_path,in_dir)
+function [ ] = countcells_allTB_class(class2do_string,yrrange,classpath_generic,out_path,in_dir)
 % Gives you a summary file of counts for thresholds 0.1 to 1 for the specified class
 % Alexis Fischer, April 2018
 

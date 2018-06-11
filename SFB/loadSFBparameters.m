@@ -1,6 +1,6 @@
-function[phys]=loadSFBparameters_v2(filename)
+function[phys]=loadSFBparameters(filename)
 
-%filename = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw_2.csv';
+%filename = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
 delimiter = ',';
 startRow = 3;
 
