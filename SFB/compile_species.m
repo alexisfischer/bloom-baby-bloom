@@ -11,10 +11,9 @@ load(alexData);
 [~,~,c] = intersect(filename,Alex(1).filelist);
 matdate=Alex(1).mdateTB(c);
 y_mat=Alex(1).y_mat(c);
-fname=Alex(1).filelist(c);
 
-for i=1:length(fname)
-    phyto(i).filename=fname(i);
+for i=1:length(filename)
+    phyto(i).filename=filename(i);
     phyto(i).st=st(i);
     phyto(i).matdate=matdate(i);
     phyto(i).y_mat=y_mat(i);    

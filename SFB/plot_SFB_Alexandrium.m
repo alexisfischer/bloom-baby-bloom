@@ -6,7 +6,6 @@ resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
     [resultpath 'Data\sfb_raw.csv']);
 
 %%
-
 load('F:\IFCB113\class\summary\Alex_param','phyto','A');
 
 %% contour Alexandrium
