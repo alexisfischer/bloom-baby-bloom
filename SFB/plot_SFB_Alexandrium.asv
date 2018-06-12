@@ -1,4 +1,4 @@
-% summarize your class of interest
+%run summarize_Alexandrium
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
 class2do_string = 'Alexandrium_singlet'; 
 
@@ -6,17 +6,23 @@ class2do_string = 'Alexandrium_singlet';
     [resultpath 'Data\Coeff_' class2do_string],...
     'F:\IFCB113\manual\summary\count_biovol_manual_11Jun2018',...
     ['F:\IFCB113\class\summary\summary_allTB_bythre_' class2do_string],...
-    resultpath);
+    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\');
+
 
 %%
+
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
-[phyto,A] = compile_species(class2do_string,...
-    [resultpath 'Data\Alexandrium_singlet_summary'],...
+
+[phyto,A] = compile_species(...
+    [resultpath 'Data\Alexandrium_summary'],...
     [resultpath 'Data\st_filename_raw.csv'],...
     [resultpath 'Data\sfb_raw.csv']);
 
+%%
+load('F:\IFCB113\class\summary\Alex_param','phyto','A');
 
 %% contour Alexandrium
+
 str='Alexandrium';
 label='Alexandrium (cells mL^{-1})';
 ccon=0:.5:6;

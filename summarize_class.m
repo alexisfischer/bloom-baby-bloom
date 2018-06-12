@@ -1,11 +1,14 @@
-class2do_string = 'Alexandrium_singlet'; 
+function [class] = summarize_class(class2do_string,Thr_sum,biovol_sum,class_sum,resultpath)
 
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
-load([resultpath 'Data\Coeff_' class2do_string]);
-
-load('F:\IFCB113\manual\summary\count_biovol_manual_11Jun2018'); %USER
-summary_path = 'F:\IFCB113\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
-load([summary_path 'summary_allTB_bythre_' class2do_string]);
+% class2do_string = 'Alexandrium_singlet'; 
+% Thr_sum = ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Coeff_' class2do_string];
+% biovol_sum = 'F:\IFCB113\manual\summary\count_biovol_manual_11Jun2018';
+% class_sum = ['F:\IFCB113\class\summary\summary_allTB_bythre_' class2do_string];
+% resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
+%%
+load(Thr_sum);
+load(biovol_sum);
+load(class_sum);
 
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
@@ -37,14 +40,17 @@ ind2 = strmatch(class2do_string, class2use); %change this for whatever class you
 ind=(find(y_mat)); % find dates associated with nonzero elements
 mdate_val=[mdateTB(ind),y_mat(ind)];
 
-Alex(1).name = 'Alexandrium';
-Alex(1).chosen_threshold=chosen_threshold;
-Alex(1).bin=bin;
-Alex(1).slope=slope;
-Alex(1).y_mat=y_mat;
-Alex(1).y_mat_manual=y_mat_manual;
-Alex(1).mdateTB=datenum(datestr(mdateTB),'dd-mm-yyyy');
-Alex(1).mdate_mat_manual=mdate_mat_manual;
-Alex(1).filelist=string(filelistTB);
+class(1).name = class2do_string;
+class(1).chosen_threshold=chosen_threshold;
+class(1).bin=bin;
+class(1).slope=slope;
+class(1).y_mat=y_mat;
+class(1).y_mat_manual=y_mat_manual;
+class(1).mdateTB=datenum(datestr(mdateTB),'dd-mm-yyyy');
+class(1).mdate_mat_manual=mdate_mat_manual;
+class(1).filelist=string(filelistTB);
 
-save([resultpath 'Data\Alexandrium_summary'],'Alex');
+save([resultpath 'Data\' num2str(class2do_string) '_summary'],'class');
+
+end
+

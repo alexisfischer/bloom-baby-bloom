@@ -1,16 +1,17 @@
-function [phyto,A] = compile_species(alexData,cruisetime,parameters)
+function [phyto,A] = compile_species(class2do_string,classData,cruisetime,parameters)
 
-%alexData='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium_summary';
-%cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
-%parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
+% class2do_string = 'Alexandrium_singlet'; 
+% classData = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium_singlet_summary.mat';
+% cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
+% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
 
 %% add station #s to Alexandrium data 
-load(alexData);
+load(classData);
 [st,filename] = import_IFCB_stations(cruisetime);
 
-[~,~,c] = intersect(filename,Alex(1).filelist);
-matdate=Alex(1).mdateTB(c);
-y_mat=Alex(1).y_mat(c);
+[~,~,c] = intersect(filename,class(1).filelist);
+matdate=class(1).mdateTB(c);
+y_mat=class(1).y_mat(c);
 
 for i=1:length(filename)
     phyto(i).filename=filename(i);
@@ -79,6 +80,5 @@ for i=1:length(A)
 end
 A=rmfield(A,'a');
 
-save('F:\IFCB113\class\summary\Alex_param','phyto','A');
+save(['F:\IFCB113\class\summary\' num2str(class2do_string) '_param'],'phyto','A');
 
-end
