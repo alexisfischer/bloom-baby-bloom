@@ -8,10 +8,11 @@
 [PSE]=summarize_Man_Auto_TB('Pseudo-nitzschia');
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-load([resultpath 'Data\RAI_SCW']);
-load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
-load([resultpath 'Data\WeeklySampling_SCW.mat']);
-load([resultpath 'Data\wind_SCW_M1_2016_2018']);
+%load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
+load([resultpath 'Data\RAI_SCW.mat'],'r');
+load([resultpath 'Data\SCW_SCOOS.mat'],'a');
+load([resultpath 'Data\TempChlTurb_SCW'],'S');
+load([resultpath 'Data\Weatherstation_SCW'],'SC');
 
 %% Akashiwo Fall 2016 Automated vs. Manual vs. Microscopy
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
@@ -54,42 +55,41 @@ hold off
 %% Spring 2018 Akashiwo, Chaetoceros, Prorocentrum, Pseudo-nitzschia
 % with wind and temperature
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.07 0.04], [0.12 0.1]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.06 0.04], [0.1 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(4,1,1); %M1 wind
-[U,~]=plfilt(M1(3).U,M1(3).DN);
-[V,DN]=plfilt(M1(3).V,M1(3).DN);
+subplot(4,1,1); %SCW wind
+[U,~]=plfilt(SC(7).U,SC(7).DN);
+[V,DN]=plfilt(SC(7).V,SC(7).DN);
 [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
 [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2018-01-18'); xax2=datenum('2018-07-01');
-yax1=-10; yax2=10;
-stick(time,u,v,xax1,xax2,yax1,yax2,'M1');
+xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
+yax1=-5; yax2=5;
+stick(time,u,v,xax1,xax2,yax1,yax2,' ');
 
-subplot(4,1,2); %SCW wind
-[U,~]=plfilt(SC(3).U,SC(3).DN);
-[V,DN]=plfilt(SC(3).V,SC(3).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2018-01-18'); xax2=datenum('2018-07-01');
-yax1=-2; yax2=2;
-stick(time,u,v,xax1,xax2,yax1,yax2,'SCW');
-
-subplot(4,1,3); 
-yyaxis left
-plot(a.dn,a.temp,'ko--','Markersize',3);
-set(gca,'xgrid', 'on','ylim',[11 17],'ytick',10:2:16,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),datenum('2018-04-01'),...
-    datenum('2018-05-01'),datenum('2018-06-01'),datenum('2018-07-01')],'Xticklabel',{},'tickdir','out','ycolor','k');      
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial','Color','k');    
+subplot(4,1,2); %Temp
+plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
+hold on
+plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
+set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
+    'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
+    datenum('2018-06-01'),datenum('2018-07-01')],...
+    'Xticklabel',{},'tickdir','out');      
+ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
 hold on
 
-yyaxis right
-plot(a.dn,a.chl,'*-','Markersize',3,'color',[0.8500,0.3250,0.0980]);
-set(gca,'xgrid', 'on','ylim',[0 15],'ytick',0:5:15,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),datenum('2018-04-01'),...
-    datenum('2018-05-01'),datenum('2018-06-01'),datenum('2018-07-01')],'xticklabel',{},'tickdir','out');      
+subplot(4,1,3); %Chlorophyll and Biovolume
+plot(a.dn,(a.chl),'*','Color',[0.8500 0.3250 0.0980]);
+hold on
+plot(S.dn,(S.chl),'-','Color',[0.8500 0.3250 0.0980]);
+set(gca,'xgrid', 'on','ylim',[0 20],'ytick',0:10:20,'xlim',[xax1 xax2],...
+    'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
+    datenum('2018-06-01'),datenum('2018-07-01')],...
+    'Xticklabel',{},...
+    'tickdir','out');      
 ylabel('Chl (mg m^{-3})','fontsize',12, 'fontname', 'Arial');    
 hold on
 
@@ -109,9 +109,10 @@ set(h3,'color',[0.3010,0.7450,0.9330]);
 set(h4,'color',[0.4660,0.6740,0.1880]);
 
 set(gca,'xgrid', 'on','ylim',[0 100],'ytick',0:50:100,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),...
-    datenum('2018-04-01'),datenum('2018-05-01'),datenum('2018-06-01'),datenum('2018-07-01')],...
-    'Xticklabel',{'Feb','Mar','Apr','May','Jun','Jul'},'tickdir','out');      
+    'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
+    datenum('2018-06-01'),datenum('2018-07-01')],...
+    'Xticklabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul'},'tickdir','out');      
 ylabel('Cells mL^{-1}\bf','fontsize',12, 'fontname', 'Arial');    
 hold on
 

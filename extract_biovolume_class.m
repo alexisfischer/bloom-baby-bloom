@@ -2,16 +2,16 @@
 % classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 % feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
 
-resultpath = 'F:\IFCB113\class\summary\'; %Where you want the summary file to go
-classpath_generic = 'F:\IFCB113\class\classxxxx_v1\';
-feapath_generic = 'F:\IFCB113\features\xxxx\'; %Put in your featurepath byyear
-roibasepath_generic = 'F:\IFCB113\data\xxxx\'; %Where you raw data is
+resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
+classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
+feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
+roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
 
 adhocthresh = 0.5;
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath_generic 'D*.csv']);
 
-for yr = 2017:2018, %:2012,
+for yr = 2016:2018; %:2012,
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
     feapath = regexprep(feapath_generic, 'xxxx', num2str(yr));
     roibasepath = regexprep(roibasepath_generic, 'xxxx', num2str(yr));
