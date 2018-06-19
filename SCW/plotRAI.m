@@ -2,40 +2,42 @@
 % load([resultpath 'Data\RAI_SCW.mat']);
 
 resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-load([resultpath 'Data/RAI_SCW.mat']);
-load([resultpath 'Data/WeeklySampling_SCW.mat']);
+load([resultpath 'Data/RAI_SCW.mat'],'r');
+load([resultpath 'Data/SCW_SCOOS.mat'],'a');
+load([resultpath 'Data/TempChlTurb_SCW'],'S');
+load([resultpath 'Data/Weatherstation_SCW'],'SC');
 
-%%
-[r] = import_RAI();
-[a] = import_weeklysampling();
+%[r] = import_RAI();
+%[a] = import_SCOOS_weeklySCW();
 
 %% Seasonality 2012-2019 dinoflagellates and diatoms with Chlorophyll Threshold
+clearvars class2do_string dnok dnchl dnk h i ii j rk rok y_mat y_wkmat yd_wk yearlist;
 
-class2do_string = 'Dinoflagellates';
-i=find(a.chl>=3); dnchl=a.dn(i); %find the dates with chlorophyll exceeding a threshold
-for i=1:length(dnchl) %find corresponding dates in rai dataset
-    for j=1:length(r(15).dn)
-        if dnchl(i) == r(15).dn(j)
-            dnk(i) = r(15).dn(j);
-            rk(i) = r(15).rai(j);           
-        else
-        end
-    end
-end
-ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
-
-% class2do_string = 'Diatoms';
-% i=find(a.chl>=4); dnchl=a.dn(i); %find the dates with chlorophyll exceeding a threshold
+% class2do_string = 'Dinoflagellates';
+% i=find(a.chl>=3); dnchl=a.dn(i); %find the dates with chlorophyll exceeding a threshold
 % for i=1:length(dnchl) %find corresponding dates in rai dataset
-%     for j=1:length(r(16).dn)
-%         if dnchl(i) == r(16).dn(j)
-%             dnk(i) = r(16).dn(j);
-%             rk(i) = r(16).rai(j);           
+%     for j=1:length(r(15).dn)
+%         if dnchl(i) == r(15).dn(j)
+%             dnk(i) = r(15).dn(j);
+%             rk(i) = r(15).rai(j);           
 %         else
 %         end
 %     end
 % end
 % ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
+
+class2do_string = 'Diatoms';
+i=find(a.chl>=3); dnchl=a.dn(i); %find the dates with chlorophyll exceeding a threshold
+for i=1:length(dnchl) %find corresponding dates in rai dataset
+    for j=1:length(r(16).dn)
+        if dnchl(i) == r(16).dn(j)
+            dnk(i) = r(16).dn(j);
+            rk(i) = r(16).rai(j);           
+        else
+        end
+    end
+end
+ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
 
 [~,y_mat,yearlist,~]=timeseries2ydmat(dnok,rok); %takes a timeseries and makes it into a year x day matrix
 
@@ -52,8 +54,7 @@ title(num2str(class2do_string), 'fontsize',16, 'fontname', 'arial','fontweight',
 
 set(gca,'ylim',[2012 2019],'tickdir','out');
 h=colorbar;
-set(get(h,'ylabel'),'string','Temperature (^oC)','fontsize',14,'fontname','arial');
-% set(get(h,'ylabel'),'string','Chlorophyll (mg m^{-3})','fontsize',14,'fontname','arial');
+set(get(h,'ylabel'),'string','RAI (fraction)','fontsize',14,'fontname','arial');
 %set(get(h,'ylabel'),'string','RAI','fontsize',14,'fontname','arial');
  h.TickDirection = 'out';
 datetick('x',4)
@@ -67,26 +68,26 @@ hold off
 
 %% Seasonality 2012-2019 Chlorophyll, Temperature
 
-param_string = 'Silicate';
-ii=find(a.SilicateuM); rok=a.SilicateuM(ii); dnok=a.dn(ii); %remove NaNs
+% param_string = 'Silicate';
+% ii=find(a.SilicateuM); rok=a.SilicateuM(ii); dnok=a.dn(ii); %remove NaNs
 
 % param_string = 'Nitrate';
 % ii=find(a.NitrateuM); rok=a.NitrateuM(ii); dnok=a.dn(ii); %remove NaNs
 
-% param_string = 'Temperature';
-% ii=find(a.temp); rok=a.temp(ii); dnok=a.dn(ii); %remove NaNs
+param_string = 'Temperature';
+ii=find(a.temp); rok=a.temp(ii); dnok=a.dn(ii); %remove NaNs
 
-% param_string = 'Chlorophyll';
-% ii=find(a.chl); rok=a.chl(ii); dnok=a.dn(ii); %remove NaNs
+%param_string = 'Chlorophyll';
+%ii=find(a.chl); rok=a.chl(ii); dnok=a.dn(ii); %remove NaNs
 
 [~,y_mat,yearlist,~]=timeseries2ydmat(dnok,rok); %takes a timeseries and makes it into a year x day matrix
 
 figure;
 [y_wkmat,~,yd_wk]=ydmat2weeklymat(y_mat,yearlist); %takes a year x day matrix and makes it a year x 2 week matrix
 pcolor([yd_wk ;yd_wk(end)+7],[yearlist(1:8) yearlist(8)+1],[[y_wkmat(:,1:8)';zeros(1,52)] zeros(9,1)]) %for just 2006:2014
-caxis([0 50]) %Silicate
+%caxis([0 50]) %Silicate
 %caxis([0 20]) %Nitrate
-%caxis([5 20]) %Temperature
+caxis([11 18]) %Temperature
 %caxis([0 30]) %Chlorophyll
 
 colormap(flipud(hot));
@@ -98,10 +99,10 @@ title(num2str(param_string), 'fontsize',16, 'fontname', 'arial','fontweight','bo
 
 set(gca,'ylim',[2012 2019],'tickdir','out');
 h=colorbar;
-set(get(h,'ylabel'),'string','Silicate (uM)','fontsize',14,'fontname','arial');
-%set(get(h,'ylabel'),'string','Nitrate (uM)','fontsize',14,'fontname','arial');
-%set(get(h,'ylabel'),'string','Temperature (^oC)','fontsize',14,'fontname','arial');
-% set(get(h,'ylabel'),'string','Chlorophyll (mg m^{-3})','fontsize',14,'fontname','arial');
+%set(get(h,'ylabel'),'string','Silicate (uM)','fontsize',14,'fontname','arial');
+%set(get(h,'ylabel'),'string','(uM)','fontsize',14,'fontname','arial');
+set(get(h,'ylabel'),'string','(^oC)','fontsize',14,'fontname','arial');
+%set(get(h,'ylabel'),'string','(mg m^{-3})','fontsize',14,'fontname','arial');
  h.TickDirection = 'out';
 datetick('x',4)
 axis square
