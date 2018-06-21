@@ -73,6 +73,7 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_08May2018',...
     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 
+%%
 % Summarize random forest classification results by class
 countcells_allTBnew_user_training(...
     'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\', 2015:2018)
@@ -100,7 +101,6 @@ countcells_allTB_class('Coscinodiscus', yrrange, classpath_generic, out_path, in
 countcells_allTB_class('Protoperidinium', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Guinardia', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Rhizosolenia', yrrange, classpath_generic, out_path, in_dir)
-
 
 %% Compile features for the training set
 

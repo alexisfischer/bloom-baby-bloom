@@ -1,4 +1,4 @@
-function [class2useTB,classcountTB,classbiovolTB,ml_analyzedTB,mdateTB,filelistTB,classpath_generic,feapath_generic] = extract_biovolume_class(resultpath,classpath_generic,feapath_generic,roibasepath_generic,year)
+function [class2useTB,classcountTB,classbiovolTB,ml_analyzedTB,mdateTB,filelistTB] = extract_biovolume_class(resultpath,classpath_generic,feapath_generic,roibasepath_generic,year)
 %Extracts biovolume from classification files
 % resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
 % classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
@@ -66,5 +66,4 @@ for yr = year
     save([resultpath 'summary_biovol_allTB' num2str(yr)] , 'class2useTB', 'classcountTB', 'classbiovolTB', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'feapath_generic')
 %    save([resultpath 'summary_biovol_allTB'] , 'class2useTB', 'classcountTB*', 'classbiovolTB*', 'classC_TB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'feapath_generic')
     clear *files* classcount* classbiovol* classC* 
-end
 end

@@ -5,7 +5,7 @@
 %% Step 1: Load in data
 figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
-load([resultpath 'summary_biovol_allTB2018']);
+load([resultpath 'summary_biovol_allTB2018'],'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
 
 % convert to cubic microns
 micron_factor = 1/3.4; %microns per pixel
@@ -18,9 +18,9 @@ resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
 roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
-year = 2018;
+year = 2017;
 
-extract_biovolume_class(resultpath,classpath_generic,feapath_generic,roibasepath_generic,year)
+[class2useTB,classcountTB,classbiovolTB,ml_analyzedTB,mdateTB,filelistTB] = extract_biovolume_class(resultpath,classpath_generic,feapath_generic,roibasepath_generic,year);
 % can modify compile_biovolume_yrs or compile_biovolume_summaries if need to compile multiple years of s
 
 % convert to cubic microns
@@ -151,7 +151,7 @@ plot(xmat, ymat./ymat_ml,'k.-','linewidth', 1);
 hold on
 datetick('x', 3, 'keeplimits')
 xlim(datenum(['01-Jan-2018'; '01-Jul-2018']))
-ylim([0;3.2*10^5])
+ylim([0;14*10^4])
 set(gca,'xgrid','on','fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel('Biovolume (\mum^{-3} mL^{-1})', 'fontsize', 12, 'fontname', 'arial','fontweight','bold')
 hold all
