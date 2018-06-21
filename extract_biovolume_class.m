@@ -1,17 +1,16 @@
+function [class2useTB,classcountTB,classbiovolTB,ml_analyzedTB,mdateTB,filelistTB,classpath_generic,feapath_generic] = extract_biovolume_class(resultpath,classpath_generic,feapath_generic,roibasepath_generic,year)
+%Extracts biovolume from classification files
 % resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
 % classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 % feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
-
-resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
-classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
-feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
-roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
+% roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
+% year = 2018;
 
 adhocthresh = 0.5;
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath_generic 'D*.csv']);
 
-for yr = 2016:2018; %:2012,
+for yr = year
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
     feapath = regexprep(feapath_generic, 'xxxx', num2str(yr));
     roibasepath = regexprep(roibasepath_generic, 'xxxx', num2str(yr));
@@ -67,4 +66,5 @@ for yr = 2016:2018; %:2012,
     save([resultpath 'summary_biovol_allTB' num2str(yr)] , 'class2useTB', 'classcountTB', 'classbiovolTB', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'feapath_generic')
 %    save([resultpath 'summary_biovol_allTB'] , 'class2useTB', 'classcountTB*', 'classbiovolTB*', 'classC_TB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'feapath_generic')
     clear *files* classcount* classbiovol* classC* 
+end
 end

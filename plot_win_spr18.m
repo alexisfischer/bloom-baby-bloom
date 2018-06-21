@@ -59,16 +59,9 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.06 0.04], [0.1 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(4,1,1); %SCW wind
-[U,~]=plfilt(SC(7).U,SC(7).DN);
-[V,DN]=plfilt(SC(7).V,SC(7).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
 xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,' ');
 
-subplot(4,1,2); %Temp
+subplot(4,1,1); %Temp
 plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
 hold on
 plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
@@ -80,7 +73,7 @@ set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
 ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
 hold on
 
-subplot(4,1,3); %Chlorophyll and Biovolume
+subplot(4,1,2); %Chlorophyll and Biovolume
 plot(a.dn,(a.chl),'*','Color',[0.8500 0.3250 0.0980]);
 hold on
 plot(S.dn,(S.chl),'-','Color',[0.8500 0.3250 0.0980]);
@@ -92,6 +85,14 @@ set(gca,'xgrid', 'on','ylim',[0 20],'ytick',0:10:20,'xlim',[xax1 xax2],...
     'tickdir','out');      
 ylabel('Chl (mg m^{-3})','fontsize',12, 'fontname', 'Arial');    
 hold on
+
+subplot(4,1,3); %SCW wind
+[U,~]=plfilt(SC(7).U,SC(7).DN);
+[V,DN]=plfilt(SC(7).V,SC(7).DN);
+[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+yax1=-3; yax2=3;
+stick(time,u,v,xax1,xax2,yax1,yax2,' ');
 
 subplot(4,1,4); %IFCB
 h1=plot(AKA.dn_auto,AKA.y_auto./AKA.slope,'ko-','Linewidth',1,'markersize',3); %This adjusts the automated counts by the chosen slope. 
@@ -122,7 +123,8 @@ vfill([datenum('2018-03-02'),0,datenum('2018-03-06'),500],[200 200 200]/255,'Fac
 vfill([datenum('2018-04-14'),0,datenum('2018-04-17'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 vfill([datenum('2018-04-28'),0,datenum('2018-05-11'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
 hold on
-legend([h1,h2,h3,h4],'Akashiwo','Prorocentrum','Chaetoceros','Pseudo-nitzschia','location','N');
+legend([h1,h2,h3,h4],'Akashiwo','Prorocentrum','Chaetoceros',...
+    'Pseudo-nitzschia','location','NE');
 
 % set figure parameters
 set(gcf,'color','w');

@@ -1,10 +1,10 @@
 % extract biovolume from feature files
 
-yr = 2017; %specify yr
+yr = 2018; %specify yr
 
-resultpath = 'F:\IFCB113\class\summary\'; %Where you want the summary file to go
-roibasepath = ['F:\IFCB113\data\' num2str(yr) '\']; %Where you raw data is
-feapath = ['F:\IFCB113\features\' num2str(yr) '\']; %Put in your featurepath byyear
+resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
+roibasepath = ['F:\IFCB104\data\' num2str(yr) '\']; %Where you raw data is
+feapath = ['F:\IFCB104\features\' num2str(yr) '\']; %Put in your featurepath byyear
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath 'D*.csv']);
 

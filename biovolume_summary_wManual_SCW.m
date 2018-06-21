@@ -2,7 +2,7 @@ clear
 
 resultpath = 'F:\IFCB104\manual\'; %Where you want the summary file to go
 roibasepath = 'F:\IFCB104\data\'; %Where you raw data is
-feapath = 'F:\IFCB104\features\2017\'; %Put in your featurepath byyear
+feapath = 'F:\IFCB104\features\2018\'; %Put in your featurepath byyear
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([resultpath 'D*.mat']);
 

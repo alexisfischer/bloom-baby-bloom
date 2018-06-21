@@ -94,6 +94,14 @@ countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_di
 countcells_allTB_class('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Pseudo-nitzschia', yrrange, classpath_generic, out_path, in_dir)
 
+countcells_allTB_class('Ditylum', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Coscinodiscus', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Protoperidinium', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Guinardia', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Rhizosolenia', yrrange, classpath_generic, out_path, in_dir)
+
+
 %% Compile features for the training set
 
 manualpath = 'F:\IFCB104\manual\'; % manual annotation file location

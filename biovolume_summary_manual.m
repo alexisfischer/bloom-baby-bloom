@@ -1,6 +1,6 @@
 function [ ] = biovolume_summary_manual(resultpath, roibasepath,feapath_base)
 % Gives you a summary file of counts and biovolume from manually classified results
-% Alexis Fischer, April 2018
+%  Alexis D. Fischer, University of California - Santa Cruz, April 2018
 
 % resultpath = 'F:\IFCB104\manual\'; %USER
 % roibasepath = 'F:\IFCB104\data\'; %USER
