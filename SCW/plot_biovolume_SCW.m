@@ -5,7 +5,7 @@
 %% Step 1: Load in data
 figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
-load([resultpath 'summary_biovol_allTB2018'],'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
+load([resultpath 'summary_biovol_allTB2017'],'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
 
 % convert to cubic microns
 micron_factor = 1/3.4; %microns per pixel
@@ -106,7 +106,7 @@ for ii = 1:length(cat)
 end
 
 datetick('x', 3, 'keeplimits')
-xlim(datenum(['01-Jan-2018'; '01-Jul-2018']))
+xlim(datenum(['01-Jan-2017'; '01-Jul-2017']))
 ylim([0;1])
 set(gca,'xticklabel',{}, 'fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel('Fraction of total biovolume', 'fontsize', 12, 'fontname', 'arial','fontweight','bold')
@@ -135,7 +135,7 @@ for ii = 1:length(cat)
 end
 
 datetick('x', 3, 'keeplimits')
-xlim(datenum(['01-Jan-2018'; '01-Jul-2018']))
+xlim(datenum(['01-Jan-2017'; '01-Jul-2017']))
 ylim([0;1])
 set(gca,'xticklabel',{}, 'fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel('Fraction of total biovolume', 'fontsize', 12, 'fontname', 'arial','fontweight','bold')
@@ -150,15 +150,15 @@ subplot(3,1,3);
 plot(xmat, ymat./ymat_ml,'k.-','linewidth', 1);
 hold on
 datetick('x', 3, 'keeplimits')
-xlim(datenum(['01-Jan-2018'; '01-Jul-2018']))
-ylim([0;14*10^4])
+xlim(datenum(['01-Jan-2017'; '01-Jul-2017']))
+ylim([0;1.6*10^4])
 set(gca,'xgrid','on','fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel('Biovolume (\mum^{-3} mL^{-1})', 'fontsize', 12, 'fontname', 'arial','fontweight','bold')
 hold all
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[figpath 'Figs\FxBiovolume_IFCB_SCW_2018.tif']);
+print(gcf,'-dtiff','-r600',[figpath 'Figs\FxBiovolume_IFCB_SCW_2017.tif']);
 hold off
 
 %% plot dinos vs diatoms
