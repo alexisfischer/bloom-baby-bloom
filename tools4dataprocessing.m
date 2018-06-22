@@ -40,19 +40,18 @@ biovolume_summary_manual('F:\IFCB104\manual\','F:\IFCB104\data\',...
     'F:\IFCB104\features\XXXX\');
 
 %% Step 7: Summarize biovolume from Classification results
-% do individual years
-figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
+%have not tested this ye, but should work
 resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
 roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
-year = 2018;
+adhocthresh = 0.5;
+yrrange = 2017:2018;
 
-extract_biovolume_class(resultpath,classpath_generic,feapath_generic,roibasepath_generic,year);
-% can modify compile_biovolume_yrs or compile_biovolume_summaries if need to compile multiple years
+biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
 %% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
-yrrange = 2015:2018;
+yrrange = 2016:2018;
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 out_path = 'F:\IFCB104\class\summary\'; 
 in_dir = 'F:\IFCB104\data\';

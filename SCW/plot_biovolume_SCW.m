@@ -3,13 +3,15 @@
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 %% Step 1: Load in data
+year=2017; %USER
+
 figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
-load([resultpath 'summary_biovol_allTB2018'],'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
+load([resultpath 'summary_biovol_allTB' num2str(year) ''],'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
 
-% % convert to cubic microns
-% micron_factor = 1/3.4; %microns per pixel
-% classbiovolTB = classbiovolTB*micron_factor^3;
+% convert to cubic microns
+micron_factor = 1/3.4; %microns per pixel
+classbiovolTB = classbiovolTB*micron_factor^3;
 
 %% Step 2: Determine what fraction of Cell-derived biovolume is 
 % Dinoflagellates vs Diatoms vs Classes of interest
@@ -80,9 +82,6 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.08 0.04], [0.09 0.2]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-year=2018; %USER
-%year=2017;
-
 %Fraction dinos and diatoms
 subplot(3,1,1);
 fx_other=[ymat-[ydino+ydiat]]./ymat; %fraction not dinos or diatoms
@@ -145,7 +144,6 @@ plot(xmat, ymat./ymat_ml,'k.-','linewidth', 1);
 hold on
 datetick('x', 3, 'keeplimits')
 xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
-%ylim([0;1.6*10^4])
 set(gca,'xgrid','on','fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel('Biovolume (\mum^{-3} mL^{-1})', 'fontsize', 12, 'fontname', 'arial','fontweight','bold')
 hold all
@@ -158,8 +156,6 @@ hold off
 %% plot dinos vs diatoms
 figure, %set(gcf, 'position', [360 278 500 250])
 cstr = ['rbkgcmy']; %order of colors
-
-year=2018; USER
 
 ph = plot(xdino, ydino./ydino_ml,'.-', xdiat, ydiat./ydiat_ml,'.-','linewidth', 1);
 for ii = 1:length(ph)
@@ -177,7 +173,6 @@ figure('Units','inches','Position',[1 1 8 5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.08 0.04], [0.09 0.2]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
-year= 218; USER
  
 fx_other=[ymat-[ydino+ydiat]]./ymat; %fraction not dinos or diatoms
 
