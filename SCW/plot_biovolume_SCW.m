@@ -81,6 +81,8 @@ ind = 23; %Guin_Dact
     [~,yGUIN ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
     [~,yGUIN_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);  
 
+%[~, cind] = sort(sum(x), 'descend'); %rank order biomass    
+
 %% plot fraction biovolume of select species
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.08 0.04], [0.09 0.2]);
@@ -109,7 +111,7 @@ h=legend('dinoflagellates','diatoms','other cell-derived');
 set(h,'Position',[0.810763891876882 0.890190973968452 0.166666663678673 0.0651041649204368]);
 hold on
 
-%Fraction dinos and diatoms
+%species breakdown
 subplot(3,1,2);
 fx_dino=[ydino-[yAKA+yCER+yDINO+yLING+yPRO]]./ymat; %fraction other dinos
 fx_diat=[ydiat-[yCHAET+yC+yDETO+yPN+yEUC+yGUIN]]./ymat; %fraction other diatoms
@@ -159,33 +161,53 @@ hold off
 
 %% plot of chl, proportion dino/diatom, winds, and temps
 figure('Units','inches','Position',[1 1 7 7],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.04]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.08]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
 xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
 
-subplot(4,1,1); %total cell-derived biovolume
+subplot(4,1,1); 
+left_color = [.5 .5 0];
+right_color = [0 .5 .5];
+
+yyaxis left %total cell-derived biovolume
     plot(xmat, ymat./ymat_ml,'k.-','linewidth', 1);
     datetick('x', 3, 'keeplimits')
     xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
-    set(gca,'xgrid','on','fontsize', 10, 'fontname', 'arial',...
-        'xaxislocation','top','tickdir','out')
-    ylabel('Biovolume (\mum^{-3} mL^{-1})','fontsize',12,'fontname','arial','fontweight','bold')
+    set(gca,'xgrid','on','fontsize', 8, 'fontname', 'arial',...
+        'xaxislocation','top','tickdir','out','ycolor','k')
+    ylabel({'Biovolume';'(\mum^{-3} mL^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold')
     hold on
-
-subplot(4,1,2); %Chlorophyll
-    plot(a.dn,(a.chl),'*','Color',[0.8500 0.3250 0.0980]);
+    
+yyaxis right %Chlorophyll
+    plot(a.dn,(a.chl),'*','Markersize',4,'Color',[0.8500 0.3250 0.0980]);
     hold on
-    plot(S.dn,(S.chl),'-','Color',[0.8500 0.3250 0.0980]);
+    plot(S.dn,(S.chl),'-','linewidth',1,'Color',[0.8500 0.3250 0.0980]);
     set(gca,'xgrid', 'on','ylim',[0 20],'ytick',0:10:20,'xlim',[xax1 xax2],...
         'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
         datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
         datenum('2018-06-01'),datenum('2018-07-01')],...
-        'Xticklabel',{},...
-        'tickdir','out');      
-    ylabel('Chl (mg m^{-3})','fontsize',12,'fontname','arial','fontweight','bold');  
-    hold on
+        'Xticklabel',{},'fontsize',8,'tickdir','out');      
+    ylabel('Chl (mg m^{-3})','fontsize',10,'fontname','arial','fontweight','bold');  
+    hold on    
+    
+subplot(4,1,2); %Fraction dinos and diatoms
+    bar(xmat, [ydino./[ydino+ydiat] ydiat./[ydino+ydiat]], 0.5, 'stack');
+    ax = get(gca);
+    cat = ax.Children;
+    cstr = [ [200 200 200]/255; [80 80 80]/255]; %black/dk grey/lt grey
+    for ii = 1:length(cat)
+        set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
+    end
+
+    datetick('x', 3, 'keeplimits')
+    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
+    ylim([0;1])
+    set(gca,'xticklabel',{}, 'fontsize', 8, 'fontname', 'arial','tickdir','out')
+    ylabel({'Fraction of';'total biovolume'}, 'fontsize', 10, 'fontname', 'arial','fontweight','bold')
+    h=legend('dinoflagellates','diatoms');
+    hold on    
 
 %subplot(5,1,3); %M1 data
 %     [U,~]=plfilt(M1(3).U,M1(3).DN);
@@ -202,23 +224,23 @@ subplot(4,1,3); %SCW wind
     [V,DN]=plfilt(SC(7).V,SC(7).DN);
     [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
     [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-    yax1=-3; yax2=3;
+    yax1=-2.5; yax2=2.5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
-    ylabel('Wind (m s^{-1})','fontsize',12,'fontname','arial','fontweight','bold');  
+    ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');  
     hold on
     
 subplot(4,1,4); %SCW Temp
-    plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
+    plot(a.dn,(a.temp),'o','Markersize',4,'Color',[0 0.4470 0.7410]);
     hold on
     plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
     datetick('x', 3, 'keeplimits')    
-    set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
+    set(gca,'xgrid', 'on','ylim',[11 16],'ytick',12:2:16,'xlim',[xax1 xax2],...
     'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
     datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
     datenum('2018-06-01'),datenum('2018-07-01')],...
-    'Xticklabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul'},...
+    'Xticklabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul'},'fontsize',8,...
     'xaxislocation','bottom','tickdir','out');      
-    ylabel('SST (^oC)','fontsize',12,'fontname','arial','fontweight','bold');
+    ylabel('SST (^oC)','fontsize',10,'fontname','arial','fontweight','bold');
     hold on
 
 % set figure parameters
