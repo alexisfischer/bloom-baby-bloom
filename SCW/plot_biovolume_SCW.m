@@ -9,6 +9,7 @@ load([resultpath 'Data\RAI_SCW.mat'],'r');
 load([resultpath 'Data\SCW_SCOOS.mat'],'a');
 load([resultpath 'Data\TempChlTurb_SCW'],'S');
 load([resultpath 'Data\Weatherstation_SCW'],'SC');
+load([resultpath 'Data\M1_buoy.mat'],'M1');
 
 % Biovolume
 year=2018; %USER
@@ -167,7 +168,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.08]);
 
 xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
 
-subplot(4,1,1); 
+subplot(5,1,1); 
 left_color = [.5 .5 0];
 right_color = [0 .5 .5];
 
@@ -192,7 +193,7 @@ yyaxis right %Chlorophyll
     ylabel('Chl (mg m^{-3})','fontsize',10,'fontname','arial','fontweight','bold');  
     hold on    
     
-subplot(4,1,2); %Fraction dinos and diatoms
+subplot(5,1,2); %Fraction dinos and diatoms
     bar(xmat, [ydino./[ydino+ydiat] ydiat./[ydino+ydiat]], 0.5, 'stack');
     ax = get(gca);
     cat = ax.Children;
@@ -209,27 +210,29 @@ subplot(4,1,2); %Fraction dinos and diatoms
     h=legend('dinoflagellates','diatoms');
     hold on    
 
-%subplot(5,1,3); %M1 data
-%     [U,~]=plfilt(M1(3).U,M1(3).DN);
-%     [V,DN]=plfilt(M1(3).V,M1(3).DN);
-%     [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-%     [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-%     xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
-%     yax1=-10; yax2=10;
-%     stick(time,u,v,xax1,xax2,yax1,yax2,'M1');
-%     hold on
+subplot(5,1,3); %M1 data
+    [U,~]=plfilt(M1(3).U,M1(3).DN);
+    [V,DN]=plfilt(M1(3).V,M1(3).DN);
+    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+    yax1=-10; yax2=10;
+    stick(time,u,v,xax1,xax2,yax1,yax2,' ');
+    ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');      
+    legend('M1','Location','NW')
+    legend boxoff
+    hold on
 
-subplot(4,1,3); %SCW wind
+subplot(5,1,4); %SCW wind
     [U,~]=plfilt(SC(7).U,SC(7).DN);
     [V,DN]=plfilt(SC(7).V,SC(7).DN);
     [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
     [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-    yax1=-2.5; yax2=2.5;
+    yax1=-3; yax2=3;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');  
-    hold on
+    hold on    
     
-subplot(4,1,4); %SCW Temp
+subplot(5,1,5); %SCW Temp
     plot(a.dn,(a.temp),'o','Markersize',4,'Color',[0 0.4470 0.7410]);
     hold on
     plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
