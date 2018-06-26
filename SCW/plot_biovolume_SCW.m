@@ -223,7 +223,7 @@ subplot(4,1,4); %SCW Temp
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs\Dino-Diatom_2018.tif']);
+print(gcf,'-dtiff','-r600',[figpath 'Figs\Dino-Diatom_2018.tif']);
 hold off
 
 %% plot dinos vs diatoms
