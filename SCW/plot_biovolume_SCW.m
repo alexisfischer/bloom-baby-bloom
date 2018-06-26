@@ -2,16 +2,22 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-%% Step 1: Load in data
-year=2017; %USER
+% Step 1: Load in data
+% Chemical and Physical
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
+load([resultpath 'Data\RAI_SCW.mat'],'r');
+load([resultpath 'Data\SCW_SCOOS.mat'],'a');
+load([resultpath 'Data\TempChlTurb_SCW'],'S');
+load([resultpath 'Data\Weatherstation_SCW'],'SC');
 
+% Biovolume
+year=2018; %USER
 figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
 load([resultpath 'summary_biovol_allTB' num2str(year) ''],'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
-
-% convert to cubic microns
-micron_factor = 1/3.4; %microns per pixel
-classbiovolTB = classbiovolTB*micron_factor^3;
+    % convert to cubic microns
+    micron_factor = 1/3.4; %microns per pixel
+    classbiovolTB = classbiovolTB*micron_factor^3;
 
 %% Step 2: Determine what fraction of Cell-derived biovolume is 
 % Dinoflagellates vs Diatoms vs Classes of interest
@@ -50,8 +56,7 @@ ind = 26; %Lingulodinium
 ind = 33; %Prorocentrum 
     [~,yPRO ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
     [~,yPRO_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);    
-    
-    
+      
 ind = 10; %Chaetoceros 
     [~,yCHAET ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
     [~,yCHAET_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
@@ -122,7 +127,6 @@ cstr = [[220 220 220]/255; [110 110 110]/255; [0 0 0]/255;...
     [253,191,111]/255; [255,127,0]/255; [202,178,214]/255;...
     [106,61,154]/255;[220 220 220]/255];
 
-
 for ii = 1:length(cat)
     set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
 end
@@ -151,6 +155,75 @@ hold all
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[figpath 'Figs\FxBiovolume_IFCB_SCW_' num2str(year) '.tif']);
+hold off
+
+%% plot of chl, proportion dino/diatom, winds, and temps
+figure('Units','inches','Position',[1 1 7 7],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.04]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+
+xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
+
+subplot(4,1,1); %total cell-derived biovolume
+    plot(xmat, ymat./ymat_ml,'k.-','linewidth', 1);
+    datetick('x', 3, 'keeplimits')
+    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
+    set(gca,'xgrid','on','fontsize', 10, 'fontname', 'arial',...
+        'xaxislocation','top','tickdir','out')
+    ylabel('Biovolume (\mum^{-3} mL^{-1})','fontsize',12,'fontname','arial','fontweight','bold')
+    hold on
+
+subplot(4,1,2); %Chlorophyll
+    plot(a.dn,(a.chl),'*','Color',[0.8500 0.3250 0.0980]);
+    hold on
+    plot(S.dn,(S.chl),'-','Color',[0.8500 0.3250 0.0980]);
+    set(gca,'xgrid', 'on','ylim',[0 20],'ytick',0:10:20,'xlim',[xax1 xax2],...
+        'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+        datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
+        datenum('2018-06-01'),datenum('2018-07-01')],...
+        'Xticklabel',{},...
+        'tickdir','out');      
+    ylabel('Chl (mg m^{-3})','fontsize',12,'fontname','arial','fontweight','bold');  
+    hold on
+
+%subplot(5,1,3); %M1 data
+%     [U,~]=plfilt(M1(3).U,M1(3).DN);
+%     [V,DN]=plfilt(M1(3).V,M1(3).DN);
+%     [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+%     [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+%     xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
+%     yax1=-10; yax2=10;
+%     stick(time,u,v,xax1,xax2,yax1,yax2,'M1');
+%     hold on
+
+subplot(4,1,3); %SCW wind
+    [U,~]=plfilt(SC(7).U,SC(7).DN);
+    [V,DN]=plfilt(SC(7).V,SC(7).DN);
+    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+    yax1=-3; yax2=3;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'');
+    ylabel('Wind (m s^{-1})','fontsize',12,'fontname','arial','fontweight','bold');  
+    hold on
+    
+subplot(4,1,4); %SCW Temp
+    plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
+    hold on
+    plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
+    datetick('x', 3, 'keeplimits')    
+    set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
+    'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
+    datenum('2018-06-01'),datenum('2018-07-01')],...
+    'Xticklabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul'},...
+    'xaxislocation','bottom','tickdir','out');      
+    ylabel('SST (^oC)','fontsize',12,'fontname','arial','fontweight','bold');
+    hold on
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Dino-Diatom_2018.tif']);
 hold off
 
 %% plot dinos vs diatoms

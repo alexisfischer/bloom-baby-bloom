@@ -3,7 +3,7 @@
 
 %% PART 1: Applying and evaluating a classifier
 %% Step 1: Sort data into folders
-%sort_data_into_folders;
+sort_data_into_folders;
 
 %% Step 2: Extract blobs
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
@@ -22,12 +22,12 @@ start_feature_batch_user_training('F:\IFCB104\data\2018\',...
    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
 
 %% Step 4: Apply classifier
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
-    'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
-    'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
-    'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
+%     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
+%     'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
+%     'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 
@@ -57,19 +57,22 @@ out_path = 'F:\IFCB104\class\summary\';
 in_dir = 'F:\IFCB104\data\';
 
 %dinos
-countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Lingulodinium', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
+%countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
+%countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
+%countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
+%countcells_allTB_class('Lingulodinium', yrrange, classpath_generic, out_path, in_dir)
+%countcells_allTB_class('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
 
 %diatoms
-countcells_allTB_class('Chaetoceros', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Detonula', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Pseudo-nitzschia', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Eucampia', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Guinardia', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Centric', yrrange, classpath_generic, out_path, in_dir)
+%countcells_allTB_class('Chaetoceros', yrrange, classpath_generic, out_path, in_dir)
+% countcells_allTB_class('Det_Cer_Lau', yrrange, classpath_generic, out_path, in_dir)
+% countcells_allTB_class('Eucampia', yrrange, classpath_generic, out_path, in_dir)
+% countcells_allTB_class('Pseudo-nitzschia', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('NanoP_less10', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Cryptophyte', yrrange, classpath_generic, out_path, in_dir)
+% countcells_allTB_class('Skeletonema', yrrange, classpath_generic, out_path, in_dir)
+% countcells_allTB_class('Centric', yrrange, classpath_generic, out_path, in_dir)
+% countcells_allTB_class('Guin_Dact', yrrange, classpath_generic, out_path, in_dir)
 
 
 %% PART 2: Training and Making a classifier
