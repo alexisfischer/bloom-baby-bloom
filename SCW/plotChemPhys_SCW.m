@@ -1,43 +1,8 @@
 resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-%load([resultpath 'Data/wind_SCW_M1_2016_2018']);
+load([resultpath 'Data/M1_buoy']);
 load([resultpath 'Data/SCW_SCOOS.mat'],'a');
 load([resultpath 'Data/TempChlTurb_SCW'],'S');
 load([resultpath 'Data/Weatherstation_SCW'],'SC');
-
-%% plots 2018 Wind for SCW and M1
-
-figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.07 0.07], [0.08 0.06], [0.09 0.04]);
-%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
-%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
-
-subplot(2,1,1); %SCW data
-[U,~]=plfilt(SC(3).U,SC(3).DN);
-[V,DN]=plfilt(SC(3).V,SC(3).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2018 - SCW');
-
-subplot(2,1,2); %M1 data
-[U,~]=plfilt(M1(3).U,M1(3).DN);
-[V,DN]=plfilt(M1(3).V,M1(3).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
-yax1=-10; yax2=10;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2018 - M1');
-
-set(gca,'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
-    datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
-    datenum('2018-06-01'),datenum('2018-07-01')],...
-    'Xticklabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul'});
-
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs\Wind_M1_SCW_2018.tif']);
-hold off
 
 %% plots 2012-2018 Wind for SCW
 
