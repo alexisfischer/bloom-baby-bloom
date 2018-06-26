@@ -1,6 +1,28 @@
 %%
 resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-load([resultpath 'Data/wind_SCW_M1_2016_2018']);
+load([resultpath 'Data/Weatherstation_SCW'],'SC');
+load([resultpath 'Data/M1_buoy']);
+
+%% Import M1 data
+
+[U,V] = UVfromDM(WINDDIR,Windspeed);
+
+SC(7).yr=2018;
+SC(7).DN=TIME;
+SC(7).WINDDIR=WINDDIR;
+SC(7).WINDSPEED=Windspeed;
+SC(7).U=U;
+SC(7).V=V;
+SC(7).PAR=PAR;
+SC(7).RAINFALL=RAINFALL;
+SC(7).AIRTEMP=AIRTEMP;
+SC(7).BAROMETER=BAROMETER;
+SC(7).DEWPOINT=DEWPOINT;
+SC(7).HUMIDITY=HUMIDITY;
+
+clearvars AIRTEMP BAROMETER DEWPOINT HUMIDITY PAR RAINFALL TIME U V WINDDIR Windspeed WINDSPEED;
+save('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/Weatherstation_SCW','SC');
+
 
 %% Import M1 Apr 2018 data
 
@@ -43,7 +65,7 @@ Vm=pl66tn(U);
  
 M1(1).dn=[datenum('2016-01-01'):datenum('2016-12-30')]';
 M1(2).dn=[datenum('2017-01-01'):datenum('2017-12-30')]';
-M1(3).dn=[datenum('2018-01-01'):datenum('2018-04-30')]';
+M1(3).dn=[datenum('2018-01-01'):datenum('2018-05-31')]';
 
 M1(3).DN=[M1(3).DN;DN];
 M1(3).Dir=[M1(3).Dir;Dir];

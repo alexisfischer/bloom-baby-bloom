@@ -1,8 +1,9 @@
 resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-load([resultpath 'Data/M1_buoy']);
 load([resultpath 'Data/SCW_SCOOS.mat'],'a');
 load([resultpath 'Data/TempChlTurb_SCW'],'S');
 load([resultpath 'Data/Weatherstation_SCW'],'SC');
+load([resultpath 'Data/M1_buoy']);
+
 
 %% plots 2012-2018 Wind for SCW
 
