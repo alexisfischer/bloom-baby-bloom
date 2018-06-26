@@ -92,7 +92,7 @@ ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
 [y_wkmat,~,yd_wk]=ydmat2weeklymat(y_mat,yearlist);
 
 pcolor(yd_wk(1:24),[1,2],[y_wkmat(1:24,8)'; zeros(1,24)]) %01jan-01jul2018
-caxis([0 0.6]) %RAI
+caxis([0 0.7]) %RAI
 shading flat
 datetick('x',4)
 set(gca,'ylim',[1 2],'ytick',[1,2],'yticklabel',{},'xticklabel',{},'tickdir','out');
