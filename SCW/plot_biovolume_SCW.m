@@ -170,27 +170,25 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.08]);
 xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
 
 subplot(5,1,1); 
-left_color = [.5 .5 0];
-right_color = [0 .5 .5];
-
+    
 yyaxis left %total cell-derived biovolume
-    plot(xmat, ymat./ymat_ml,'k.-','linewidth', 1);
+    h1=plot(xmat, ymat./ymat_ml,'k.-','linewidth', 1);
     datetick('x', 3, 'keeplimits')
     xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Aug-' num2str(year) '']]))
-    set(gca,'xgrid','on','fontsize', 8, 'fontname', 'arial',...
+    set(gca,'xgrid','on','fontsize', 10, 'fontname', 'arial',...
         'xaxislocation','top','tickdir','out','ycolor','k')
     ylabel({'Biovolume';'(\mum^{-3} mL^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold')
-    hold on
+    hold on    
     
 yyaxis right %Chlorophyll
-    plot(a.dn,(a.chl),'*','Markersize',4,'Color',[0.8500 0.3250 0.0980]);
+    h2=plot(a.dn,(a.chl),'*','Markersize',4,'Color',[0.8500 0.3250 0.0980]);
     hold on
-    plot(S.dn,(S.chl),'-','linewidth',1,'Color',[0.8500 0.3250 0.0980]);
-    
+    h3=plot(S.dn,(S.chl),'-','linewidth',1,'Color',[0.8500 0.3250 0.0980]);
     xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Aug-' num2str(year) '']]))
-    set(gca,'ylim',[0 20],'xgrid','on','fontsize', 8, 'fontname', 'arial',...
+    set(gca,'ylim',[0 20],'xgrid','on','fontsize', 10, 'fontname', 'arial',...
         'xaxislocation','top','tickdir','out','ycolor','k','Xticklabel',{})   
-    ylabel('Chl (mg m^{-3})','fontsize',10,'fontname','arial','fontweight','bold');  
+    ylabel('Chl (mg m^{-3})','fontsize',10,'fontname','arial','fontweight','bold');      
+    legend([h2,h3],{'Chl weekly','Chl sensor'},'Location','NE');            
     hold on    
     
 subplot(5,1,2); %Fraction dinos and diatoms
@@ -205,8 +203,8 @@ subplot(5,1,2); %Fraction dinos and diatoms
     datetick('x', 3, 'keeplimits')
     xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Aug-' num2str(year) '']]))
     ylim([0;1])
-    set(gca,'xticklabel',{}, 'fontsize', 8, 'fontname', 'arial','tickdir','out')
-    ylabel({'Fraction of';'total biovolume'}, 'fontsize', 10, 'fontname', 'arial','fontweight','bold')
+    set(gca,'xgrid','on','xticklabel',{}, 'fontsize', 10, 'fontname', 'arial','tickdir','out')
+    ylabel({'Fraction';'of biovolume'}, 'fontsize', 10, 'fontname', 'arial','fontweight','bold')
     h=legend('dinoflagellates','diatoms','Location','NE');
     hold on    
 
@@ -236,17 +234,19 @@ subplot(5,1,4); %SCW wind
     legend boxoff    
     hold on    
     
+left_color = [.5 .5 0];
+right_color = [0 .5 .5];    
 subplot(5,1,5); %SCW Temp
     plot(a.dn,(a.temp),'o','Markersize',4,'Color',[0 0.4470 0.7410]);
     hold on
     plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
     hold on
-    plot(M1(3).dn,(M1(3).T),'-','color','b');
+    plot(M1(3).dn,(M1(3).T),'-','color',[.5 .5 0]);
     datetick('x','m');
     axis([xax1 xax2 10 16]); 
     datetick('x', 3, 'keeplimits')    
     xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Aug-' num2str(year) '']]))
-    set(gca,'xgrid', 'on','ylim',[10 16],'ytick',10:2:16,'fontsize',8,...
+    set(gca,'xgrid', 'on','ylim',[10 16],'ytick',10:2:16,'fontsize',10,...
     'xaxislocation','bottom','tickdir','out');   
     ylabel('SST (^oC)','fontsize',10,'fontname','arial','fontweight','bold');
     legend('SCW weekly','SCW sensor','M1','Location','NE');
