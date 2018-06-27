@@ -3,7 +3,7 @@
 
 %% PART 1: Applying and evaluating a classifier
 %% Step 1: Sort data into folders
-sort_data_into_folders;
+%sort_data_into_folders;
 
 %% Step 2: Extract blobs
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
@@ -11,7 +11,7 @@ sort_data_into_folders;
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
 start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
 
-%% Step 3: Extract features
+% Step 3: Extract features
 % start_feature_batch_user_training('F:\IFCB104\data\2015\',...
 %     'F:\IFCB104\blobs\2015\','F:\IFCB104\features\2015\',true)
 % start_feature_batch_user_training('F:\IFCB104\data\2016\',...
@@ -21,7 +21,7 @@ start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',
 start_feature_batch_user_training('F:\IFCB104\data\2018\',...
    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
 
-%% Step 4: Apply classifier
+% Step 4: Apply classifier
 % start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
 %     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
 % start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
@@ -31,15 +31,15 @@ start_feature_batch_user_training('F:\IFCB104\data\2018\',...
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 
-%% Step 5: Summarize random forest classification results by class
+% Step 5: Summarize random forest classification results by class
 countcells_allTBnew_user_training(...
     'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\', 2015:2018)
 
-%% Step 6: Summarize biovolume from Manual files
+% Step 6: Summarize biovolume from Manual files
 biovolume_summary_manual('F:\IFCB104\manual\','F:\IFCB104\data\',...
     'F:\IFCB104\features\XXXX\');
 
-%% Step 7: Summarize biovolume from Classification results
+% Step 7: Summarize biovolume from Classification results
 %have not tested this ye, but should work
 resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
