@@ -10,6 +10,7 @@ load([resultpath 'Data\SCW_SCOOS.mat'],'a');
 load([resultpath 'Data\TempChlTurb_SCW'],'S');
 load([resultpath 'Data\Weatherstation_SCW'],'SC');
 load([resultpath 'Data\M1_buoy.mat'],'M1');
+load([resultpath 'Data/coastal_46042'],'coast');
 
 % Biovolume
 year=2018; %USER
@@ -211,14 +212,14 @@ subplot(5,1,2); %Fraction dinos and diatoms
     hold on    
 
 subplot(5,1,3); %M1 data
-    [U,~]=plfilt(M1(3).U,M1(3).DN);
-    [V,DN]=plfilt(M1(3).V,M1(3).DN);
+    [U,~]=plfilt(coast(7).U,coast(7).DN);
+    [V,DN]=plfilt(coast(7).V,coast(7).DN);
     [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
     [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
     yax1=-10; yax2=10;
     stick(time,u,v,xax1,xax2,yax1,yax2,' ');
     ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');      
-    legend('M1','Location','NW')
+    legend('46042','Location','NW')
     legend boxoff
     hold on
 
@@ -230,20 +231,27 @@ subplot(5,1,4); %SCW wind
     yax1=-3; yax2=3;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');  
+    legend('SCW','Location','NW')
+    legend boxoff    
     hold on    
     
 subplot(5,1,5); %SCW Temp
     plot(a.dn,(a.temp),'o','Markersize',4,'Color',[0 0.4470 0.7410]);
     hold on
     plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
+    hold on
+    plot(M1(3).dn,(M1(3).T),'-','color','b');
+    datetick('x','m');
+    axis([xax1 xax2 10 16]); 
     datetick('x', 3, 'keeplimits')    
-    set(gca,'xgrid', 'on','ylim',[11 16],'ytick',12:2:16,'xlim',[xax1 xax2],...
+    set(gca,'xgrid', 'on','ylim',[10 16],'ytick',10:2:16,'xlim',[xax1 xax2],...
     'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
     datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
     datenum('2018-06-01'),datenum('2018-07-01')],...
     'Xticklabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul'},'fontsize',8,...
     'xaxislocation','bottom','tickdir','out');      
     ylabel('SST (^oC)','fontsize',10,'fontname','arial','fontweight','bold');
+    legend('SCW wharf','SCW sensor','M1');
     hold on
 
 % set figure parameters
