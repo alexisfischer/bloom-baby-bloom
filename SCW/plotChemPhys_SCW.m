@@ -2,204 +2,160 @@ resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load([resultpath 'Data/SCW_SCOOS.mat'],'a');
 load([resultpath 'Data/TempChlTurb_SCW'],'S');
 load([resultpath 'Data/Weatherstation_SCW'],'SC');
-load([resultpath 'Data/M1_buoy']);
+load([resultpath 'Data/M1_buoy'],'M1');
+load([resultpath 'Data/coastal_46042'],'coast');
 
+%% plot 2018 SCW, M1, and 46042
+figure('Units','inches','Position',[1 1 8 5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.08 0.06], [0.09 0.04]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-%% plots 2012-2018 Wind for SCW
+subplot(3,1,1); %46042
+    [U,~]=plfilt(coast(7).U,coast(7).DN);
+    [V,DN]=plfilt(coast(7).V,coast(7).DN);
+    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+    xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
+    yax1=-10; yax2=10;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'2018');
+        legend('46042','Location','NW')
+        legend boxoff
+    hold on
 
+subplot(3,1,2); %M1
+    [U,~]=plfilt(M1(3).U,M1(3).DN);
+    [V,DN]=plfilt(M1(3).V,M1(3).DN);
+    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+    xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
+    yax1=-10; yax2=10;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'');
+        legend('M1','Location','NW')
+        legend boxoff
+    hold on
+
+subplot(3,1,3); %SCW
+    [U,~]=plfilt(SC(7).U,SC(7).DN);
+    [V,DN]=plfilt(SC(7).V,SC(7).DN);
+    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+    xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
+    yax1=-3; yax2=3;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'');
+        legend('SCW','Location','NW')
+        legend boxoff
+    hold on
+datetick('x','mmm');
+set(gca,'xgrid', 'on','xlim',[xax1 xax2]);
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\wind_2018_M1_46042_SCW.tif']);
+hold off
+
+%% plots 2012-2018 Wind for 46042
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.04 0.03], [0.09 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(7,1,7); %2012
-[U,~]=plfilt(SC(1).U,SC(1).DN);
-[V,DN]=plfilt(SC(1).V,SC(1).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2012-01-01'); xax2=datenum('2012-12-31');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2012');
-set(gca,'xtick',[datenum('2012-01-01'),datenum('2012-02-01'),...
-    datenum('2012-03-01'),datenum('2012-04-01'),datenum('2012-05-01'),...
-    datenum('2012-06-01'),datenum('2012-07-01'),datenum('2012-08-01'),...
-    datenum('2012-09-01'),datenum('2012-10-01'),...
-    datenum('2012-11-01'),datenum('2012-12-01')],...
-    'Xticklabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep',...
-    'Oct','Nov','Dec'},...
-    'tickdir','out','fontsize',10);  
+for i=1:length(coast)
+    subplot(length(coast),1,i)
+    
+    [U,~]=plfilt(coast(i).U,coast(i).DN);
+    [V,DN]=plfilt(coast(i).V,coast(i).DN);
+    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+        
+    xax1=datenum(['' num2str(coast(i).yr) '-01-01']);
+    xax2=datenum(['' num2str(coast(i).yr) '-12-31']);
+    yax1=-10; yax2=10;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'');
+    legend(['' num2str(coast(i).yr) ''],'Location','NW'); legend boxoff
+    hold on
+end
 
-subplot(7,1,6); %2013
-[U,~]=plfilt(SC(2).U,SC(2).DN);
-[V,DN]=plfilt(SC(2).V,SC(2).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2013-01-01'); xax2=datenum('2013-12-31');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2013');
+set(gca,'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
+    datenum('2018-06-01'),datenum('2018-07-01'),datenum('2018-08-01'),...
+    datenum('2018-09-01'),datenum('2018-10-01'),datenum('2018-11-01'),...
+    datenum('2018-12-01')],'Xticklabel',{'Jan','Feb','Mar','Apr','May',...
+    'Jun','Jul','Aug','Sep','Oct','Nov','Dec'},'tickdir','out','fontsize',10);  
+   
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Wind_46042_2012_2018.tif']);
+hold off    
+    
+%% plots 2012-2018 Wind for SCW
+figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.04 0.03], [0.09 0.04]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(7,1,5); %2014
-[U,~]=plfilt(SC(3).U,SC(3).DN);
-[V,DN]=plfilt(SC(3).V,SC(3).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2014-01-01'); xax2=datenum('2014-12-31');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2014');
+for i=1:length(SC)
+    subplot(length(SC),1,i)
+    
+    [U,~]=plfilt(SC(i).U,SC(i).DN);
+    [V,DN]=plfilt(SC(i).V,SC(i).DN);
+    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+        
+    xax1=datenum(['' num2str(SC(i).yr) '-01-01']);
+    xax2=datenum(['' num2str(SC(i).yr) '-12-31']);
+    yax1=-4; yax2=4;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'');
+    legend(['' num2str(SC(i).yr) ''],'Location','NW'); legend boxoff
+    hold on  
+end
 
-subplot(7,1,4); %2015
-[U,~]=plfilt(SC(4).U,SC(4).DN);
-[V,DN]=plfilt(SC(4).V,SC(4).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2015-01-01'); xax2=datenum('2015-12-31');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2015');
-
-subplot(7,1,3); %2016
-[U,~]=plfilt(SC(5).U,SC(5).DN);
-[V,DN]=plfilt(SC(5).V,SC(5).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2016-01-01'); xax2=datenum('2016-12-31');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2016');
-
-subplot(7,1,2); %2017
-[U,~]=plfilt(SC(6).U,SC(6).DN);
-[V,DN]=plfilt(SC(6).V,SC(6).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2017-01-01'); xax2=datenum('2017-12-31');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2017');
-
-subplot(7,1,1); %2018
-[U,~]=plfilt(SC(7).U,SC(7).DN);
-[V,DN]=plfilt(SC(7).V,SC(7).DN);
-[~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-[time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-xax1=datenum('2018-01-01'); xax2=datenum('2018-12-31');
-yax1=-5; yax2=5;
-stick(time,u,v,xax1,xax2,yax1,yax2,'2018');
-
+set(gca,'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+    datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
+    datenum('2018-06-01'),datenum('2018-07-01'),datenum('2018-08-01'),...
+    datenum('2018-09-01'),datenum('2018-10-01'),datenum('2018-11-01'),...
+    datenum('2018-12-01')],'Xticklabel',{'Jan','Feb','Mar','Apr','May',...
+    'Jun','Jul','Aug','Sep','Oct','Nov','Dec'},'tickdir','out','fontsize',10);  
+   
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[resultpath 'Figs\Wind_SCW_2012_2018.tif']);
-hold off
+hold off        
 
 %% plots 2012-2018 temperature for SCW
-
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.04 0.03], [0.09 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(7,1,1); %2012
-plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
-hold on
-plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
-datetick('x','m');
-xax1=datenum('2012-01-01'); xax2=datenum('2012-07-01');
-set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2012-01-01'),datenum('2012-02-01'),...
-    datenum('2012-03-01'),datenum('2012-04-01'),datenum('2012-05-01'),...
-    datenum('2012-06-01'),datenum('2012-07-01')],...
-    'tickdir','out','xticklabel',{}); 
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');   
-title('2012','fontsize',12, 'fontname', 'Arial'); 
-hold on
+for i=1:length(SC)
+    subplot(length(SC),1,i)
+    
+    plot(a.dn,(a.temp),'o','Markersize',4,'Color',[0 0.4470 0.7410]);
+    hold on
+    plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
+    datetick('x','mm');
+    
+    xax1=datenum(['' num2str(SC(i).yr) '-01-01']);
+    xax2=datenum(['' num2str(SC(i).yr) '-12-31']);
+    set(gca,'xgrid', 'on','ylim',[10 19],...
+        'xlim',[xax1 xax2],'xticklabel',{});
+    ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');   
+    legend(['' num2str(SC(i).yr) ''],'Location','NW'); legend boxoff
+    hold on     
+end
 
-subplot(7,1,2); %2013
-plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
-hold on
-plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
-datetick('x','m');
-xax1=datenum('2013-01-01'); xax2=datenum('2013-07-01');
-set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2013-01-01'),datenum('2013-02-01'),...
-    datenum('2013-03-01'),datenum('2013-04-01'),datenum('2013-05-01'),...
-    datenum('2013-06-01'),datenum('2013-07-01')],...
-    'tickdir','out','xticklabel',{}); 
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
-title('2013','fontsize',12, 'fontname', 'Arial'); 
-hold on
-
-subplot(7,1,3); %2014 temp
-plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
-hold on
-plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
-xax1=datenum('2014-01-01'); xax2=datenum('2014-07-01');
-set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2014-01-01'),datenum('2014-02-01'),...
-    datenum('2014-03-01'),datenum('2014-04-01'),datenum('2014-05-01'),...
-    datenum('2014-06-01'),datenum('2014-07-01')],...
-    'tickdir','out','xticklabel',{}); 
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');    
-title('2014','fontsize',12, 'fontname', 'Arial'); 
-hold on
-
-subplot(7,1,4); %2015 temp
-plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
-hold on
-plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
-xax1=datenum('2015-01-01'); xax2=datenum('2015-07-01');
-set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2015-01-01'),datenum('2015-02-01'),...
-    datenum('2015-03-01'),datenum('2015-04-01'),datenum('2015-05-01'),...
-    datenum('2015-06-01'),datenum('2015-07-01')],...
-    'Xticklabel',{},'tickdir','out');      
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');  
-title('2015','fontsize',12, 'fontname', 'Arial'); 
-hold on
-
-subplot(7,1,5); %2016
-plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
-hold on
-plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
-datetick('x','m');
-xax1=datenum('2016-01-01'); xax2=datenum('2016-07-01');
-set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2016-01-01'),datenum('2016-02-01'),...
-    datenum('2016-03-01'),datenum('2016-04-01'),datenum('2016-05-01'),...
-    datenum('2016-06-01'),datenum('2016-07-01')],...
-    'tickdir','out','xticklabel',{}); 
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');  
-title('2016','fontsize',12, 'fontname', 'Arial'); 
-hold on
-
-subplot(7,1,6); %2017 temp
-plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
-hold on
-plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
-xax1=datenum('2017-01-01'); xax2=datenum('2017-07-01');
-set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2017-01-01'),datenum('2017-02-01'),...
-    datenum('2017-03-01'),datenum('2017-04-01'),datenum('2017-05-01'),...
-    datenum('2017-06-01'),datenum('2017-07-01')],...
-    'tickdir','out','xticklabel',{}); 
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');   
-title('2017','fontsize',12, 'fontname', 'Arial'); 
-hold on
-
-subplot(7,1,7); %2018 temp
-plot(a.dn,(a.temp),'o','Color',[0 0.4470 0.7410]);
-hold on
-plot(S.dn,(S.temp),'-','Color',[0 0.4470 0.7410]);
-xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
-set(gca,'xgrid', 'on','ylim',[10 17],'ytick',10:3:16,'xlim',[xax1 xax2],...
-    'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
+set(gca,'xtick',[datenum('2018-01-01'),datenum('2018-02-01'),...
     datenum('2018-03-01'),datenum('2018-04-01'),datenum('2018-05-01'),...
-    datenum('2018-06-01'),datenum('2018-07-01')],...
-    'Xticklabel',{'Jan','Feb','Mar','Apr','May','Jun','Jul'},'tickdir','out');      
-ylabel('SST (^oC)','fontsize',12, 'fontname', 'Arial');  
-title('2018','fontsize',12, 'fontname', 'Arial'); 
-hold on
-
+    datenum('2018-06-01'),datenum('2018-07-01'),datenum('2018-08-01'),...
+    datenum('2018-09-01'),datenum('2018-10-01'),datenum('2018-11-01'),...
+    datenum('2018-12-01')],'Xticklabel',{'Jan','Feb','Mar','Apr','May',...
+    'Jun','Jul','Aug','Sep','Oct','Nov','Dec'},'tickdir','out','fontsize',10);  
+   
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs\SCW_Temp_2012_2018.tif']);
-hold off
+print(gcf,'-dtiff','-r600',[resultpath 'Figs\Temp_SCW_2012_2018.tif']);
+hold off  
 
 %% plots 2016-2018 Wind for M1
 

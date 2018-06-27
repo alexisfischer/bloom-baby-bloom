@@ -3,25 +3,88 @@ resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load([resultpath 'Data/Weatherstation_SCW'],'SC');
 load([resultpath 'Data/M1_buoy']);
 
-%% Import M1 data
+%% Import 46042 data (2012-2017)
+%change filename based off of what you are importing
+ind=6;
+filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/46042/46042_2017.txt';
+startRow = 3;
+formatSpec = '%4f%3f%3f%3f%3f%4f%5f%[^\n\r]';
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
 
-[U,V] = UVfromDM(WINDDIR,Windspeed);
+YY = dataArray{:, 1};
+MM = dataArray{:, 2};
+DD = dataArray{:, 3};
+hh = dataArray{:, 4};
+mm = dataArray{:, 5};
+WDI = dataArray{:, 6};
+RWSP = dataArray{:, 7};
 
-SC(7).yr=2018;
-SC(7).DN=TIME;
-SC(7).WINDDIR=WINDDIR;
-SC(7).WINDSPEED=Windspeed;
-SC(7).U=U;
-SC(7).V=V;
-SC(7).PAR=PAR;
-SC(7).RAINFALL=RAINFALL;
-SC(7).AIRTEMP=AIRTEMP;
-SC(7).BAROMETER=BAROMETER;
-SC(7).DEWPOINT=DEWPOINT;
-SC(7).HUMIDITY=HUMIDITY;
+DN=datenum(YY,MM,DD,hh,mm,zeros(size(YY)));
 
-clearvars AIRTEMP BAROMETER DEWPOINT HUMIDITY PAR RAINFALL TIME U V WINDDIR Windspeed WINDSPEED;
-save('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/Weatherstation_SCW','SC');
+for i=1:length(DN)
+    if WDI(i) == 999
+        WDI(i) = NaN;        
+    end
+    if RWSP(i) == 999
+        RWSP(i) = NaN;        
+    end    
+end
+
+[U,V] = UVfromDM(WDI,RWSP);
+
+coast(ind).yr=YY(end);
+coast(ind).DN=DN;
+coast(ind).WINDDIR=WDI;
+coast(ind).WINDSPEED=RWSP;
+coast(ind).U=U;
+coast(ind).V=V;
+
+clearvars DD DGD GTIME hh mm MM RGST RWSP WDI YY U V DN i filename startRow formatSpec fileID dataArray ans;
+save('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/coastal_46042','coast');
+
+%% Import 46042 data (2018 month by month )
+%change filename based off of what you are importing
+ind=7;
+filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/46042/46042_May_2018.txt';
+startRow = 3;
+formatSpec = '%4f%3f%3f%3f%3f%4f%5f%[^\n\r]';
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+
+YY = dataArray{:, 1};
+MM = dataArray{:, 2};
+DD = dataArray{:, 3};
+hh = dataArray{:, 4};
+mm = dataArray{:, 5};
+WDI = dataArray{:, 6};
+RWSP = dataArray{:, 7};
+
+DN=datenum(YY,MM,DD,hh,mm,zeros(size(YY)));
+
+for i=1:length(DN)
+    if WDI(i) == 999
+        WDI(i) = NaN;        
+    end
+    if RWSP(i) == 999
+        RWSP(i) = NaN;        
+    end    
+end
+
+[U,V] = UVfromDM(WDI,RWSP);
+
+
+%coast(ind).yr=YY(end);
+coast(ind).DN=[coast(ind).DN;DN];
+coast(ind).WINDDIR=[coast(ind).WINDDIR;WDI];
+coast(ind).WINDSPEED=[coast(ind).WINDSPEED;RWSP];
+coast(ind).U=[coast(ind).U;U];
+coast(ind).V=[coast(ind).V;V];
+
+clearvars DD DGD GTIME hh mm MM RGST RWSP WDI YY U V DN i filename startRow formatSpec fileID dataArray ans;
+save('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/coastal_46042','coast');
 
 
 %% Import M1 Apr 2018 data
