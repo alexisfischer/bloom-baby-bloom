@@ -14,46 +14,35 @@ load([resultpath 'Data/Weatherstation_SCW'],'SC');
 %% Seasonality 2012-2019 dinoflagellates and diatoms with Chlorophyll Threshold
 clearvars class2do_string dnok dnchl dnk h i ii j rk rok y_mat y_wkmat yd_wk yearlist;
 
-% class2do_string = 'Dinoflagellates';
-% i=find(a.chl>=3); dnchl=a.dn(i); %find the dates with chlorophyll exceeding a threshold
-% for i=1:length(dnchl) %find corresponding dates in rai dataset
-%     for j=1:length(r(60).dn)
-%         if dnchl(i) == r(60).dn(j)
-%             dnk(i) = r(60).dn(j);
-%             rk(i) = r(60).rai(j);           
-%         else
-%         end
-%     end
-% end
-% ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
+%class2do_string = 'Diatoms'; ind=61;
+ class2do_string = 'Dinoflagellates'; ind=60;
 
-class2do_string = 'Diatoms';
 i=find(a.chl>=3); dnchl=a.dn(i); %find the dates with chlorophyll exceeding a threshold
 for i=1:length(dnchl) %find corresponding dates in rai dataset
-    for j=1:length(r(61).dn)
-        if dnchl(i) == r(61).dn(j)
-            dnk(i) = r(61).dn(j);
-            rk(i) = r(61).rai(j);           
+    for j=1:length(r(ind).dn)
+        if dnchl(i) == r(ind).dn(j)
+            dnk(i) = r(ind).dn(j);
+            rk(i) = r(ind).rai(j);           
         else
         end
     end
 end
-ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
 
+ii=find(rk); rok=rk(ii)'; dnok=dnk(ii)'; %remove NaNs
 [~,y_mat,yearlist,~]=timeseries2ydmat(dnok,rok); %takes a timeseries and makes it into a year x day matrix
 
 figure;
 [y_wkmat,~,yd_wk]=ydmat2weeklymat(y_mat,yearlist); %takes a year x day matrix and makes it a year x 2 week matrix
 pcolor([yd_wk ;yd_wk(end)+7],[yearlist(1:8) yearlist(8)+1],[[y_wkmat(:,1:8)';zeros(1,52)] zeros(9,1)]) %for just 2006:2014
 caxis([0 .7]) %RAI
-%colormap(flipud(hot));
+colormap(flipud(hot));
 
 ylabel('Year', 'fontsize',14, 'fontname', 'arial');
 xlabel('Month', 'fontsize',14, 'fontname', 'arial');
 
 title(num2str(class2do_string), 'fontsize',16, 'fontname', 'arial','fontweight','bold');
 
-set(gca,'ylim',[2012 2019],'tickdir','out');
+set(gca,'ylim',[2012 2019],'yticklabel',{'2012','2013','2014','2015','2016','2017','2018',''},'tickdir','out');
 h=colorbar;
 set(get(h,'ylabel'),'string','RAI (fraction)','fontsize',14,'fontname','arial');
 %set(get(h,'ylabel'),'string','RAI','fontsize',14,'fontname','arial');
@@ -97,6 +86,8 @@ shading flat
 datetick('x',4)
 set(gca,'ylim',[1 2],'ytick',[1,2],'yticklabel',{},'xticklabel',{},'tickdir','out');
 ylabel('Dinoflagellate','fontsize',12, 'fontname', 'Arial');    
+colormap(flipud(hot));
+
 % h=colorbar;
 % set(get(h,'ylabel'),'string','fraction','fontsize',14,'fontname','arial');
 % h.TickDirection = 'out';
@@ -125,6 +116,7 @@ shading flat
 datetick('x',4)
 set(gca,'ylim',[1 2],'ytick',[1,2],'yticklabel',{},'xticklabel',{},'tickdir','out');
 ylabel('Diatom','fontsize',12, 'fontname', 'Arial');    
+colormap(flipud(hot));
  
 hold on
 
@@ -228,7 +220,7 @@ xlabel('Month', 'fontsize',14, 'fontname', 'arial');
 
 title(num2str(param_string), 'fontsize',16, 'fontname', 'arial','fontweight','bold');
 
-set(gca,'ylim',[2012 2019],'tickdir','out');
+set(gca,'ylim',[2012 2019],'yticklabel',{'2012','2013','2014','2015','2016','2017','2018',''},'tickdir','out');
 h=colorbar;
 %set(get(h,'ylabel'),'string','uM','fontsize',14,'fontname','arial');
 %set(get(h,'ylabel'),'string','^oC','fontsize',14,'fontname','arial');
