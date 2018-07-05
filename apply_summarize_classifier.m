@@ -9,7 +9,7 @@
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
-start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
+start_blob_batch_user_training('F:\IFCB113\data\2018\','F:\IFCB113\blobs\2018\',true)
 
 % Step 3: Extract features
 % start_feature_batch_user_training('F:\IFCB104\data\2015\',...
@@ -18,8 +18,8 @@ start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',
 %     'F:\IFCB104\blobs\2016\','F:\IFCB104\features\2016\',true)
 % start_feature_batch_user_training('F:\IFCB104\data\2017\',...
 %     'F:\IFCB104\blobs\2017\','F:\IFCB104\features\2017\',true)
-start_feature_batch_user_training('F:\IFCB104\data\2018\',...
-   'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
+start_feature_batch_user_training('F:\IFCB113\data\2018\',...
+   'F:\IFCB113\blobs\2018\','F:\IFCB113\features\2018\',false)
 
 % Step 4: Apply classifier
 % start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
