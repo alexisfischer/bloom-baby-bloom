@@ -24,7 +24,12 @@ make_TreeBaggerClassifier_user_training(result_path, train_filename, result_str,
 
 %% If want to remake figures related to classifier output
 classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018');
-
+%%
+figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[figpath 'Figs\ClassifierPerformance.tif']);
+hold off
 
 %% Find the volume sampled in milliliters for >1 IFCB files
 %examples
