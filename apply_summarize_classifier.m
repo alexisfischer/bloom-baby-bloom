@@ -3,13 +3,13 @@
 
 %% PART 1: Apply classifier
 %% Step 1: Sort data into folders
-%sort_data_into_folders;
+sort_data_into_folders;
 
 %% Step 2: Extract blobs
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
-%start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
+start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
 
 % Step 3: Extract features
 % start_feature_batch_user_training('F:\IFCB104\data\2015\',...
