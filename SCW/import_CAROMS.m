@@ -39,44 +39,75 @@ ROMS(392) = [];
 save(out_dir,'ROMS');
 
 %% find dT/dz
-
+load('MB_temp_sal_2018','ROMS');
 
 for i=1:length(ROMS)
-    ROMS(i).dTdz=abs(diff(ROMS(i).temp));
+    ROMS(i).dTdz=abs((diff(ROMS(i).temp)))./(diff(ROMS(i).depth));
     [ROMS(i).maxdTdz,idx]=max(ROMS(i).dTdz);
     ROMS(i).maxT=ROMS(i).temp(idx);
     ROMS(i).maxZ=ROMS(i).depth(idx);
 end
 
+save('~/Documents/MATLAB/bloom-baby-bloom/SCW/ROMS/MB_temp_sal_2018','ROMS');
 
 
-%%
-resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-load('MB_temp_sal_2018','ROMS');
+%% plot pcolor temperatyre and dTdz profile
+resultpath='~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
-X=[ROMS.dn]';
-Y=[ROMS(1).depth]';
-C=[ROMS.temp];
+figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.08 0.04], [0.09 0.2]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings. 
 
-figure('Units','inches','Position',[1 1 8 2],'PaperPositionMode','auto');
-pcolor(X,Y,C); shading interp;
-caxis([10 16]); datetick('x',4);  grid on; 
-hold on
+subplot(2,1,1);
+    X=[ROMS.dn]';
+    Y=[ROMS(1).depth]';
+    C=[ROMS.temp];
 
-set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],...
-    'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,'fontsize',10,'tickdir','out');
-datetick('x','mmm','keeplimits','keepticks');
-ylabel('Depth (m)','fontsize',12,'fontweight','bold');
-colormap(jet);
-h=colorbar; set(get(h,'title'),'string','T (^oC)');
-h.FontSize = 10;
-h.Label.FontSize = 12;
-h.Label.FontWeight = 'bold';
-h.TickDirection = 'out';
+    pcolor(X,Y,C); shading interp;
+    caxis([10 16]); datetick('x',4);  grid on; 
+    hold on
+
+    set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],'xticklabel',{},...
+        'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,'fontsize',10,'tickdir','out');
+
+    ylabel('Depth (m)','fontsize',12,'fontweight','bold');
+  %  colormap(jet);
+    h=colorbar; 
+    h.FontSize = 10;
+    h.Label.String = 'T (^oC)'; 
+    h.Label.FontSize = 12;
+    h.Label.FontWeight = 'bold';
+    h.TickDirection = 'out';
+    hold on
+
+subplot(2,1,2);
+    X=[ROMS.dn]';
+    Y=[ROMS(1).depth(1:23)]';
+    C=[ROMS.dTdz];
+    
+%    colormap(jet);
+    pcolor(X,Y,C); shading interp;
+    caxis([0 0.2]); datetick('x',4);  grid on; 
+    hold on
+    plot(X,smooth([ROMS.maxZ],20),'w-','linewidth',2);
+    hold on
+
+    set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],...
+        'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,'fontsize',10,'tickdir','out');
+    datetick('x','mmm','keeplimits','keepticks');
+    ylabel('Depth (m)','fontsize',12,'fontweight','bold');
+    h=colorbar; 
+    h.Label.String = 'dTdz (^oC m^{-1})';
+    h.FontSize = 10;
+    h.Label.FontSize = 12;
+    h.Label.FontWeight = 'bold';
+    h.TickDirection = 'out';
+    hold on
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_Temp_Profile_2018.tif']);
+print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_MB_Temp_dTdz_2018.tif']);
 hold off
 
 %%

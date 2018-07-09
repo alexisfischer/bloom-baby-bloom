@@ -39,21 +39,49 @@ ROMS(392) = [];
 save(out_dir,'ROMS');
 
 %% find dT/dz
-
-
-for i=1:length(ROMS)
-    dTdz=abs(diff(ROMS(i).temp));
-    [maxdTdz(i),idx]=max(dTdz);
-    ROMS(i).maxT=ROMS(i).temp(idx);
-    maxZ(i)=ROMS(i).depth(idx);
-end
-
-
-
-%%
-resultpath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load('MB_temp_sal_2018','ROMS');
 
+for i=1:length(ROMS)
+    ROMS(i).dTdz=abs((diff(ROMS(i).temp))./(diff(ROMS(i).depth)));
+    [ROMS(i).maxdTdz,idx]=max(ROMS(i).dTdz);
+    ROMS(i).maxT=ROMS(i).temp(idx);
+    ROMS(i).maxZ=ROMS(i).depth(idx);
+end
+
+save('~/Documents/MATLAB/bloom-baby-bloom/SCW/ROMS/MB_temp_sal_2018','ROMS');
+
+
+%% plot pcolor dTdz profile
+resultpath='~/Documents/MATLAB/bloom-baby-bloom/SCW/';
+X=[ROMS.dn]';
+Y=[ROMS(1).depth(1:23)]';
+C=[ROMS.dTdz];
+
+figure('Units','inches','Position',[1 1 8 2],'PaperPositionMode','auto');
+pcolor(X,Y,C); shading interp;
+caxis([0 0.15]); datetick('x',4);  grid on; 
+hold on
+plot(X,smooth([ROMS.maxZ]),'w-','linewidt);
+hold on
+
+set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],...
+    'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,'fontsize',10,'tickdir','out');
+datetick('x','mmm','keeplimits','keepticks');
+ylabel('Depth (m)','fontsize',12,'fontweight','bold');
+colormap(jet);
+h=colorbar; set(get(h,'title'),'string','dTdz (^oC m^{-1})');
+h.FontSize = 10;
+h.Label.FontSize = 12;
+h.Label.FontWeight = 'bold';
+h.TickDirection = 'out';
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_dTdz_Profile_2018.tif']);
+hold off
+
+
+%% plot pcolor temp profile
 X=[ROMS.dn]';
 Y=[ROMS(1).depth]';
 C=[ROMS.temp];
