@@ -9,7 +9,7 @@
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
-start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
+%start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
 
 % Step 3: Extract features
 % start_feature_batch_user_training('F:\IFCB104\data\2015\',...
@@ -59,21 +59,21 @@ out_path = 'F:\IFCB104\class\summary\';
 in_dir = 'F:\IFCB104\data\';
 
 %dinos
-%countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
-%countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
-%countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
-%countcells_allTB_class('Lingulodinium', yrrange, classpath_generic, out_path, in_dir)
-%countcells_allTB_class('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Lingulodinium', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
 
 %diatoms
-%countcells_allTB_class('Chaetoceros', yrrange, classpath_generic, out_path, in_dir)
-% countcells_allTB_class('Det_Cer_Lau', yrrange, classpath_generic, out_path, in_dir)
-% countcells_allTB_class('Eucampia', yrrange, classpath_generic, out_path, in_dir)
-% countcells_allTB_class('Pseudo-nitzschia', yrrange, classpath_generic, out_path, in_dir)
-% countcells_allTB_class('NanoP_less10', yrrange, classpath_generic, out_path, in_dir)
-% countcells_allTB_class('Cryptophyte', yrrange, classpath_generic, out_path, in_dir)
-% countcells_allTB_class('Skeletonema', yrrange, classpath_generic, out_path, in_dir)
-% countcells_allTB_class('Centric', yrrange, classpath_generic, out_path, in_dir)
-% countcells_allTB_class('Guin_Dact', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Chaetoceros', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Det_Cer_Lau', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Eucampia', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Pseudo-nitzschia', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('NanoP_less10', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Cryptophyte', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Skeletonema', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Centric', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Guin_Dact', yrrange, classpath_generic, out_path, in_dir)
 
 

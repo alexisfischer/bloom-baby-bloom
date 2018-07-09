@@ -1,10 +1,10 @@
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 summary_path = 'F:\IFCB104\class\summary\'; %USER
-m = load('F:\IFCB104\manual\summary\count_biovol_manual_22Jun2018'); %USER
+m = load('F:\IFCB104\manual\summary\count_biovol_manual_09Jul2018'); %USER
 
-% class2do_string = 'Akashiwo'; chosen_threshold = 0.7; hi=2000;
-% class2do_string = 'Ceratium'; chosen_threshold = 0.5; hi=100;
-% class2do_string = 'Chaetoceros'; chosen_threshold = 0.8; hi=00;
+class2do_string = 'Akashiwo'; chosen_threshold = 0.7; hi=2000;
+%class2do_string = 'Ceratium'; chosen_threshold = 0.5; hi=100;
+% class2do_string = 'Chaetoceros'; chosen_threshold = 0.8; hi=300;
 % class2do_string = 'Dinophysis'; chosen_threshold = 0.7; hi=60; 
 % class2do_string = 'Pseudo-nitzschia'; chosen_threshold = 0.7; hi=150;
 % class2do_string = 'Det_Cer_Lau'; chosen_threshold = 0.7; hi=300;
@@ -15,7 +15,7 @@ m = load('F:\IFCB104\manual\summary\count_biovol_manual_22Jun2018'); %USER
 % class2do_string = 'Skeletonema'; chosen_threshold = 0.6; hi=30;
 % class2do_string = 'Centric'; chosen_threshold = 0.8; hi=400;
 %class2do_string = 'NanoP_less10'; chosen_threshold = 0.9; hi=1500;
-class2do_string = 'Cryptophyte'; chosen_threshold = 0.9; hi=80;
+%class2do_string = 'Cryptophyte'; chosen_threshold = 0.9; hi=80;
 
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 ind = strfind(class2do_string, ',');

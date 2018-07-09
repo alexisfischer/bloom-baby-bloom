@@ -1,9 +1,23 @@
-class2do_string = 'Thalassiosira'; 
+
+class2do_string = 'Akashiwo'; ymax=800; 
+%class2do_string = 'Ceratium'; ymax=50; 
+% class2do_string = 'Chaetoceros'; ymax=300;
+% class2do_string = 'Dinophysis'; ymax=12;
+% class2do_string = 'Pseudo-nitzschia'; ymax=25;
+% class2do_string = 'Det_Cer_Lau'; ymax=40; 
+% class2do_string = 'Eucampia'; ymax=80;
+% class2do_string = 'Prorocentrum'; ymax=200;
+% class2do_string = 'Lingulodinium'; ymax=10;
+% class2do_string = 'Thalassiosira'; ymax=30;
+% class2do_string = 'Skeletonema'; ymax=40;
+% class2do_string = 'Centric'; ymax=120;
+%class2do_string = 'NanoP_less10'; ymax=800;
+%class2do_string = 'Cryptophyte'; ymax=40;
 
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\Coeff_' class2do_string]);
 
-load('F:\IFCB104\manual\summary\count_biovol_manual_22Jun2018'); %USER
+load('F:\IFCB104\manual\summary\count_biovol_manual_09Jul2018'); %USER
 summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
 load([summary_path 'summary_allTB_bythre_' class2do_string]);
 
@@ -40,26 +54,11 @@ ind2 = strmatch(class2do_string, class2use); %change this for whatever class you
 ind=(find(y_mat)); % find dates associated with nonzero elements
 mdate_val=[mdateTB(ind),y_mat(ind)];
 
-%%
+%
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.09 0.2], [0.09 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
-
-%ymax=800; %Akashiwo
-%ymax=80; %Centric
-%ymax=50; %Ceratium
-%ymax=100; %Chaetoceros
-%ymax=40; %Cryptophyte
-%ymax=40; %Det_Cer_Lau
-%ymax=15; %Dinophysis
-%ymax=80; %Eucampia
-%ymax=10; %Lingulodinium
-%ymax=800; %NanoP_less10
-%ymax=200; %Prorocentrum
-%ymax=25; %Pseudo-nitzschia
-%ymax=10; %Skeletonema
-ymax=30; %Thalassiosira
 
 subplot(1,3,1);
 stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
@@ -74,7 +73,7 @@ set(gca,'xgrid','on','ylim',[0 ymax],...
     'xlim',[datenum('2016-08-01') datenum('2016-11-05')],...
     'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
     datenum('2016-10-01'),datenum('2016-11-01')],'fontsize',10,...    
-    'Xticklabel',{'Aug16','Sep','Oct','Nov'},'tickdir','out');  
+    'Xticklabel',{'A16','S','O','N'},'tickdir','out');  
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
     'fontsize',12, 'fontname', 'Arial');    
 hold on
@@ -97,7 +96,7 @@ set(gca,'xgrid','on','ycolor','none','ylim',[0 ymax],...
     'xlim',[datenum('2017-02-22') datenum('2017-06-24')],...
     'xtick',[datenum('2017-03-01'),datenum('2017-04-01'),...
     datenum('2017-05-01'),datenum('2017-06-01')],'fontsize',10,...    
-    'Xticklabel',{'Mar17','Apr','May','Jun'},'tickdir','out');  
+    'Xticklabel',{'M17','A','M','J'},'tickdir','out');  
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
     'fontsize',12, 'fontname', 'Arial');    
 % vfill([datenum('2017-03-28'),0,datenum('2017-04-21'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
@@ -116,7 +115,7 @@ set(gca,'xgrid','on','ycolor','none','ylim',[0 ymax],...
     'xtick',[datenum('2018-02-01'),datenum('2018-03-01'),...
     datenum('2018-04-01'),datenum('2018-05-01'),datenum('2018-06-01'),...
     datenum('2018-07-01')],'fontsize',10,...    
-    'Xticklabel',{'Feb18','Mar','Apr','May','Jun','Jul'},'tickdir','out');  
+    'Xticklabel',{'F18','M','A','M','J','J'},'tickdir','out');  
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
     'fontsize',12, 'fontname', 'Arial');    
 % vfill([datenum('2018-01-28'),0,datenum('2018-02-01'),500],[200 200 200]/255,'FaceAlpha',.3,'Edgecolor','none');
