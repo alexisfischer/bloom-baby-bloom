@@ -1,14 +1,11 @@
-load('MB_ROMs_filenames_Jan-Jul2018','filename'); filename=flipud(char(filename));
-in_dir='http://west.rssoffice.com:8080/thredds/dodsC/roms/CA3km-nowcast/MB/';
-out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/ROMS/MB_temp_sal_2018';
-in_dir_base='ca_subMB_das_';
+%load('MB_ROMs_filenames_Jan-Jul2018','filename');
+load('MB_ROMs_filenames_Jan-Jul2017','filename'); 
 
-ROMS.dn=zeros(length(filename),1);
-ROMS.lat=zeros(length(filename),1);
-ROMS.lon=zeros(length(filename),1);
-ROMS.depth=zeros(length(filename),1);
-ROMS.temp=zeros(length(filename),1);
-ROMS.salt=zeros(length(filename),1);
+filename=flipud(char(filename));
+
+in_dir='http://west.rssoffice.com:8080/thredds/dodsC/roms/CA3km-nowcast/MB/';
+out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/ROMS/MB_temp_sal_2017'; %change for whatever year
+in_dir_base='ca_subMB_das_';
 
 for i=1:length(filename)
     disp(filename(i,1:26));
@@ -34,15 +31,11 @@ ROMS(i).S=squeeze(salt(54,49,:));
 end
 
 % remove bad data on '11-Apr-2018 09:00:00'
-ROMS(392) = [];
+%ROMS(392) = [];
 
-save(out_dir,'ROMS');
-
-%% find dT/dz
-load('MB_temp_sal_2018','ROMS');
-
+% find dT/dz
 for i=1:length(ROMS)
-    ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)';
+    ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)'; %cubic spline interpolation
     ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).T,0:1:40)';
     ROMS(i).Zi = (0:1:40)';
     
@@ -52,13 +45,13 @@ for i=1:length(ROMS)
     ROMS(i).Zmax=ROMS(i).Zi(idx);
     
 end
-
-save('~/Documents/MATLAB/bloom-baby-bloom/SCW/ROMS/MB_temp_sal_2018','ROMS');
+save(out_dir,'ROMS');
 
 
 %% plot pcolor temperature and dTdz profile
 resultpath='~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
+load('MB_temp_sal_2017','ROMS');
 figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.08 0.04], [0.09 0.2]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
@@ -73,7 +66,7 @@ subplot(2,1,1);
     caxis([10 16]); datetick('x',4);  grid on; 
     hold on
 
-    set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],'xticklabel',{},...
+    set(gca,'XLim',[datenum('01-Jan-2017') datenum('01-Jul-2017')],'xticklabel',{},...
         'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
 
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
@@ -93,10 +86,10 @@ subplot(2,1,2);
     pcolor(X,Y,C); shading interp;
     caxis([0 0.2]); datetick('x',4);  grid on; 
     hold on
-    plot(X,smooth([ROMS.Zmax],30),'w-','linewidth',3);
+    plot(X,smooth([ROMS.Zmax],20),'k-','linewidth',3);
     hold on
 
-    set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],...
+    set(gca,'XLim',[datenum('01-Jan-2017') datenum('01-Jul-2017')],...
         'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
     datetick('x','mmm','keeplimits','keepticks');
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
@@ -110,7 +103,7 @@ subplot(2,1,2);
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_MB_Temp_dTdz_2018.tif']);
+print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_MB_Temp_dTdz_2017.tif']);
 hold off
 
 %%
