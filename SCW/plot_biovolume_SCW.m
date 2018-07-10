@@ -2,7 +2,7 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-year=2018; %USER
+year=2017; %USER
 
 % Step 1: Load in data
 % Chemical and Physical
@@ -42,49 +42,12 @@ load([resultpath 'summary_biovol_allTB' num2str(year) ''],'class2useTB',...
 [xdino, ydino ] = timeseries2ydmat(mdateTB, nansum(classbiovolTB(:,ind_dino),2));
 [xdino ydino_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
-ind = 1; %Akashiwo 
-    [~,yAKA ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yAKA_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
-    
-ind = 9; %Ceratium 
-    [~,yCER ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yCER_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
-    
-ind = 33; %Dinophysis 
-    [~,yDINO ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yDINO_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
-    
-ind = 26; %Lingulodinium 
-    [~,yLING ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yLING_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
-
-ind = 33; %Prorocentrum 
-    [~,yPRO ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yPRO_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);    
-      
-ind = 10; %Chaetoceros 
-    [~,yCHAET ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yCHAET_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
-    
-ind = 8; %Centric
-    [~,yC ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yC_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
-    
-ind = 34; %Pseudo-nitzschia 
-    [~,yPN ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yPN_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);    
-    
-ind = 17; %Det_Cer_Lau
-    [~,yDETO ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yDETO_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
-    
-ind = 22; %Eucampia
-    [~,yEUC ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yEUC_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
-    
-ind = 23; %Guin_Dact
-    [~,yGUIN ] = timeseries2ydmat(mdateTB, classbiovolTB(:,ind));
-    [~,yGUIN_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);  
+%extract biovolume for each class
+for i=1:length(class2useTB)
+    BIO(i).class = class2useTB(i);
+    [~,BIO(i).bio ] = timeseries2ydmat(mdateTB, classbiovolTB(:,i));
+    [~,BIO(i).mL ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
+end
 
 %[~, cind] = sort(sum(x), 'descend'); %rank order biomass    
 
@@ -96,7 +59,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.08 0.04], [0.11 0.2]);
 
 %Fraction dinos and diatoms
 subplot(3,1,1);
-fx_other=[ymat-[ydino+ydiat]]./ymat; %fraction not dinos or diatoms
+fx_other=(ymat-(ydino+ydiat))./ymat; %fraction not dinos or diatoms
 
 bar(xmat, [ydino./ymat ydiat./ymat fx_other], 0.5, 'stack');
 ax = get(gca);
@@ -118,21 +81,32 @@ hold on
 
 %species breakdown
 subplot(3,1,2);
-fx_dino=[ydino-[yAKA+yCER+yDINO+yLING+yPRO]]./ymat; %fraction other dinos
-fx_diat=[ydiat-[yCHAET+yC+yDETO+yPN+yEUC+yGUIN]]./ymat; %fraction other diatoms
-fx_other=[ymat-[ydino+ydiat]]./ymat; %fraction not dinos or diatoms
+ 
+select_dino=[BIO(strmatch('Akashiwo',class2useTB)).bio,...
+    BIO(strmatch('Ceratium',class2useTB)).bio,...
+    BIO(strmatch('Dinophysis',class2useTB)).bio,...
+    BIO(strmatch('Lingulodinium',class2useTB)).bio,...
+    BIO(strmatch('Prorocentrum',class2useTB)).bio];
+fx_otherdino=(ydino-sum(select_dino,2))./ymat; %fraction other dinos
 
-bar(xmat,[yAKA./ymat yCER./ymat yDINO./ymat yLING./ymat yPRO./ymat...
-    yCHAET./ymat yDETO./ymat yEUC./ymat yGUIN./ymat yPN./ymat yC./ymat...
-    fx_dino fx_diat fx_other], 0.5, 'stack');
-ax = get(gca);
-cat = ax.Children;
+select_diat=[BIO(strmatch('Chaetoceros',class2useTB)).bio,...
+    BIO(strmatch('Det_Cer_Lau',class2useTB)).bio,...
+    BIO(strmatch('Eucampia',class2useTB)).bio,...
+    BIO(strmatch('Guin_Dact',class2useTB)).bio,...    
+    BIO(strmatch('Pseudo-nitzschia',class2useTB)).bio,...
+    BIO(strmatch('Centric',class2useTB)).bio,...    
+    BIO(strmatch('Pennate',class2useTB)).bio];
+fx_otherdiat=(ydiat-sum(select_diat,2))./ymat; %fraction other dinos
 
-cstr = [[220 220 220]/255; [110 110 110]/255; [0 0 0]/255;...
-    [255,255,153]/255; [166,206,227]/255; [31,120,180]/255;...
-    [178,223,138]/255; [51,160,44]/255; [251,154,153]/255; [227,26,28]/255;...
-    [253,191,111]/255; [255,127,0]/255; [202,178,214]/255;...
-    [106,61,154]/255;[220 220 220]/255];
+bar(xmat,[select_dino./ymat select_diat./ymat fx_otherdino fx_otherdiat fx_other], 0.5, 'stack');
+
+ax=get(gca); cat = ax.Children;
+col_diat1=flipud(brewermap(6,'BuGn'));
+col_diat2=flipud(brewermap(6,'BuPu'));
+col_dino=(brewermap(6,'YlOrRd'));
+
+cstr=[[220 220 220]/255; [110 110 110]/255; [0 0 0]/255;...
+    col_diat2(1:4,:); col_diat1(1:3,:); col_dino(1:5,:)];
 
 for ii = 1:length(cat)
     set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
@@ -144,8 +118,8 @@ ylim([0;1])
 set(gca,'xticklabel',{}, 'fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel({'Fraction';'of biovolume'}, 'fontsize', 11, 'fontname', 'arial','fontweight','bold')
 h=legend('Akashiwo','Ceratium','Dinophysis','Lingulodinium','Prorocentrum',...
-    'Chaetoceros','Detonula','Eucampia','Guinardia','Pseudo-nitzschia','Centric diatoms',...
-    'other dinos','other diatoms','other cell-derived');
+    'Chaetoceros','DetCerLau','Eucampia','GuinDact','Pseudo-nitzschia',...
+    'Centric diatoms','Pennate diatoms','other dinos','other diatoms','other cell-derived');
 set(h,'Position',[0.808159725831097 0.399956604207141 0.187499996391125 0.246744784681747]);
 hold on
 
