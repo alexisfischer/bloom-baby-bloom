@@ -27,9 +27,9 @@ for i=1:length(filename)
 ROMS(i).dn=dn;    
 ROMS(i).lat=lat(49); % 36.9573°N,    
 ROMS(i).lon=lon(54); % -122.0173°W
-ROMS(i).depth=depth;
-ROMS(i).temp=squeeze(temp(54,49,:));
-ROMS(i).salt=squeeze(salt(54,49,:));
+ROMS(i).Z=depth;
+ROMS(i).T=squeeze(temp(54,49,:));
+ROMS(i).S=squeeze(salt(54,49,:));
     
 end
 
@@ -42,16 +42,21 @@ save(out_dir,'ROMS');
 load('MB_temp_sal_2018','ROMS');
 
 for i=1:length(ROMS)
-    ROMS(i).dTdz=abs((diff(ROMS(i).temp)))./(diff(ROMS(i).depth));
+    ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)';
+    ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).T,0:1:40)';
+    ROMS(i).Zi = (0:1:40)';
+    
+    ROMS(i).dTdz=(-diff(ROMS(i).Ti))./(diff(ROMS(i).Zi));
     [ROMS(i).maxdTdz,idx]=max(ROMS(i).dTdz);
-    ROMS(i).maxT=ROMS(i).temp(idx);
-    ROMS(i).maxZ=ROMS(i).depth(idx);
+    ROMS(i).Tmax=ROMS(i).Ti(idx);
+    ROMS(i).Zmax=ROMS(i).Zi(idx);
+    
 end
 
 save('~/Documents/MATLAB/bloom-baby-bloom/SCW/ROMS/MB_temp_sal_2018','ROMS');
 
 
-%% plot pcolor temperatyre and dTdz profile
+%% plot pcolor temperature and dTdz profile
 resultpath='~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
 figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
@@ -61,18 +66,17 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.08 0.04], [0.09 0.2]);
 
 subplot(2,1,1);
     X=[ROMS.dn]';
-    Y=[ROMS(1).depth]';
-    C=[ROMS.temp];
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Ti];
 
     pcolor(X,Y,C); shading interp;
     caxis([10 16]); datetick('x',4);  grid on; 
     hold on
 
     set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],'xticklabel',{},...
-        'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,'fontsize',10,'tickdir','out');
+        'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
 
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
-  %  colormap(jet);
     h=colorbar; 
     h.FontSize = 10;
     h.Label.String = 'T (^oC)'; 
@@ -83,18 +87,17 @@ subplot(2,1,1);
 
 subplot(2,1,2);
     X=[ROMS.dn]';
-    Y=[ROMS(1).depth(1:23)]';
+    Y=[ROMS(1).Zi(1:40)]';
     C=[ROMS.dTdz];
     
-%    colormap(jet);
     pcolor(X,Y,C); shading interp;
     caxis([0 0.2]); datetick('x',4);  grid on; 
     hold on
-    plot(X,smooth([ROMS.maxZ],20),'w-','linewidth',2);
+    plot(X,smooth([ROMS.Zmax],30),'w-','linewidth',3);
     hold on
 
     set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],...
-        'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,'fontsize',10,'tickdir','out');
+        'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
     datetick('x','mmm','keeplimits','keepticks');
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
     h=colorbar; 
