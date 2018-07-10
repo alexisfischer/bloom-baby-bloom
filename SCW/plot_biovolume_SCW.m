@@ -310,7 +310,7 @@ xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[figpath 'Figs\Dino-Diatom_2018.tif']);
+print(gcf,'-dtiff','-r600',[figpath 'Figs\TEMP_comparison.tif']);
 hold off
 
 %% plot dinos vs diatoms
