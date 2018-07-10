@@ -164,11 +164,6 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[figpath 'Figs\FxBiovolume_IFCB_SCW_' num2str(year) '.tif']);
 hold off
 
-%%
-X=([ROMS.maxZ]);
-
-Y=[ydino./[ydino+ydiat];
-
 
 %% plot of Temp, dZdt with the dinos/diatom
 figure('Units','inches','Position',[1 1 7 6],'PaperPositionMode','auto');
@@ -180,15 +175,15 @@ xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
        
 subplot(4,1,1); %SCW ROMS Temp
     X=[ROMS.dn]';
-    Y=[ROMS(1).depth]';
-    C=[ROMS.temp];
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Ti];
     pcolor(X,Y,C); shading interp;
     caxis([10 16]); datetick('x',4);  grid on; 
     hold on
     
     xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
     set(gca,'xticklabel',{},'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
-    ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+    ylabel('Depth (m)','fontsize',11,'fontweight','bold');
     h=colorbar('Position',[0.894841269841615 0.767361111111111 0.0203373015869565 0.192708333333334]);
     h.FontSize = 8;
     h.Label.String = 'T (^oC)';     
@@ -199,18 +194,18 @@ subplot(4,1,1); %SCW ROMS Temp
   
 subplot(4,1,2)
     X=[ROMS.dn]';
-    Y=[ROMS(1).depth(1:23)]';
+    Y=[ROMS(1).Zi(1:40)]';
     C=[ROMS.dTdz];
     
     pcolor(X,Y,C); shading interp;
     caxis([0 0.2]); datetick('x',4);  grid on; 
     hold on
-    plot(X,smooth([ROMS.maxZ],20),'w-','linewidth',2);
+    plot(X,smooth([ROMS.Zmax],30),'w-','linewidth',2);
     hold on
 
     set(gca,'XLim',[datenum('01-Jan-2018') datenum('01-Jul-2018')],'xticklabel',{},...
-        'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',8,'tickdir','out');
-    ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+        'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
+    ylabel('Depth (m)','fontsize',11,'fontweight','bold');
     h=colorbar('Position',[0.896329364591529 0.53125 0.0233134925513283 0.194444444444445]); 
     h.Label.String = 'dTdz (^oC m^{-1})';
     h.FontSize = 8;
@@ -232,7 +227,7 @@ subplot(4,1,3); %Fraction dinos and diatoms
     xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
     ylim([0;1])
     set(gca,'xgrid','on', 'fontsize', 10, 'fontname', 'arial','tickdir','out','Xticklabel',{})
-    ylabel({'Fraction';'of biovolume'}, 'fontsize', 10, 'fontname', 'arial','fontweight','bold')
+    ylabel({'Fraction';'of biovolume'}, 'fontsize', 11, 'fontname', 'arial','fontweight','bold')
     h=legend('dinos','diatoms','Location','NE');
     h.FontSize = 8;    
     hold on    
@@ -244,7 +239,7 @@ yyaxis left %total cell-derived biovolume
     xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
     set(gca,'xgrid','on','fontsize', 10, 'fontname', 'arial',...
         'xaxislocation','top','tickdir','out','ycolor','k','Xticklabel',{})
-    ylabel({'Biovolume';'(\mum^{-3} mL^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold')
+    ylabel({'Biovolume';'(\mum^{-3} mL^{-1})'},'fontsize',11,'fontname','arial','fontweight','bold')
     hold on      
     
 yyaxis right %Chlorophyll
@@ -255,12 +250,9 @@ yyaxis right %Chlorophyll
     set(gca,'ylim',[0 20],'xgrid','on','fontsize', 10, 'fontname', 'arial',...
         'xaxislocation','bottom','tickdir','out','ycolor','k','ycolor',[0.8500 0.3250 0.0980])   
     datetick('x','mmm','keeplimits','keepticks');        
-    ylabel('Chl (mg m^{-3})','Color',[0.8500 0.3250 0.0980],'fontsize',10,'fontname','arial','fontweight','bold');      
-    %h=legend([h2,h3],{'weekly','sensor'},'Location','NE'); 
-    %h.FontSize = 8;    
+    ylabel('Chl (mg m^{-3})','Color',[0.8500 0.3250 0.0980],'fontsize',11,'fontname','arial','fontweight','bold');         
     hold on    
     
-
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[figpath 'Figs\Dino-Diatom_dTdz_2018.tif']);
@@ -302,8 +294,8 @@ subplot(5,1,2); %SCW wind
        
 subplot(5,1,3); %SCW ROMS Temp
     X=[ROMS.dn]';
-    Y=[ROMS(1).depth]';
-    C=[ROMS.temp];
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Ti];
     pcolor(X,Y,C); shading interp;
     caxis([10 16]); datetick('x',4);  grid on; 
     hold on
