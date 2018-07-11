@@ -1,0 +1,40 @@
+%% import discharge data
+% Discharge (cubic feet per second)
+% Date,  dn=datenum(TimeUTC,'yyyy-mm-dd HH:MM');
+
+filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/PajaroRiver_2012-2018.txt';
+delimiter = {'\t',' ',':'};
+startRow = 31;
+formatSpec = '%*q%*q%{yyyy-MM-dd HH:mm}D%*q%f%*s%[^\n\r]';
+
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'MultipleDelimsAsOne', true, 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+
+dt = dataArray{:, 1};
+discharge = dataArray{:, 2};
+
+
+%% plot Pajaro River discharge
+figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.07 0.07], [0.07 0.04], [0.12 0.03]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+
+t=datenum(dt);
+
+% discharge
+plot((dt),discharge,'b-','Linewidth',1);
+    hold on
+datetick('x',10);
+set(gca,'ylim',[0 10000],'ytick',0:2500:10000,...
+        'xlim',[datenum('2012-01-01') datenum('2018-07-01')],...     
+        'fontsize',10,'XAxisLocation','bottom','TickDir','out'); 
+        hold on
+        ylabel('Discharge (ft^3 sec^-^1)','fontsize',11,'fontweight','bold');        
+hold on
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600','~/Documents/MATLAB/bloom-baby-bloom/SCW/Figs/PajaroDischarge_2012-2018.tif')
+hold off 

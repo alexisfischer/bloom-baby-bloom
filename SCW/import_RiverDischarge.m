@@ -1,53 +1,32 @@
 %% import discharge data
 % Discharge (cubic feet per second)
-% Gage height (feet)
 % Date,  dn=datenum(TimeUTC,'yyyy-mm-dd HH:MM');
 
-%% import temperature data
-temp = ncread('http://west.rssoffice.com:8080/thredds/dodsC/roms/CA3km-nowcast/CA/ca_subCA_das_2018022509.nc','temp' );
+filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/PajaroRiver_2012-2018.txt';
+delimiter = {'\t',' ',':'};
+startRow = 31;
+formatSpec = '%*q%*q%{yyyy-MM-dd HH:mm}D%*q%f%*s%[^\n\r]';
+
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'MultipleDelimsAsOne', true, 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+
+dt = dataArray{:, 1};
+discharge = dataArray{:, 2};
+
 
 %% plot Pajaro River discharge
-figure('Units','inches','Position',[1 1 6 4],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.07 0.07], [0.07 0.04], [0.12 0.03]);
-%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
-%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+figure('Units','inches','Position',[1 1 7 2.5],'PaperPositionMode','auto');
 
-% discharge
-subplot(2,1,1)
-plot(dn,discharge,'r-','Linewidth',1);
-    hold on
-set(gca,'ylim',[0 10000],'ytick',0:2500:10000,...
-        'xlim',[datenum('2016-08-01') datenum('2017-07-31')],...
-        'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
-        datenum('2016-10-01'),datenum('2016-11-01'),...
-        datenum('2016-12-01'),datenum('2017-01-01'),...
-        datenum('2017-02-01'),datenum('2017-03-01'),...
-        datenum('2017-04-01'),datenum('2017-05-01'),...
-        datenum('2017-06-01'),datenum('2017-07-01')],...        
-        'XTickLabel',{},...
-        'fontsize',8,'XAxisLocation','bottom','TickDir','out'); 
-        hold on
-        ylabel('Discharge (ft^3 sec^-^1)','fontsize',9,'fontweight','bold');        
+plot(datenum(dt),discharge,'b-','Linewidth',1);
+datetick('x','yyyy');
+set(gca,'yscale','log','ylim',[1 10^4],...
+    'xlim',[datenum('2012-01-01') datenum('2019-01-01')],...     
+	'fontsize',10,'XAxisLocation','bottom','TickDir','out'); 
+ylabel('Discharge (ft^3 sec^-^1)','fontsize',11,'fontweight','bold');        
 hold on
-
-subplot(2,1,2);
-plot(dn,gageheight,'b-','Linewidth',1);
-    hold on
-set(gca,'ylim',[0 30],'ytick',0:10:30,...
-        'xlim',[datenum('2016-08-01') datenum('2017-07-31')],...
-        'xtick',[datenum('2016-08-01'),datenum('2016-09-01'),...
-        datenum('2016-10-01'),datenum('2016-11-01'),...
-        datenum('2016-12-01'),datenum('2017-01-01'),...
-        datenum('2017-02-01'),datenum('2017-03-01'),...
-        datenum('2017-04-01'),datenum('2017-05-01'),...
-        datenum('2017-06-01'),datenum('2017-07-01')],...        
-        'XTickLabel',{'Aug','Sep',...
-        'Oct','Nov','Dec','Jan17','Feb','Mar','Apr','May','Jun','Jul'},...
-        'fontsize',8,'XAxisLocation','bottom','TickDir','out'); 
-        hold on
-        ylabel('Gage Height (ft)','fontsize',9,'fontweight','bold');        
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600','~/Documents/MATLAB/bloom-baby-bloom/SCW/Figs/PajaroDischarge_SCW_2016-2017.tif')
+print(gcf,'-dtiff','-r600','~/Documents/MATLAB/bloom-baby-bloom/SCW/Figs/PajaroDischarge_2012-2018.tif')
 hold off 

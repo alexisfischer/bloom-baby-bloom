@@ -49,9 +49,11 @@ save(out_dir,'ROMS');
 
 
 %% plot pcolor temperature and dTdz profile
-resultpath='~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
-load('MB_temp_sal_2017','ROMS');
+year=2018;
+
+resultpath='~/Documents/MATLAB/bloom-baby-bloom/SCW/';
+load(['MB_temp_sal_' num2str(year) ''],'ROMS');
 figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.08 0.04], [0.09 0.2]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
@@ -66,8 +68,8 @@ subplot(2,1,1);
     caxis([10 16]); datetick('x',4);  grid on; 
     hold on
 
-    set(gca,'XLim',[datenum('01-Jan-2017') datenum('01-Jul-2017')],'xticklabel',{},...
-        'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
+    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
+    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
 
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
     h=colorbar; 
@@ -86,11 +88,11 @@ subplot(2,1,2);
     pcolor(X,Y,C); shading interp;
     caxis([0 0.2]); datetick('x',4);  grid on; 
     hold on
-    plot(X,smooth([ROMS.Zmax],20),'k-','linewidth',3);
+    plot(X,smooth([ROMS.Zmax],20),'w-','linewidth',3);
     hold on
 
-    set(gca,'XLim',[datenum('01-Jan-2017') datenum('01-Jul-2017')],...
-        'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
+    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))    
+    set(gca,'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
     datetick('x','mmm','keeplimits','keepticks');
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
     h=colorbar; 
@@ -103,7 +105,7 @@ subplot(2,1,2);
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_MB_Temp_dTdz_2017.tif']);
+print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_MB_Temp_dTdz_' num2str(year) '.tif']);
 hold off
 
 %%
