@@ -2,9 +2,9 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-year=2018; %USER
+year=2017; %USER
 
-% Step 1: Load in data
+%%%% Step 1: Load in data
 % Chemical and Physical
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([resultpath 'Data\RAI_SCW.mat'],'r');
@@ -14,6 +14,7 @@ load([resultpath 'Data\Weatherstation_SCW'],'SC');
 load([resultpath 'Data\M1_buoy.mat'],'M1');
 load([resultpath 'Data\coastal_46042'],'coast');
 load([resultpath 'ROMS\MB_temp_sal_' num2str(year) ''],'ROMS');
+load([resultpath 'Data\pajaroRiver'],'paj');
 
 % Biovolume
 figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
@@ -24,7 +25,7 @@ load([resultpath 'summary_biovol_allTB' num2str(year) ''],'class2useTB',...
     micron_factor = 1/3.4; %microns per pixel
     classbiovolTB = classbiovolTB*micron_factor^3;
 
-%% Step 2: Determine what fraction of Cell-derived biovolume is 
+%%%% Step 2: Determine what fraction of Cell-derived biovolume is 
 % Dinoflagellates vs Diatoms vs Classes of interest
 
 %select total living biovolume 
@@ -101,12 +102,12 @@ fx_otherdiat=(ydiat-sum(select_diat,2))./ymat; %fraction other dinos
 bar(xmat,[select_dino./ymat select_diat./ymat fx_otherdino fx_otherdiat fx_other], 0.5, 'stack');
 
 ax=get(gca); cat = ax.Children;
-col_diat1=flbrewermap(5,'PuBu');
-col_diat2=brewermap(5,'YlGn');
-col_dino=brewermap(6,'YlOrRd');
+col_diat1=flipud(brewermap(6,'BuGn'));
+col_diat2=flipud(brewermap(6,'BuPu'));
+col_dino=(brewermap(6,'YlOrRd'));
 
 cstr=[[220 220 220]/255; [110 110 110]/255; [0 0 0]/255;...
-    col_diat1(1:3,:); col_diat2(1:4,:); col_dino(1:5,:)];
+    col_diat2(1:4,:); col_diat1(1:3,:); col_dino(1:5,:)];
 
 for ii = 1:length(cat)
     set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
@@ -146,24 +147,24 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.12]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-xax1=datenum('2017-01-01'); xax2=datenum('2017-07-01');  
+xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-07-01']);  
 
-subplot(6,1,1); %46042 data
-    [U,~]=plfilt(coast(6).U,coast(6).DN);
-    [V,DN]=plfilt(coast(6).V,coast(6).DN);
-    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-    yax1=-10; yax2=10;
-    stick(time,u,v,xax1,xax2,yax1,yax2,' ');
-    xlim([xax1;xax2])    
-    ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');      
-    legend('46042','Location','NW')
-    legend boxoff
-    hold on
+% subplot(6,1,1); %46042 data
+%     [U,~]=plfilt(coast(6).U,coast(6).DN);
+%     [V,DN]=plfilt(coast(6).V,coast(6).DN);
+%     [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
+%     [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
+%     yax1=-10; yax2=10;
+%     stick(time,u,v,xax1,xax2,yax1,yax2,' ');
+%     xlim([xax1;xax2])    
+%     ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');      
+%     legend('46042','Location','NW')
+%     legend boxoff
+%     hold on
 
-subplot(6,1,2); %SCW wind
-    [U,~]=plfilt(SC(6).U,SC(6).DN);
-    [V,DN]=plfilt(SC(6).V,SC(6).DN);
+subplot(6,1,1); %SCW wind
+    [U,~]=plfilt(SC(7).U,SC(7).DN);
+    [V,DN]=plfilt(SC(7).V,SC(7).DN);
     [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
     [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
     yax1=-3; yax2=3;
@@ -174,17 +175,46 @@ subplot(6,1,2); %SCW wind
     legend boxoff    
     hold on    
        
-subplot(6,1,3); %SCW ROMS Temp
+subplot(6,1,2);
+    plot(paj.dn,paj.dis,'-k','linewidth',1.5);
+    datetick('x', 3, 'keeplimits')    
+    xlim([xax1;xax2]);
+    set(gca,'xgrid','on','xticklabel',{},'fontsize',9,'tickdir','out'); 
+    ylabel('Discharge (ft^3 s^{-1})','fontsize',10,'fontweight','bold');
+hold on
+
+subplot(6,1,3); %ROMS Salinity
+    X=[ROMS.dn]';
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Si];
+    colormap(jet);    
+    pcolor(X,Y,C); shading interp;
+    caxis([33.2 33.9]); datetick('x',4);  grid on; 
+    hold on
+
+    set(gca,'XLim',[xax1;xax2],'xticklabel',{},...
+        'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',9,'tickdir','out');
+    ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+    h=colorbar('Position',[0.896267361111111 0.520833333333333 0.0269097222222222 0.134114583333333]);
+    h.Label.String = 'S (g kg^{-1})';
+    h.FontSize = 8;
+    h.Label.FontSize = 10;
+    h.Label.FontWeight = 'bold';
+    h.TickDirection = 'out';
+    hold on
+    
+subplot(6,1,4); %SCW ROMS Temp
     X=[ROMS.dn]';
     Y=[ROMS(1).Zi]';
     C=[ROMS.Ti];
+    colormap(jet);
     pcolor(X,Y,C); shading interp;
     caxis([10 16]); datetick('x',4);  grid on; 
     hold on
     xlim([xax1;xax2])        
-    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
-    ylabel('Depth (m)','fontsize',11,'fontweight','bold');
-    h=colorbar('Position',[0.896267361111111 0.520833333333333 0.0269097222222222 0.134114583333333]);
+    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',9,'tickdir','out');
+    ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+    h=colorbar('Position',[0.894965277777778 0.368489583333333 0.0282118055555555 0.1328125]); 
     h.FontSize = 8;
     h.Label.String = 'T (^oC)';     
     h.Label.FontSize = 10;
@@ -192,27 +222,27 @@ subplot(6,1,3); %SCW ROMS Temp
     h.TickDirection = 'out';
     hold on
   
-subplot(6,1,4)
-    X=[ROMS.dn]';
-    Y=[ROMS(1).Zi(1:40)]';
-    C=[ROMS.dTdz];
-    
-    pcolor(X,Y,C); shading interp;
-    caxis([0 0.2]); datetick('x',4);  grid on; 
-    hold on
-    plot(X,smooth([ROMS.Zmax],20),'w-','linewidth',2);
-    hold on
-
-    set(gca,'XLim',[xax1;xax2],'xticklabel',{},...
-        'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
-    ylabel('Depth (m)','fontsize',10,'fontweight','bold');
-    h=colorbar('Position',[0.894965277777778 0.368489583333333 0.0282118055555555 0.1328125]); 
-    h.Label.String = 'dTdz (^oC m^{-1})';
-    h.FontSize = 8;
-    h.Label.FontSize = 10;
-    h.Label.FontWeight = 'bold';
-    h.TickDirection = 'out';
-    hold on
+% subplot(6,1,4); %dTdz
+%     X=[ROMS.dn]';
+%     Y=[ROMS(1).Zi(1:40)]';
+%     C=[ROMS.dTdz];
+%     colormap(jet);    
+%     pcolor(X,Y,C); shading interp;
+%     caxis([0 0.2]); datetick('x',4);  grid on; 
+%     hold on
+%     plot(X,smooth([ROMS.Zmax],20),'w-','linewidth',2);
+%     hold on
+% 
+%     set(gca,'XLim',[xax1;xax2],'xticklabel',{},...
+%         'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',9,'tickdir','out');
+%     ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+%     h=colorbar('Position',[0.894965277777778 0.368489583333333 0.0282118055555555 0.1328125]); 
+%     h.Label.String = 'dTdz (^oC m^{-1})';
+%     h.FontSize = 8;
+%     h.Label.FontSize = 10;
+%     h.Label.FontWeight = 'bold';
+%     h.TickDirection = 'out';
+%     hold on
     
 subplot(6,1,5); %Fraction dinos and diatoms
     bar(xmat, [ydino./[ydino+ydiat] ydiat./[ydino+ydiat]], 0.5, 'stack');
@@ -226,7 +256,7 @@ subplot(6,1,5); %Fraction dinos and diatoms
     datetick('x', 3, 'keeplimits')
     xlim([xax1;xax2])    
     ylim([0;1])
-    set(gca,'xgrid','on', 'fontsize', 10, 'fontname', 'arial','tickdir','out','Xticklabel',{})
+    set(gca,'xgrid','on', 'fontsize', 9, 'fontname', 'arial','tickdir','out','Xticklabel',{})
     ylabel({'Fraction';'of biovolume'}, 'fontsize', 10, 'fontname', 'arial','fontweight','bold')
     h=legend('dinos','diatoms','Location','NE');
     h.FontSize = 8;    
@@ -237,9 +267,9 @@ yyaxis left %total cell-derived biovolume
     h1=plot(xmat, smooth(ymat./ymat_ml,1),'k-','linewidth', 1);
     datetick('x', 3, 'keeplimits')
     xlim([xax1;xax2]);    
-    set(gca,'xgrid','on','fontsize', 10, 'fontname', 'arial',...
+    set(gca,'xgrid','on','fontsize', 9, 'fontname', 'arial',...
         'xaxislocation','top','tickdir','out','ycolor','k','Xticklabel',{})
-    ylabel({'Biovolume';'(\mum^{-3} mL^{-1})'},'fontsize',11,'fontname','arial','fontweight','bold')
+    ylabel({'Biovolume';'(\mum^{-3} mL^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold')
     hold on      
     
 yyaxis right %Chlorophyll
