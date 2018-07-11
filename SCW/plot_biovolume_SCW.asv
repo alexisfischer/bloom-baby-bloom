@@ -2,7 +2,7 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-year=2017; %USER
+year=2018; %USER
 
 %%%% Step 1: Load in data
 % Chemical and Physical
@@ -170,6 +170,9 @@ subplot(6,1,1); %SCW wind
     yax1=-3; yax2=3;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
+    set(gca,'xaxislocation','top');
+    datetick('x','mmm','keeplimits','keepticks');        
+    
     ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');  
     legend('SCW','Location','NW')
     legend boxoff    
@@ -177,8 +180,8 @@ subplot(6,1,1); %SCW wind
        
 subplot(6,1,2);
     plot(paj.dn,paj.dis,'-k','linewidth',1.5);
+    xlim([xax1;xax2]);    
     datetick('x', 3, 'keeplimits')    
-    xlim([xax1;xax2]);
     set(gca,'xgrid','on','xticklabel',{},'fontsize',9,'tickdir','out'); 
     ylabel('Discharge (ft^3 s^{-1})','fontsize',10,'fontweight','bold');
 hold on
@@ -245,6 +248,9 @@ subplot(6,1,4); %SCW ROMS Temp
 %     hold on
     
 subplot(6,1,5); %Fraction dinos and diatoms
+
+%     bar(r(60).dn, [r(60).rai r(61).rai], 3, 'stack');
+
     bar(xmat, [ydino./[ydino+ydiat] ydiat./[ydino+ydiat]], 0.5, 'stack');
     ax = get(gca);
     cat = ax.Children;
@@ -252,6 +258,7 @@ subplot(6,1,5); %Fraction dinos and diatoms
     for ii = 1:length(cat)
         set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
     end
+hold on
 
     datetick('x', 3, 'keeplimits')
     xlim([xax1;xax2])    
