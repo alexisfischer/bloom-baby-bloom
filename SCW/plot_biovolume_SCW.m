@@ -2,7 +2,7 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-year=2018; %USER
+year=2017; %USER
 
 %%%% Step 1: Load in data
 % Chemical and Physical
@@ -291,7 +291,7 @@ yyaxis right %Chlorophyll
     
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[figpath 'Figs\Dino-Diatom_dTdz_' num2str(year) '.tif']);
+print(gcf,'-dtiff','-r600',[figpath 'Figs\Dino-Diatom_W_D_S_T_' num2str(year) '.tif']);
 hold off
 
 %% Just temperature
