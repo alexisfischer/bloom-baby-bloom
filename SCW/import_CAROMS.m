@@ -36,7 +36,7 @@ end
 % find dT/dz
 for i=1:length(ROMS)
     ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)'; %cubic spline interpolation
-    ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).T,0:1:40)';
+    ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).S,0:1:40)';
     ROMS(i).Zi = (0:1:40)';
     
     ROMS(i).dTdz=(-diff(ROMS(i).Ti))./(diff(ROMS(i).Zi));
@@ -50,7 +50,7 @@ save(out_dir,'ROMS');
 
 %% plot pcolor temperature and dTdz profile
 
-year=2018;
+year=2017;
 
 resultpath='~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load(['MB_temp_sal_' num2str(year) ''],'ROMS');
