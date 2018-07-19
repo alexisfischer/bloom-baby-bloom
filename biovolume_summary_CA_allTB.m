@@ -36,7 +36,7 @@ for yr = yrrange
    % pathall = repmat(hdrpath, size(temp,1),1);   
     xall = repmat('.hdr', size(temp,1),1);
   %  temp = cellstr([pathall temp(:,ind:ind+23) xall]);
-    temp = cellstr([temp(:,ind:ind+23) xall]);  
+    temp = cellstr([temp(:,ind:ind+23) xall]);
     ml_analyzed = IFCB_volume_analyzed(temp); 
     
     temp = load(classfiles{1}, 'class2useTB');
