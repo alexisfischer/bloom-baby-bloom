@@ -2,19 +2,14 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-year=2017; %USER
+year=2018; %USER
 
 %%%% Step 1: Load in data
 % Chemical and Physical
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-load([resultpath 'Data\RAI_SCW.mat'],'r');
-load([resultpath 'Data\SCW_SCOOS.mat'],'a');
-load([resultpath 'Data\TempChlTurb_SCW'],'S');
-load([resultpath 'Data\Weatherstation_SCW'],'SC');
-load([resultpath 'Data\M1_buoy.mat'],'M1');
-load([resultpath 'Data\coastal_46042'],'coast');
-load([resultpath 'ROMS\MB_temp_sal_' num2str(year) ''],'ROMS');
-load([resultpath 'Data\pajaroRiver'],'paj');
+load([resultpath 'Data\ROMS\MB_temp_sal_' num2str(year) ''],'ROMS');
+load([resultpath 'Data\SCW_master'],'SC');
+load([resultpath 'Data\Winds_MB'],'W');
 
 % Biovolume
 figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
@@ -149,36 +144,21 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.12]);
 
 xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-07-01']);  
 
-% subplot(6,1,1); %46042 data
-%     [U,~]=plfilt(coast(6).U,coast(6).DN);
-%     [V,DN]=plfilt(coast(6).V,coast(6).DN);
-%     [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-%     [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-%     yax1=-10; yax2=10;
-%     stick(time,u,v,xax1,xax2,yax1,yax2,' ');
-%     xlim([xax1;xax2])    
-%     ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');      
-%     legend('46042','Location','NW')
-%     legend boxoff
-%     hold on
-
 subplot(6,1,1); %SCW wind
-    [U,~]=plfilt(SC(7).U,SC(7).DN);
-    [V,DN]=plfilt(SC(7).V,SC(7).DN);
-    [~,u,~] = ts_aggregation(DN,U,1,'day',@mean);
-    [time,v,~] = ts_aggregation(DN,V,1,'day',@mean);
-    yax1=-3; yax2=3;
+    [U,~]=plfilt(W.SC(7).U,W.SC(7).DN);
+    [V,DN]=plfilt(W.SC(7).V,W.SC(7).DN);
+    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
+    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+    yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
     set(gca,'xaxislocation','top');
     datetick('x','mmm','keeplimits','keepticks');       
     ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');  
-    legend('SCW','Location','NW')
-    legend boxoff    
     hold on    
        
 subplot(6,1,2);
-    plot(paj.dn,paj.dis,'-k','linewidth',1.5);
+    plot(SC.dn,SC.river,'-k','linewidth',1.5);
     xlim([xax1;xax2]);    
     datetick('x', 3, 'keeplimits')    
     set(gca,'xgrid','on','xticklabel',{},'fontsize',9,'tickdir','out'); 
@@ -279,9 +259,9 @@ yyaxis left %total cell-derived biovolume
     hold on      
     
 yyaxis right %Chlorophyll
-    h2=plot(a.dn,a.chl,'*','Markersize',4,'Color',[0.8500 0.3250 0.0980]);
+    h2=plot(SC.dn,SC.CHL,'*-','Markersize',4,'Color',[0.8500 0.3250 0.0980]);
     hold on
-    h3=plot(S.dn,smooth(S.chl,2),'-','linewidth',1,'Color',[0.8500 0.3250 0.0980]);
+%    h3=plot(SC.dn,(SC.CHLsensor),'-','linewidth',1,'Color',[0.8500 0.3250 0.0980]);
     xlim([xax1;xax2]);    
     set(gca,'ylim',[0 20],'xgrid','on','fontsize', 10, 'fontname', 'arial',...
         'xaxislocation','bottom','tickdir','out','ycolor','k','ycolor',[0.8500 0.3250 0.0980])   
