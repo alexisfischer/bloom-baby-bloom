@@ -1,4 +1,4 @@
-out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/ROMS/SCW_master';
+out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/SCW_master';
 
 %% step 1) import hourly river discharge data 1993-2018
 % Discharge (cubic feet per second)
