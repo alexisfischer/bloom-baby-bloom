@@ -16,7 +16,7 @@ vec(id,:) = s*[us(i), v(i)];
 vec(id,1) = vec(id,1)+ones(3,1)*time(i);
 id = id+3;
 end
-plot(vec(:,1),vec(:,2),'Color','k','linewidth',.2);
+plot(vec(:,1),vec(:,2),'Color','k','linewidth',.5);
 datetick('x','m');
 axis(ax);
 set(gca,'xgrid', 'on','xticklabel',{},'tickdir','out');

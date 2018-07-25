@@ -1,9 +1,11 @@
-out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/SCW_master';
+%% imports all the data (except wind and IFCB) from Santa Cruz Wharf
+% T, sal, Chl, nit, amm, urea, ammon, phos, sil, DA, STX, RAI
 
+filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/';
 %% step 1) import hourly river discharge data 1993-2018
 % Discharge (cubic feet per second)
 % Date,  dn=datenum(TimeUTC,'yyyy-mm-dd HH:MM');
-filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/PajaroRiver_1993-2018.txt';
+filename = [filepath 'PajaroRiver_1993-2018.txt'];
 delimiter = {'\t',' '};
 startRow = 31;
 formatSpec = '%*s%*s%{yyyy-MM-dd}D%*s%*s%f%*s%*s%*s%*s%*s%*s%*s%*s%*s%[^\n\r]';
@@ -120,7 +122,7 @@ clearvars data raw R dn ib T i idx;
 
 %% step 3) import weekly Chl, nutrients, PN and Alex from DOD 2005-2015
 
-filename = '/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_DODserver_2005-2015.txt';
+filename = [filepath 'SCW_DODserver_2005-2015.txt'];
 delimiter = ',';
 startRow = 18;
 formatSpec = '%{yyyy-MM-dd HH:mm:ss.S}D%f%f%f%f%f%f%f%f%f%f%[^\n\r]';
@@ -168,7 +170,7 @@ end
 clearvars Alex ammonium CHL dataArray delimiter dn dt fileID filename formatSpec i j nitrate Paust Paustralis phosphate Pmult Pmultiseries Pn silicate startRow test urea;
 
 %% step 4) import weekly Chl, nutrients, PN and Alex from SCOOS Website 2011-2018
-filename = '/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/Harmful Algal Blooms_2011-2018.csv';
+filename = [filepath 'Harmful Algal Blooms_2011-2018.csv'];
 delimiter = ',';
 startRow = 9;
 formatSpec = '%q%q%q%*q%*q%*q%*q%*q%*q%q%q%q%q%q%q%q%q%*q%q%*q%*q%*q%*q%q%*q%*q%q%q%*q%q%[^\n\r]';
@@ -446,7 +448,7 @@ clearvars stringVectors data d dn fxDiat fxDino i j R rai raw;
 
 %% step 7) Import CENCOOS downloadable sensor data
 
-filename = '~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/SCW_weatherstation_cencoos/CENCOOS_09-18.csv';
+filename = [filepath 'SCW_weatherstation_cencoos/CENCOOS_09-18.csv'];
 delimiter = ',';
 startRow = 3;
 formatSpec = '%s%f%f%f%[^\n\r]';
@@ -526,4 +528,4 @@ end
 clearvars data raw R S dn i j;
 
 %%
-save(out_dir,'SC');
+save([filepath 'SCW_master'],'SC');

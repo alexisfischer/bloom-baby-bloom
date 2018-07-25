@@ -1,8 +1,7 @@
-function [dn,t,dn14d,t14d,ti3,ti9,tAnom] = extractClimatology(var,SC)
+function [C] = extractClimatology(var,SC,filepath,varname)
 % Extracts Climatology for generic variables
 %  Alexis D. Fischer, University of California - Santa Cruz, July 2018
 
-% temperature, chlorophyll, fxDino, or fx diat
 i = ~isnan(var); t = smooth(var(i),2); dn = SC.dn(i); %remove NaNs
 t(t==-Inf)=0; %replace all -Inf with 0
 DN=[dn(1):1:dn(end)]';
@@ -39,5 +38,21 @@ ti3 =smooth(ti,3); ti3(i0) = NaN;
 %% (4) Difference the gridded and smoothed bin values from the 
 % corresponding mean annual cycle, thus creating an anomaly time series
 tAnom = ti9-t14d;
+
+%% (5) Deviation of smoothed data from the overall mean
+Tmean = nanmean(T);
+tMDev = ti9-Tmean;
+
+%% (6) Save the output file
+C.dn=dn;
+C.t=t;
+C.dn14d=dn14d;
+C.t14d=t14d;
+C.ti3=ti3;
+C.ti9=ti9;
+C.tAnom=tAnom;
+C.tMDev=tMDev;
+
+save([filepath 'Data/Climatology_' varname],'C');
 
 end
