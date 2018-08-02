@@ -4,6 +4,7 @@ function [C] = extractClimatology(var,SC,filepath,varname)
 
 i = ~isnan(var); t = smooth(var(i),2); dn = SC.dn(i); %remove NaNs
 t(t==-Inf)=0; %replace all -Inf with 0
+t(t<0)=0;
 DN=[dn(1):1:dn(end)]';
 T = interp1(dn,t,DN);
 
@@ -27,9 +28,11 @@ dn14d=dn14d(1:iEnd);
 t14d=t14d(1:iEnd);
 
 %% (2) Grid the time series at 14day intervals using Stineman (1980) interpolation
+%ti=spline(DN,T,dn14d); ti=ti';
+
 ti=stineman(DN,T,dn14d); ti=ti';
-ti(ti==0)=NaN;
-i0=find(isnan(ti)); %find zeros elements
+ti(end)=NaN;
+i0=find(isnan(ti)); %find NaNs
 
 %% (3) Smooth the gridded series with a 9 point (126 day) moving average 
 ti9 =smooth(ti,9); ti9(i0) = NaN;
@@ -39,11 +42,11 @@ ti3 =smooth(ti,3); ti3(i0) = NaN;
 % corresponding mean annual cycle, thus creating an anomaly time series
 tAnom = ti9-t14d;
 
-%% (5) Deviation of smoothed data from the overall mean
-Tmean = nanmean(T);
-tMDev = ti9-Tmean;
+% %% (5) Deviation of smoothed data from the overall mean
+% Tmean = nanmean(T);
+% tMDev = ti9-Tmean;
 
-%% (6) Save the output file
+%% Save the output file
 C.dn=dn;
 C.t=t;
 C.dn14d=dn14d;
@@ -51,7 +54,6 @@ C.t14d=t14d;
 C.ti3=ti3;
 C.ti9=ti9;
 C.tAnom=tAnom;
-C.tMDev=tMDev;
 
 save([filepath 'Data/Climatology_' varname],'C');
 

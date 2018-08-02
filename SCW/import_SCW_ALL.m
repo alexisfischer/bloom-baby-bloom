@@ -49,54 +49,6 @@ SC.Tsensor=nan*ones(size(SC.dn));
 SC.CHLsensor=nan*ones(size(SC.dn));
 SC.TURsensor=nan*ones(size(SC.dn));
 
-%% step 2) Import SCW parameters (Temp, Chl, Alex, DA) 2000-2009
-
-[~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_Jester_2000-2009.xlsx','Sheet1');
-raw = raw(2:end,:);
-raw(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),raw)) = {''};
-R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
-raw(R) = {NaN}; % Replace non-numeric cells
-data = reshape([raw{:}],size(raw));
-
-dn = data(:,1) +693960;
-
-T = data(:,3);
-sal = data(:,2);
-Paust = data(:,4);
-Pmult = data(:,5);
-Pn = data(:,6);
-Alex = data(:,7);
-DA = data(:,8);
-STX = data(:,9);
-CHL = data(:,10);
-silicate = data(:,11);
-nitrate = data(:,12);
-phosphate = data(:,13);
-
-for i=1:length(SC.dn)
-    for j=1:length(dn)
-        if dn(j) == SC.dn(i)
-            SC.sal(i)=sal(j);
-            SC.T(i)=T(j);            
-            SC.Paust(i)=Paust(j);
-            SC.Pmult(i)=Pmult(j);            
-            SC.Pn(i)=Pn(j);            
-            SC.Alex(i)=Alex(j);            
-            SC.DA(i)=DA(j);            
-            SC.STX(i)=STX(j);            
-            SC.CHL(i)=CHL(j);            
-            SC.silicate(i)=silicate(j);            
-            SC.nitrate(i)=nitrate(j);            
-            SC.phosphate(i)=phosphate(j);            
-        else
-        end
-    end
-end
-
-idx=~isnan(SC.T);
-figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
-
-clearvars data raw stringVectors R dn nitrate Paust phosphate Pmult Pn sal silicate STX T i j;
 
 %% step 2) import weekly Temperature from SCOOS spreadsheet 2005-2018
 [~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_temp_2005-2018.xlsx','Sheet1');
@@ -169,7 +121,56 @@ end
 
 clearvars Alex ammonium CHL dataArray delimiter dn dt fileID filename formatSpec i j nitrate Paust Paustralis phosphate Pmult Pmultiseries Pn silicate startRow test urea;
 
-%% step 4) import weekly Chl, nutrients, PN and Alex from SCOOS Website 2011-2018
+%% step 4) Import SCW parameters (Temp, Chl, Alex, DA) 2000-2009
+
+[~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_Jester_2000-2009.xlsx','Sheet1');
+raw = raw(2:end,:);
+raw(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),raw)) = {''};
+R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
+raw(R) = {NaN}; % Replace non-numeric cells
+data = reshape([raw{:}],size(raw));
+
+dn = data(:,1) +693960;
+
+T = data(:,3);
+sal = data(:,2);
+Paust = data(:,4);
+Pmult = data(:,5);
+Pn = data(:,6);
+Alex = data(:,7);
+DA = data(:,8);
+STX = data(:,9);
+CHL = data(:,10);
+silicate = data(:,11);
+nitrate = data(:,12);
+phosphate = data(:,13);
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.sal(i)=sal(j);
+            SC.T(i)=T(j);            
+            SC.Paust(i)=Paust(j);
+            SC.Pmult(i)=Pmult(j);            
+            SC.Pn(i)=Pn(j);            
+            SC.Alex(i)=Alex(j);            
+            SC.DA(i)=DA(j);            
+            SC.STX(i)=STX(j);            
+            SC.CHL(i)=CHL(j);            
+            SC.silicate(i)=silicate(j);            
+            SC.nitrate(i)=nitrate(j);            
+            SC.phosphate(i)=phosphate(j);            
+        else
+        end
+    end
+end
+
+idx=~isnan(SC.T);
+figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
+
+clearvars data raw stringVectors R dn nitrate Paust phosphate Pmult Pn sal silicate STX T i j;
+
+%% step 5) import weekly Chl, nutrients, PN and Alex from SCOOS Website 2011-2018
 filename = [filepath 'Harmful Algal Blooms_2011-2018.csv'];
 delimiter = ',';
 startRow = 9;
@@ -260,7 +261,7 @@ end
 
 clearvars T Alex CHL DA data dn i j nitrate phosphate ammonium day dinophysis month year Pn R raw silicate idx;
 
-%% step 5) import old RAI data (2002-2017)
+%% step 6) import old RAI data (2002-2017)
 
 [~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/RAIdata_042417_RR_KH.xlsx','KendraCalculation');
 raw = raw(3:end,[1,3:23,27:36,38:63,68:70]);
@@ -352,7 +353,7 @@ figure; plot(SC.dn(idx),SC.fxDino(idx)); datetick('x','yyyy');
 
 clearvars stringVectors data dn fxDiat fxDino i j R rai raw;
 
-%% step 6) import new RAI data (2017-2018)
+%% step 7) import new RAI data (2017-2018)
 
 [~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_RAI_180613.xls','SCW RAI_Leica');
 raw = raw(4:end,[5:65,84:end]);
@@ -446,7 +447,7 @@ figure; plot(SC.dn(idx),SC.fxDino(idx)); datetick('x','yyyy');
 
 clearvars stringVectors data d dn fxDiat fxDino i j R rai raw;
 
-%% step 7) Import CENCOOS downloadable sensor data
+%% step 8) Import CENCOOS downloadable sensor data
 
 filename = [filepath 'SCW_weatherstation_cencoos/CENCOOS_09-18.csv'];
 delimiter = ',';
