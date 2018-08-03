@@ -2,45 +2,54 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-year=2017; %USER
+year=2018; %USER
 
 %%%% Step 1: Load in data
-% Chemical and Physical
 figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([figpath 'Data\ROMS\MB_temp_sal_' num2str(year) ''],'ROMS');
 load([figpath 'Data\SCW_master'],'SC');
 load([figpath 'Data\Wind_MB'],'w');
-
-% Biovolume
 load(['F:\IFCB104\class\summary\summary_biovol_allTB' num2str(year) ''],'class2useTB',...
     'classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
-    % convert to cubic microns
-    micron_factor = 1/3.4; %microns per pixel
-    classbiovolTB = classbiovolTB*micron_factor^3;
+    
+%%%% Step 2: Convert Biovolume to Carbon
+% convert Biovolume (cubic microns/cell) to Carbon (picograms/cell)
+[ ind_diatom, class_label ] = get_diatom_ind_CA( class2useTB, class2useTB );
+[ cellC ] = biovol2carbon(classbiovolTB, ind_diatom ); 
+%cellC=(10^(-6))*cellC;
 
-%%%% Step 2: Determine what fraction of Cell-derived biovolume is 
+%convert to micrograms Carbon/mL and biovolume cubic microns/mL
+volC=zeros(size([cellC]));
+volB=zeros(size([cellC]));
+
+for i=1:length(cellC)
+    volC(i,:)=cellC(i,:)./ml_analyzedTB(i);
+    volB(i,:)=classbiovolTB(i,:)./ml_analyzedTB(i);    
+end
+    
+%%%% Step 3: Determine what fraction of Cell-derived carbon is 
 % Dinoflagellates vs Diatoms vs Classes of interest
 
 %select total living biovolume 
 [ ind_cell, class_label ] = get_cell_ind_CA( class2useTB, class2useTB );
-[xmat, ymat ] = timeseries2ydmat(mdateTB, nansum(classbiovolTB(:,ind_cell),2));
+[xmat, ymat ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_cell),2));
 [xmat ymat_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
 %select only diatoms
 [ ind_diatom, class_label ] = get_diatom_ind_CA( class2useTB, class2useTB );
-[xdiat, ydiat ] = timeseries2ydmat(mdateTB, nansum(classbiovolTB(:,ind_diatom),2));
+[xdiat, ydiat ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_diatom),2));
 [xdiat ydiat_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
 %select only dinoflagellates
 [ ind_dino, class_label ] = get_dino_ind_CA( class2useTB, class2useTB );
-[xdino, ydino ] = timeseries2ydmat(mdateTB, nansum(classbiovolTB(:,ind_dino),2));
+[xdino, ydino ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_dino),2));
 [xdino ydino_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
-%extract biovolume for each class
+% extract biovolume and carbon for each class
 for i=1:length(class2useTB)
     BIO(i).class = class2useTB(i);
-    [~,BIO(i).bio ] = timeseries2ydmat(mdateTB, classbiovolTB(:,i));
-    [~,BIO(i).mL ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
+    [~,BIO(i).bio ] = timeseries2ydmat(mdateTB, volB(:,i));
+    [~,BIO(i).car ] = timeseries2ydmat(mdateTB, volC(:,i));    
 end
 
 clearvars i ind_cell ind_diatom ind_dino mdateTB micron_factor
@@ -59,21 +68,25 @@ subplot(6,1,1);
 fxdino = ydino./[ydino+ydiat];
 fxdiat = ydiat./[ydino+ydiat];
 
-    h1=plot(xmat,smooth((fxdino.*ymat)./ymat_ml,2),'-r.',...
-        xmat,smooth((fxdiat.*ymat)./ymat_ml,2),'-b.','linewidth', 1);
+% idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; Dino=SC.fxDino.*SC.CHL;
+% idx=isnan(SC.fxDiat); SC.CHL(idx)=NaN; Diat=SC.fxDiat.*SC.CHL;
+% plot(SC.dn,Dino,'ro','Markersize',4)
+
+h1=plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
+        xmat,smooth((fxdiat.*ymat)./ymat_ml,1),'-b.','linewidth', 1);
     datetick('x','mmm', 'keeplimits')
     xlim([xax1;xax2]);    
-    set(gca,'xgrid','on','fontsize', 9, 'fontname', 'arial','ylim',[0 15*10^3],...
+    set(gca,'xgrid','on','fontsize', 9, 'fontname', 'arial',...
         'tickdir','out','xaxislocation','top')
-    ylabel({'Biovolume';'(\mum^{-3} mL^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold')
+    ylabel('Carbon (pg mL^{-1})','fontsize',10,'fontname','arial','fontweight','bold')
     legend(h1,'dinos','diatoms','Location','NE');
     hold on 
     
 subplot(6,1,2); %SCW wind
-%    [U,~]=plfilt(w.scw.u, w.scw.dn);
-%    [V,DN]=plfilt(w.scw.v, w.scw.dn);
-%    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-%    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+   [U,~]=plfilt(w.scw.u, w.scw.dn);
+   [V,DN]=plfilt(w.scw.v, w.scw.dn);
+   [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
+   [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
     yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
@@ -160,7 +173,45 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[figpath 'Figs\Dino-Diatom_W_D_S_T_' num2str(year) '.tif']);
 hold off
 
+%% old scripts
+yyaxis left %total cell-derived biovolume
+    h1=plot(xmat, smooth(ymat./ymat_ml,1),'k-','linewidth', 1);
+    datetick('x', 3, 'keeplimits')
+    xlim([xax1;xax2]);    
+    set(gca,'yscale','log','ylim',[10^3 10^6],'xgrid','on','fontsize', 9, 'fontname', 'arial',...
+        'tickdir','out','ycolor','k','Xticklabel',{})
+    ylabel({'Biovolume';'(\mum^{-3} mL^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold')
+    hold on      
+yyaxis right %Chlorophyll
+    h2=plot(SC.dn,SC.CHL,'*-','Markersize',4,'Color',[0.8500 0.3250 0.0980]);
+    hold on
+    h3=plot(SC.dn,SC.CHLsensor,'-','linewidth',1,'Color',[0.8500 0.3250 0.0980]);
+    xlim([xax1;xax2]);    
+    set(gca,'yscale','log','ylim',[1 40],'xgrid','on','fontsize',9, 'fontname', 'arial',...
+        'xaxislocation','top','tickdir','out','ycolor','k','ycolor',[0.8500 0.3250 0.0980])   
+    datetick('x','mmm','keeplimits','keepticks');        
+    ylabel('Chl (mg m^{-3})','Color',[0.8500 0.3250 0.0980],'fontsize',10,'fontname','arial','fontweight','bold');         
+    hold on   
 
+subplot(7,1,2); %Fraction dinos and diatoms
+    bar(xmat, [ydino./[ydino+ydiat] ydiat./[ydino+ydiat]], 0.5, 'stack');
+    ax = get(gca);
+    cat = ax.Children;
+    cstr = [ [200 200 200]/255; [80 80 80]/255]; %black/dk grey/lt grey
+    for ii = 1:length(cat)
+        set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
+    end
+hold on
+    datetick('x', 3, 'keeplimits')
+    xlim([xax1;xax2])    
+    ylim([0;1])
+    set(gca,'xgrid','on', 'fontsize', 9, 'fontname', 'arial',...
+        'xaxislocation','top','tickdir','out','Xticklabel',{})
+    ylabel({'Fraction of';'Biovolume'}, 'fontsize', 10, 'fontname', 'arial','fontweight','bold')
+    h=legend('dinos','diatoms','Location','NE');
+    h.FontSize = 8;    
+    hold on 
+    
 %% plot fraction biovolume of select species
 figure('Units','inches','Position',[1 1 8 6],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.08 0.04], [0.11 0.2]);
