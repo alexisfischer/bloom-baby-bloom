@@ -36,18 +36,21 @@ end
 % remove bad data on '11-Apr-2018 09:00:00'
 %ROMS(392) = [];
 
-% find dT/dz
+% find max dT/dz and find 0.04ºC/m
 for i=1:length(ROMS)
-    ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)'; %cubic spline interpolation
-    ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).S,0:1:40)';
-    ROMS(i).Zi = (0:1:40)';
-    ROMS(i).dTdz=(-diff(ROMS(i).Ti))./(diff(ROMS(i).Zi));
-    [ROMS(i).maxdTdz,idx]=max(ROMS(i).dTdz);
-    ROMS(i).Tmax=ROMS(i).Ti(idx);
-    ROMS(i).Zmax=ROMS(i).Zi(idx);
-    
+   % ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)'; %cubic spline interpolation
+    %ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).S,0:1:40)';
+   % ROMS(i).Zi = (0:1:40)';
+    ROMS(i).dTdz=diff(ROMS(i).Ti)';  
+    ROMS(i).zero4=ROMS(i).Zi(find(ROMS(i).dTdz >= 0.04,1));
+    ROMS(i).zero4(isempty(ROMS(i).zero4))=NaN; %replace with Nan if empty      
+     ROMS(i).dTdz=(ROMS(i).dTdz)';  
+     [ROMS(i).maxdTdz,idx]=max(ROMS(i).dTdz);
+     ROMS(i).Tmax=ROMS(i).Ti(idx);
+     ROMS(i).Zmax=ROMS(i).Zi(idx);   
 end
 
+    
 % find where dT from the surface exceeds 0.5ºC, aka the MLD
 for i=1:length(ROMS)
     for j=1:length(ROMS(i).Ti)

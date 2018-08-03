@@ -45,6 +45,7 @@ SC.Paust=nan*ones(size(SC.dn));
 SC.Pmult=nan*ones(size(SC.dn));
 SC.rai=nan*ones(size(SC.dn));
 SC.fxDino=nan*ones(size(SC.dn));
+SC.fxDiat=nan*ones(size(SC.dn));
 SC.Tsensor=nan*ones(size(SC.dn));
 SC.CHLsensor=nan*ones(size(SC.dn));
 SC.TURsensor=nan*ones(size(SC.dn));
@@ -282,7 +283,7 @@ for i=1:length(SC.dn)
         if dn(j) == SC.dn(i)
             SC.fxDino(i)=fxDino(j);
             SC.fxDiat(i)=fxDiat(j);
-        else
+        else       
         end
     end
 end
