@@ -16,9 +16,8 @@ load(['F:\IFCB104\class\summary\summary_biovol_allTB' num2str(year) ''],'class2u
 % convert Biovolume (cubic microns/cell) to Carbon (picograms/cell)
 [ ind_diatom, class_label ] = get_diatom_ind_CA( class2useTB, class2useTB );
 [ cellC ] = biovol2carbon(classbiovolTB, ind_diatom ); 
-%cellC=(10^(-6))*cellC;
 
-%convert to micrograms Carbon/mL and biovolume cubic microns/mL
+%convert from per cell to per mL
 volC=zeros(size([cellC]));
 volB=zeros(size([cellC]));
 
@@ -27,6 +26,9 @@ for i=1:length(cellC)
     volB(i,:)=classbiovolTB(i,:)./ml_analyzedTB(i);    
 end
     
+%convert from pg/mL to ug/L 
+volC=volC./1000;
+
 %%%% Step 3: Determine what fraction of Cell-derived carbon is 
 % Dinoflagellates vs Diatoms vs Classes of interest
 
@@ -78,7 +80,7 @@ h1=plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
     xlim([xax1;xax2]);    
     set(gca,'xgrid','on','fontsize', 9, 'fontname', 'arial',...
         'tickdir','out','xaxislocation','top')
-    ylabel('Carbon (pg mL^{-1})','fontsize',10,'fontname','arial','fontweight','bold')
+    ylabel('Carbon (\mug L^{-1})','fontsize',10,'fontname','arial','fontweight','bold')
     legend(h1,'dinos','diatoms','Location','NE');
     hold on 
     
@@ -90,7 +92,7 @@ subplot(6,1,2); %SCW wind
     yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
-    datetick('x','m','keeplimits','keepticks');   
+    datetick('x','m','keeplimits');   
     set(gca,'ytick',-4:4:4,'xticklabel',{},'fontsize',9);    
     ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');  
     hold on  
