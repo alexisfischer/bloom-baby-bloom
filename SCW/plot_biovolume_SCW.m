@@ -2,7 +2,7 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-year=2018; %USER
+year=2017; %USER
 
 %%%% Step 1: Load in data
 figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
@@ -70,18 +70,19 @@ subplot(6,1,1);
 fxdino = ydino./[ydino+ydiat];
 fxdiat = ydiat./[ydino+ydiat];
 
-% idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; Dino=SC.fxDino.*SC.CHL;
-% idx=isnan(SC.fxDiat); SC.CHL(idx)=NaN; Diat=SC.fxDiat.*SC.CHL;
-% plot(SC.dn,Dino,'ro','Markersize',4)
+idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; Dino=SC.fxDino.*SC.CHL;
+idx=isnan(SC.fxDiat); SC.CHL(idx)=NaN; Diat=SC.fxDiat.*SC.CHL;
 
-h1=plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
+h=plot(SC.dn,Dino,'ro',SC.dn,Diat,'b^','Markersize',4);
+hold on
+plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
         xmat,smooth((fxdiat.*ymat)./ymat_ml,1),'-b.','linewidth', 1);
-    datetick('x','mmm', 'keeplimits')
     xlim([xax1;xax2]);    
     set(gca,'xgrid','on','fontsize', 9, 'fontname', 'arial',...
         'tickdir','out','xaxislocation','top')
+    datetick('x','mmm','keeplimits')
     ylabel('Carbon (\mug L^{-1})','fontsize',10,'fontname','arial','fontweight','bold')
-    legend(h1,'dinos','diatoms','Location','NE');
+    legend(h,'dinoflagellates','diatoms','Location','NW');
     hold on 
     
 subplot(6,1,2); %SCW wind
@@ -204,7 +205,7 @@ subplot(7,1,2); %Fraction dinos and diatoms
         set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
     end
 hold on
-    datetick('x', 3, 'keeplimits')
+    datetick('x','mmm', 'keeplimits')
     xlim([xax1;xax2])    
     ylim([0;1])
     set(gca,'xgrid','on', 'fontsize', 9, 'fontname', 'arial',...
