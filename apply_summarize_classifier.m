@@ -4,8 +4,10 @@
 %% PART 1: Apply classifier
 %% Step 1: Sort data into folders
 sort_data_into_folders('F:\IFCB104\data\raw\','F:\IFCB104\data\2018\');
-
 %sort_data_into_folders('F:\IFCB113\Exploratorium\data\raw\','F:\IFCB113\Exploratorium\data\2018\');
+
+%add new data to search path
+addpath(genpath('F:\IFCB104\data\2018\'));
 
 %% Step 2: Extract blobs
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
@@ -24,28 +26,31 @@ start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',
 start_feature_batch_user_training('F:\IFCB104\data\2018\',...
    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
 
-% Step 4: Apply classifier
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
-%     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
-%     'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_22Jun2018',...
-%     'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
+%% Step 4: Apply classifier
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
+    'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
+    'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
+    'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 
 %% PART 2: Summarize results
 % Step 5: Summarize random forest classification results by class
-countcells_allTBnew_user_training(...
-    'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\', 2015:2018)
+
+countcells_allTBnew_user_training('F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\',...
+    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',...
+    2015:2018)
 
 % Step 6: Summarize biovolume from Manual files
-biovolume_summary_manual('F:\IFCB104\manual\','F:\IFCB104\data\',...
-    'F:\IFCB104\features\XXXX\');
-%%
+biovolume_summary_manual('F:\IFCB104\manual\',...
+        'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\',...
+        'F:\IFCB104\data\','F:\IFCB104\features\XXXX\');
+
 % Step 7: Summarize biovolume from Classification results
 %have not tested this ye, but should work
-resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\'; %Where you want the summary file to go
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
 roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
@@ -58,7 +63,7 @@ biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasep
 % Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
 yrrange = 2016:2018;
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
-out_path = 'F:\IFCB104\class\summary\'; 
+out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\';
 in_dir = 'F:\IFCB104\data\';
 
 %dinos
