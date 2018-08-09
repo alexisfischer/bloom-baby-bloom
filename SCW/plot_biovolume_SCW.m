@@ -9,8 +9,8 @@ figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
 load([figpath 'Data\ROMS\MB_temp_sal_' num2str(year) ''],'ROMS');
 load([figpath 'Data\SCW_master'],'SC');
 load([figpath 'Data\Wind_MB'],'w');
-load(['F:\IFCB104\class\summary\summary_biovol_allTB' num2str(year) ''],'class2useTB',...
-    'classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
+load([figpath 'Data\IFCB_summary\class\summary_biovol_allTB' num2str(year) ''],...
+    'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
     
 %%%% Step 2: Convert Biovolume to Carbon
 % convert Biovolume (cubic microns/cell) to Carbon (picograms/cell)
