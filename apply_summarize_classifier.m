@@ -26,15 +26,15 @@ start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',
 start_feature_batch_user_training('F:\IFCB104\data\2018\',...
    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
 
-%% Step 4: Apply classifier
+% Step 4: Apply classifier
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
-    'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
+    'F:\IFCB113\features\2016\','F:\IFCB113\class\class2016_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
-    'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
+    'F:\IFCB113\features\2017\','F:\IFCB113\class\class2017_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
-    'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
+    'F:\IFCB113\features\2018\','F:\IFCB113\class\class2018_v1\')
 
 %% PART 2: Summarize results
 % Step 5: Summarize random forest classification results by class
@@ -83,5 +83,5 @@ countcells_allTB_class('Cryptophyte', yrrange, classpath_generic, out_path, in_d
 countcells_allTB_class('Skeletonema', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Centric', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Guin_Dact', yrrange, classpath_generic, out_path, in_dir)
-
+countcells_allTB_class('Pennate', yrrange, classpath_generic, out_path, in_dir)
 
