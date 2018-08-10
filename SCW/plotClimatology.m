@@ -1,19 +1,22 @@
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
-%%
 load([filepath 'Data/SCW_master'],'SC');
 
-%var = SC.ammonium; varname = 'Ammonium'; units = ' (ppt)';
+%%
+
+%var = SC.silicate; varname = 'Silicate'; units = ' (uM)';
+
+%var = SC.ammonium; varname = 'Ammonium'; units = ' (uM)';
 
 %var = SC.sal; varname = 'Salinity'; units = ' (ppt)';
 
 %var = SC.T; varname = 'Temperature'; units = ' (^oC)';
 
-var = log(SC.CHL); varname = 'Chlorophyll'; units = ' (mg m^{-3})';
+%var = log(SC.CHL); varname = 'Chlorophyll'; units = ' (mg m^{-3})';
 
 %var = SC.CHL; varname = 'Chlorophyll'; units = ' (mg m^{-3})';
 
-%var = SC.nitrate; varname = 'Nitrate'; units = '(uM)';
+var = SC.nitrate; varname = 'Nitrate'; units = '(uM)';
 
 %var = log(SC.river); varname = 'log(Discharge)'; units = ' (ft^3 s^{-1})';
 %var = SC.river; varname = 'Discharge'; units = ' (ft^3 s^{-1})';
@@ -33,11 +36,12 @@ var = log(SC.CHL); varname = 'Chlorophyll'; units = ' (mg m^{-3})';
 [C] = extractClimatology(var,SC,filepath,varname);
 
 %% rename structures
+load([filepath 'Data/Climatology_Nitrate'],'C'); nit=C;
+load([filepath 'Data/Climatology_Silicate'],'C'); sil=C;
 load([filepath 'Data/Climatology_Ammonium'],'C'); ammon=C;
 load([filepath 'Data/Climatology_log(Chlorophyll)'],'C'); chl=C;
 load([filepath 'Data/Climatology_Dinoflagellate log(CHL)'],'C'); dino=C;
-%load([filepath 'Data/Climatology_log(Discharge)'],'C'); river=C;
-load([filepath 'Data/Climatology_Discharge'],'C'); river=C;
+load([filepath 'Data/Climatology_log(Discharge)'],'C'); river=C;
 load([filepath 'Data/Climatology_Temperature'],'C'); T=C;
 load([filepath 'Data/Climatology_Windspeed'],'C'); wind=C;
 
@@ -51,7 +55,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.05 0.05], [0.12 0.03])
 xax1=datenum('01-Jan-2002');
 xax2=datenum('01-Jan-2019');
 
-subplot(5,1,1);
+subplot(7,1,1);
 anomaly(dino.dn14d,dino.tAnom);
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10,'xaxislocation','top')
 datetick('x','yyyy','keeplimits')
@@ -59,7 +63,7 @@ box on
 ylabel({'Dinoflagellate';'log Chlorophyll'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(5,1,2);
+subplot(7,1,2);
 anomaly(wind.dn14d,wind.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -68,7 +72,7 @@ box on
 ylabel({'Windspeed'; '(m/s)'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(5,1,3);
+subplot(7,1,3);
 anomaly(river.dn14d,river.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -77,7 +81,7 @@ box on
 ylabel({'log Discharge';'(ft^3 s^{-1})'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(5,1,4);
+subplot(7,1,4);
 anomaly(T.dn14d,T.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -86,7 +90,25 @@ box on
 ylabel({'Temperature'; '(^oC)'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(5,1,5);
+subplot(7,1,5);
+anomaly(sil.dn14d,sil.tAnom);
+datetick('x','yyyy','keeplimits')
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
+    'fontsize',10,'xticklabel',{});    
+box on
+ylabel({'Silicate'; '(uM)'},'fontsize',10,'fontweight','bold')
+hold on
+
+subplot(7,1,6);
+anomaly(nit.dn14d,nit.tAnom);
+datetick('x','yyyy','keeplimits')
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
+    'fontsize',10,'xticklabel',{});    
+box on
+ylabel({'Nitrate'; '(uM)'},'fontsize',10,'fontweight','bold')
+hold on
+
+subplot(7,1,7);
 anomaly(ammon.dn14d,ammon.tAnom);
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10)
 datetick('x','yyyy','keeplimits')

@@ -1,23 +1,25 @@
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-summary_path = 'F:\IFCB104\class\summary\'; %USER
-m = load('F:\IFCB104\manual\summary\count_biovol_manual_09Jul2018'); %USER
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
+m = load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_03Aug2018']); 
 
-class2do_string = 'Akashiwo'; chosen_threshold = 0.7; hi=2000;
+%class2do_string = 'Akashiwo'; chosen_threshold = 0.6; hi=2000;
 %class2do_string = 'Ceratium'; chosen_threshold = 0.5; hi=100;
-% class2do_string = 'Chaetoceros'; chosen_threshold = 0.8; hi=300;
+% class2do_string = 'Chaetoceros'; chosen_threshold = 0.6; hi=300;
 % class2do_string = 'Dinophysis'; chosen_threshold = 0.7; hi=60; 
 % class2do_string = 'Pseudo-nitzschia'; chosen_threshold = 0.7; hi=150;
 % class2do_string = 'Det_Cer_Lau'; chosen_threshold = 0.7; hi=300;
 % class2do_string = 'Eucampia'; chosen_threshold = 0.6; hi=120;
-% class2do_string = 'Prorocentrum'; chosen_threshold = 0.8; hi=800;
+%class2do_string = 'Guin_Dact'; chosen_threshold = 0.5; hi=130;
+% class2do_string = 'Prorocentrum'; chosen_threshold = 0.7; hi=800;
 % class2do_string = 'Lingulodinium'; chosen_threshold = 0.6; hi=60;
 % class2do_string = 'Thalassiosira'; chosen_threshold = 0.9; hi=200;
 % class2do_string = 'Skeletonema'; chosen_threshold = 0.6; hi=30;
-% class2do_string = 'Centric'; chosen_threshold = 0.8; hi=400;
+% class2do_string = 'Centric'; chosen_threshold = 0.7; hi=400;
 %class2do_string = 'NanoP_less10'; chosen_threshold = 0.9; hi=1500;
 %class2do_string = 'Cryptophyte'; chosen_threshold = 0.9; hi=80;
+class2do_string = 'Pennate'; chosen_threshold = 0.7; hi=200;
 
-load([summary_path 'summary_allTB_bythre_' class2do_string]);
+load([filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string]);
+
 ind = strfind(class2do_string, ',');
 if ~isempty(ind)
     ind = [0 ind length(class2do_string)];
@@ -75,7 +77,8 @@ for ii = 1:length(threlist)
 end;
 bin=chosen_threshold*10+1;
 slope = Coeffs(bin,2);
-save([resultpath 'Data\Coeff_' num2str(class2do_string) ' '],'class2do_string','slope','bin','chosen_threshold');
+save([filepath 'Data/IFCB_summary/Coeff_' num2str(class2do_string) ''],...
+    'class2do_string','slope','bin','chosen_threshold');
 
 figure(1)
 subplot(3,4,5), ylabel('Automated')
@@ -88,7 +91,7 @@ a.Visible = 'off'; % set(a,'Visible','off');
 t1.Visible = 'on'; % set(t1,'Visible','on');
 
 print(gcf,'-dtiff','-r600',...
-    [resultpath 'Figs\Threshold_range_'  num2str(class2do_string) '.tif']);
+    [filepath 'Figs/Threshold_range_'  num2str(class2do_string) '.tif']);
 hold off
 
 %%
@@ -171,5 +174,5 @@ t1.Visible = 'on'; % set(t1,'Visible','on');
 
 set(gca, 'fontsize',11);
 print(gcf,'-dtiff','-r600',...
-    [resultpath 'Figs\Threshold' num2str(chosen_threshold) '_'  num2str(class2do_string) '.tif']);
+    [filepath 'Figs/Threshold' num2str(chosen_threshold) '_'  num2str(class2do_string) '.tif']);
 hold off
