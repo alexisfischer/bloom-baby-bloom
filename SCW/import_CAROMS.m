@@ -43,9 +43,9 @@ end
 
 % find max dT/dz and find 0.04ºC/m
 for i=1:length(ROMS)
-   % ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)'; %cubic spline interpolation
-    %ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).S,0:1:40)';
-   % ROMS(i).Zi = (0:1:40)';
+   ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)'; %cubic spline interpolation
+    ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).S,0:1:40)';
+   ROMS(i).Zi = (0:1:40)';
     ROMS(i).dTdz=diff(ROMS(i).Ti)';  
     ROMS(i).zero4=ROMS(i).Zi(find(ROMS(i).dTdz >= 0.04,1));
     ROMS(i).zero4(isempty(ROMS(i).zero4))=NaN; %replace with Nan if empty      

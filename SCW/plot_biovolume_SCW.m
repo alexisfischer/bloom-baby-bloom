@@ -7,7 +7,7 @@ year=2018; %USER
 %%%% Step 1: Load in data
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 % filepath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-load([filepath 'Data/ROMS/MB_temp_sal_' num2str(year) ''],'ROMS');
+load([filepath 'Data/ROMS/MB_temp_sal_2017-2018'],'ROMS');
 load([filepath 'Data/SCW_master'],'SC');
 load([filepath 'Data/Wind_MB'],'w');
 load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB' num2str(year) ''],...
@@ -58,6 +58,124 @@ end
 clearvars i ind_cell ind_diatom ind_dino mdateTB micron_factor
 %[~, cind] = sort(sum(x), 'descend'); %rank order biomass    
 
+%% plot 2017-2018 pcolor temperature profile, delta T MLD, and  dinos/diatom
+
+figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.12]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+
+xax1=datenum(['2017-01-01']); xax2=datenum(['2018-08-15']);     
+    
+subplot(6,1,1); 
+fxdino = ydino./[ydino+ydiat];
+fxdiat = ydiat./[ydino+ydiat];
+
+idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; Dino=SC.fxDino.*SC.CHL;
+idx=isnan(SC.fxDiat); SC.CHL(idx)=NaN; Diat=SC.fxDiat.*SC.CHL;
+
+h=plot(SC.dn,Dino,'ro',SC.dn,Diat,'b^','Markersize',4);
+hold on
+plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
+        xmat,smooth((fxdiat.*ymat)./ymat_ml,1),'-b.','linewidth', 1);
+    xlim([xax1;xax2]);    
+    set(gca,'xgrid','on','fontsize', 9, 'fontname', 'arial',...
+        'tickdir','out','xaxislocation','top')
+    datetick('x','mmm','keeplimits')
+    ylabel('Carbon (\mug L^{-1})','fontsize',10,'fontname','arial','fontweight','bold')
+    legend(h,'dinoflagellates','diatoms','Location','NW');
+    hold on 
+    
+subplot(6,1,2); %SCW wind
+%    [U,~]=plfilt(w.scw.u, w.scw.dn);
+%    [V,DN]=plfilt(w.scw.v, w.scw.dn);
+%    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
+%    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+    yax1=-5; yax2=5;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'');
+    xlim([xax1;xax2])    
+    datetick('x','m','keeplimits');   
+    set(gca,'ytick',-4:4:4,'xticklabel',{},'fontsize',9);    
+    ylabel('Wind (m s^{-1})','fontsize',10,'fontname','arial','fontweight','bold');  
+    hold on  
+    
+subplot(6,1,3); %Discharge
+    plot(SC.dn,SC.river,'-k','linewidth',1.5);
+    xlim([xax1;xax2]);    
+    datetick('x', 3, 'keeplimits')    
+    set(gca,'xgrid','on','xticklabel',{},...
+        'fontsize',9,'tickdir','out'); 
+    ylabel('Discharge (ft^3 s^{-1})','fontsize',10,'fontweight','bold');
+hold on       
+    
+subplot(6,1,4); %SCW ROMS Sal    
+    X=[ROMS.dn]';
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Si];
+    colormap(parula);    
+    pcolor(X,Y,C); shading interp;
+    caxis([33.2 33.9]); datetick('x','mmm');  grid on; 
+    hold on
+    set(gca,'XLim',[xax1;xax2],'xticklabel',{},...
+        'Ydir','reverse','ylim',[0 40],'ytick',10:10:30,'fontsize',9,'tickdir','out');
+    ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+    h=colorbar('Position',...
+    [0.894965277777778 0.3671875 0.0203993055555555 0.1328125]);
+    h.Label.String = 'S (g kg^{-1})';
+    h.FontSize = 8;
+    h.Label.FontSize = 10;
+    h.Label.FontWeight = 'bold';
+    h.TickDirection = 'out';
+    hold on
+    
+subplot(6,1,5); %SCW ROMS Temp
+    X=[ROMS.dn]';
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Ti];
+    colormap(parula);
+    pcolor(X,Y,C); shading interp;
+    caxis([10 16]); datetick('x',4);  grid on; 
+    hold on
+    xlim([xax1;xax2])        
+    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[0 40],'ytick',10:10:30,'fontsize',9,'tickdir','out');
+    ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+    h=colorbar('Position',...
+    [0.894965277777778 0.217447916666667 0.0230034722222223 0.1328125]);
+    h.FontSize = 8;
+    h.Label.String = 'T (^oC)';     
+    h.Label.FontSize = 10;
+    h.Label.FontWeight = 'bold';
+    h.TickDirection = 'out';
+    hold on
+  
+subplot(6,1,6); %ROMS MLD
+    X=[ROMS.dn]';
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.diff];
+    pcolor(X,Y,C); shading interp;
+    caxis([0 0.5]); datetick('x','mmm','keeplimits');  grid on; 
+    hold on
+    hh=plot(X,smooth([ROMS.mld5],20),'k-','linewidth',3);
+    hold on
+    set(gca,'XLim',[xax1;xax2],'Ydir','reverse',...
+        'ylim',[0 40],'ytick',10:10:30,'fontsize',9,'tickdir','out');
+    ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+    h=colorbar('Position',...
+    [0.898871527389727 0.0598958333333333 0.0217013892769401 0.1328125]);
+    h.Label.String = '\DeltaT from 0m (^oC)';
+    h.FontSize = 8;
+    h.Label.FontSize = 10;
+    h.Label.FontWeight = 'bold';
+    h.TickDirection = 'out';
+    hold on
+    legend([hh(1)],'\DeltaT = 0.5^oC','Location','SE');
+    hold on
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[filepath 'Figs/Dino-Diatom_W_D_S_T_2017-2018.tif']);
+hold off
+
 %% plot pcolor temperature profile, delta T MLD, and  dinos/diatom
 
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
@@ -87,10 +205,10 @@ plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
     hold on 
     
 subplot(6,1,2); %SCW wind
-%    [U,~]=plfilt(w.scw.u, w.scw.dn);
-%    [V,DN]=plfilt(w.scw.v, w.scw.dn);
-%    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-%    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+   [U,~]=plfilt(w.scw.u, w.scw.dn);
+   [V,DN]=plfilt(w.scw.v, w.scw.dn);
+   [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
+   [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
     yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
