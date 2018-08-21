@@ -1,28 +1,26 @@
 
-class2do_string = 'Akashiwo'; ymax=800; 
-%class2do_string = 'Ceratium'; ymax=50; 
-% class2do_string = 'Chaetoceros'; ymax=300;
+%class2do_string = 'Akashiwo'; ymax=1000; 
+%class2do_string = 'Ceratium'; ymax=100; 
 % class2do_string = 'Dinophysis'; ymax=12;
-% class2do_string = 'Pseudo-nitzschia'; ymax=25;
-% class2do_string = 'Det_Cer_Lau'; ymax=40; 
-% class2do_string = 'Eucampia'; ymax=80;
-% class2do_string = 'Prorocentrum'; ymax=200;
-% class2do_string = 'Lingulodinium'; ymax=10;
+% class2do_string = 'Lingulodinium'; ymax=12;
+ class2do_string = 'Pennate'; ymax=70;
+% class2do_string = 'Prorocentrum'; ymax=240;
+% class2do_string = 'Chaetoceros'; ymax=350;
+% class2do_string = 'Det_Cer_Lau'; ymax=50; 
+% class2do_string = 'Eucampia'; ymax=120;
+% class2do_string = 'Pseudo-nitzschia'; ymax=30;
+%class2do_string = 'NanoP_less10'; ymax=600;
+%class2do_string = 'Cryptophyte'; ymax=50;
 % class2do_string = 'Thalassiosira'; ymax=30;
-% class2do_string = 'Skeletonema'; ymax=40;
-% class2do_string = 'Centric'; ymax=120;
-%class2do_string = 'NanoP_less10'; ymax=800;
-%class2do_string = 'Cryptophyte'; ymax=40;
+% class2do_string = 'Skeletonema'; ymax=50;
+% class2do_string = 'Centric'; ymax=150;
+% class2do_string = 'Guin_Dact'; ymax=35;
 
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-load([resultpath 'Data\Coeff_' class2do_string]);
-
-load('F:\IFCB104\manual\summary\count_biovol_manual_09Jul2018'); %USER
-summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
-load([summary_path 'summary_allTB_bythre_' class2do_string]);
-
-load([resultpath 'Data\RAI_SCW'],'r');
-%load([resultpath 'Data\SCW_microscopydata.mat']); %load cell count data
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
+load([filepath 'Data/IFCB_summary/Coeff_' class2do_string]);
+load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_03Aug2018']); 
+load([filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string]);
+load([filepath 'Data/SCW_master'],'SC');
 
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
@@ -133,5 +131,5 @@ hold on
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs\Manual_automated_' num2str(class2do_string) '.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs/Manual_automated_' num2str(class2do_string) '.tif']);
 hold off

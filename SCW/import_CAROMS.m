@@ -1,11 +1,16 @@
 %% import ROMS data for particular years of interest
 
-year= 2017;
+%year= 2015;
+% load('MB_ROMs_filenames_2015','filename');
+% filename=flipud(char(filename));
+% in_dir='http://west.rssoffice.com:8080/thredds/dodsC/roms/CA3km-nowcast/MB/';
+% out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/ROMS/MB_temp_sal_2015'; %change for whatever year
+% in_dir_base='ca_subMB_das_';
 
-load(['MB_ROMs_filenames_Jan-Jul' num2str(year) ''],'filename');
+load('MB_ROMs_filenames_2017-2018','filename');
 filename=flipud(char(filename));
 in_dir='http://west.rssoffice.com:8080/thredds/dodsC/roms/CA3km-nowcast/MB/';
-out_dir=['~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/ROMS/MB_temp_sal_' num2str(year) '']; %change for whatever year
+out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/ROMS/MB_temp_sal_2017-2018'; %change for whatever year
 in_dir_base='ca_subMB_das_';
 
 %%
@@ -63,9 +68,7 @@ for i=1:length(ROMS)
     ROMS(i).diff=ROMS(i).diff';
 end
 
-out_dir=['~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/ROMS/MB_temp_sal_' num2str(year) '']; 
 save(out_dir,'ROMS');
-
 
 %% notes
 

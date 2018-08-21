@@ -5,11 +5,12 @@
 year=2018; %USER
 
 %%%% Step 1: Load in data
-figpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-load([figpath 'Data\ROMS\MB_temp_sal_' num2str(year) ''],'ROMS');
-load([figpath 'Data\SCW_master'],'SC');
-load([figpath 'Data\Wind_MB'],'w');
-load([figpath 'Data\IFCB_summary\class\summary_biovol_allTB' num2str(year) ''],...
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
+% filepath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
+load([filepath 'Data/ROMS/MB_temp_sal_' num2str(year) ''],'ROMS');
+load([filepath 'Data/SCW_master'],'SC');
+load([filepath 'Data/Wind_MB'],'w');
+load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB' num2str(year) ''],...
     'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
     
 %%%% Step 2: Convert Biovolume to Carbon
@@ -64,7 +65,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.12]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-07-01']);     
+xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-12-01']);     
     
 subplot(6,1,1); 
 fxdino = ydino./[ydino+ydiat];
@@ -86,10 +87,10 @@ plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
     hold on 
     
 subplot(6,1,2); %SCW wind
-   [U,~]=plfilt(w.scw.u, w.scw.dn);
-   [V,DN]=plfilt(w.scw.v, w.scw.dn);
-   [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-   [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+%    [U,~]=plfilt(w.scw.u, w.scw.dn);
+%    [V,DN]=plfilt(w.scw.v, w.scw.dn);
+%    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
+%    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
     yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
@@ -152,7 +153,7 @@ subplot(6,1,6); %ROMS MLD
     Y=[ROMS(1).Zi]';
     C=[ROMS.diff];
     pcolor(X,Y,C); shading interp;
-    caxis([0 0.5]); datetick('x','mmm');  grid on; 
+    caxis([0 0.5]); datetick('x','mmm','keeplimits');  grid on; 
     hold on
     hh=plot(X,smooth([ROMS.mld5],20),'k-','linewidth',3);
     hold on
@@ -173,7 +174,7 @@ subplot(6,1,6); %ROMS MLD
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[figpath 'Figs\Dino-Diatom_W_D_S_T_' num2str(year) '.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs/Dino-Diatom_W_D_S_T_' num2str(year) '.tif']);
 hold off
 
 %% old scripts
@@ -221,6 +222,8 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.08 0.04], [0.11 0.2]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
+xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-08-01']);     
+
 %Fraction dinos and diatoms
 subplot(3,1,1);
 fx_other=(ymat-(ydino+ydiat))./ymat; %fraction not dinos or diatoms
@@ -235,7 +238,7 @@ for ii = 1:length(cat)
 end
 
 datetick('x', 3, 'keeplimits')
-xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
+xlim([xax1 xax2])
 ylim([0;1])
 set(gca,'xticklabel',{}, 'fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel({'Fraction';'of biomass'}, 'fontsize', 11, 'fontname', 'arial','fontweight','bold')
@@ -277,7 +280,7 @@ for ii = 1:length(cat)
 end
 
 datetick('x', 3, 'keeplimits')
-xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
+xlim([xax1 xax2])
 ylim([0;1])
 set(gca,'xticklabel',{}, 'fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel({'Fraction';'of biomass'}, 'fontsize', 11, 'fontname', 'arial','fontweight','bold')
@@ -292,7 +295,7 @@ subplot(3,1,3);
 plot(xmat,ymat./ymat_ml,'k.-','linewidth', 1);
 hold on
 datetick('x', 3, 'keeplimits')
-xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
+xlim([xax1 xax2])
 set(gca,'xgrid','on',...
     'fontsize', 10, 'fontname', 'arial','tickdir','out')
 ylabel('Carbon (\mug L^{-1})', 'fontsize', 11, 'fontname', 'arial','fontweight','bold')
@@ -300,7 +303,7 @@ hold all
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[figpath 'Figs\FxBiovolume_IFCB_SCW_' num2str(year) '.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs/FxBiovolume_IFCB_SCW_' num2str(year) '.tif']);
 hold off
 
 %% Just temperature
@@ -329,7 +332,7 @@ xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[figpath 'Figs\TEMP_comparison.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs/TEMP_comparison.tif']);
 hold off
 
 %% plot dinos vs diatoms
@@ -391,5 +394,5 @@ hold all
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[figpath 'Figs\Diatom_Dino_IFCB_' num2str(year) '.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs/Diatom_Dino_IFCB_' num2str(year) '.tif']);
 hold off
