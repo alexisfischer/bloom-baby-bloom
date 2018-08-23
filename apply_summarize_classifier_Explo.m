@@ -45,27 +45,23 @@ extract_biovolume_allcells;
 
 %% PART 3: Evaluate classifier
 % Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
-yrrange = 2016:2018;
-classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
-out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\';
-in_dir = 'F:\IFCB104\data\';
+yrrange = 2018;
+classpath_generic = 'F:\IFCB113\Exploratorium\class\classxxxx_v1\';
+out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Exploratorium\Data\IFCB_summary\class\';
+in_dir = 'F:\IFCB113\Exploratorium\data\';
 
 %dinos
 countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Lingulodinium', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
 
 %diatoms
-countcells_allTB_class('Chaetoceros', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Det_Cer_Lau', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Eucampia', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Thalassiosira', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Entomoneis', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Pseudo-nitzschia', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('NanoP_less10', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Cryptophyte', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Skeletonema', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Centric', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Guin_Dact', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Pennate', yrrange, classpath_generic, out_path, in_dir)
 
