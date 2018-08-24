@@ -4,7 +4,6 @@
 %% PART 1: Apply classifier
 %% Step 1: Sort data into folders
 sort_data_into_folders('F:\IFCB104\data\raw\','F:\IFCB104\data\2018\');
-%sort_data_into_folders('F:\IFCB113\Exploratorium\data\raw\','F:\IFCB113\Exploratorium\data\2018\');
 
 %add new data to search path
 addpath(genpath('F:\IFCB104\data\2018\'));

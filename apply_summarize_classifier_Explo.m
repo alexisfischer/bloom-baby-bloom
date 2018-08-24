@@ -6,7 +6,7 @@
 sort_data_into_folders('F:\IFCB113\Exploratorium\data\raw\','F:\IFCB113\Exploratorium\data\2018\');
 
 %add new data to search path
-addpath(genpath('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017'));
+addpath(genpath('F:\IFCB113\ACIDD2017\'));
 
 %% Step 2: Extract blobs
 start_blob_batch_user_training('F:\IFCB113\Exploratorium\data\2018\','F:\IFCB113\Exploratorium\blobs\2018\',true)

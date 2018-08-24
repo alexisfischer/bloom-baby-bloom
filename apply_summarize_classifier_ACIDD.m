@@ -2,7 +2,7 @@
 %% Step 1: Sort data into folders
 
 %% Step 2: Extract blobs
-start_blob_batch_user_training('F:\IFCB113\ACIDD2017\data\2017\','F:\IFCB113\ACIDD2017\blobs\2017\',true)
+start_blob_batch_user_training('F:\IFCB113\ACIDD2017\data\2017\','F:\IFCB113\ACIDD2017\blobs\2017\',false)
 
 % Step 3: Extract features
 start_feature_batch_user_training('F:\IFCB113\ACIDD2017\data\2017\',...
@@ -19,10 +19,10 @@ countcells_allTBnew_user_training('F:\IFCB113\ACIDD2017\class\classxxxx_v1\',...
     'F:\IFCB113\ACIDD2017\data\',...
     'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\class\',2017)
 
-% Step 6: Summarize biovolume from Manual files
+%% Step 6: Summarize biovolume from Manual files
 biovolume_summary_manual('F:\IFCB113\ACIDD2017\manual\',...
         'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\manual\',...
-        'F:\IFCB113\ACIDD2017\data\','F:\IFCB113\ACIDD\features\XXXX\');
+        'F:\IFCB113\ACIDD2017\data\','F:\IFCB113\ACIDD2017\features\XXXX\');
 
 % Step 7: Summarize biovolume from Classification results
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\class\'; %Where you want the summary file to go
