@@ -51,13 +51,14 @@ biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasep
 extract_biovolume_allcells;
 
 % PART 3: Evaluate classifier
-% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
+%% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
 yrrange = 2017:2018;
 classpath_generic = 'F:\IFCB113\class\classxxxx_v1\';
 out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\class\';
 in_dir = 'F:\IFCB113\data\';
 
 %dinos
+countcells_allTB_class('Alexandrium_singlet', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
