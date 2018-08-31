@@ -1,26 +1,26 @@
 % summarize your class of interest
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
-class2do_string = 'Alexandrium_singlet'; 
+class2do_string = 'Dinophysis'; 
+
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/SFB/';
 
 [class] = summarize_class(class2do_string,...
-    [resultpath 'Data\Coeff_' class2do_string],...
-    'F:\IFCB113\manual\summary\count_biovol_manual_11Jun2018',...
-    ['F:\IFCB113\class\summary\summary_allTB_bythre_' class2do_string],...
-    resultpath);
+    ['~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/IFCB_summary/Coeff_' class2do_string],...
+    [filepath 'Data/IFCB_summary/manual/count_biovol_manual_18Aug2018'],...
+    [filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string],...
+    filepath);
 
-%%
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\';
+%
 [phyto,A] = compile_species(class2do_string,...
-    [resultpath 'Data\Alexandrium_singlet_summary'],...
-    [resultpath 'Data\st_filename_raw.csv'],...
-    [resultpath 'Data\sfb_raw.csv']);
+    [filepath 'Data/IFCB_summary/class/' num2str(class2do_string) '_summary'],...
+    [filepath 'Data/st_filename_raw.csv'],...
+    [filepath 'Data/sfb_raw.csv'],filepath);
 
 
 %% contour Alexandrium
-str='Alexandrium';
-label='Alexandrium (cells mL^{-1})';
-ccon=0:.5:6;
-cax=[0 6];    
+str='Prorocentrum';
+label='Prorocentrum (cells mL^{-1})';
+ccon=0:1:30;
+cax=[0 30];    
 
 for i=1:(length(A)-1)
     
@@ -39,7 +39,7 @@ for i=1:(length(A)-1)
 
     % contour plot 
     x = -122.56:.001:-121.76; y = 37.4:.001:38.22;
-    bathydata = load([resultpath 'Data\SFB_bathymetry.mat']);
+    bathydata = load([filepath 'Data/SFB_bathymetry.mat']);
     xx = bathydata.lon; yy = bathydata.lat;
     F = scatteredInterpolant(lonok,latok,vvok,'nearest','nearest'); %F is a function
     zz = F(xx,yy); %must call scatteredInterp function in order to plot
@@ -82,7 +82,7 @@ for i=1:(length(A)-1)
     % Set figure parameters
     set(gcf,'color','w');
     print(gcf,'-dtiff','-r600',...
-        [resultpath 'Figs\' num2str(str) '_contour_' datestr(yrok,'ddmmmyyyy') '.tif'])
+        [filepath 'Figs/' num2str(str) '_contour_' datestr(yrok,'ddmmmyyyy') '.tif'])
     hold off
 
 end
@@ -221,5 +221,5 @@ set(hSub, 'Visible', 'off');
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs\Alex_Sal_Dist_SFB.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs\Alex_Sal_Dist_SFB.tif']);
 hold off 

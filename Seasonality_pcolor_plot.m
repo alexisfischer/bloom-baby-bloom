@@ -1,6 +1,24 @@
-class2do_string = 'Akashiwo'; %USER 
-summary_path = 'F:\IFCB104\class\summary\'; %load automated count file with all thresholds you made from running 'countcells_allTB_class_by_thre_user.m'
-load([summary_path 'summary_allTB_bythre_' class2do_string]);
+
+class2do_string = 'Akashiwo'; ymax=1000; 
+%class2do_string = 'Ceratium'; ymax=100; 
+% class2do_string = 'Dinophysis'; ymax=12;
+% class2do_string = 'Lingulodinium'; ymax=12;
+% class2do_string = 'Pennate'; ymax=70;
+% class2do_string = 'Prorocentrum'; ymax=240;
+% class2do_string = 'Chaetoceros'; ymax=350;
+% class2do_string = 'Det_Cer_Lau'; ymax=50; 
+% class2do_string = 'Eucampia'; ymax=120;
+% class2do_string = 'Pseudo-nitzschia'; ymax=30;
+%class2do_string = 'NanoP_less10'; ymax=600;
+%class2do_string = 'Cryptophyte'; ymax=50;
+% class2do_string = 'Thalassiosira'; ymax=30;
+% class2do_string = 'Skeletonema'; ymax=50;
+% class2do_string = 'Centric'; ymax=150;
+% class2do_string = 'Guin_Dact'; ymax=35;
+
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
+load([filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string]);
+
 
 mdate = mdateTB;
 y = classcountTB_above_thre(:,6)./ml_analyzedTB; % use column with whatever threshold you select
@@ -23,7 +41,7 @@ datetick('x',4)
 axis square
 shading flat
 
-% set figure parameters
+%% set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',...
     ['C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Figs\SCW_seasonality_' num2str(class2do_string) '.tif']);

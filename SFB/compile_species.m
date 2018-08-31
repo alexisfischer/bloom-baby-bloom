@@ -1,9 +1,10 @@
-function [phyto,A] = compile_species(class2do_string,classData,cruisetime,parameters)
+%function [phyto,A] = compile_species(class2do_string,classData,cruisetime,parameters,filepath)
+class2do_string = 'Dinophysis'; 
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/SFB/';
+classData = [filepath 'Data/IFCB_summary/class/' num2str(class2do_string) '_summary'];
+cruisetime =[filepath 'Data/st_filename_raw.csv'];
+parameters= [filepath 'Data/sfb_raw.csv'];
 
-% class2do_string = 'Alexandrium_singlet'; 
-% classData = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\Alexandrium_singlet_summary.mat';
-% cruisetime = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\st_filename_raw.csv';
-% parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
 
 %% add station #s to Alexandrium data 
 load(classData);
@@ -56,6 +57,13 @@ A(12).a=find([phyto.matdate]==datenum('15-Mar-2018'));
 A(13).a=find([phyto.matdate]==datenum('26-Mar-2018'));
 A(14).a=find([phyto.matdate]==datenum('09-Apr-2018'));
 A(15).a=find([phyto.matdate]==datenum('18-Apr-2018'));
+% A(16).a=find([phyto.matdate]==datenum('07-May-2018'));
+% A(17).a=find([phyto.matdate]==datenum('17-May-2018'));
+% A(18).a=find([phyto.matdate]==datenum('06-Jun-2018'));
+% A(19).a=find([phyto.matdate]==datenum('11-Jun-2018'));
+% A(20).a=find([phyto.matdate]==datenum('12-Jul-2018'));
+% A(21).a=find([phyto.matdate]==datenum('03-Aug-2018'));
+% A(22).a=find([phyto.matdate]==datenum('14-Aug-2018'));
 
 % organize station data into structures
 for i=1:length(A)
@@ -80,5 +88,5 @@ for i=1:length(A)
 end
 A=rmfield(A,'a');
 
-save(['F:\IFCB113\class\summary\' num2str(class2do_string) '_param'],'phyto','A');
+save([filepath 'Data/IFCB_summary/class/' num2str(class2do_string) '_param'],'phyto','A');
 

@@ -1,21 +1,19 @@
 %%
+
 year=2018;
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/Exploratorium/';
-load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB' num2str(year) ''],...
-    'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
+load([filepath 'Data/IFCB_summary/class/summary_biovol_allcells' num2str(year)],...
+    'matdate', 'ml_analyzed', 'biovol_sum', 'filelist','eqdiam',...
+    'notes1', 'notes2');
 
-resultpath = 'F:\IFCB104\manual\'; %Where you want the summary file to go
-load ([resultpath 'summary\biovol_size_allcells_23Dec2017']);
-
-%
-diambins=0:5:50; %decide what kind of size bins you want to look at
+diambins=0:5:40; %decide what kind of size bins you want to look at
 clear bincount
 bincount=NaN(length(eqdiam),length(diambins));
 
 %bincount is a matrix of counts/ml for each diameter bin (as specified in
 %diambin) by each file....or essentially histogram values
 for i=1:length(eqdiam)
-    [d,bins]=hist(eqdiam(i),diambins); %This looks at equivalent spherical diameter, change this if you want to look at something else
+    [d,bins]=hist(eqdiam{i,1},diambins); %This looks at equivalent spherical diameter, change this if you want to look at something else
     bincount(i,:)=d./ml_analyzed(i);
 end
 
@@ -26,6 +24,32 @@ for i=1:length(diambins)
 end
 
 
+%% summary figure by bin
+figure('Units','inches','Position',[1 1 8 5],'PaperPositionMode','auto');
+
+xax1=datenum(['' num2str(year) '-05-20']); xax2=datenum(['' num2str(year) '-07-10']);     
+plot(matdate_bin,[daybin_perml],'linewidth',3);
+
+cstr=[brewermap(8,'Spectral');[0 0 0]/255];
+ax=get(gca); cat = ax.Children;
+for ii = 1:length(cat)
+    set(cat(ii), 'Color', cstr(ii,:))
+end
+
+datetick('x', 3, 'keeplimits')
+set(gca,'xgrid','on','ylim',[0 150],'ytick',0:50:150,'xlim',[xax1 xax2],...
+     'FontSize',14,'XAxisLocation','bottom','TickDir','out'); 
+
+ylabel('Counts mL^{-1}', 'fontsize', 16, 'fontname', 'arial','fontweight','bold')
+h=legend('0-5 \mum','5-10 \mum','10-15 \mum','15-20 \mum','20-25 \mum',...
+    '25-30 \mum','30-35 \mum','35-40 \mum');
+set(h,'FontSize',12,'Location','EastOutside');
+hold on
+
+% Set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[filepath 'Figs/Eqdiam_Histogram_Explo' num2str(year) '.tif']);
+hold off
 
 %% Plots histograms by day on one plot, the colors of the line are associated with time of year
 figure
@@ -59,10 +83,10 @@ figure('Units','inches','Position',[1 1 5 5],'PaperPositionMode','auto');
 
 S=std(bincount,1);
 bar(diambins,mean(bincount,1));
-set(gca,'ylim',[0 12],'ytick',0:2:12,'xlim',[0 55],'xtick',0:5:55,...
-    'FontSize',10,'XAxisLocation','bottom','TickDir','out'); 
+ set(gca,'ylim',[0 400],'ytick',0:50:400,'xlim',[0 55],...
+     'FontSize',10,'XAxisLocation','bottom','TickDir','out'); 
 
-ylabel('Concentration (L^{-1} \mum ^{-1})', 'FontSize', 12,'FontName', 'Arial')
+ylabel('Concentration (counts mL^{-1})', 'FontSize', 12,'FontName', 'Arial')
 xlabel('Equivalent spherical diameter (\mum)', 'FontSize', 12,'FontName', 'Arial')
 t = char(datetime(matdate(1),'ConvertFrom','datenum'));
 title_date=t(1:11);
@@ -70,7 +94,7 @@ title(title_date,'FontSize', 12, 'FontName', 'Arial');
 
 % Set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600','~/Documents/MATLAB/SantaCruz/Figs/HistogramTest.tif')
+print(gcf,'-dtiff','-r600',[filepath 'Figs/Eqdiam_Histogram_Explo' num2str(year) '.tif']);
 hold off
 
 %% new figure for each date 

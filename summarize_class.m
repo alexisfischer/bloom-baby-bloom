@@ -50,7 +50,7 @@ class(1).mdateTB=datenum(datestr(mdateTB),'dd-mm-yyyy');
 class(1).mdate_mat_manual=mdate_mat_manual;
 class(1).filelist=string(filelistTB);
 
-save([resultpath 'Data\' num2str(class2do_string) '_summary'],'class');
+save([resultpath 'Data/IFCB_summary/class/' num2str(class2do_string) '_summary'],'class');
 
 end
 

@@ -79,7 +79,7 @@ hold on
 plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
         xmat,smooth((fxdiat.*ymat)./ymat_ml,1),'-b.','linewidth', 1);
     xlim([xax1;xax2]);    
-    set(gca,'xgrid','on','fontsize', 9, 'fontname', 'arial',...
+    set(gca,'yscale','log','xgrid','on','ylim',[1 100],'fontsize', 9, 'fontname', 'arial',...
         'tickdir','out','xaxislocation','top')
     datetick('x','mmm','keeplimits')
     ylabel('Carbon (\mug L^{-1})','fontsize',10,'fontname','arial','fontweight','bold')
@@ -422,6 +422,81 @@ hold all
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[filepath 'Figs/FxBiovolume_IFCB_SCW_' num2str(year) '.tif']);
+hold off
+
+%% plot fraction biovolume of select species
+figure('Units','inches','Position',[1 1 8 6],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.08 0.04], [0.1 0.25]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
+
+xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-08-01']);     
+
+%species breakdown
+subplot(2,1,1);
+ 
+select_dino=[BIO(strmatch('Akashiwo',class2useTB)).car,...
+    BIO(strmatch('Ceratium',class2useTB)).car,...
+    BIO(strmatch('Dinophysis',class2useTB)).car,...
+    BIO(strmatch('Lingulodinium',class2useTB)).car,...
+    BIO(strmatch('Prorocentrum',class2useTB)).car];
+fx_otherdino=(ydino-sum(select_dino,2))./ymat; %fraction other dinos
+
+select_diat=[BIO(strmatch('Chaetoceros',class2useTB)).car,...
+    BIO(strmatch('Det_Cer_Lau',class2useTB)).car,...
+    BIO(strmatch('Eucampia',class2useTB)).car,...
+    BIO(strmatch('Guin_Dact',class2useTB)).car,...    
+    BIO(strmatch('Pseudo-nitzschia',class2useTB)).car,...
+    BIO(strmatch('Centric',class2useTB)).car,...    
+    BIO(strmatch('Pennate',class2useTB)).car];
+fx_otherdiat=(ydiat-sum(select_diat,2))./ymat; %fraction other dinos
+
+bar(xmat,[select_dino./ymat select_diat./ymat fx_otherdino fx_otherdiat fx_other], 0.5, 'stack');
+
+ax=get(gca); cat = ax.Children;
+col_diat1=flipud(brewermap(6,'BuGn'));
+col_diat2=flipud(brewermap(6,'BuPu'));
+col_dino=(brewermap(6,'YlOrRd'));
+
+cstr=[[220 220 220]/255; [110 110 110]/255; [0 0 0]/255;...
+    col_diat2(1:4,:); col_diat1(1:3,:); col_dino(1:5,:)];
+
+for ii = 1:length(cat)
+    set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
+end
+
+datetick('x', 3, 'keeplimits')
+xlim([xax1 xax2])
+ylim([0;1])
+set(gca,'xticklabel',{},'ylim',[0 1],'ytick',0.5:0.5:1,'fontsize', 14, 'fontname', 'arial','tickdir','out')
+ylabel('Fraction of biomass', 'fontsize', 16, 'fontname', 'arial','fontweight','bold')
+h=legend('Akashiwo','Ceratium','Dinophysis','Lingulodinium','Prorocentrum',...
+    'Chaetoceros','DetCerLau','Eucampia','GuinDact','Pseudo-nitzschia',...
+    'Centric diatoms','Pennate diatoms','other dinos','other diatoms','other cell-derived');
+set(h, 'Position',[0.760416666666464 0.416666666666667 0.239583333333333 0.546296296296296],'box','off');
+hold on
+
+%total cell-derived biovolume
+subplot(2,1,2);
+h1=plot(xmat,ymat./ymat_ml,'k.-','linewidth', 2);
+hold on
+    h2=plot(SC.dn,SC.CHL,'*k','Markersize',5);
+    hold on
+    h3=plot(SC.dn,SC.CHLsensor,'k--','linewidth',1.5);
+hold on
+datetick('x', 'm', 'keeplimits')
+xlim([xax1 xax2])
+set(gca,'xgrid','on','ytick',[0:10:20],'ylim',[0 25],'fontsize', 14, 'fontname', 'arial','tickdir','out')
+ylabel('Carbon biomass (\mug L^{-1})', 'fontsize', 16, 'fontname', 'arial','fontweight','bold')
+h=legend([h1,h2,h3],'IFCB','Chl manual','Chl sensor');
+set(h,'Position',[0.763888888888888 0.239583333333333 0.182291666666666 0.115740740740741],'box','off');
+datetick('x', 'mmm', 'keeplimits')
+
+hold on
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r600',[filepath 'Figs/FxBiovolume_IFCB_SCW_2panel_' num2str(year) '.tif']);
 hold off
 
 %% Just temperature
