@@ -1,76 +1,220 @@
 %% import ROMS data for particular years of interest
+out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/ROMS/SCW_ROMS_TS_MLD'; %change for whatever year
 
-%year= 2015;
-% load('MB_ROMs_filenames_2015','filename');
-% filename=flipud(char(filename));
-% in_dir='http://west.rssoffice.com:8080/thredds/dodsC/roms/CA3km-nowcast/MB/';
-% out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/ROMS/MB_temp_sal_2015'; %change for whatever year
-% in_dir_base='ca_subMB_das_';
+%% ROMS Monterey Bay Nowcast (1km) 2010-2013
+%SCW 36.9573°N, -122.0173°W
+%in_dir='http://thredds.cencoos.org/thredds/dodsC/MB_DAS.nc?depth[0:1:4],lat[136],lon[78],temp[0:1:3364][0:1:4][136][78],salt[0:1:3364][0:1:4][136][78],time[0:1:3364]';
+in_dir='http://thredds.cencoos.org/thredds/dodsC/MB_DAS.nc?depth[0:1:7],lat[132],lon[75],temp[0:1:3364][0:1:7][132][75],salt[0:1:3364][0:1:7][132][75],time[0:1:3364]';
 
-load('MB_ROMs_filenames_2017-2018','filename');
-filename=flipud(char(filename));
-in_dir='http://west.rssoffice.com:8080/thredds/dodsC/roms/CA3km-nowcast/MB/';
-out_dir='~/Documents/MATLAB/bloom-baby-bloom/SCW/Data/ROMS/MB_temp_sal_2017-2018'; %change for whatever year
-in_dir_base='ca_subMB_das_';
+lat=ncread(in_dir,'lat'); %degrees_north
+lon=ncread(in_dir,'lon'); %degrees_east
+depth=ncread(in_dir,'depth'); %degrees_north
 
-%%
-% organize data of interest
-for i=1:length(filename)
-    disp(filename(i,1:26));
-    indir_name = [in_dir filename(i,1:26)];
-    lat=ncread(indir_name,'lat'); %degrees_north
-    lon_E=ncread(indir_name,'lon'); %degrees_east
-    lon=lon_E-360; %convert to negative degrees_west    
-    depth=ncread(indir_name,'depth'); 
-    temp=ncread(indir_name,'temp'); 
-    temp(find(temp==-9999))=NaN; %convert -9999 to NaNs
-    salt=ncread(indir_name,'salt'); 
-    salt(find(salt==-9999))=NaN; %convert -9999 to NaNs
-    time=ncread(indir_name,'time'); 
-    dn=datenum(datetime({num2str(filename(i,14:23))},'InputFormat','yyyyMMddHH'));
-
-ROMS(i).dn=dn;    
-ROMS(i).lat=lat(49); % 36.9573°N,    
-ROMS(i).lon=lon(54); % -122.0173°W
-ROMS(i).Z=depth;
-ROMS(i).T=squeeze(temp(54,49,:));
-ROMS(i).S=squeeze(salt(54,49,:));
-
+time=ncread(in_dir,'time'); % convert time from ISO String format to typical numerical type
+dn=NaN*ones(length(time),1);
+for i=1:length(dn)
+    tt=time(1:20,i)';
+    dn(i) = datenum(datetime(tt,'InputFormat','yyyy-MM-dd''T''HH:mm:ss''Z'));
 end
-
-% remove bad data on '11-Apr-2018 09:00:00'
-%ROMS(392) = [];
-
-% find max dT/dz and find 0.04ºC/m
-for i=1:length(ROMS)
-   ROMS(i).Ti = spline(ROMS(1).Z,ROMS(i).T,0:1:40)'; %cubic spline interpolation
-    ROMS(i).Si = spline(ROMS(1).Z,ROMS(i).S,0:1:40)';
-   ROMS(i).Zi = (0:1:40)';
-    ROMS(i).dTdz=diff(ROMS(i).Ti)';  
-    ROMS(i).zero4=ROMS(i).Zi(find(ROMS(i).dTdz >= 0.04,1));
-    ROMS(i).zero4(isempty(ROMS(i).zero4))=NaN; %replace with Nan if empty      
-     ROMS(i).dTdz=(ROMS(i).dTdz)';  
-     [ROMS(i).maxdTdz,idx]=max(ROMS(i).dTdz);
-     ROMS(i).Tmax=ROMS(i).Ti(idx);
-     ROMS(i).Zmax=ROMS(i).Zi(idx);   
-end
-
     
-% find where dT from the surface exceeds 0.5ºC, aka the MLD
+temp  = ncread(in_dir,'temp');
+temp((temp==-9999))=NaN; %convert -9999 to NaNs
+temp((temp==0))=NaN; %convert 0 to NaNs
+t=double(squeeze(temp))';
+
+salt  = ncread(in_dir,'salt');
+salt((salt==-9999))=NaN; %convert -9999 to NaNs
+salt((salt==0))=NaN; %convert 0 to NaNs
+s=double(squeeze(salt))';
+
+% low pass filter
+for i=1:length(t)
+    tfilt(:,i)=pl33tn(t(:,i)); 
+    sfilt(:,i)=pl33tn(s(:,i)); 
+end
+
+tfilt=tfilt';
+sfilt=sfilt';
+
+% convert data to daily
+for i=1:length(depth)
+    [DN,T(i,:),~] = ts_aggregation(dn,tfilt(i,:),1,'day',@mean);
+    [~,S(i,:),~] = ts_aggregation(dn,sfilt(i,:),1,'day',@mean);
+end
+
+% convert date format
+DNN=datenum(datestr(DN),'dd-mm-yyyy');
+
+% put in structure
+for i=1:length(DNN)
+    MB(i).dn=DNN(i);    
+    MB(i).lat=lat;
+    MB(i).lon=lon; 
+    MB(i).Z=depth;
+    MB(i).T=T(:,i);
+    MB(i).S=S(:,i); 
+    MB(i).Zi =double(0:1:depth(end))';        
+end
+
+%interpolate (avoiding the NaNs)
+for i=1:length(MB)
+    if MB(i).T == 0   
+        MB(i).T=NaN*ones(size(MB(1).T));  
+        MB(i).Ti=NaN*ones(size(MB(1).Zi));          
+    elseif isnan(MB(i).T)
+        MB(i).Ti=NaN*ones(size(MB(1).Zi));                  
+    else    
+    MB(i).Ti = double(spline(MB(1).Z,MB(i).T,MB(1).Zi)); %cubic spline interpolation
+    end
+
+    if MB(i).S == 0   
+        MB(i).S=NaN*ones(size(MB(1).S));  
+        MB(i).Si=NaN*ones(size(MB(1).Zi));          
+    elseif isnan(MB(i).S)
+        MB(i).Si=NaN*ones(size(MB(1).Zi));                  
+    else    
+    MB(i).Si = double(spline(MB(1).Z,MB(i).S,MB(1).Zi)); %cubic spline interpolation
+    end    
+    
+end
+
+clearvars depth salt temp dn i lat lon s t tt tfilt sfilt time T S DN DNN idx ii;
+
+%% California ROMS Nowcast (3km) 2012-present
+%SCW 36.9573°N, -122.0173°W
+
+%in_dir='http://thredds.cencoos.org/thredds/dodsC/CENCOOS_CA_ROMS_DAS.nc?depth[0:1:2],lat[188],lon[183],salt[0:1:8056][0:1:2][188][183],temp[0:1:8056][0:1:2][188][183],time[0:1:8056]';
+in_dir='http://thredds.cencoos.org/thredds/dodsC/CENCOOS_CA_ROMS_DAS.nc?depth[0:1:5],lat[187],lon[181],temp[0:1:8056][0:1:5][187][181],salt[0:1:8056][0:1:5][187][181],time[0:1:8056]';
+
+lat=ncread(in_dir,'lat'); %degrees_north
+lon=ncread(in_dir,'lon'); %degrees_east
+lon=lon-360; %degrees_west
+depth  = ncread(in_dir,'depth');
+time=ncread(in_dir,'time'); %units: hours since 1970-01-01 00:00:00 UTC
+dn=double(time)/24 + datenum('1970-01-01 00:00:00'); %7 hrs ahead of PT
+clearvars time
+
+temp = ncread(in_dir,'temp');
+temp(find(temp==-9999))=NaN; %convert -9999 to NaNs
+t=(squeeze(temp))';
+
+salt  = ncread(in_dir,'salt');
+salt(find(salt==-9999))=NaN; %convert -9999 to NaNs
+s=(squeeze(salt))';
+
+% low pass filter
+for i=1:length(t)
+    tfilt(:,i)=pl33tn(t(:,i)); 
+    sfilt(:,i)=pl33tn(s(:,i)); 
+end
+
+tfilt=tfilt';
+sfilt=sfilt';
+
+% convert data to daily
+for i=1:length(depth)
+    [DN,T(i,:),~] = ts_aggregation(dn,tfilt(i,:),1,'day',@mean);
+    [~,S(i,:),~] = ts_aggregation(dn,sfilt(i,:),1,'day',@mean);
+end
+
+% convert date format
+DNN=datenum(datestr(DN),'dd-mm-yyyy');
+
+%put in structure
+for i=1:length(DNN)
+    CA(i).dn=DNN(i);    
+    CA(i).lat=lat;
+    CA(i).lon=lon; 
+    CA(i).Z=depth;
+    CA(i).T=T(:,i);
+    CA(i).S=S(:,i); 
+    CA(i).Zi =double((0:1:depth(end)))';            
+end
+
+%interpolate (avoiding the NaNs)
+for i=1:length(CA)
+    if CA(i).T == 0   
+        CA(i).T=NaN*ones(size(CA(1).T));  
+        CA(i).Ti=NaN*ones(size(CA(1).Zi));          
+    elseif isnan(CA(i).T)
+        CA(i).Ti=NaN*ones(size(CA(1).Zi));                  
+    else    
+    CA(i).Ti = double(spline(CA(1).Z,CA(i).T,CA(1).Zi)); %cubic spline interpolation
+    end
+
+    if CA(i).S == 0   
+        CA(i).S=NaN*ones(size(CA(1).S));  
+        CA(i).Si=NaN*ones(size(CA(1).Zi));          
+    elseif isnan(CA(i).S)
+        CA(i).Si=NaN*ones(size(CA(1).Zi));                  
+    else    
+    CA(i).Si = double(spline(CA(1).Z,CA(i).S,CA(1).Zi)); %cubic spline interpolation
+    end    
+    
+end
+
+clearvars depth salt temp dn i lat lon s t sfilt tfilt tt time T S DN DNN idx ii;
+
+%% match up CA data with Monterey bay ROMS so don't overlap
+idx = find([CA.dn]> MB(end).dn,1); %id for where the points overlap
+
+dn = [[MB.dn]'; [CA(idx:end).dn]'];   
+lat = [[MB.lat]'; [CA(idx:end).lat]'];   
+lon = [[MB.lon]'; [CA(idx:end).lon]'];   
+Ti = [[MB.Ti]'; [CA(idx:end).Ti]'];   
+Si = [[MB.Si]'; [CA(idx:end).Si]'];   
+
+for i=1:length(dn)
+    ROMS(i).dn=dn(i);
+    ROMS(i).lat=double(lat(i));
+    ROMS(i).lon=double(lon(i));
+    ROMS(i).Zi=MB(1).Zi; %same depth for all  
+    ROMS(i).Ti=double(Ti(i,:))';
+    ROMS(i).Si=double(Si(i,:))';    
+end
+
+clearvars MB CA i dn lat lon Ti Si Zi idx;
+
+%% find where dT from the surface exceeds 0.5ºC, aka the MLD
+deep=max(ROMS(1).Zi);
+
 for i=1:length(ROMS)
+    
+    if isnan(ROMS(i).Ti)
+        ROMS(i).diff = NaN*ones(size(ROMS(1).Zi));   
+        ROMS(i).mld2=NaN;
+        ROMS(i).mld5=NaN;
+        ROMS(i).dTdz=NaN*ones(length(ROMS(1).Zi)-1,1); 
+        ROMS(i).zero4=NaN;
+        ROMS(i).maxdTdz=NaN;        
+        ROMS(i).Zmax=NaN;
+        ROMS(i).Tmax=NaN;
+     
+    else          
     for j=1:length(ROMS(i).Ti)
        ROMS(i).diff(j)=abs(diff([ROMS(i).Ti(1) ROMS(i).Ti(j)]));
     end
     ROMS(i).mld2=ROMS(i).Zi(find(ROMS(i).diff > 0.2,1));
-    ROMS(i).mld2(isempty(ROMS(i).mld2))=40; %replace with deepest depth if empty
+    ROMS(i).mld2(isempty(ROMS(i).mld2))=deep; %replace with deepest depth if empty
     ROMS(i).mld5=ROMS(i).Zi(find(ROMS(i).diff > 0.5,1));
-    ROMS(i).mld5(isempty(ROMS(i).mld5))=40; %replace with deepest depth if empty    
+    ROMS(i).mld5(isempty(ROMS(i).mld5))=deep; %replace with deepest depth if empty    
     ROMS(i).diff=ROMS(i).diff';
+    ROMS(i).dTdz=abs(diff(ROMS(i).Ti))';  
+    ROMS(i).zero4=ROMS(i).Zi(find(ROMS(i).dTdz >= 0.04,1));
+    ROMS(i).zero4(isempty(ROMS(i).zero4))=NaN; %replace with Nan if empty      
+    ROMS(i).dTdz=(ROMS(i).dTdz)';  
+    [ROMS(i).maxdTdz,idx]=max(ROMS(i).dTdz);
+    ROMS(i).Zmax=ROMS(i).Zi(idx);   
+    ROMS(i).Tmax=ROMS(i).Ti(idx);    
+    
+    end
+    
 end
 
 save(out_dir,'ROMS');
 
-%% notes
+%%
+%% NOTES
 
 surface=zeros(length(ROMS),1);
 for i=1:length(ROMS)

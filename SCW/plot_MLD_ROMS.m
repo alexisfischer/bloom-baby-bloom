@@ -1,9 +1,7 @@
 %plot MLD from ROMS data
 
-%year=2017;
-year=2018;
-resultpath='~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
-load([resultpath 'Data/ROMS/MB_temp_sal_' num2str(year) ''],'ROMS');
+filepath='~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
+load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD'],'ROMS');
 
 %% plot pcolor temperature profile and delta T MLD 
 figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
@@ -11,50 +9,63 @@ figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
 % %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 % %where opt = {gap, width_h, width_w} describes the inner and outer spacings. 
 
-subplot(2,1,1);
+xax1= datenum('01-Sep-2010');
+xax2= datenum('01-Oct-2018');
+
+yax1= ROMS(1).Zi(1);
+yax2= ROMS(1).Zi(end);
+    
+ax1=subplot(2,1,1);   
     X=[ROMS.dn]';
     Y=[ROMS(1).Zi]';
     C=[ROMS.Ti];
+    colormap(ax1,parula);     
     pcolor(X,Y,C); shading interp;
-    caxis([10 16]); datetick('x','m');  grid on; 
+    caxis([10 16]); datetick('x','yyyy');  
     hold on
-    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
-    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,...
-        'fontsize',10,'tickdir','out');
+    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[yax1 yax2],...
+            'xlim',[xax1 xax2],'ytick',yax1:yax2/2:yax2,'fontsize',10,'tickdir','out');
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
-    h=colorbar; 
-    h.FontSize = 10;
-    h.Label.String = 'T (^oC)'; 
-    h.Label.FontSize = 12;
-    h.Label.FontWeight = 'bold';
-    h.TickDirection = 'out';
+    box on;
+    h1=colorbar; 
+    h1.FontSize = 10;
+    h1.Label.String = 'T (^oC)'; 
+    h1.Label.FontSize = 12;
+    h1.Label.FontWeight = 'bold';
+    h1.TickDirection = 'out';
     hold on
     
-subplot(2,1,2);
+ax2=subplot(2,1,2);
     X=[ROMS.dn]';
     Y=[ROMS(1).Zi]';
     C=[ROMS.diff];
     pcolor(X,Y,C); shading interp;
-    caxis([0 0.5]); datetick('x','m');  grid on; 
+    colormap(ax2,(parula)); 
+    caxis([0 0.5]); datetick('x','yyyy'); 
     hold on
-    hh=plot(X,smooth([ROMS.mld5],20),'k-','linewidth',3);
+    ii=~isnan([ROMS.mld2])';
+%    Y=boxfilt3([ROMS.mld5]',10);    
+    Y=smooth([ROMS(ii).mld5],20);
+    plot(X(ii),Y,'k-','linewidth',2);
     hold on
-    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))    
-    set(gca,'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,'fontsize',10,'tickdir','out');
-    datetick('x','m','keeplimits','keepticks');
+    set(gca,'Ydir','reverse','ylim',[yax1 yax2],...
+        'xlim',[xax1 xax2],'ytick',yax1:yax2/2:yax2,'fontsize',10,'tickdir','out');
+    datetick('x','yyyy','keeplimits','keepticks');
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
-    h=colorbar; 
-    h.Label.String = '\DeltaT from 0m (^oC)';
-    h.FontSize = 10;
-    h.Label.FontSize = 12;
-    h.Label.FontWeight = 'bold';
-    h.TickDirection = 'out';
+    box on;
+    h2=colorbar; 
+   % h2.YDir='reverse';
+    h2.Label.String = '\DeltaT from 0 m (^oC)';
+    h2.FontSize = 10;
+    h2.Label.FontSize = 12;
+    h2.Label.FontWeight = 'bold';
+    h2.TickDirection = 'out';
     hold on
-    legend([hh(1)],'\DeltaT = 0.5^oC','Location','SE');
+%    legend([hh(1)],'\DeltaT = 0.5^oC','Location','SE');
         
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_MB_Temp_MLD_' num2str(year) '.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs/ROMS_SCW_Temp_MLD_50m.tif']);
 hold off
 
 %% plot pcolor temperature profile, delta T MLD  and dT/dZ
@@ -63,37 +74,44 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.08 0.04], [0.09 0.06])
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings. 
 
-subplot(3,1,1);
+xax1= datenum('01-Sep-2010');
+xax2= datenum('01-Oct-2018');
+
+yax1= ROMS(1).Zi(1);
+yax2= ROMS(1).Zi(end);
+    
+ax1=subplot(3,1,1);   
     X=[ROMS.dn]';
     Y=[ROMS(1).Zi]';
     C=[ROMS.Ti];
-
+    colormap(ax1,parula);     
     pcolor(X,Y,C); shading interp;
-    caxis([10 16]); datetick('x','m');  grid on; 
+    caxis([10 16]); datetick('x','yyyy');  
     hold on
-    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))
-    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,'tickdir','out');
+    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[yax1 yax2],...
+            'xlim',[xax1 xax2],'ytick',yax1:yax2/2:yax2,'fontsize',10,'tickdir','out');
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
-    h=colorbar; 
-    h.FontSize = 10;
-    h.Label.String = 'T (^oC)'; 
-    h.Label.FontSize = 12;
-    h.Label.FontWeight = 'bold';
-    h.TickDirection = 'out';
+    box on;
+    h1=colorbar; 
+    h1.FontSize = 10;
+    h1.Label.String = 'T (^oC)'; 
+    h1.Label.FontSize = 12;
+    h1.Label.FontWeight = 'bold';
+    h1.TickDirection = 'out';
     hold on
-
-subplot(3,1,2);
+    
+ax2=subplot(3,1,2);
     X=[ROMS.dn]';
-    Y=[ROMS(1).Zi(1:40)]';
+    Y=[ROMS(1).Zi(1:end-1)]';
     C=[ROMS.dTdz];
-    pcolor(X,Y,C); shading interp;
-    caxis([0 0.2]); datetick('x','m');  grid on; 
+    pcolor(X,Y,C); shading interp;    
+    colormap(ax2,(parula)); 
+    caxis([0 0.2]); datetick('x','yyyy');
     hold on
-    plot(X,smooth([ROMS.Zmax],20),'w-','linewidth',3);
+    plot(X,smooth([ROMS.Zmax],20),'w-',X,smooth([ROMS.zero4],20),'r-','linewidth',2);
     hold on
-    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))    
-    set(gca,'Ydir','reverse','ylim',[0 40],'ytick',0:20:40,'fontsize',10,...
-        'xticklabel',{},'tickdir','out');
+    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[yax1 yax2],...
+            'xlim',[xax1 xax2],'ytick',yax1:yax2/2:yax2,'fontsize',10,'tickdir','out');    
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
     h=colorbar; 
     h.Label.String = 'dTdz (^oC m^{-1})';
@@ -103,29 +121,34 @@ subplot(3,1,2);
     h.TickDirection = 'out';
     hold on
 
-subplot(3,1,3);
+ax3=subplot(3,1,3);
     X=[ROMS.dn]';
     Y=[ROMS(1).Zi]';
     C=[ROMS.diff];
     pcolor(X,Y,C); shading interp;
-    caxis([0 0.5]); datetick('x','m');  grid on; 
+    colormap(ax3,(parula)); 
+    caxis([0 0.5]); datetick('x','yyyy'); 
     hold on
-    hh=plot(X,smooth([ROMS.mld2],20),'r-',X,smooth([ROMS.mld5],20),'k-','linewidth',3);
+    ii=~isnan([ROMS.mld2])';
+    Y=smooth([ROMS(ii).mld5],20);
+    plot(X(ii),Y,'k-','linewidth',2);
     hold on
-    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))    
-    set(gca,'Ydir','reverse','ylim',[0 40],'ytick',0:10:40,'fontsize',10,'tickdir','out');
-    datetick('x','m','keeplimits','keepticks');
+    set(gca,'Ydir','reverse','ylim',[yax1 yax2],...
+        'xlim',[xax1 xax2],'ytick',yax1:yax2/2:yax2,'fontsize',10,'tickdir','out');
+    datetick('x','yyyy','keeplimits','keepticks');
     ylabel('Depth (m)','fontsize',12,'fontweight','bold');
-    h=colorbar; 
-    h.Label.String = '\DeltaT from 0m (^oC)';
-    h.FontSize = 10;
-    h.Label.FontSize = 12;
-    h.Label.FontWeight = 'bold';
-    h.TickDirection = 'out';
+    box on;
+    h2=colorbar; 
+   % h2.YDir='reverse';
+    h2.Label.String = '\DeltaT from 0 m (^oC)';
+    h2.FontSize = 10;
+    h2.Label.FontSize = 12;
+    h2.Label.FontWeight = 'bold';
+    h2.TickDirection = 'out';
     hold on
-    legend([hh(1),hh(2)],'\DeltaT = 0.2^oC','\DeltaT = 0.5^oC','Location','SE');
+   % legend([hh(1),hh(2)],'\DeltaT = 0.2^oC','\DeltaT = 0.5^oC','Location','SE');
     
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[resultpath 'Figs/ROMS_MB_Temp_dTdz_' num2str(year) '.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs/ROMS_SCW_Temp_MLD_dTdz_50m.tif']);
 hold off
