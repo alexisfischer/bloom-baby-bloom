@@ -71,6 +71,7 @@ countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Lingulodinium', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Gymnodinium', yrrange, classpath_generic, out_path, in_dir)
 
 %diatoms
 countcells_allTB_class('Chaetoceros', yrrange, classpath_generic, out_path, in_dir)
@@ -83,4 +84,7 @@ countcells_allTB_class('Skeletonema', yrrange, classpath_generic, out_path, in_d
 countcells_allTB_class('Centric', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Guin_Dact', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Pennate', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Hemiaulus', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Asterionellopsis', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Thalassiosira', yrrange, classpath_generic, out_path, in_dir)
 
