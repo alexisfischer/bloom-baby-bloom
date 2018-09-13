@@ -10,11 +10,7 @@ function [t_acc,x_acc,subs] = ts_aggregation(t,x,n,target_fmt,fct_handle)
     x = x(:);
     switch target_fmt
         case 'day'
-            t_factor = 1;
-        case '12hour'
-            t_factor = 1 / 2;
-        case '8hour'
-            t_factor = 1 / 3;            
+            t_factor = 1;        
         case 'hour'
             t_factor = 1 / 24;            
         case 'minute'

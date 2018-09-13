@@ -7,7 +7,7 @@ year=2018; %USER
 %%%% Step 1: Load in data
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 % filepath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\';
-load([filepath 'Data/ROMS/MB_temp_sal_2017-2018'],'ROMS');
+load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD'],'ROMS');
 load([filepath 'Data/SCW_master'],'SC');
 load([filepath 'Data/Wind_MB'],'w');
 load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB' num2str(year) ''],...
@@ -15,7 +15,7 @@ load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB' num2str(year) ''],
     
 %%%% Step 2: Convert Biovolume to Carbon
 % convert Biovolume (cubic microns/cell) to Carbon (picograms/cell)
-[ ind_diatom, class_label ] = get_diatom_ind_CA( class2useTB, class2useTB );
+[ ind_diatom, ~ ] = get_diatom_ind_CA( class2useTB, class2useTB );
 [ cellC ] = biovol2carbon(classbiovolTB, ind_diatom ); 
 
 %convert from per cell to per mL
@@ -55,6 +55,24 @@ for i=1:length(class2useTB)
     [~,BIO(i).car ] = timeseries2ydmat(mdateTB, volC(:,i));    
 end
 
+%%%% Step 4: Interpolate data for small data gaps 
+for i=1:length(BIO)
+    [BIO(i).bio_i] = interp1babygap(BIO(i).bio,4);
+    [BIO(i).car_i] = interp1babygap(BIO(i).car,4);
+end
+
+for i=1:length(ydino)
+    [ydino] = interp1babygap(ydino,4);
+    [ydino_ml] = interp1babygap(ydino_ml,4);
+
+    [ydiat] = interp1babygap(ydiat,4);
+    [ydiat_ml] = interp1babygap(ydiat_ml,4);
+    
+    [ymat] = interp1babygap(ymat,4);
+    [ymat_ml] = interp1babygap(ymat_ml,4);
+
+end
+
 clearvars i ind_cell ind_diatom ind_dino mdateTB micron_factor
 %[~, cind] = sort(sum(x), 'descend'); %rank order biomass    
 
@@ -87,10 +105,10 @@ plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
     hold on 
     
 subplot(6,1,2); %SCW wind
-%    [U,~]=plfilt(w.scw.u, w.scw.dn);
-%    [V,DN]=plfilt(w.scw.v, w.scw.dn);
-%    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-%    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+   [U,~]=plfilt(w.scw.u, w.scw.dn);
+   [V,DN]=plfilt(w.scw.v, w.scw.dn);
+   [~,u,~] = ts_aggregation(DN,U,8,'hour',@mean);
+   [time,v,~] = ts_aggregation(DN,V,8,'hour',@mean);
     yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
@@ -197,18 +215,18 @@ hold on
 plot(xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
         xmat,smooth((fxdiat.*ymat)./ymat_ml,1),'-b.','linewidth', 1);
     xlim([xax1;xax2]);    
-    set(gca,'xgrid','on','fontsize', 9, 'fontname', 'arial',...
-        'tickdir','out','xaxislocation','top')
+    set(gca,'yscale','log','xgrid','on','fontsize', 9, 'fontname', 'arial',...
+        'tickdir','out','xaxislocation','top','ylim',[1 100])
     datetick('x','mmm','keeplimits')
     ylabel('Carbon (\mug L^{-1})','fontsize',10,'fontname','arial','fontweight','bold')
-    legend(h,'dinoflagellates','diatoms','Location','NW');
+    legend(h,'dinoflagellates','diatoms','Location','NE');
     hold on 
     
 subplot(6,1,2); %SCW wind
-   [U,~]=plfilt(w.scw.u, w.scw.dn);
-   [V,DN]=plfilt(w.scw.v, w.scw.dn);
-   [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-   [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+    [U,~]=plfilt(w.scw.u, w.scw.dn);
+    [V,DN]=plfilt(w.scw.v, w.scw.dn);
+    [~,u,~] = ts_aggregation(DN,U,8,'hour',@mean);
+    [time,v,~] = ts_aggregation(DN,V,8,'hour',@mean);
     yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
@@ -234,8 +252,8 @@ subplot(6,1,4); %SCW ROMS Sal
     pcolor(X,Y,C); shading interp;
     caxis([33.2 33.9]); datetick('x','mmm');  grid on; 
     hold on
-    set(gca,'XLim',[xax1;xax2],'xticklabel',{},...
-        'Ydir','reverse','ylim',[0 40],'ytick',10:10:30,'fontsize',9,'tickdir','out');
+    set(gca,'XLim',[xax1;xax2],'xticklabel',{},'Ydir','reverse',...
+        'ylim',[0 ROMS(1).Zi(end)],'ytick',10:10:40,'fontsize',9,'tickdir','out');
     ylabel('Depth (m)','fontsize',10,'fontweight','bold');
     h=colorbar('Position',...
     [0.894965277777778 0.3671875 0.0203993055555555 0.1328125]);
@@ -254,8 +272,8 @@ subplot(6,1,5); %SCW ROMS Temp
     pcolor(X,Y,C); shading interp;
     caxis([10 16]); datetick('x',4);  grid on; 
     hold on
-    xlim([xax1;xax2])        
-    set(gca,'xticklabel',{},'Ydir','reverse','ylim',[0 40],'ytick',10:10:30,'fontsize',9,'tickdir','out');
+    set(gca,'XLim',[xax1;xax2],'xticklabel',{},'Ydir','reverse',...
+        'ylim',[0 ROMS(1).Zi(end)],'ytick',10:10:40,'fontsize',9,'tickdir','out');    
     ylabel('Depth (m)','fontsize',10,'fontweight','bold');
     h=colorbar('Position',...
     [0.894965277777778 0.217447916666667 0.0230034722222223 0.1328125]);
@@ -273,12 +291,13 @@ subplot(6,1,6); %ROMS MLD
     pcolor(X,Y,C); shading interp;
     caxis([0 0.5]); datetick('x','mmm','keeplimits');  grid on; 
     hold on
-    hh=plot(X,smooth([ROMS.mld5],20),'k-','linewidth',3);
+    hh=plot(X,smooth([ROMS.mld5],10),'k-','linewidth',3);
     hold on
-    xlim(datenum([['01-Jan-' num2str(year) '']; ['01-Jul-' num2str(year) '']]))   
     set(gca,'XLim',[xax1;xax2],'Ydir','reverse',...
-        'ylim',[0 40],'ytick',10:10:30,'fontsize',9,'tickdir','out');
+        'ylim',[0 ROMS(1).Zi(end)],'ytick',10:10:40,'fontsize',9,'tickdir','out');
     ylabel('Depth (m)','fontsize',10,'fontweight','bold');
+    datetick('x','mmm','keeplimits')
+    
     h=colorbar('Position',...
     [0.898871527389727 0.0598958333333333 0.0217013892769401 0.1328125]);
     h.Label.String = '\DeltaT from 0m (^oC)';
@@ -340,7 +359,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.08 0.04], [0.11 0.2]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-08-01']);     
+xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-10-01']);     
 
 %Fraction dinos and diatoms
 subplot(3,1,1);
@@ -358,8 +377,8 @@ end
 datetick('x', 3, 'keeplimits')
 xlim([xax1 xax2])
 ylim([0;1])
-set(gca,'xticklabel',{}, 'fontsize', 10, 'fontname', 'arial','tickdir','out')
-ylabel({'Fraction';'of biomass'}, 'fontsize', 11, 'fontname', 'arial','fontweight','bold')
+set(gca,'xticklabel',{},'ylim',[0 1],'ytick',0.5:0.5:1, 'fontsize', 12, 'fontname', 'arial','tickdir','out')
+ylabel('Fraction Biomass', 'fontsize', 14, 'fontname', 'arial','fontweight','bold')
 h=legend('dinoflagellates','diatoms','other cell-derived');
 set(h,'Position',[0.810763891876882 0.890190973968452 0.166666663678673 0.0651041649204368]);
 hold on
@@ -367,31 +386,33 @@ hold on
 %species breakdown
 subplot(3,1,2);
  
-select_dino=[BIO(strmatch('Akashiwo',class2useTB)).car,...
-    BIO(strmatch('Ceratium',class2useTB)).car,...
-    BIO(strmatch('Dinophysis',class2useTB)).car,...
-    BIO(strmatch('Lingulodinium',class2useTB)).car,...
-    BIO(strmatch('Prorocentrum',class2useTB)).car];
+select_dino=[BIO(strmatch('Akashiwo',class2useTB)).car_i,...
+    BIO(strmatch('Prorocentrum',class2useTB)).car_i,...    
+    BIO(strmatch('Ceratium',class2useTB)).car_i,...
+    BIO(strmatch('Dinophysis',class2useTB)).car_i,...
+    BIO(strmatch('Gymnodinium',class2useTB)).car_i];
 fx_otherdino=(ydino-sum(select_dino,2))./ymat; %fraction other dinos
 
-select_diat=[BIO(strmatch('Chaetoceros',class2useTB)).car,...
-    BIO(strmatch('Det_Cer_Lau',class2useTB)).car,...
-    BIO(strmatch('Eucampia',class2useTB)).car,...
-    BIO(strmatch('Guin_Dact',class2useTB)).car,...    
-    BIO(strmatch('Pseudo-nitzschia',class2useTB)).car,...
-    BIO(strmatch('Centric',class2useTB)).car,...    
-    BIO(strmatch('Pennate',class2useTB)).car];
+select_diat=[BIO(strmatch('Chaetoceros',class2useTB)).car_i,...
+    BIO(strmatch('Det_Cer_Lau',class2useTB)).car_i,...
+    BIO(strmatch('Eucampia',class2useTB)).car_i,...
+    BIO(strmatch('Guin_Dact',class2useTB)).car_i,...    
+    BIO(strmatch('Skeletonema',class2useTB)).car_i,...
+    BIO(strmatch('Centric',class2useTB)).car_i,...    
+    BIO(strmatch('Pennate',class2useTB)).car_i];
 fx_otherdiat=(ydiat-sum(select_diat,2))./ymat; %fraction other dinos
 
 bar(xmat,[select_dino./ymat select_diat./ymat fx_otherdino fx_otherdiat fx_other], 0.5, 'stack');
 
 ax=get(gca); cat = ax.Children;
-col_diat1=flipud(brewermap(6,'BuGn'));
-col_diat2=flipud(brewermap(6,'BuPu'));
-col_dino=(brewermap(6,'YlOrRd'));
+col_dino=(brewermap(6,'YlOrBr'));
+col_diat1=flipud(brewermap(6,'YlGnBu'));
+col_diat2=(brewermap(5,'Purples'));
+
+%cstr=[[220 220 220]/255; [110 110 110]/255; [0 0 0]/255; flipud(brewermap(12,'Spectral'))];
 
 cstr=[[220 220 220]/255; [110 110 110]/255; [0 0 0]/255;...
-    col_diat2(1:4,:); col_diat1(1:3,:); col_dino(1:5,:)];
+    col_diat2(3,:);col_diat2(5,:); col_diat1(1:5,:); col_dino(2:6,:)];
 
 for ii = 1:length(cat)
     set(cat(ii), 'FaceColor', cstr(ii,:),'BarWidth',1)
@@ -400,23 +421,26 @@ end
 datetick('x', 3, 'keeplimits')
 xlim([xax1 xax2])
 ylim([0;1])
-set(gca,'xticklabel',{}, 'fontsize', 10, 'fontname', 'arial','tickdir','out')
-ylabel({'Fraction';'of biomass'}, 'fontsize', 11, 'fontname', 'arial','fontweight','bold')
-h=legend('Akashiwo','Ceratium','Dinophysis','Lingulodinium','Prorocentrum',...
-    'Chaetoceros','DetCerLau','Eucampia','GuinDact','Pseudo-nitzschia',...
+set(gca,'xticklabel',{},'ylim',[0 1],'ytick',0.5:0.5:1,'fontsize', 12, 'fontname', 'arial','tickdir','out')
+ylabel('Fraction Biomass', 'fontsize', 14, 'fontname', 'arial','fontweight','bold')
+h=legend('Akashiwo','Prorocentrum','Ceratium','Dinophysis','Gymnodinium',...
+    'Chaetoceros','DetCerLau','Eucampia','GuinDact','Skeletonema',...
     'Centric diatoms','Pennate diatoms','other dinos','other diatoms','other cell-derived');
 set(h,'Position',[0.808159725831097 0.399956604207141 0.187499996391125 0.246744784681747]);
 hold on
 
 %total cell-derived biovolume
 subplot(3,1,3);
-plot(xmat,ymat./ymat_ml,'k.-','linewidth', 1);
+idx=isnan(ymat);
+y=smooth(ymat./ymat_ml,3);
+y(idx)=NaN;
+plot(xmat,y,'k-','linewidth', 1);
 hold on
 datetick('x', 3, 'keeplimits')
 xlim([xax1 xax2])
-set(gca,'xgrid','on',...
-    'fontsize', 10, 'fontname', 'arial','tickdir','out')
-ylabel('Carbon (\mug L^{-1})', 'fontsize', 11, 'fontname', 'arial','fontweight','bold')
+set(gca,'xgrid','on','yscale','log','ylim',[1 100],'ytick',[10,100],...
+    'fontsize', 12, 'fontname', 'arial','tickdir','out')
+ylabel('Carbon (\mug L^{-1})', 'fontsize', 14, 'fontname', 'arial','fontweight','bold')
 hold all
 
 % set figure parameters

@@ -1,7 +1,7 @@
 function Ok = InstallMex(SourceFile, varargin)
 % INSTALLMEX - Compile and install Mex file
-% The C,C++ or FORTRAN mex file is compiled and additional installation routines
-% are started. Advanced users can call MEX() manually instead, but some
+% The C, C++ or FORTRAN mex file is compiled and additional installation
+% routines are started. Advanced users can call MEX() manually instead, but some
 % beginners are overwhelmed by instructions for a compilation sometimes.
 % Therefore this function can be called automatically from an M-function, when
 % the compiled Mex-Function does not exist already.
@@ -13,36 +13,39 @@ function Ok = InstallMex(SourceFile, varargin)
 %   Optional arguments in arbitrary order:
 %     Function name: Function is started after compiling, e.g. a unit-test.
 %     Cell string:   Additional arguments for the compilation, e.g. libraries.
-%     '-debug':      Enabled debug mode.
-%     '-force32':    Use compatibleArrayDims under 64 bit Matlab.
+%     '-debug':      Enable debug mode.
+%     '-force32':    Use the compatibleArrayDims flag under 64 bit Matlab.
 %     '-replace':    Overwrite existing mex file without confirmation.
 %
 % OUTPUT:
-%   Ok: Logical flag, TRUE if compilation was successful. Optional.
+%   Ok:  Logical flag, TRUE if compilation was successful. Optional.
 %
 % COMPATIBILITY:
 % - A compiler must be installed and setup before: mex -setup
 % - For Linux and MacOS the C99 style is enabled for C-files.
 % - The optimization flag -O is set.
-% - The compiler directive -DMATLABVER<XYZ> is added to support pre-processor
-%   switches, where <XYZ> is the current version, e.g. 708 for v7.8.
+% - Defined compiler directives:
+%    * MATLABVER<XYZ>: <XYZ> is the current version, e.g. 708 for v7.8.
+%    * _LITTLE_ENDIAN or _BIG_ENDIAN: according to processor type
+%    * HAS_HG2: Defined for Matlab >= R2014b with HG2 graphics.
 %
 % EXAMPLES:
 % Compile func1.c with LAPACK libraries:
 %   InstallMex('func1', {'libmwlapack.lib', 'libmwblas.lib'})
 % Compile func2.cpp, enable debugging and call a test function:
 %   InstallMex('func2.cpp', '-debug', 'Test_func2');
-% These lines can be appended after the help section of an M-file, when the
+% These commands can be appended after the help section of an M-file, when the
 % compilation should be started automatically, if the compiled MEX is not found.
 %
+% NOTES:
 % Suggestions for improvements and comments are welcome!
 % Feel free to add this function to your FEX submissions, when you change the
 % URL in the variable "Precompiled" accordingly.
 %
-% Tested: Matlab 6.5, 7.7, 7.8, 7.13, WinXP/32, Win7/64
-% Author: Jan Simon, Heidelberg, (C) 2012-2014 matlab.THISYEAR(a)nMINUSsimon.de
+% Tested: Matlab/64 7.8, 7.13, 8.6, 9.1, Win7/64
+% Author: Jan Simon, Heidelberg, (C) 2012-2017 matlab.2010(a)n(MINUS)simon.de
 
-% $JRev: R-x V:023 Sum:VIjGgNDHfvQp Date:26-Dec-2014 02:04:01 $
+% $JRev: R-J V:035 Sum:2nORyg1Xr1iA Date:03-Jan-2017 15:58:22 $
 % $License: BSD (use/copy/change/redistribute on own risk, mention the author) $
 % $File: Tools\GLSource\InstallMex.m $
 % History:
@@ -50,16 +53,27 @@ function Ok = InstallMex(SourceFile, varargin)
 % 005: 29-Jul-2012 17:11, Run the unit-test instead of showing a link only.
 % 006: 11-Aug-2012 23:59, Inputs are accepted in free order.
 % 020: 30-Dec-2013 01:48, Show a question dialog if mex is existing already.
+% 027: 08-Mar-2015 22:15, Define _LITTLE_ENDIAN / _BIG_ENDIAN.
+% 028: 22-Aug-2015 19:16, Define HAS_HG2 for Matlab >= 2014b.
+% 029: 24-Dec-2015 17:46, CATCH MException: No Matlab6.5 support anymore.
+% 032: 24-Apr-2016 17:45, Bugs fixed: "cmd" instead of "cmdStr".
 
 % Initialize: ==================================================================
 % Global Interface: ------------------------------------------------------------
 % URL to file or folder containing pre-compiled files, or the empty string if
 % pre-compiled files are not offered:
+% ### START: ADJUST TO USER NEEDS
 Precompiled = 'http://www.n-simon.de/mex';
+% ### END
 
 % Initial values: --------------------------------------------------------------
 bakCD   = cd;
-matlabV = [100, 1] * sscanf(version, '%d.%d', 2);  % Numerical Matlab version
+matlabV = [100, 1] * sscanf(version, '%d.%d', 2);  % Matlab version
+[Arch, MaxSize, Endian] = computer;  %#ok<ASGLU>
+
+hasHG2         = (matlabV >= 804);  % R2014b
+hasLargeDims   = (matlabV >= 705) & any(strfind(Arch, '64'));  % R2007b & 64bit
+isLittleEndian = strncmpi(Endian, 'L', 1);
 
 % Program Interface: -----------------------------------------------------------
 % Parse inputs:
@@ -117,8 +131,22 @@ if isempty(whichSource)
 end
 [SourcePath, SourceName, Ext] = fileparts(whichSource);
 Source                        = [SourceName, Ext];
-mexFile                       = [SourceName, '.', mexext];
-mexPath                       = SourcePath;
+
+% Consider output name and outputdir:
+index = find(strcmpi(Param, '-output'), 1, 'last');
+if isempty(index)
+   mexName = SourceName;
+else
+   [dummy, mexName] = fileparts(Param{index + 1});  %#ok<ASGLU>
+end
+mexFile = [mexName, '.', mexext];
+
+index = find(strcmpi(Param, '-outdir'), 1, 'last');
+if isempty(index)
+   mexPath = SourcePath;
+else
+   mexPath = Param{index + 1};
+end
 
 fprintf('== Compile: %s\n', fullfile(SourcePath, Source));
 
@@ -129,7 +157,8 @@ if ~isempty(whichMex)
    
    if ~replace
       % Ask the user if a new compilation is wanted:
-      QuestReply = questdlg({['\bf', mfilename, ': ', SourceName, '\rm'], ...
+      QuestReply = questdlg({ ...
+         ['\bf', mfilename, ': ', TeXFirm(SourceName), '\rm'], ...
          '', 'The function is existing already:', ...
          ['  ', TeXFirm(whichMex)], '', ...
          'Do you want to compile it here:', ...
@@ -158,65 +187,70 @@ end
 
 % Large array dimensions under 64 bit, possible since R2007b:
 matlabVDef = {sprintf('-DMATLABVER=%d', matlabV)};
-if matlabV >= 705
-   if any(strfind(computer, '64')) && ~force32
-      Flags = cat(2, Flags, {'-largeArrayDims'});
-   else
-      Flags = cat(2, Flags, {'-compatibleArrayDims'});
-   end
+if hasLargeDims && ~force32
+   Flags = cat(2, Flags, {'-largeArrayDims'});
+else
+   Flags = cat(2, Flags, {'-compatibleArrayDims'});
+end
+
+% Define endianess directive:
+if isLittleEndian
+   Flags = cat(2, Flags, {'-D_LITTLE_ENDIAN'});
+else  % Does Matlab run on a big endian machine currently?!
+   Flags = cat(2, Flags, {'-D_BIG_ENDIAN'});
+end
+
+% Define the new HG2 graphic handles:
+if hasHG2
+   Flags = cat(2, Flags, {'-DHAS_HG2'});
 end
 
 % Compile: ---------------------------------------------------------------------
 % Display the compilation command:
 Flags  = cat(1, Flags(:), debugFlag, matlabVDef, Param(:), {Source});
-cmdStr = textwrap({['mex', sprintf(' %s', Flags{:})]}, 72);
-fprintf('%s\n', cmdStr{:});
+cmdStr = ['mex', sprintf(' %s', Flags{:})];
+fprintf('%s\n\n', cmdStr);
 
 cd(SourcePath);
 try    % Start the compilation:
    mex(Flags{:});
    compiled = true;
-   fprintf('Compiled successfully:\n  %s\n', which(mexFile));
+   fprintf('Compiled:\n  %s\n', which(mexFile));
    
-catch  % Compilation failed - no MException to support Matlab 6.5:
+catch ME  % Compilation failed - MException fails in Matlab 6.5!
    compiled = false;
-   err      = lasterror;
-   fprintf(2, '\n*** Compilation failed:\n%s\n', err.message);
+   fprintf(2, '\n*** Compilation failed:\n%s\n\n', ME.message);
+   fprintf('Matlab version: %s\n', version);
    if ~doDebug  % Compile again in debug mode if not done already:
+      fprintf('Compile with debug flag to get details:\n');
       try
          mex(Flags{:}, '-v');
-      catch  % Empty
+      catch  % Empty - it is known already that it fails
       end
    end
    
    % Show commands for manual compilation and download pre-compiled files:
    fprintf('\n== The compilation failed! Possible solutions:\n');
-   fprintf('  * Install and set up a compiler on demand:\n');
-   if hasHRef
-      fprintf('    <a href="matlab:mex -setup">mex -setup</a>\n');
-      fprintf('  * Try to compile manually:\n    cd(''%s'')\n    %s -v\n', ...
-         SourcePath, cmd);
-      if ~isempty(Precompiled)
-         fprintf('  * Or download the pre-compiled file %s:\n', mexFile);
-         fprintf('    <a href="matlab:web(''%s#%s'',''-browser'')">%s</a>\n', ...
+   fprintf('  * Is a compiler installed and set up properly by: mex -setup?\n');
+   fprintf('  * Try to compile manually:\n    cd(''%s'')\n', SourcePath);
+   fprintf('    %s -v\n', cmdStr);
+   fprintf('  * Or download the pre-compiled file %s:\n', mexFile);
+   if ~isempty(Precompiled)
+      if hasHRef
+         fprintf( ...
+            '    <a href="matlab:web(''%s#%s'',''-browser'')">%s</a>\n', ...
             Precompiled, mexFile, Precompiled);
-      end
-   else  % No hyper-references in the command window without Java:
-      fprintf('  * mex -setup\n');
-      fprintf('  * Try to compile manually:\n  cd(''%s'')\n  %s -v\n', ...
-         SourcePath, cmd);
-      if ~isempty(Precompiled)
-         fprintf('  * Or download the pre-compiled file %s:\n  %s\n', ...
-            mexFile, Precompiled);
+      else  % No hyper-references in the command window without Java:
+         fprintf('    %s\n', Precompiled);
       end
    end
-   fprintf('  * Or send this report to the author\n');
+   fprintf('  * Please send this report to the author.\n');
 end
 
 % Restore original directory and check precedence: -----------------------------
 cd(bakCD);
 if compiled
-   allWhich = which(SourceName, '-all');
+   allWhich = which(mexName, '-all');
    if ~strcmpi(allWhich{1}, fullfile(mexPath, mexFile))
       Spec  = sprintf('  %%-%ds   ', max(cellfun('length', allWhich)));
       fprintf(2, '\n*** Failed: Compiled function is shadowed:\n');
@@ -246,10 +280,14 @@ if ~isempty(UnitTestFcn) && compiled
 end
 
 % Return success of compilation: -----------------------------------------------
-if nargout
+if nargout >= 1
    Ok = compiled;
 end
-fprintf('\n%s: ready.\n', mfilename);
+if compiled
+   fprintf('\n== %s: ready.\n', mfilename);
+else
+   fprintf('\n== %s: failed.\n', mfilename);
+end
 
 % end
 

@@ -3,6 +3,7 @@
 filepath='~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
 load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD'],'ROMS');
 
+
 %% plot pcolor temperature profile and delta T MLD 
 figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
  subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.08 0.04], [0.09 0.06]);
@@ -44,7 +45,6 @@ ax2=subplot(2,1,2);
     caxis([0 0.5]); datetick('x','yyyy'); 
     hold on
     ii=~isnan([ROMS.mld2])';
-%    Y=boxfilt3([ROMS.mld5]',10);    
     Y=smooth([ROMS(ii).mld5],20);
     plot(X(ii),Y,'k-','linewidth',2);
     hold on
