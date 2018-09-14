@@ -41,9 +41,9 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 
 countcells_allTBnew_user_training('F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\',...
     'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',...
-    2015:2018)
+    2016:2018)
 
-%% Step 6: Summarize biovolume from Manual files
+% Step 6: Summarize biovolume from Manual files
 biovolume_summary_manual('F:\IFCB104\manual\',...
         'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\',...
         'F:\IFCB104\data\','F:\IFCB104\features\XXXX\');
@@ -58,7 +58,7 @@ yrrange = 2018;
 
 biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
-% PART 3: Evaluate classifier
+%% PART 3: Evaluate classifier
 % Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
 yrrange = 2016:2018;
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
@@ -68,6 +68,7 @@ in_dir = 'F:\IFCB104\data\';
 %dinos
 countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
+countcells_allTB_class('Cochlodinium', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Dinophysis', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Lingulodinium', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Prorocentrum', yrrange, classpath_generic, out_path, in_dir)
