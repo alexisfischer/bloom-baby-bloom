@@ -27,6 +27,9 @@ end
 y_mat=classcountTB_above_thre(:,bin)./ml_analyzedTB(:);
 y_mat((y_mat<0)) = 0; % cannot have negative numbers 
 
+[ mdateTBi, y_mati, ~, ~ ] = filltimeseriesgaps( mdateTB, y_mat );
+[y_matii] = interp1babygap(y_mati,3);
+
 ind2 = strmatch(class2do_string, class2use); %change this for whatever class you are analyzing
 
 % Makes day bins for the matched manual counts.
@@ -37,16 +40,16 @@ ind2 = strmatch(class2do_string, class2use); %change this for whatever class you
 [mdate_mat_manual, y_mat_manual, yearlist, yd ] =...
     timeseries2ydmat(matdate_bin_auto,classcount_bin_auto./ml_analyzed_mat_bin_auto); 
 
-ind=(find(y_mat)); % find dates associated with nonzero elements
-mdate_val=[mdateTB(ind),y_mat(ind)];
+%ind=(find(y_mat)); % find dates associated with nonzero elements
+%mdate_val=[mdateTB(ind),y_mat(ind)];
 
 class(1).name = class2do_string;
 class(1).chosen_threshold=chosen_threshold;
 class(1).bin=bin;
 class(1).slope=slope;
-class(1).y_mat=y_mat;
+class(1).y_mat=y_matii;
 class(1).y_mat_manual=y_mat_manual;
-class(1).mdateTB=datenum(datestr(mdateTB),'dd-mm-yyyy');
+class(1).mdateTB=mdateTBi;
 class(1).mdate_mat_manual=mdate_mat_manual;
 class(1).filelist=string(filelistTB);
 

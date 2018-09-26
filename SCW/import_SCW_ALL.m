@@ -1,55 +1,88 @@
 %% imports all the data (except wind and IFCB) from Santa Cruz Wharf
 % T, sal, Chl, nit, amm, urea, ammon, phos, sil, DA, STX, RAI
 
-filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/';
+filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/';
+
+dn=(datenum('01-Jan-2003'):1:datenum('31-Dec-2018'))';
+SC.dn=dn;
+
+% preallocate space
+SC.T=nan(size(SC.dn));
+SC.sal=nan(size(SC.dn));
+SC.CHL=nan(size(SC.dn));
+SC.nitrate=nan(size(SC.dn));
+SC.ammonium=nan(size(SC.dn));
+SC.urea=nan(size(SC.dn));
+SC.phosphate=nan(size(SC.dn));
+SC.silicate=nan(size(SC.dn));
+SC.DA=nan(size(SC.dn));
+SC.STX=nan(size(SC.dn));
+SC.Alex=nan(size(SC.dn));
+SC.dinophysis=nan(size(SC.dn));
+SC.Pn=nan(size(SC.dn));
+SC.Paust=nan(size(SC.dn));
+SC.Pmult=nan(size(SC.dn));
+SC.rai=nan(size(SC.dn));
+SC.fxDino=nan(size(SC.dn));
+SC.fxDiat=nan(size(SC.dn));
+SC.Tsensor=nan(size(SC.dn));
+SC.CHLsensor=nan(size(SC.dn));
+SC.TURsensor=nan(size(SC.dn));
+
+SC.maxdTdz=nan(size(SC.dn));
+SC.Zmax=nan(size(SC.dn));
+SC.mld5=nan(size(SC.dn));
+
+SC.maxdTdzS=nan(size(SC.dn));
+SC.ZmaxS=nan(size(SC.dn));
+SC.mld5S=nan(size(SC.dn));
+
+SC.upwell=nan(size(SC.dn));
+SC.river=nan(size(SC.dn));
+SC.wind=nan(size(SC.dn));
+SC.wind42=nan(size(SC.dn));
+SC.windM1=nan(size(SC.dn));
+
 %% step 1) import hourly river discharge data 1993-2018
 % Discharge (cubic feet per second)
 % Date,  dn=datenum(TimeUTC,'yyyy-mm-dd HH:MM');
-filename = [filepath 'PajaroRiver_1993-2018.txt'];
+filename = [filepath 'Data/PajaroRiver_1993-2018.txt'];
 delimiter = {'\t',' '};
 startRow = 31;
 formatSpec = '%*s%*s%{yyyy-MM-dd}D%*s%*s%f%*s%*s%*s%*s%*s%*s%*s%*s%*s%[^\n\r]';
 fileID = fopen(filename,'r');
-dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'MultipleDelimsAsOne', true, 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter,...
+    'MultipleDelimsAsOne', true, 'TextType', 'string', 'EmptyValue', NaN,...
+    'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
 fclose(fileID);
 
 dt = dataArray{:, 1};
-Ri = dataArray{:, 2};
+Rii = dataArray{:, 2};
 
-[dn,R,~] = ts_aggregation(datenum(dt),Ri,1,'day',@mean);
+Ri=pl33tn(Rii); % low pass filter
+[dn, R, ~, ~ ] = filltimeseriesgaps( datenum(dt), Ri ); % fill time gaps with NaNs
 
-SC.dn=dn;
-SC.river=R;
+%interpolate data unless gaps >4 
+index    = isnan(R);
+R(index) = interp1(find(~index), R(~index), find(index), 'linear');
+[b, n]     = RunLength(index);
+longRun    = RunLength(b & (n > 4), n);
+R(longRun) = NaN;
 
- figure; plot(SC.dn,SC.river,'-b')
- datetick('x','yyyy');
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.river(i)=R(j);       
+        else
+        end
+    end
+end
 
-clearvars filename delimiter startRow formatSpec fileID dataArray ans dn dt Ri R;
+figure; plot(SC.dn,SC.river,'-b')
+datetick('x','yyyy');
 
-%% preallocate space
-
-SC.T=nan*ones(size(SC.dn));
-SC.sal=nan*ones(size(SC.dn));
-SC.CHL=nan*ones(size(SC.dn));
-SC.nitrate=nan*ones(size(SC.dn));
-SC.ammonium=nan*ones(size(SC.dn));
-SC.urea=nan*ones(size(SC.dn));
-SC.phosphate=nan*ones(size(SC.dn));
-SC.silicate=nan*ones(size(SC.dn));
-SC.DA=nan*ones(size(SC.dn));
-SC.STX=nan*ones(size(SC.dn));
-SC.Alex=nan*ones(size(SC.dn));
-SC.dinophysis=nan*ones(size(SC.dn));
-SC.Pn=nan*ones(size(SC.dn));
-SC.Paust=nan*ones(size(SC.dn));
-SC.Pmult=nan*ones(size(SC.dn));
-SC.rai=nan*ones(size(SC.dn));
-SC.fxDino=nan*ones(size(SC.dn));
-SC.fxDiat=nan*ones(size(SC.dn));
-SC.Tsensor=nan*ones(size(SC.dn));
-SC.CHLsensor=nan*ones(size(SC.dn));
-SC.TURsensor=nan*ones(size(SC.dn));
-
+clearvars filename delimiter startRow formatSpec fileID dataArray ans...
+    i j dn dt Rii Ri R;
 
 %% step 2) import weekly Temperature from SCOOS spreadsheet 2005-2018
 [~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_temp_2005-2018.xlsx','Sheet1');
@@ -75,7 +108,7 @@ clearvars data raw R dn ib T i idx;
 
 %% step 3) import weekly Chl, nutrients, PN and Alex from DOD 2005-2015
 
-filename = [filepath 'SCW_DODserver_2005-2015.txt'];
+filename = [filepath 'Data/SCW_DODserver_2005-2015.txt'];
 delimiter = ',';
 startRow = 18;
 formatSpec = '%{yyyy-MM-dd HH:mm:ss.S}D%f%f%f%f%f%f%f%f%f%f%[^\n\r]';
@@ -120,11 +153,13 @@ end
  idx=~isnan(SC.CHL);
  figure; plot(SC.dn(idx),SC.CHL(idx)); datetick('x','yyyy');
 
-clearvars Alex ammonium CHL dataArray delimiter dn dt fileID filename formatSpec i j nitrate Paust Paustralis phosphate Pmult Pmultiseries Pn silicate startRow test urea;
+clearvars Alex ammonium CHL dataArray delimiter dn dt fileID filename...
+    formatSpec i j nitrate Paust Paustralis phosphate Pmult Pmultiseries...
+    Pn silicate startRow test urea;
 
 %% step 4) Import SCW parameters (Temp, Chl, Alex, DA) 2000-2009
 
-[~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_Jester_2000-2009.xlsx','Sheet1');
+[~,~,raw]=xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_Jester_2000-2009.xlsx','Sheet1');
 raw = raw(2:end,:);
 raw(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),raw)) = {''};
 R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
@@ -171,8 +206,8 @@ figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
 
 clearvars data raw stringVectors R dn nitrate Paust phosphate Pmult Pn sal silicate STX T i j;
 
-%% step 5) import weekly Chl, nutrients, PN and Alex from SCOOS Website 2011-2018
-filename = [filepath 'Harmful Algal Blooms_2011-2018.csv'];
+%% step 5) import weekly Chl, nutrients, PN and Alex from SCOOS Website 2008-2018
+filename = [filepath 'Data/Harmful Algal Blooms_2011-2018.csv'];
 delimiter = ',';
 startRow = 9;
 formatSpec = '%q%q%q%*q%*q%*q%*q%*q%*q%q%q%q%q%q%q%q%q%*q%q%*q%*q%*q%*q%q%*q%*q%q%q%*q%q%[^\n\r]';
@@ -356,7 +391,7 @@ clearvars stringVectors data dn fxDiat fxDino i j R rai raw;
 
 %% step 7) import new RAI data (2017-2018)
 
-[~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_RAI_180613.xls','SCW RAI_Leica');
+[~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_RAI_180829.xls','SCW RAI_Leica');
 raw = raw(4:end,[5:65,84:end]);
 raw(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),raw)) = {''};
 stringVectors = string(raw(:,33));
@@ -450,7 +485,7 @@ clearvars stringVectors data d dn fxDiat fxDino i j R rai raw;
 
 %% step 8) Import CENCOOS downloadable sensor data
 
-filename = [filepath 'SCW_weatherstation_cencoos/CENCOOS_09-18.csv'];
+filename = [filepath 'Data/SCW_weatherstation_cencoos/CENCOOS_09-18.csv'];
 delimiter = ',';
 startRow = 3;
 formatSpec = '%s%f%f%f%[^\n\r]';
@@ -507,27 +542,149 @@ end
  
 clearvars CHL d dn DN i mass_concentration_of_chlorophyll_in_sea_water sea_water_temperature T T_F time TUR turbidity j;
 
-%% step 9) Import ROMS salinity SCW grid (2013-2015)
-[~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_Salinity_ClarissaPaper.xlsx','Sheet1');
-raw = raw(2:end,:);
-raw(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),raw)) = {''};
-R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
-raw(R) = {NaN}; % Replace non-numeric cells
-data = reshape([raw{:}],size(raw));
+%% step 9) Import M1 CTD: MLD, dTdz, Tmax, and Zmax
+load([filepath 'Data/M1-46092/M1_CTD_TS'],'M1');
 
-dn = data(:,1);
-S = data(:,2);
+dn = [M1.dn]';
+
+Zmax=NaN*(ones(size(dn)));
+maxdTdz=NaN*(ones(size(dn)));
+mld5=NaN*(ones(size(dn)));
+for i=1:length(M1)
+    Zmax(i)=M1(i).Zmax;
+    maxdTdz(i)=M1(i).maxdTdz;
+    mld5(i)=M1(i).mld5;    
+
+end
 
 for i=1:length(SC.dn)
     for j=1:length(dn)
         if dn(j) == SC.dn(i)
-            SC.sal(i)=S(j);       
+            SC.Zmax(i)=Zmax(j);      
+            SC.maxdTdz(i)=maxdTdz(j);   
+            SC.mld5(i)=mld5(j);                
+            
         else
         end
     end
 end
 
-clearvars data raw R S dn i j;
+figure; plot(SC.dn,SC.Zmax,'*b')
+datetick('x','yyyy');
+
+clearvars data raw R S dn i j M1;
+
+%% step 10) Import ROMS nearest SCW
+load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD'],'ROMS');
+
+dn = [ROMS.dn]';
+
+Zmax=NaN*(ones(size(dn)));
+maxdTdz=NaN*(ones(size(dn)));
+mld5=NaN*(ones(size(dn)));
+for i=1:length(ROMS)
+    Zmax(i)=ROMS(i).Zmax;
+    maxdTdz(i)=ROMS(i).maxdTdz;
+    mld5(i)=ROMS(i).mld5;    
+
+end
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.ZmaxS(i)=Zmax(j);      
+            SC.maxdTdzS(i)=maxdTdz(j);   
+            SC.mld5S(i)=mld5(j);                
+            
+        else
+        end
+    end
+end
+
+figure; plot(SC.dn,SC.ZmaxS,'-b')
+datetick('x','yyyy');
+
+clearvars data raw R S dn i j M1;
+
+%% 11) import Bakun Upwelling index
+delimiter = ' ';
+startRow = 7;
+formatSpec = '%{yyyyMMdd}D%f%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%[^\n\r]';
+fileID = fopen([filepath 'Data/UpwellingIndex_daily_36N.txt'],'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter,...
+    'MultipleDelimsAsOne', true, 'TextType', 'string', 'EmptyValue', NaN,...
+    'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+
+dt = dataArray{:, 1};
+upwell = dataArray{:, 2};
+upwell((upwell==-9999))=NaN; %convert -9999 to NaNs
+
+
+d = dateshift(dt, 'start', 'day');
+d.Format = 'dd-MMM-yyyy';
+dn=datenum(d);
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.upwell(i)=upwell(j);       
+        else
+        end
+    end
+end
+
+figure; plot(SC.dn,SC.upwell,'-b')
+datetick('x','yyyy');
+
+% Clear temporary variables
+clearvars filename delimiter startRow formatSpec upwell dn fileID dataArray ans d dt;
+
+%% 12) Import wind
+load([filepath 'Data/Wind_MB'],'w');
+[dn,spd,~] = ts_aggregation(w.scw.dn,w.scw.spd,1,'day',@mean);
+d = dateshift(datetime(datestr(dn)),'start','day'); %remove the extra minutes. just keep the day
+d.Format = 'dd-MMM-yyyy';
+dn=datenum(d);
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.wind(i)=spd(j);       
+        else
+        end
+    end
+end
+
+[dn,spd,~] = ts_aggregation(w.s42.dn,w.s42.spd,1,'day',@mean);
+d = dateshift(datetime(datestr(dn)),'start','day'); %remove the extra minutes. just keep the day
+d.Format = 'dd-MMM-yyyy';
+dn=datenum(d);
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.wind42(i)=spd(j);       
+        else
+        end
+    end
+end
+
+[dn,spd,~] = ts_aggregation(w.M1.dn,w.M1.spd,1,'day',@mean);
+d = dateshift(datetime(datestr(dn)),'start','day'); %remove the extra minutes. just keep the day
+d.Format = 'dd-MMM-yyyy';
+dn=datenum(d);
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.windM1(i)=spd(j);       
+        else
+        end
+    end
+end
+
+clearvars d dn DN i j spd SPD w;
 
 %%
-save([filepath 'SCW_master'],'SC');
+save([filepath 'Data/SCW_master'],'SC');

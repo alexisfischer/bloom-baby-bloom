@@ -8,7 +8,8 @@
 % class2do_string = 'Chaetoceros'; ymax=350;
 % class2do_string = 'Det_Cer_Lau'; ymax=50; 
 % class2do_string = 'Eucampia'; ymax=120;
- class2do_string = 'Pseudo-nitzschia'; ymax=30;
+ class2do_string = 'Gymnodinium'; ymax=75;
+%class2do_string = 'Pseudo-nitzschia'; ymax=30;
 %class2do_string = 'NanoP_less10'; ymax=600;
 %class2do_string = 'Cryptophyte'; ymax=50;
 % class2do_string = 'Thalassiosira'; ymax=30;
@@ -18,7 +19,7 @@
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load([filepath 'Data/IFCB_summary/Coeff_' class2do_string]);
-load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_03Aug2018']); 
+load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_12Sep2018']); 
 load([filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string]);
 load([filepath 'Data/SCW_master'],'SC');
 

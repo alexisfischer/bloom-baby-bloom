@@ -1,8 +1,8 @@
 Project: Harmful Algal Blooms,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 Calibrated: No,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 Requested start: 2011-10-05 13:00:00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Requested end: 2018-07-19 22:49:00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-"Request time: Thu, 19 Jul 2018 22:49:35 +0000",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Requested end: 2018-09-13 21:36:00,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Request time: Thu, 13 Sep 2018 21:36:33 +0000",,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 Other Notes: All times provided in UTC,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 year,month,day,time,latitude,longitude,depth (m),location,Akashiwo sanguinea (cells/L),Alexandrium spp. (cells/L),Ammonia (uM),Chlorophyll (mg/m3),Chlorophyll 1 (mg/m3),Chlorophyll 2 (mg/m3),DA Volume Filtered (mL),Dinophysis spp. (cells/L),Domoic Acid (ng/mL),Lingulodinium polyedrum (cells/L),Nitrate (uM),Nitrite (uM),Phaeophytin (mg/m3),Phaeophytin 1 (mg/m3),Phaeophytin 2 (mg/m3),Phosphate (uM),Prorocentrum spp. (cells/L),Pseudo-nitzschia delicatissima group (cells/L),Pseudo-nitzschia seriata group (cells/L),Silicate (uM),Volume Settled for counting (mL),Water Temperature (°C)
@@ -340,8 +340,15 @@ year,month,day,time,latitude,longitude,depth (m),location,Akashiwo sanguinea (ce
 2018,5,23,16:45:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,370,NaN,4.4,4.44,4.36,250,NaN,0.03,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,1400,NaN,NaN,14.1
 2018,5,30,17:15:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,330,NaN,8.47,8.14,8.8,250,NaN,0.07,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,2450,NaN,NaN,16.5
 2018,6,6,16:30:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,60,NaN,5.33,5.71,4.95,250,160,0.52,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,650,NaN,NaN,16.1
-2018,6,13,16:30:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,40,NaN,8.52,8.37,8.66,250,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,15.7
-2018,6,20,16:30:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,0,NaN,4.86,5.01,4.71,250,350,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,15.7
-2018,6,28,17:45:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,0,NaN,3.37,3.29,3.44,250,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,16.7
-2018,7,5,15:45:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,70,NaN,6.11,6.54,5.68,250,5200,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,15.7
-2018,7,11,16:00:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,80,NaN,5.58,5.87,5.29,250,5600,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,2100,NaN,NaN,18
+2018,6,13,16:30:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,40,NaN,8.52,8.37,8.66,250,NaN,0.1,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,15.7
+2018,6,20,16:30:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,0,NaN,4.86,5.01,4.71,250,350,0,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,15.7
+2018,6,28,17:45:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,0,NaN,3.37,3.29,3.44,250,NaN,0.05,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,16.7
+2018,7,5,15:45:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,70,NaN,6.11,6.54,5.68,250,5200,0.02,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,15.7
+2018,7,11,16:00:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,80,NaN,5.58,5.87,5.29,250,5600,0.83,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,2100,NaN,NaN,18
+2018,7,18,15:30:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,0,NaN,6.81,6.75,6.87,250,1734,0.79,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,1700,NaN,NaN,17
+2018,7,25,16:45:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,40,NaN,8.16,8.01,8.31,250,1125,0.02,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,18.7
+2018,8,1,14:45:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,240,NaN,16.94,17.4,16.47,250,3150,0.02,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,18.1
+2018,8,8,16:30:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,180,NaN,43.41,45.69,41.13,250,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,16.2
+2018,8,15,17:15:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,400,NaN,18.23,18.13,18.34,250,1450,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,17.4
+2018,8,22,18:50:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,610,NaN,11.81,12.12,11.5,250,22933,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,17.8
+2018,8,29,17:30:00,36.958,-122.017,0,Santa Cruz Wharf,NaN,20,NaN,9.74,9.41,10.08,250,1175,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,NaN,0,NaN,NaN,18.2

@@ -2,48 +2,86 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
 load([filepath 'Data/SCW_master'],'SC');
 
+dn=SC.dn;
 %%
 
-%var = SC.silicate; varname = 'Silicate'; units = ' (uM)';
+var = SC.Zmax; varname = 'Zmax'; units = ' (m)';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-%var = SC.ammonium; varname = 'Ammonium'; units = ' (uM)';
+var = SC.maxdTdz; varname = 'maxdTdz'; units = ' (^oC/m)';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-%var = SC.sal; varname = 'Salinity'; units = ' (ppt)';
+var = SC.mld5; varname = 'MixedLayerDepth'; units = ' (m)';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-%var = SC.T; varname = 'Temperature'; units = ' (^oC)';
+var = SC.ZmaxS; varname = 'Zmax_S'; units = ' (m)';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-%var = log(SC.CHL); varname = 'Chlorophyll'; units = ' (mg m^{-3})';
+var = SC.maxdTdzS; varname = 'maxdTdz_S'; units = ' (^oC/m)';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-%var = SC.CHL; varname = 'Chlorophyll'; units = ' (mg m^{-3})';
+var = SC.mld5S; varname = 'MixedLayerDepth_S'; units = ' (m)';
+[C] = extractClimatology(var,dn,filepath,varname);
+
+%%
+
+var = SC.upwell; varname = 'UpwellingIndex'; units = ' (m^3/s/100m coastline)';
+[C] = extractClimatology(var,dn,filepath,varname);
+
+var = SC.silicate; varname = 'Silicate'; units = ' (uM)';
+[C] = extractClimatology(var,dn,filepath,varname);
+
+var = SC.ammonium; varname = 'Ammonium'; units = ' (uM)';
+[C] = extractClimatology(var,dn,filepath,varname);
+
+var = SC.sal; varname = 'Salinity'; units = ' (ppt)';
+[C] = extractClimatology(var,dn,filepath,varname);
+
+var = SC.T; varname = 'Temperature'; units = ' (^oC)';
+[C] = extractClimatology(var,dn,filepath,varname);
+
+var = log(SC.CHL); varname = 'log(Chlorophyll)'; units = ' (mg m^{-3})';
+[C] = extractClimatology(var,dn,filepath,varname);
+
+var = SC.CHL; varname = 'Chlorophyll'; units = ' (mg m^{-3})';
+[C] = extractClimatology(var,dn,filepath,varname);
 
 var = SC.nitrate; varname = 'Nitrate'; units = '(uM)';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-%var = log(SC.river); varname = 'log(Discharge)'; units = ' (ft^3 s^{-1})';
-%var = SC.river; varname = 'Discharge'; units = ' (ft^3 s^{-1})';
+var = log(SC.river); varname = 'log(Discharge)'; units = ' (ft^3 s^{-1})';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-% idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; %make sure CHL and DINO have same points
-% var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate log(CHL)'; units = ' (mg m^{-3})';
+var = SC.river; varname = 'Discharge'; units = ' (ft^3 s^{-1})';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-%%%%wind
-% load([filepath 'Data/Wind_MB'],'w');
-% [SPD,DN]=plfilt(w.scw.spd, w.scw.dn);
-% [dn,spd,~] = ts_aggregation(DN,SPD,1,'day',@mean);
-% d = dateshift(datetime(datestr(dn)),'start','day'); %remove the extra minutes. just keep the day
-% d.Format = 'dd-MMM-yyyy';
-% SC.dn=datenum(d);
-% var = spd; varname = 'Windspeed'; units = ' (m/s)';
+idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; %make sure CHL and DINO have same points
+var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate log(CHL)'; units = ' (mg m^{-3})';
+[C] = extractClimatology(var,dn,filepath,varname);
 
-[C] = extractClimatology(var,SC,filepath,varname);
+var = SC.wind; varname = 'Windspeed_SC'; units = ' (m/s)';
+[C] = extractClimatology(var,dn,filepath,varname);
+
+var = SC.wind42; varname = 'Windspeed_46042'; units = ' (m/s)';
+[C] = extractClimatology(var,dn,filepath,varname);
 
 %% rename structures
-load([filepath 'Data/Climatology_Nitrate'],'C'); nit=C;
+load([filepath 'Data/Climatology_maxdTdz'],'C'); maxdTdz=C;
+load([filepath 'Data/Climatology_UpwellingIndex'],'C'); upwell=C;
+load([filepath 'Data/Climatology_Zmax'],'C'); Zmax=C;
+load([filepath 'Data/Climatology_Zmax_S'],'C'); ZmaxS=C;
+
+load([filepath 'Data/Climatology_MixedLayerDepth'],'C'); MLD=C;
+load([filepath 'Data/Climatology_MixedLayerDepth_S'],'C'); MLDS=C;
+
 load([filepath 'Data/Climatology_Silicate'],'C'); sil=C;
 load([filepath 'Data/Climatology_Ammonium'],'C'); ammon=C;
 load([filepath 'Data/Climatology_log(Chlorophyll)'],'C'); chl=C;
 load([filepath 'Data/Climatology_Dinoflagellate log(CHL)'],'C'); dino=C;
 load([filepath 'Data/Climatology_log(Discharge)'],'C'); river=C;
 load([filepath 'Data/Climatology_Temperature'],'C'); T=C;
-load([filepath 'Data/Climatology_Windspeed'],'C'); wind=C;
+load([filepath 'Data/Climatology_Windspeed_SC'],'C'); windSC=C;
+%load([filepath 'Data/Climatology_Windspeed_46042'],'C'); wind46042=C;
 
 %% Plot Climatology drought analysis
 
@@ -52,10 +90,10 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.05 0.05], [0.12 0.03])
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-xax1=datenum('01-Jan-2002');
+xax1=datenum('01-Jan-2003');
 xax2=datenum('01-Jan-2019');
 
-subplot(7,1,1);
+subplot(6,1,1);
 anomaly(dino.dn14d,dino.tAnom);
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10,'xaxislocation','top')
 datetick('x','yyyy','keeplimits')
@@ -63,25 +101,25 @@ box on
 ylabel({'Dinoflagellate';'log Chlorophyll'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(7,1,2);
-anomaly(wind.dn14d,wind.tAnom);
+subplot(6,1,2);
+anomaly(Zmax.dn14d,Zmax.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
     'fontsize',10,'xticklabel',{});
 box on
-ylabel({'Windspeed'; '(m/s)'},'fontsize',10,'fontweight','bold')
+ylabel({'Z(max dT/dz)'; '@M1 (m)'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(7,1,3);
-anomaly(river.dn14d,river.tAnom);
+subplot(6,1,3);
+anomaly(ZmaxS.dn14d,ZmaxS.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
-    'fontsize',10,'xticklabel',{});    
+    'fontsize',10,'xticklabel',{},'ylim',[-25 25]);
 box on
-ylabel({'log Discharge';'(ft^3 s^{-1})'},'fontsize',10,'fontweight','bold')
+ylabel({'Z(max dT/dz)'; '(m)'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(7,1,4);
+subplot(6,1,4);
 anomaly(T.dn14d,T.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -90,45 +128,44 @@ box on
 ylabel({'Temperature'; '(^oC)'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(7,1,5);
-anomaly(sil.dn14d,sil.tAnom);
+subplot(6,1,5);
+anomaly(upwell.dn14d,upwell.tAnom);
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10,'xticklabel',{})
+box on
+ylabel({'Upwelling Index'; '(m^3/s/100m coast)'},'fontsize',10,'fontweight','bold')
+
+% subplot(6,1,5);
+% anomaly(windSC.dn14d,windSC.tAnom);
+% datetick('x','yyyy','keeplimits')
+% set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
+%     'fontsize',10,'xticklabel',{});
+% box on
+% ylabel('Wind (m/s)','fontsize',10,'fontweight','bold')
+% hold on
+
+subplot(6,1,6);
+anomaly(river.dn14d,river.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
-    'fontsize',10,'xticklabel',{});    
-box on
-ylabel({'Silicate'; '(uM)'},'fontsize',10,'fontweight','bold')
-hold on
-
-subplot(7,1,6);
-anomaly(nit.dn14d,nit.tAnom);
-datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
-    'fontsize',10,'xticklabel',{});    
-box on
-ylabel({'Nitrate'; '(uM)'},'fontsize',10,'fontweight','bold')
-hold on
-
-subplot(7,1,7);
-anomaly(ammon.dn14d,ammon.tAnom);
-set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10)
+    'fontsize',10);
 datetick('x','yyyy','keeplimits')
 box on
-ylabel({'Ammonium'; '(uM)'},'fontsize',10,'fontweight','bold')
+ylabel({'log(Discharge)'; '(ft^3 s^{-1})'},'fontsize',10,'fontweight','bold')
 hold on
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs\Dino_Drought.tiff']);
+print(gcf,'-dtiff','-r200',[filepath 'Figs\Dino_wind.tiff']);
 hold off
 
 %% Plot Climatology (generic)
 
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.05], [0.08 0.04]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.05], [0.1 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-xax1=datenum('01-Jan-2002');
+xax1=datenum('01-Jan-2005');
 xax2=datenum('01-Jan-2019');
 
 subplot(3,1,1);
@@ -137,14 +174,14 @@ set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10)
 datetick('x','yyyy','keeplimits')
 box on
 ylabel('Anomalies','fontsize',11,'fontweight','bold')
-title(['Santa Cruz Wharf ' num2str(varname) ''],'fontsize',12,'fontweight','bold');
+title(['' num2str(varname) ''],'fontsize',12,'fontweight','bold');
 hold on
 
 subplot(3,1,2);
 plot(C.dn,C.t,'o-',C.dn14d,C.ti9,'-','linewidth',1.5,'markersize',3)
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10)
 datetick('x','yyyy','keeplimits')
-ylabel(['' num2str(varname) num2str(units) ''],'fontsize',11,'fontweight','bold')
+ylabel({['' num2str(varname) ''];['' num2str(units) '']},'fontsize',11,'fontweight','bold')
 title('weekly raw (blue), 9pt running average (red)','fontsize',11,'fontweight','normal');
 hold on
 
@@ -155,7 +192,53 @@ set(gca,'xlim',[datenum('01-Jan-2015') datenum('01-Jan-2019')],...
     'xtick',datenum('01-Jan-2015'):365:datenum('01-Jan-2019'),...
     'xgrid','on','fontsize',10)
 datetick('x','yyyy','keeplimits')
-ylabel(['' num2str(varname) num2str(units)''],'fontsize',11,'fontweight','bold')
+ylabel({['' num2str(varname) ''];['' num2str(units) '']},'fontsize',11,'fontweight','bold')
+title('climatology (black dashed), 3pt running average (blue)','fontsize',11,'fontweight','normal');
+hold on
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',[filepath 'Figs\Climatology_SCW_' num2str(varname) '.tiff']);
+hold off
+
+
+%% Plot Climatology Zmax
+
+figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.05], [0.08 0.04]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+
+xax1=datenum('01-Oct-2010');
+xax2=datenum('01-Jan-2019');
+
+subplot(3,1,1);
+anomaly(C.dn14d,C.tAnom);
+hold on
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10)
+datetick('x','yyyy','keeplimits')
+box on
+ylabel('Anomalies','fontsize',11,'fontweight','bold')
+title('SCW ROMS Z(max dT/dz)','fontsize',12,'fontweight','bold');
+hold on
+
+subplot(3,1,2);
+plot(C.dn,C.t,'o-',C.dn14d,C.ti9,'-','linewidth',1.5,'markersize',3)
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,...
+    'Ydir','reverse','xgrid','on','fontsize',10)
+datetick('x','yyyy','keeplimits')
+ylabel('Z(max dT/dz) (m)','fontsize',10,'fontweight','bold')
+title('weekly raw (blue), 9pt running average (red)','fontsize',11,'fontweight','normal');
+hold on
+
+subplot(3,1,3);
+h=plot(C.dn14d,C.t14d,'--k',C.dn14d,C.ti3,'-','linewidth',1.5);
+set(h(1),'linewidth',3);
+set(gca,'xlim',[datenum('01-Jan-2015') datenum('01-Jan-2019')],...
+    'xtick',datenum('01-Jan-2015'):365:datenum('01-Jan-2019'),...
+    'xgrid','on','fontsize',10,'Ydir','reverse')
+datetick('x','yyyy','keeplimits')
+ylabel('Z(max dT/dz) (m)','fontsize',10,'fontweight','bold')
 title('climatology (black dashed), 3pt running average (blue)','fontsize',11,'fontweight','normal');
 hold on
 

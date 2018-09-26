@@ -107,9 +107,9 @@ x = x(:);
 y = y(:); 
 
 % If y contains nans, ignore them so filling will work: 
-ind = isfinite(y); 
-x = x(ind); 
-y = y(ind); 
+ ind = isfinite(y); 
+ x = x(ind); 
+ y = y(ind); 
 
 % Find zero crossings so shading will meet the baseline properly: 
 [xc,yc] = intersections(x,y,[x(1) x(end)],[base base]); % intersections is a subfunction by Douglas Schwarz, included below.

@@ -3,7 +3,6 @@ function [Yi] = interp1babygap(Y,maxgap)
 % maxgap = maximum gap size that you want to exclude from interpolation
 
 Yi=Y; %output
-
 Yi(Yi==Inf)=NaN;
 
 idx = isnan(Yi);

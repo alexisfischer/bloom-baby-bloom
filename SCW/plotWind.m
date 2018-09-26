@@ -3,52 +3,55 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load([filepath 'Data/Wind_MB'],'w');
 
 %% plot 2018 SCW, M1, and 46042
-figure('Units','inches','Position',[1 1 8 5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.08 0.06], [0.09 0.04]);
+figure('Units','inches','Position',[1 1 10 5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.08 0.06], [0.09 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-subplot(3,1,1); %46042
-    [U,~]=plfilt(w.s42.u, w.s42.dn);
-    [V,DN]=plfilt(w.s42.v, w.s42.dn);
-    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
-    xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
-    yax1=-10; yax2=10;
-    stick(time,u,v,xax1,xax2,yax1,yax2,'2018');
-        legend('46042','Location','NW')
-        legend boxoff
-    hold on
+xax1=datenum('2012-01-01'); xax2=datenum('2018-10-01');
 
-subplot(3,1,2); %M1
+subplot(3,1,1); %M1
     [U,~]=plfilt(w.M1.u, w.M1.dn);
     [V,DN]=plfilt(w.M1.v, w.M1.dn);
-    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
-    xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
+    [~,u,~] = ts_aggregation(DN,U,2,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,2,'day',@mean);
     yax1=-10; yax2=10;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
         legend('M1','Location','NW')
         legend boxoff
+    datetick('x','yy','keeplimits');   
+    set(gca,'xlim',[xax1 xax2],'xgrid','on','ytick',-8:8:8);
+    hold on
+    
+subplot(3,1,2); %46042
+    [U,~]=plfilt(w.s42.u, w.s42.dn);
+    [V,DN]=plfilt(w.s42.v, w.s42.dn);
+    [~,u,~] = ts_aggregation(DN,U,2,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,2,'day',@mean);
+    yax1=-10; yax2=10;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'');
+        legend('46042','Location','NW')
+        legend boxoff
+    datetick('x','yy','keeplimits');   
+    set(gca,'xlim',[xax1 xax2],'xgrid', 'on','ytick',-8:8:8);   
     hold on
 
 subplot(3,1,3); %SCW
     [U,~]=plfilt(w.scw.u, w.scw.dn);
     [V,DN]=plfilt(w.scw.v, w.scw.dn);
-    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
-    xax1=datenum('2018-01-01'); xax2=datenum('2018-07-01');
-    yax1=-4; yax2=4;
+    [~,u,~] = ts_aggregation(DN,U,2,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,2,'day',@mean);
+    yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
         legend('SCW','Location','NW')
         legend boxoff
-    hold on
-datetick('x','mmm');
-set(gca,'xgrid', 'on','xlim',[xax1 xax2]);
+    datetick('x','yyyy','keeplimits');   
+    set(gca,'xgrid', 'on','xlim',[xax1 xax2],'ytick',-4:4:4);
+    hold on    
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[filepath 'Figs\wind_2018_M1_46042_SCW.tif']);
+print(gcf,'-dtiff','-r600',[filepath 'Figs\wind_M1_46042_SCW.tif']);
 hold off
 
 %% plots 2012-2018 Wind for SCW
@@ -94,8 +97,8 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.04 0.03], [0.09 0.04])
 
     [U,~]=plfilt(w.s42.u, w.s42.dn);
     [V,DN]=plfilt(w.s42.v, w.s42.dn);
-    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+    [~,u,~] = ts_aggregation(DN,U,12,'hour',@mean);
+    [time,v,~] = ts_aggregation(DN,V,12,'hour',@mean);
     
 yr=[2012:2018]';    
 for i=1:length(yr)
@@ -129,8 +132,8 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.04 0.03], [0.09 0.04])
 
     [U,~]=plfilt(w.M1.u, w.M1.dn);
     [V,DN]=plfilt(w.M1.v, w.M1.dn);
-    [~,u,~] = ts_aggregation(DN,U,1,'8hour',@mean);
-    [time,v,~] = ts_aggregation(DN,V,1,'8hour',@mean);
+    [~,u,~] = ts_aggregation(DN,U,12,'hour',@mean);
+    [time,v,~] = ts_aggregation(DN,V,12,'hour',@mean);
     
 yr=[2012:2018]';    
 for i=1:length(yr)
