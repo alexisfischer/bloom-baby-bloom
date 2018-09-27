@@ -8,7 +8,8 @@
 % class2do_string = 'Chaetoceros'; ymax=350;
 % class2do_string = 'Det_Cer_Lau'; ymax=50; 
 % class2do_string = 'Eucampia'; ymax=120;
- class2do_string = 'Gymnodinium'; ymax=75;
+ class2do_string = 'Umbilicosphaera'; chosen_threshold = 0.7; hi=50;
+
 %class2do_string = 'Pseudo-nitzschia'; ymax=30;
 %class2do_string = 'NanoP_less10'; ymax=600;
 %class2do_string = 'Cryptophyte'; ymax=50;

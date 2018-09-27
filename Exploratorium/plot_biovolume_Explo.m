@@ -16,7 +16,7 @@ load([filepath 'Data/IFCB_summary/class/summary_biovol_allcells' num2str(year)],
 
 %%%% Step 2: Convert Biovolume to Carbon
 % convert Biovolume (cubic microns/cell) to Carbon (picograms/cell)
-[ ind_diatom, class_label ] = get_diatom_ind_CA( class2useTB, class2useTB );
+[ ind_diatom, ~ ] = get_diatom_ind_CA( class2useTB, class2useTB );
 [ cellC ] = biovol2carbon(classbiovolTB, ind_diatom ); 
 
 %convert from per cell to per mL
@@ -35,22 +35,22 @@ volC=volC./1000;
 % Dinoflagellates vs Diatoms vs Classes of interest
 
 %select total living biovolume 
-[ ind_cell, class_label ] = get_cell_ind_CA( class2useTB, class2useTB );
+[ ind_cell, ~ ] = get_cell_ind_CA( class2useTB, class2useTB );
 [xmat, ymat ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_cell),2));
 [xmat ymat_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
 %select only diatoms
-[ ind_diatom, class_label ] = get_diatom_ind_CA( class2useTB, class2useTB );
+[ ind_diatom, ~ ] = get_diatom_ind_CA( class2useTB, class2useTB );
 [xdiat, ydiat ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_diatom),2));
 [xdiat ydiat_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
 %select only dinoflagellates
-[ ind_dino, class_label ] = get_dino_ind_CA( class2useTB, class2useTB );
+[ ind_dino, ~ ] = get_dino_ind_CA( class2useTB, class2useTB );
 [xdino, ydino ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_dino),2));
 [xdino ydino_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
 %select only nanoplankton
-[ ind_nano, class_label ] = get_nano_ind_CA( class2useTB, class2useTB );
+[ ind_nano, ~ ] = get_nano_ind_CA( class2useTB, class2useTB );
 [xnano, ynano ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_nano),2));
 [xnano ynano_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
