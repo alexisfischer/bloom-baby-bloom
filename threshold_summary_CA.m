@@ -9,7 +9,7 @@ m = load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_12Sep2018']);
 % class2do_string = 'Det_Cer_Lau'; chosen_threshold = 0.7; hi=300;
 % class2do_string = 'Eucampia'; chosen_threshold = 0.6; hi=120;
 %class2do_string = 'Guin_Dact'; chosen_threshold = 0.5; hi=130;
- class2do_string = 'Gymnodinium'; chosen_threshold = 0.7; hi=250;
+% class2do_string = 'Gymnodinium'; chosen_threshold = 0.7; hi=250;
 % class2do_string = 'Prorocentrum'; chosen_threshold = 0.7; hi=800;
 % class2do_string = 'Lingulodinium'; chosen_threshold = 0.6; hi=60;
 % class2do_string = 'Thalassiosira'; chosen_threshold = 0.9; hi=200;
