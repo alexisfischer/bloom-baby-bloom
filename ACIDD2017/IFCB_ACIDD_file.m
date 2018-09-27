@@ -2,8 +2,17 @@
 %20180925
 %UCSB IGPMS
 
+in_dir_base='F:\IFCB113\ACIDD2017\datai\2017\';
+
+daydir = dir([in_dir_base 'D*']);
+bins = [];
+in_dir = [];
+out_dir_blob = [];
+for ii = 1:length(daydir)
+
+end
 %%%IFCB file processing for Alexis
-cd %insert your folder path here
+cd 'F:\IFCB113\ACIDD2017\data\2017\D20171217\' %insert your folder path here
 
 %Load all of your IFCB files into a structure
 filein = dir('*.hdr'); %put your file extension after the period (.txt, .hdr)

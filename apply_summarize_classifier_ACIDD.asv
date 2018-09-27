@@ -34,7 +34,7 @@ yrrange = 2017;
 biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
 extract_biovolume_allcells;
-%%
+
 % PART 3: Evaluate classifier
 % Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
 yrrange = 2017;
@@ -44,8 +44,7 @@ in_dir = 'F:\IFCB113\ACIDD2017\data\';
 
 countcells_allTB_class('Umbilicosphaera', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Gymnodinium', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Ciliates', yrrange, classpath_generic, out_path, in_dir)
-%%
+
 %dinos
 countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
