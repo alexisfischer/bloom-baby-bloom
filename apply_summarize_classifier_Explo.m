@@ -6,7 +6,7 @@
 sort_data_into_folders('F:\IFCB113\Exploratorium\data\raw\','F:\IFCB113\Exploratorium\data\2018\');
 
 %add new data to search path
-addpath(genpath('F:\IFCB113\ACIDD2017\'));
+addpath(genpath('F:\IFCB113\Exploratorium\'));
 
 %% Step 2: Extract blobs
 start_blob_batch_user_training('F:\IFCB113\Exploratorium\data\2018\','F:\IFCB113\Exploratorium\blobs\2018\',true)
@@ -19,7 +19,7 @@ start_feature_batch_user_training('F:\IFCB113\Exploratorium\data\2018\',...
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
     'F:\IFCB113\Exploratorium\features\2018\','F:\IFCB113\Exploratorium\class\class2018_v1\')
 
-% PART 2: Summarize results 
+%% PART 2: Summarize results 
 % Step 5: Summarize random forest classification results by class
 
 countcells_allTBnew_user_training('F:\IFCB113\Exploratorium\class\classxxxx_v1\',...

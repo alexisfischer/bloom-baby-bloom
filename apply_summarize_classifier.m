@@ -58,7 +58,7 @@ yrrange = 2018;
 
 biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
-%% PART 3: Evaluate classifier
+% PART 3: Evaluate classifier
 % Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
 yrrange = 2016:2018;
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
@@ -66,7 +66,6 @@ out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_s
 in_dir = 'F:\IFCB104\data\';
 
 countcells_allTB_class('Umbilicosphaera', yrrange, classpath_generic, out_path, in_dir)
-%%
 
 %dinos
 countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
