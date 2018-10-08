@@ -7,7 +7,9 @@ year=2018; %USER
 %%%% Step 1: Load in data
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/'; % MAC 
 % filepath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\'; %PC
-load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD'],'ROMS','CA');
+%load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD'],'ROMS','CA','MB');
+load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD_50m'],'ROMS','CA','MB');
+
 load([filepath 'Data/SCW_master'],'SC');
 load([filepath 'Data/Wind_MB'],'w');
 load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB' num2str(year) ''],...
@@ -55,22 +57,21 @@ for i=1:length(class2useTB)
     [~,BIO(i).car ] = timeseries2ydmat(mdateTB, volC(:,i));    
 end
 
-gap=3;
 %%%% Step 4: Interpolate data for small data gaps 
 for i=1:length(BIO)
-    [BIO(i).bio_i] = interp1babygap(BIO(i).bio,gap);
-    [BIO(i).car_i] = interp1babygap(BIO(i).car,gap);
+    [BIO(i).bio_i] = interp1babygap(BIO(i).bio,3);
+    [BIO(i).car_i] = interp1babygap(BIO(i).car,3);
 end
 
 for i=1:length(ydino)
-    [ydino] = interp1babygap(ydino,gap);
-    [ydino_ml] = interp1babygap(ydino_ml,gap);
+    [ydino] = interp1babygap(ydino,3);
+    [ydino_ml] = interp1babygap(ydino_ml,3);
 
-    [ydiat] = interp1babygap(ydiat,gap);
-    [ydiat_ml] = interp1babygap(ydiat_ml,gap);
+    [ydiat] = interp1babygap(ydiat,3);
+    [ydiat_ml] = interp1babygap(ydiat_ml,3);
     
-    [ymat] = interp1babygap(ymat,gap);
-    [ymat_ml] = interp1babygap(ymat_ml,gap);
+    [ymat] = interp1babygap(ymat,3);
+    [ymat_ml] = interp1babygap(ymat_ml,3);
 
 end
 
@@ -114,9 +115,11 @@ class2do_string = 'Pennate';
 clearvars Thr_sum biovol_sum class_sum 
 %[~, cind] = sort(sum(x), 'descend'); %rank order biomass    
 
+clear ydiat_ml ydino_ml
+
 %% zoom into Feb March
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.04 0.04], [0.11 0.22]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.04 0.04], [0.11 0.22]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
@@ -129,7 +132,7 @@ subplot(7,1,1);
     plot(xmat,y,'k-',SC.dn,SC.CHL,'*k',SC.dn,SC.CHLsensor,'k:','linewidth', 1,'Markersize',4);
     set(gca,'xgrid','on','xlim',[xax1 xax2],'fontsize',9,...
         'fontname','arial','tickdir','out','xaxislocation','top')
-    datetick('x','mmm','keeplimits');       
+    datetick('x','dd','keeplimits');       
     ylabel('Carbon (\mug L^{-1})', 'fontsize', 10, 'fontname', 'arial','fontweight','bold')
     lh=legend('IFCB','manual','sensor','Location','EastOutside'); legend boxoff
     set(lh,'Position',[0.797685185185185 0.885920353223593 0.118055555555556 0.0607638888888888]);
@@ -147,6 +150,10 @@ col_dino1=flipud(brewermap(10,'PiYG'));
 col_dino2=(brewermap(5,'YlOrBr'));
 col_diat1=flipud(brewermap(7,'YlGnBu'));
 col_diat2=(brewermap(5,'Purples'));
+col_dino1=flipud(brewermap(10,'PiYG'));
+col_dino2=(brewermap(5,'YlOrBr'));
+col_diat1=flipud(brewermap(7,'YlGnBu'));
+col_diat2=(brewermap(5,'Purples'));
 
 set(h(1),'Color',col_dino1(10,:)); %aka
 set(h(2),'Color',col_dino1(9,:)); %cer
@@ -157,23 +164,30 @@ set(h(6),'Color',col_diat1(5,:)); %DCL
 set(h(7),'Color',col_diat1(4,:)); %Euc
 set(h(8),'Color',col_diat2(5,:)); %Cen
 set(h(9),'Color',col_diat2(4,:)); %Pen
+set(h(1),'Color',col_dino1(10,:)); %aka
+set(h(2),'Color',col_dino1(9,:)); %cer
+set(h(3),'Color',col_dino2(4,:)); %gm
+set(h(4),'Color',col_dino2(2,:)); %pro
+set(h(5),'Color',col_diat1(6,:)); %chae
+set(h(6),'Color',col_diat1(5,:)); %DCL
+set(h(7),'Color',col_diat1(4,:)); %Euc
+set(h(8),'Color',col_diat2(5,:)); %Cen
+set(h(9),'Color',col_diat2(4,:)); %Pen
 
-datetick('x','mmm','keeplimits');  
-set(gca,'xlim',[xax1 xax2],'xticklabel',{},...
+set(gca,'xlim',[xax1 xax2],...
     'fontsize', 9, 'fontname', 'arial','tickdir','out')
 ylabel('Cells ml^{-1}', 'fontsize', 10, 'fontname', 'arial','fontweight','bold')
 lh=legend('Akashiwo','Ceratium','Gymnodinium','Prorocentrum',...
     'Chaetoceros','DetCerLau','Eucampia','Centric diatoms','Pennate diatoms');
 set(lh,'Position',[0.798560185185185 0.679022388790906 0.177083333333333 0.170138888888889]);
+    datetick('x','dd','keeplimits');           
 hold on
-
-%Detonula Cerautalina Lauderia
 
 subplot(7,1,3); %Discharge
     plot(SC.dn,SC.river,'-k','linewidth',1.5);
-    datetick('x','mmm','keeplimits');       
-    set(gca,'xgrid','on','XLim',[xax1;xax2],'xticklabel',{},...
+    set(gca,'xgrid','on','XLim',[xax1;xax2],...
         'fontsize',9,'tickdir','out'); 
+    datetick('x','dd','keeplimits');           
     ylabel({'Discharge'; '(ft^3 s^{-1})'},'fontsize',10,'fontweight','bold');
 hold on  
 
@@ -185,7 +199,7 @@ subplot(7,1,4); %SCW wind
     yax1=-5; yax2=5;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
-    datetick('x','mmm','keeplimits');       
+    datetick('x','dd','keeplimits');       
     set(gca,'ytick',-4:4:4,'xticklabel',{},'fontsize',9);    
     ylabel({'SCW Wind'; '(m s^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold');  
     hold on   
@@ -198,44 +212,50 @@ subplot(7,1,5); %46042 wind
     yax1=-12; yax2=12;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
-    datetick('x','mmm','keeplimits');       
+    datetick('x','dd','keeplimits');       
     set(gca,'ytick',-10:10:10,'xticklabel',{},'fontsize',9);    
     ylabel({'46042 Wind';'(m s^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold');  
     hold on            
     
 subplot(7,1,6); %SCW  
     plot(SC.dn,SC.T,'*k',SC.dn,SC.Tsensor,':k','linewidth',1.5,'markersize',4);
-    datetick('x','mmm','keeplimits');       
-    set(gca,'xgrid','on','XLim',[xax1;xax2],'xticklabel',{},...
+    set(gca,'xgrid','on','XLim',[xax1;xax2],...
         'fontsize',9,'tickdir','out'); 
+    datetick('x','dd','keeplimits');           
     ylabel('SST (^oC)','fontsize',10,'fontweight','bold');
 hold on  
 
-subplot(7,1,7); %ROMS MLD
+subplot(7,1,7); %ROMS Temp
     X=[ROMS.dn]';
-    Y=[ROMS(1).Zi(1:end-1)]';
-    C=[ROMS.dTdz];
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Ti];
     pcolor(X,Y,C); shading interp;
-    caxis([0 0.2]); datetick('x','mmm','keeplimits');  grid on; 
+    caxis([10 16]); grid on; 
     hold on
-    hh=plot(X,smooth([ROMS.Zmax],2),'k-','linewidth',3);
+    hh=plot(X,smooth([ROMS.Zmax],2),'w-','linewidth',2);
     hold on
+    datetick('x','dd','keeplimits');           
     set(gca,'XLim',[xax1;xax2],'Ydir','reverse',...
         'ylim',[0 ROMS(1).Zi(end)],'fontsize',9,'tickdir','out');
     ylabel('Depth (m)','fontsize',10,'fontweight','bold');
     box on    
-    datetick('x','mmm','keeplimits');       
+    datetick('x','dd','keeplimits');       
     h=colorbar('Position',[0.787962962962964 0.0397805212620027 0.0148148148148148 0.113854595336077]);
-    h.Label.String = 'dT/dz (^oC m^{-1})';
+    h.Label.String = 'T (^oC)';
     h.FontSize = 8;
     h.Label.FontSize = 10;
     h.Label.FontWeight = 'bold';
     h.TickDirection = 'out';
+
+    lh=legend(hh,'Z(max dT/dz)') ; 
+    legend boxoff
+    lh.FontSize = 10;
+    lh.FontWeight = 'bold';    
     hold on
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[filepath 'Figs/ZoomIn_IFCB_SCW_Spring' num2str(year) '.tif']);
+print(gcf,'-dpng','-r600',[filepath 'Figs/ZoomIn_IFCB_SCW_Spring' num2str(year) '.png']);
 hold off
 
 %% plot pcolor temperature profile, delta T MLD, and  dinos/diatom
@@ -247,21 +267,15 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.04], [0.1 0.12]);
 
 xax1=datenum(['' num2str(year) '-01-01']); xax2=datenum(['' num2str(year) '-10-01']);     
     
-subplot(6,1,1); 
-fxdino = ydino./(ydino+ydiat);
-fxdiat = ydiat./(ydino+ydiat);
-
-idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; Dino=SC.fxDino.*SC.CHL;
-idx=isnan(SC.fxDiat); SC.CHL(idx)=NaN; Diat=SC.fxDiat.*SC.CHL;
-
-h = plot(SC.dn,Dino,'ro',SC.dn,Diat,'b^',...
-    xmat,smooth((fxdino.*ymat)./ymat_ml,1),'-r.',...
-    xmat,smooth((fxdiat.*ymat)./ymat_ml,1),'-b.','linewidth',1.5);
+subplot(6,1,1);
+h = plot(SC.dn,SC.fxDino.*SC.CHL,'ro',SC.dn,SC.fxDiat.*SC.CHL,'b^',...
+    xmat,smooth(ydino./ymat_ml,1),'-r.',...
+    xmat,smooth(ydiat./ymat_ml,1),'-b.','linewidth',1.5);
     cstr=brewermap(2,'RdBu');
     set(h(1),'Markersize',4, 'Color',cstr(1,:));
     set(h(2),'Markersize',4, 'Color',cstr(2,:));
     set(h(3), 'Color',cstr(1,:));
-    set(h(4),'Color',cstr(2,:));
+    set(h(4),'Color',cstr(2,:));  
 
     set(gca,'xlim',[xax1 xax2],'xgrid','on',...
         'fontsize', 9,'fontname', 'arial','tickdir','out','xaxislocation','top')
@@ -271,32 +285,32 @@ h = plot(SC.dn,Dino,'ro',SC.dn,Diat,'b^',...
     legend boxoff;
     hold on  
     
-subplot(6,1,2); %SCW wind
-    [U,~]=plfilt(w.scw.u, w.scw.dn);
-    [V,DN]=plfilt(w.scw.v, w.scw.dn);
-    [~,u,~] = ts_aggregation(DN,U,12,'hour',@mean);
-    [time,v,~] = ts_aggregation(DN,V,12,'hour',@mean);
-    yax1=-5; yax2=5;
-    stick(time,u,v,xax1,xax2,yax1,yax2,'');
-    xlim([xax1;xax2])    
-    datetick('x','m','keeplimits');   
-    set(gca,'ytick',-4:4:4,'xticklabel',{},'fontsize',9);    
-    ylabel({'SCW';'Wind (m s^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold');  
-    hold on  
-    
-subplot(6,1,3); %40462 wind
+% subplot(6,1,2); %SCW wind
+%     [U,~]=plfilt(w.scw.u, w.scw.dn);
+%     [V,DN]=plfilt(w.scw.v, w.scw.dn);
+%     [~,u,~] = ts_aggregation(DN,U,12,'hour',@mean);
+%     [time,v,~] = ts_aggregation(DN,V,12,'hour',@mean);
+%     yax1=-5; yax2=5;
+%     stick(time,u,v,xax1,xax2,yax1,yax2,'');
+%     xlim([xax1;xax2])    
+%     datetick('x','m','keeplimits');   
+%     set(gca,'ytick',-4:4:4,'xticklabel',{},'fontsize',9);    
+%     ylabel({'SCW';'Wind (m s^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold');  
+%     hold on  
+%     
+% subplot(6,1,3); %40462 wind
 %     [U,~]=plfilt(w.s42.u, w.s42.dn);
 %     [V,DN]=plfilt(w.s42.v, w.s42.dn);
 %     [~,u,~] = ts_aggregation(DN,U,12,'hour',@mean);
 %     [time,v,~] = ts_aggregation(DN,V,12,'hour',@mean);
-    yax1=-10; yax2=10;
-    stick(time,u,v,xax1,xax2,yax1,yax2,'');
-    xlim([xax1;xax2])    
-    datetick('x','m','keeplimits');   
-    set(gca,'ytick',-10:10:10,'xticklabel',{},'fontsize',9);    
-    ylabel({'46042';'Wind (m s^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold');  
-    hold on      
-    
+%     yax1=-10; yax2=10;
+%     stick(time,u,v,xax1,xax2,yax1,yax2,'');
+%     xlim([xax1;xax2])    
+%     datetick('x','m','keeplimits');   
+%     set(gca,'ytick',-10:10:10,'xticklabel',{},'fontsize',9);    
+%     ylabel({'46042';'Wind (m s^{-1})'},'fontsize',10,'fontname','arial','fontweight','bold');  
+%     hold on      
+%     
 % subplot(6,1,3); %Discharge
 %     plot(SC.dn,SC.river,'-k','linewidth',1.5);
 %     xlim([xax1;xax2]);    
@@ -307,16 +321,14 @@ subplot(6,1,3); %40462 wind
 % hold on       
 %     
 ax=subplot(6,1,4); %SCW ROMS Sal    
-    X=[CA.dn]';
-    Y=[CA(1).Zi]';
-    C=[CA.Si];
-%     X=[ROMS.dn]';
-%     Y=[ROMS(1).Zi]';
-%     C=[ROMS.Si];
+    X=[ROMS.dn]';
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Si];
     pcolor(X,Y,C); shading interp;
     colormap(ax,jet);     
     caxis([33.2 33.9]); datetick('x','mmm');  grid on; 
     hold on
+     
     set(gca,'XLim',[xax1;xax2],'xticklabel',{},'Ydir','reverse',...
         'ylim',[0 ROMS(1).Zi(end)],'fontsize',9,'tickdir','out');
     ylabel('Depth (m)','fontsize',10,'fontweight','bold');
@@ -328,7 +340,7 @@ ax=subplot(6,1,4); %SCW ROMS Sal
     h.Label.FontWeight = 'bold';
     h.TickDirection = 'out';
     hold on
-%%    
+  
 ax1=subplot(6,1,5); %SCW ROMS Temp
     X=[ROMS.dn]';
     Y=[ROMS(1).Zi]';
@@ -337,6 +349,8 @@ ax1=subplot(6,1,5); %SCW ROMS Temp
     colormap(ax1,jet);     
     caxis([10 16]); datetick('x',4);  grid on; 
     hold on
+    hh=plot(X,smooth([ROMS.mld5],10),'w-','linewidth',2);
+hold on     
     set(gca,'XLim',[xax1;xax2],'xticklabel',{},'Ydir','reverse',...
         'ylim',[0 ROMS(1).Zi(end)],'fontsize',9,'tickdir','out');    
     ylabel('Depth (m)','fontsize',10,'fontweight','bold');
@@ -375,7 +389,7 @@ ax2=subplot(6,1,6); %ROMS MLD
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r600',[filepath 'Figs/Dino-Diatom_W_D_S_T_' num2str(year) '.tif']);
+print(gcf,'-dtiff','-r200',[filepath 'Figs/Dino-Diatom_W_D_S_T_' num2str(year) '_50m.tif']);
 hold off
 
 %% plot fraction biovolume with Chlorophyll

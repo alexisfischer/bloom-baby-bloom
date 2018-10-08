@@ -1,4 +1,4 @@
-function [ MDATE_mat, Y_mat, yearlist, yd ] = filltimeseriesgaps( mdate, y )
+function [ MMDATE_mat, YY_mat ] = filltimeseriesgaps( mdate, y )
 %function [ mdate_mat, y_mat, yearlist, yd ] = timeseries2ydmat( mdate, y )
 %accept an input time series (vector of dates in mdate; vector of y-values
 %in y) and output a matrix of mean values for each yearday by year 
@@ -25,5 +25,10 @@ end;
 Y_mat = reshape(y_mat,[],1);
 MDATE_mat = reshape(mdate_mat,[],1);
 
+t_0=find(MDATE_mat==floor(mdate(1)));
+t_end=find(MDATE_mat==floor(mdate(end)));
+
+YY_mat=Y_mat(t_0:t_end);
+MMDATE_mat=MDATE_mat(t_0:t_end);
 
 end

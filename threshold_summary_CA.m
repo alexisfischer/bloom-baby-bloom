@@ -18,6 +18,7 @@ m = load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_12Sep2018']);
 %class2do_string = 'NanoP_less10'; chosen_threshold = 0.9; hi=1500;
 %class2do_string = 'Cryptophyte'; chosen_threshold = 0.9; hi=80;
 %class2do_string = 'Pennate'; chosen_threshold = 0.7; hi=200;
+class2do_string = 'Umbilicosphaera'; chosen_threshold = 0.7; hi=10;
 
 load([filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string]);
 

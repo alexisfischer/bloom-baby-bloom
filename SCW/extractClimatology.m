@@ -36,10 +36,14 @@ dn14d = mdate_mat((1:14:end),:);
 dn14d(27,:)=[];
 dn14d = dn14d(:);
 
-% ensure end of dates agrees with end of data
+% ensure start and end of dates agrees with end of data
 iEnd= find(dn14d >= DN(end),1);
 dn14d=dn14d(1:iEnd); 
-t14d=smooth(t14d(1:iEnd),2);
+t14d=smooth(t14d(1:iEnd),4);
+
+idx=find(dn14d >= DN(1),1);
+dn14d=dn14d(idx:end);
+t14d=t14d(idx:end);
 
 %% (2) Grid the time series at 14day intervals using Stineman (1980) interpolation
 %ti=spline(DN,T,dn14d); ti=ti';

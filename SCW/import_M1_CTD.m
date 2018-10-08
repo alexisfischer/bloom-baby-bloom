@@ -114,75 +114,90 @@ for i=1:length(M1)
     M1(i).T=M1(i).T(idx);
 end
 
-%remove partial depth profiles
-%interpolate so exactly 1:200 depths
+% remove partial depth profiles
 for i=1:length(M1)
     if length(M1(i).Z) <= 102
         M1(i)=[]; % remove the depth profiles that are less than 110 depths
     else
-    M1(i).Zi=(1:200)';
-    M1(i).Ti = spline(M1(i).Z,M1(i).T,M1(i).Zi); %cubic spline interpolation
     end
 end
 
+%interpolate so exactly 1:200 depths
+for i=1:length(M1)
+    M1(i).Zi=(1:200)';
+    M1(i).Ti = spline(M1(i).Z,M1(i).T,M1(i).Zi); %cubic spline interpolation
+end
 
 %% 3) find the MLD (depth at which T=0.5ºC below the surface temp), and the
 % depth and temperature at the max dT/dz (vertical temperature gradient, ie thermocline)
 deep=max(M1(1).Zi);
 
 for i=1:length(M1)
-    
-    if isnan(M1(i).Ti)
-        M1(i).diff = NaN*ones(size(M1(1).Zi));   
-        M1(i).mld5=NaN;
-        M1(i).dTdz=NaN*ones(length(M1(1).Zi)-1,1); 
-        M1(i).zero4=NaN;
-        M1(i).maxdTdz=NaN;        
-        M1(i).Zmax=NaN;
-        M1(i).Tmax=NaN;
-     
-    else          
-        
+    if ~isnan(M1(i).Ti)        
     for j=1:length(M1(i).Ti)
-       M1(i).diff(j)=abs(diff([M1(i).Ti(1) M1(i).Ti(j)]))';
+       M1(i).diff(j)=abs(diff([M1(i).Ti(1) M1(i).Ti(j)]));
     end
-    M1(i).mld5=M1(i).Zi(find(M1(i).diff > 0.5,1));
-    M1(i).mld5(isempty(M1(i).mld5))=deep; %replace with deepest depth if empty    
-    M1(i).diff=M1(i).diff';
+    end
+end
+
+for i=1:length(M1)
+    
+    if ~isnan(M1(i).Ti)        
     M1(i).dTdz=abs(diff(M1(i).Ti))';   
     M1(i).dTdz=(M1(i).dTdz)';  
+    M1(i).diff=M1(i).diff';    
+        
+    M1(i).mld5=M1(i).Zi(find(M1(i).diff > 0.5,1));
+    M1(i).mld5(isempty(M1(i).mld5))=deep; %replace with deepest depth if empty    
     [M1(i).maxdTdz,idx]=max(M1(i).dTdz);
     M1(i).Zmax=M1(i).Zi(idx);   
     M1(i).Tmax=M1(i).Ti(idx);    
+
+    else      
+        M1(i).diff = NaN*ones(size(M1(1).Zi));   
+        M1(i).mld5=NaN;
+        M1(i).dTdz=NaN*ones(length(M1(1).Zi)-1,1); 
+        M1(i).maxdTdz=NaN;        
+        M1(i).Zmax=NaN;
+        M1(i).Tmax=NaN;
     
     end
     
 end
 
-%% 4) median filter and smoothing
-
 %eliminate outliers w 3 iterations of the median filter
-dTdz = medfilt(medfilt(medfilt([M1.maxdTdz]')));
-Zmax = medfilt(medfilt(medfilt([M1.Zmax]')));
-Tmax = medfilt(medfilt(medfilt([M1.Tmax]')));
+mld5=smooth(medfilt(medfilt(medfilt([M1.mld5]))),9);
+maxdTdz=smooth(medfilt(medfilt(medfilt([M1.maxdTdz]))),9);
+Zmax=smooth(medfilt(medfilt(medfilt([M1.Zmax]))),9);
+Tmax=smooth(medfilt(medfilt(medfilt([M1.Tmax]))),9);
 
-% smooth w 37 pt running average filter to emphaseize low-frequency
-% variability to assess long term trends
-dTdzS = smooth(dTdz,37);
-ZmaxS = smooth(Zmax,37);
-TmaxS = smooth(Tmax,37);
+for i=1:length(M1)
+    M1(i).mld5=mld5(i);
+    M1(i).maxdTdz=maxdTdz(i);
+    M1(i).Zmax=Zmax(i);
+    M1(i).Tmax=Tmax(i);
+    
+end 
 
-for i =1:length(M1)
-   M1(i).maxdTdzM = dTdz(i);
-   M1(i).maxdTdzS = dTdzS(i);
-   
-   M1(i).ZmaxM = Zmax(i);
-   M1(i).ZmaxS = ZmaxS(i);
-   
-   M1(i).TmaxM = Tmax(i);  
-   M1(i).TmaxS = TmaxS(i);  
-end
-
+% %% 4) median filter and smoothing
+% 
+% % smooth w 37 pt running average filter to emphaseize low-frequency
+% % variability to assess long term trends
+% dTdzS = smooth(dTdz,37);
+% ZmaxS = smooth(Zmax,37);
+% TmaxS = smooth(Tmax,37);
+% 
+% for i =1:length(M1)
+%    M1(i).maxdTdzM = dTdz(i);
+%    M1(i).maxdTdzS = dTdzS(i);
+%    
+%    M1(i).ZmaxM = Zmax(i);
+%    M1(i).ZmaxS = ZmaxS(i);
+%    
+%    M1(i).TmaxM = Tmax(i);  
+%    M1(i).TmaxS = TmaxS(i);  
+% end
+% 
 clearvars deep depth dn i idx indexesWithThisDate j T thisDate Ti ...
     uniqueDates Z Zi dTdz Zmax Tmax dTdzS ZmaxS TmaxS;
 

@@ -27,7 +27,7 @@ end
 y_mat=classcountTB_above_thre(:,bin)./ml_analyzedTB(:);
 y_mat((y_mat<0)) = 0; % cannot have negative numbers 
 
-[ mdateTBi, y_mati, ~, ~ ] = filltimeseriesgaps( mdateTB, y_mat );
+[ mdateTBi, y_mati] = filltimeseriesgaps( mdateTB, y_mat );
 [y_matii] = interp1babygap(y_mati,3);
 
 ind2 = strmatch(class2do_string, class2use); %change this for whatever class you are analyzing

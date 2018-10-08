@@ -36,20 +36,20 @@ vfilt=pl33tn(V);
 
 % fill gaps with NaNs
 for i=1:length(depth)
-    [ DN, T(:,i), ~, ~ ] = filltimeseriesgaps( dn, tfilt(:,i) );
-    [ ~, S(:,i), ~, ~ ] = filltimeseriesgaps( dn, sfilt(:,i) );
+    [ DN, T(:,i)] = filltimeseriesgaps( dn, tfilt(:,i) );
+    [ ~, S(:,i)] = filltimeseriesgaps( dn, sfilt(:,i) );
 end
-    [ ~, U, ~, ~ ] = filltimeseriesgaps( dn, ufilt );
-    [ ~, V, ~, ~ ] = filltimeseriesgaps( dn, vfilt );
+    [ ~, U] = filltimeseriesgaps( dn, ufilt );
+    [ ~, V] = filltimeseriesgaps( dn, vfilt );
 
-%interpolate data unless gaps >7
+%interpolate data unless gaps >4
 TT=NaN(size(T));
 for i=1:length(depth)
     x=T(:,i);
     index    = isnan(x);
     x(index) = interp1(find(~index), x(~index), find(index), 'linear');
     [b, n]     = RunLength(index);
-    longRun    = RunLength(b & (n > 7), n);
+    longRun    = RunLength(b & (n > 4), n);
     x(longRun) = NaN;
     TT(:,i)=x;
 end
@@ -60,7 +60,7 @@ for i=1:length(depth)
     index    = isnan(x);
     x(index) = interp1(find(~index), x(~index), find(index), 'linear');
     [b, n]     = RunLength(index);
-    longRun    = RunLength(b & (n > 7), n);
+    longRun    = RunLength(b & (n > 4), n);
     x(longRun) = NaN;
     SS(:,i)=x;
 end
@@ -68,13 +68,13 @@ end
 index    = isnan(U);
 U(index) = interp1(find(~index), U(~index), find(index), 'linear');
 [b, n]     = RunLength(index);
-longRun    = RunLength(b & (n > 7), n);
+longRun    = RunLength(b & (n > 4), n);
 U(longRun) = NaN;
 
 index    = isnan(V);
 V(index) = interp1(find(~index), V(~index), find(index), 'linear');
 [b, n]     = RunLength(index);
-longRun    = RunLength(b & (n > 7), n);
+longRun    = RunLength(b & (n > 4), n);
 V(longRun) = NaN;
 
 % smooth data, avoid nans
@@ -94,63 +94,77 @@ for i=1:length(DN)
     M1(i).Z=depth;
     M1(i).T=TTT(i,:)';
     M1(i).S=SSS(i,:)'; 
-    M1(i).Zi =double((0:1:depth(end)))';            
+    M1(i).Zi =double((1:1:depth(end)))';            
 end
 
-M1(1:232)=[];
-M1(9894:end)=[];
-%%
 %interpolate (avoiding the NaNs)
 for i=1:length(M1)
-    if isnan(M1(i).T(end))
+    if ~isnan(M1(i).T(end)) 
+        M1(i).Ti = (spline(M1(i).Z,M1(i).T,M1(i).Zi)); %cubic spline interpolation
+    else           
         M1(i).Ti=NaN*ones(size(M1(1).Zi));          
-    else    
-    M1(i).Ti = (spline(M1(i).Z,M1(i).T,M1(i).Zi)); %cubic spline interpolation
     end
 
-    if isnan(M1(i).S(end))
-        M1(i).Si=NaN*ones(size(M1(1).Zi));                  
-    else    
-    M1(i).Si = (spline(M1(i).Z,M1(i).S,M1(i).Zi)); %cubic spline interpolation
+    if ~isnan(M1(i).S(end))
+        M1(i).Si = (spline(M1(i).Z,M1(i).S,M1(i).Zi)); %cubic spline interpolation
+    else   
+        M1(i).Si=NaN*ones(size(M1(1).Zi));                      
     end    
     
 end
 
 %% find where dT from the surface exceeds 0.5ºC, aka the MLD
+
 deep=max(M1(1).Zi);
 
 for i=1:length(M1)
-    
-    if isnan(M1(i).Ti)
-        M1(i).diff = NaN*ones(size(M1(1).Zi));   
-        M1(i).mld2=NaN;
-        M1(i).mld5=NaN;
-        M1(i).dTdz=NaN*ones(length(M1(1).Zi)-1,1); 
-        M1(i).zero4=NaN;
-        M1(i).maxdTdz=NaN;        
-        M1(i).Zmax=NaN;
-        M1(i).Tmax=NaN;
-     
-    else          
+    if ~isnan(M1(i).Ti)        
     for j=1:length(M1(i).Ti)
-       M1(i).diff(j)=abs(diff([M1(i).Ti(1) M1(i).Ti(j)]))';
+       M1(i).diff(j)=abs(diff([M1(i).Ti(1) M1(i).Ti(j)]));
     end
-    M1(i).mld2=M1(i).Zi(find(M1(i).diff > 0.2,1));
-    M1(i).mld2(isempty(M1(i).mld2))=deep; %replace with deepest depth if empty
+    end
+end
+
+
+for i=1:length(M1)
+    
+    if ~isnan(M1(i).Ti)        
+    M1(i).dTdz=abs(diff(M1(i).Ti))';   
+    M1(i).dTdz=(M1(i).dTdz)';  
+    M1(i).diff=M1(i).diff';    
+        
     M1(i).mld5=M1(i).Zi(find(M1(i).diff > 0.5,1));
     M1(i).mld5(isempty(M1(i).mld5))=deep; %replace with deepest depth if empty    
-    M1(i).diff=M1(i).diff';
-    M1(i).dTdz=abs(diff(M1(i).Ti))';  
-    M1(i).zero4=M1(i).Zi(find(M1(i).dTdz >= 0.04,1));
-    M1(i).zero4(isempty(M1(i).zero4))=NaN; %replace with Nan if empty      
-    M1(i).dTdz=(M1(i).dTdz)';  
     [M1(i).maxdTdz,idx]=max(M1(i).dTdz);
     M1(i).Zmax=M1(i).Zi(idx);   
     M1(i).Tmax=M1(i).Ti(idx);    
+
+    else      
+        M1(i).diff = NaN*ones(size(M1(1).Zi));   
+        M1(i).mld5=NaN;
+        M1(i).dTdz=NaN*ones(length(M1(1).Zi)-1,1); 
+        M1(i).maxdTdz=NaN;        
+        M1(i).Zmax=NaN;
+        M1(i).Tmax=NaN;
     
     end
     
 end
+
+% i=~isnan([M1.mld5]');
+% 
+% mld5(i)=smooth(medfilt(medfilt(medfilt([M1(i).mld5]))),9);
+% maxdTdz(i)=smooth(medfilt(medfilt(medfilt([M1(i).maxdTdz]))),9);
+% Zmax(i)=smooth(medfilt(medfilt(medfilt([M1(i).Zmax]))),9);
+% Tmax(i)=smooth(medfilt(medfilt(medfilt([M1(i).Tmax]))),9);
+% 
+% for i=1:length(M1)
+%     M1(i).mld5=mld5(i);
+%     M1(i).maxdTdz=maxdTdz(i);
+%     M1(i).Zmax=Zmax(i);
+%     M1(i).Tmax=Tmax(i);
+%     
+% end 
 
 clearvars b deep depth dn DN i idx in_dir index j longRun n S salt sfilt...
     SS SSS T temp tfilt time TT TTT U V x xx y;
@@ -165,28 +179,24 @@ idx = find([ROMS.dn]>=[M1(end).dn],1); %id for where the points overlap
 dn = [[M1.dn]'; [ROMS(idx:end).dn]'];   
 Ti = [[M1.Ti]'; [ROMS(idx:end).Ti]'];   
 Si = [[M1.Si]'; [ROMS(idx:end).Si]'];   
-mld2 = [[M1.mld2]'; [ROMS(idx:end).mld2]'];   
 mld5 = [[M1.mld5]'; [ROMS(idx:end).mld5]'];   
-zero4 = [[M1.zero4]'; [ROMS(idx:end).zero4]'];   
 dTdz = [[M1.dTdz]'; [ROMS(idx:end).dTdz]'];   
 maxdTdz = [[M1.maxdTdz]'; [ROMS(idx:end).maxdTdz]'];   
 Zmax = [[M1.Zmax]'; [ROMS(idx:end).Zmax]'];   
 Tmax = [[M1.Tmax]'; [ROMS(idx:end).Tmax]'];   
 
 for i=1:length(dn)
-    M1(i).dn=dn(i);
-    M1(i).Zi=M1(1).Zi; %same depth for all  
-    M1(i).Ti=(Ti(i,:))';
-    M1(i).Si=(Si(i,:))';
+    M1R(i).dn=dn(i);
+    M1R(i).Zi=M1(1).Zi; %same depth for all  
+    M1R(i).Ti=(Ti(i,:))';
+    M1R(i).Si=(Si(i,:))';
 
-    M1(i).dTdz=(dTdz(i,:))';    
-    M1(i).zero4=(zero4(i));    
-    M1(i).maxdTdz=(maxdTdz(i));    
-    M1(i).Zmax=(Zmax(i));    
-    M1(i).Tmax=(Tmax(i));    
-    M1(i).mld2=(mld2(i));    
-    M1(i).mld5=(mld5(i));  
+    M1R(i).dTdz=(dTdz(i,:))';    
+    M1R(i).maxdTdz=(maxdTdz(i));    
+    M1R(i).Zmax=(Zmax(i));    
+    M1R(i).Tmax=(Tmax(i));    
+    M1R(i).mld5=(mld5(i));  
 end
 
 %%
-save([filepath 'Data/M1_46092/M1_TS'],'M1');
+save([filepath 'Data/M1_TS'],'M1','M1R');

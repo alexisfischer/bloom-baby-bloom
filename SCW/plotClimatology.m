@@ -1,5 +1,4 @@
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-
 load([filepath 'Data/SCW_master'],'SC');
 
 dn=SC.dn;
@@ -22,8 +21,6 @@ var = SC.maxdTdzS; varname = 'maxdTdz_S'; units = ' (^oC/m)';
 
 var = SC.mld5S; varname = 'MixedLayerDepth_S'; units = ' (m)';
 [C] = extractClimatology(var,dn,filepath,varname);
-
-%%
 
 var = SC.upwell; varname = 'UpwellingIndex'; units = ' (m^3/s/100m coastline)';
 [C] = extractClimatology(var,dn,filepath,varname);
@@ -86,40 +83,22 @@ load([filepath 'Data/Climatology_Windspeed_SC'],'C'); windSC=C;
 %% Plot Climatology drought analysis
 
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.05 0.05], [0.12 0.03]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.04 0.04], [0.12 0.03]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
 xax1=datenum('01-Jan-2003');
 xax2=datenum('01-Jan-2019');
 
-subplot(6,1,1);
+subplot(7,1,1);
 anomaly(dino.dn14d,dino.tAnom);
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10,'xaxislocation','top')
 datetick('x','yyyy','keeplimits')
 box on
-ylabel({'Dinoflagellate';'log Chlorophyll'},'fontsize',10,'fontweight','bold')
+ylabel({'Dinoflagellate';'log Chl'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(6,1,2);
-anomaly(Zmax.dn14d,Zmax.tAnom);
-datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
-    'fontsize',10,'xticklabel',{});
-box on
-ylabel({'Z(max dT/dz)'; '@M1 (m)'},'fontsize',10,'fontweight','bold')
-hold on
-
-subplot(6,1,3);
-anomaly(ZmaxS.dn14d,ZmaxS.tAnom);
-datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
-    'fontsize',10,'xticklabel',{},'ylim',[-25 25]);
-box on
-ylabel({'Z(max dT/dz)'; '(m)'},'fontsize',10,'fontweight','bold')
-hold on
-
-subplot(6,1,4);
+subplot(7,1,2);
 anomaly(T.dn14d,T.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -128,22 +107,40 @@ box on
 ylabel({'Temperature'; '(^oC)'},'fontsize',10,'fontweight','bold')
 hold on
 
-subplot(6,1,5);
+subplot(7,1,3);
+anomaly(windSC.dn14d,windSC.tAnom);
+datetick('x','yyyy','keeplimits')
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
+    'fontsize',10,'xticklabel',{});
+box on
+ylabel('Wind (m/s)','fontsize',10,'fontweight','bold')
+hold on
+
+subplot(7,1,4);
+anomaly(MLDS.dn14d,MLDS.tAnom);
+datetick('x','yyyy','keeplimits')
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
+    'fontsize',10,'xticklabel',{});
+box on
+ylabel({'MLD (m)';'@SCW'},'fontsize',10,'fontweight','bold')
+hold on
+
+subplot(7,1,5);
+anomaly(MLD.dn14d,MLD.tAnom);
+datetick('x','yyyy','keeplimits')
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
+    'fontsize',10,'xticklabel',{});
+box on
+ylabel({'MLD (m)';'@M1'},'fontsize',10,'fontweight','bold')
+hold on
+
+subplot(7,1,6);
 anomaly(upwell.dn14d,upwell.tAnom);
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',10,'xticklabel',{})
 box on
-ylabel({'Upwelling Index'; '(m^3/s/100m coast)'},'fontsize',10,'fontweight','bold')
+ylabel({'Upwelling'; 'm^3/s/100m'},'fontsize',10,'fontweight','bold')
 
-% subplot(6,1,5);
-% anomaly(windSC.dn14d,windSC.tAnom);
-% datetick('x','yyyy','keeplimits')
-% set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
-%     'fontsize',10,'xticklabel',{});
-% box on
-% ylabel('Wind (m/s)','fontsize',10,'fontweight','bold')
-% hold on
-
-subplot(6,1,6);
+subplot(7,1,7);
 anomaly(river.dn14d,river.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -155,7 +152,7 @@ hold on
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs\Dino_wind.tiff']);
+print(gcf,'-dtiff','-r200',[filepath 'Figs\Dino_Zmax_MLD_@SCW.tiff']);
 hold off
 
 %% Plot Climatology (generic)
@@ -165,7 +162,8 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.05], [0.1 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-xax1=datenum('01-Jan-2005');
+C=dino;
+xax1=datenum('01-Jan-2003');
 xax2=datenum('01-Jan-2019');
 
 subplot(3,1,1);
@@ -209,7 +207,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.05], [0.08 0.04])
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-xax1=datenum('01-Oct-2010');
+xax1=datenum('01-Sep-2010');
 xax2=datenum('01-Jan-2019');
 
 subplot(3,1,1);

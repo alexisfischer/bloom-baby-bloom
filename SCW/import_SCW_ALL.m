@@ -542,9 +542,10 @@ end
  
 clearvars CHL d dn DN i mass_concentration_of_chlorophyll_in_sea_water sea_water_temperature T T_F time TUR turbidity j;
 
-%% step 9) Import M1 CTD: MLD, dTdz, Tmax, and Zmax
-load([filepath 'Data/M1-46092/M1_CTD_TS'],'M1');
+%% step 9) Import M1 sensor: MLD, dTdz, Tmax, and Zmax
+load([filepath 'Data/M1_TS'],'M1R');
 
+M1=M1R;
 dn = [M1.dn]';
 
 Zmax=NaN*(ones(size(dn)));
@@ -575,7 +576,7 @@ datetick('x','yyyy');
 clearvars data raw R S dn i j M1;
 
 %% step 10) Import ROMS nearest SCW
-load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD'],'ROMS');
+load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD_50m'],'ROMS');
 
 dn = [ROMS.dn]';
 
