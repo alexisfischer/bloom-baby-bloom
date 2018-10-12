@@ -7,10 +7,15 @@ sort_data_into_folders('F:\IFCB104\data\raw\','F:\IFCB104\data\2018\');
 
 %add new data to search path
 addpath(genpath('F:\IFCB104\data\2018\'));
+addpath(genpath('F:\IFCB104\blobs\2018\'));
+
+addpath(genpath('F:\IFCB104\features\2018\'));
+addpath(genpath('F:\IFCB104\class\2018\'));
+
 %addpath(genpath('C:\Users\kudelalab\Documents\GitHub\MATLAB\dipum-toolbox\'));
 %addpath(genpath('C:\Users\kudelalab\Documents\GitHub\ifcb-analysis\'));
 
-% Step 2: Extract blobs
+%% Step 2: Extract blobs
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
@@ -27,13 +32,13 @@ start_feature_batch_user_training('F:\IFCB104\data\2018\',...
    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
 
 % Step 4: Apply classifier
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_10Oct2018',...
 %     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_10Oct2018',...
 %     'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_10Oct2018',...
 %     'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018',...
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_10Oct2018',...
     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 
 %% PART 2: Summarize results SCW
@@ -58,14 +63,12 @@ yrrange = 2018;
 
 biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
-% PART 3: Evaluate classifier
+%% PART 3: Evaluate classifier
 % Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
 yrrange = 2016:2018;
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\';
 in_dir = 'F:\IFCB104\data\';
-
-countcells_allTB_class('Umbilicosphaera', yrrange, classpath_generic, out_path, in_dir)
 
 %dinos
 countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
@@ -90,4 +93,6 @@ countcells_allTB_class('Pennate', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Hemiaulus', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Asterionellopsis', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Thalassiosira', yrrange, classpath_generic, out_path, in_dir)
+
+countcells_allTB_class('Umbilicosphaera', yrrange, classpath_generic, out_path, in_dir)
 
