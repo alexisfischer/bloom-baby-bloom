@@ -1,25 +1,26 @@
-function [t_acc,x_acc,subs] = ts_aggregation(t,x,n,target_fmt,fct_handle)
+function [dn_acc,y_acc,subs] = ts_aggregation(dn,y,n,target_fmt,fct_handle)
 
-% t is time in datenum format (i.e. days)
-% x is whatever variable you want to aggregate
+% dn is time in datenum format (i.e. days)
+% y is whatever variable you want to aggregate
 % n is the number of minutes, hours, days
 % target_fmt is 'minute', 'hour' or 'day'
 % fct_handle can be an arbitrary function (e.g. @sum or @mean)
 
-    t = t(:);
-    x = x(:);
+    dn = dn(:);
+    y = y(:);
     switch target_fmt
         case 'day'
-            t_factor = 1;        
+            dn_factor = 1;        
         case 'hour'
-            t_factor = 1 / 24;            
+            dn_factor = 1 / 24;            
         case 'minute'
-            t_factor = 1 / ( 24 * 60 );
+            dn_factor = 1 / ( 24 * 60 );
     end
-    t_acc = ( t(1) : n * t_factor : t(end) )';
-    subs = ones(length(t), 1);
-    for i = 2:length(t_acc)
-       subs(t > t_acc(i-1) & t <= t_acc(i)) = i; 
+    dn_acc = ( dn(1) : n * dn_factor : dn(end) )';
+    subs = ones(length(dn), 1);
+    for i = 2:length(dn_acc)
+       subs(dn > dn_acc(i-1) & dn <= dn_acc(i)) = i; 
     end
-    x_acc = accumarray( subs, x, [], fct_handle );
+    y_acc = accumarray( subs, y, [], fct_handle , NaN); %put in NaNs if datagap
+        
 end

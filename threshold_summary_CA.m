@@ -1,5 +1,5 @@
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-m = load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_12Sep2018']); 
+m = load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_05Oct2018']); 
 
 %class2do_string = 'Akashiwo'; chosen_threshold = 0.6; hi=2000;
 %class2do_string = 'Ceratium'; chosen_threshold = 0.5; hi=100;
@@ -18,7 +18,8 @@ m = load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_12Sep2018']);
 %class2do_string = 'NanoP_less10'; chosen_threshold = 0.9; hi=1500;
 %class2do_string = 'Cryptophyte'; chosen_threshold = 0.9; hi=80;
 %class2do_string = 'Pennate'; chosen_threshold = 0.7; hi=200;
-class2do_string = 'Umbilicosphaera'; chosen_threshold = 0.7; hi=10;
+%class2do_string = 'Umbilicosphaera'; chosen_threshold = 0.7; hi=10;
+class2do_string = 'Cochlodinium'; chosen_threshold = 0.5; hi=10;
 
 load([filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string]);
 

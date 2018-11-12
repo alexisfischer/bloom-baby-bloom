@@ -1,11 +1,10 @@
-function [C] = extractClimatology(var,dn,filepath,varname)
+function [C] = extractClimatology(var,dn,filepath,varname,n)
 % Extracts Climatology for generic variables
 %  Alexis D. Fischer, University of California - Santa Cruz, July 2018
 
 %% fine for weekly data without mega gaps
 i = ~isnan(var); t = var(i); dn = dn(i); %remove NaNs
 t(t==-Inf)=0; %replace all -Inf with 0
-t(t<0)=0;
 DN=[dn(1):1:dn(end)]';
 T = interp1(dn,t,DN);
 
@@ -27,12 +26,11 @@ T = interp1(dn,t,DN);
 [mdate_mat,y_mat,~,~] = timeseries2ydmat(DN,T);
 Tmean = nanmean(y_mat,2); %average same day for all years
 
-n = 14; % average every n values
 t14d = arrayfun(@(i) nanmean(Tmean(i:i+n-1)),1:n:length(Tmean)-n+1)'; % the averaged vector
 t14d = repmat(t14d,1,size(mdate_mat,2));
 t14d = t14d(:);
 
-dn14d = mdate_mat((1:14:end),:);
+dn14d = mdate_mat((1:n:end),:);
 dn14d(27,:)=[];
 dn14d = dn14d(:);
 

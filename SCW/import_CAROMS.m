@@ -117,12 +117,12 @@ lon=ncread([in_dir 'lon[181]'],'lon'); %degrees_east
 lon=lon-360; %degrees_west
 depth  = ncread([in_dir 'depth[0:1:5]'],'depth');
 depth(1)=1; %replace 0 with 1
-time=ncread([in_dir 'time[1:1:8719]'],'time'); %units: hours since 1970-01-01 00:00:00 UTC
+time=ncread([in_dir 'time[1:1:8754]'],'time'); %units: hours since 1970-01-01 00:00:00 UTC
 dn=double(time)/24 + datenum('1970-01-01 00:00:00'); %7 hrs ahead of PT
 clearvars time
 
-temp = ncread([in_dir 'temp[1:1:8719][0:1:5][187][181]'],'temp');
-salt  = ncread([in_dir 'salt[1:1:8719][0:1:5][187][181]'],'salt');
+temp = ncread([in_dir 'temp[1:1:8754][0:1:5][187][181]'],'temp');
+salt  = ncread([in_dir 'salt[1:1:8754][0:1:5][187][181]'],'salt');
  
 % lat=ncread([in_dir 'lat[183]'],'lat'); %degrees_north
 % lon=ncread([in_dir 'lon[180]'],'lon'); %degrees_east

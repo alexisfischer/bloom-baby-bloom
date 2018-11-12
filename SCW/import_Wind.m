@@ -233,6 +233,65 @@ w.scw.v=[w.scw.v;v];
 
 clearvars dir DIR dn DN spd SPD u v vars yr;
 
+%%
+%%%%(step 4) Import monthly data Mar-Aug 2018
+filename = [filepath 'SCW_weatherstation_cencoos/windSC_Mar-Aug2018.txt'];
+delimiter = ',';
+startRow = 2;
+formatSpec = '%*s%{yyyy-MM-dd HH:mm:ss}D%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%f%*s%*s%*s%f%[^\n\r]';
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+
+dates = dataArray{:, 1};
+spd = dataArray{:, 2};
+dir = dataArray{:, 3};
+dn=datenum(dates);
+
+clearvars filename delimiter startRow formatSpec fileID dataArray ans;
+
+[u,v] = UVfromDM(dir,spd);
+
+idx = find(dn>=w.scw.dn(end),1); %id for where the points overlap
+w.scw.dn = [[w.scw.dn]; dn(idx:end)];   
+w.scw.dir = [[w.scw.dir]; dir(idx:end)];   
+w.scw.spd = [[w.scw.spd]; spd(idx:end)];   
+w.scw.u = [[w.scw.u]; u(idx:end)];   
+w.scw.v = [[w.scw.v]; v(idx:end)];   
+
+clearvars dir DIR dn dates DN spd SPD u v vars yr idx;
+
+%%
+%%%%(step 5) Import monthly data Aug-Oct 2018
+filename = [filepath 'SCW_weatherstation_cencoos/windSC_Aug-Oct2018.txt'];
+delimiter = ',';
+startRow = 2;
+formatSpec = '%*s%{yyyy-MM-dd HH:mm:ss}D%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%f%*s%*s%*s%f%[^\n\r]';
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+
+fclose(fileID);
+
+dates = dataArray{:, 1};
+spd = dataArray{:, 2};
+dir = dataArray{:, 3};
+
+dn=datenum(dates);
+
+clearvars filename delimiter startRow formatSpec fileID dataArray ans;
+
+[u,v] = UVfromDM(dir,spd);
+
+idx = find(dn>=w.scw.dn(end),1); %id for where the points overlap
+w.scw.dn = [[w.scw.dn]; dn(idx:end)];   
+w.scw.dir = [[w.scw.dir]; dir(idx:end)];   
+w.scw.spd = [[w.scw.spd]; spd(idx:end)];   
+w.scw.u = [[w.scw.u]; u(idx:end)];   
+w.scw.v = [[w.scw.v]; v(idx:end)];   
+
+clearvars dir DIR dn dates DN spd SPD u v vars yr idx;
+
+
 %% M1
 
 %%%%(step 1) Import annual data 2012-2017

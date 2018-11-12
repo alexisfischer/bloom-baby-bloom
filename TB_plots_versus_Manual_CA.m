@@ -8,9 +8,10 @@
 % class2do_string = 'Chaetoceros'; ymax=350;
 % class2do_string = 'Det_Cer_Lau'; ymax=50; 
 % class2do_string = 'Eucampia'; ymax=120;
- class2do_string = 'Umbilicosphaera'; chosen_threshold = 0.7; hi=50;
+% class2do_string = 'Umbilicosphaera'; chosen_threshold = 0.7; hi=50;
+% class2do_string = 'Cochlodinium'; chosen_threshold = 0.5; hi=10;
 
-%class2do_string = 'Pseudo-nitzschia'; ymax=30;
+class2do_string = 'Pseudo-nitzschia'; ymax=30;
 %class2do_string = 'NanoP_less10'; ymax=600;
 %class2do_string = 'Cryptophyte'; ymax=50;
 % class2do_string = 'Thalassiosira'; ymax=30;
@@ -20,7 +21,7 @@
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load([filepath 'Data/IFCB_summary/Coeff_' class2do_string]);
-load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_12Sep2018']); 
+load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_05Oct2018']); 
 load([filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string]);
 load([filepath 'Data/SCW_master'],'SC');
 
@@ -54,7 +55,9 @@ ind2 = strmatch(class2do_string, class2use); %change this for whatever class you
 ind=(find(y_mat)); % find dates associated with nonzero elements
 mdate_val=[mdateTB(ind),y_mat(ind)];
 
-%%
+%% Plot automated vs manual classification cell counts
+%2016-2019
+
 figure('Units','inches','Position',[1 1 8 2.5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.09 0.2], [0.09 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
@@ -136,38 +139,54 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[filepath 'Figs/Manual_automated_' num2str(class2do_string) '.tif']);
 hold off
 
-%% plot cell counts
+%% Plot automated vs manual classification vs microscopy cell counts
 
-figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 7.5 3],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.12 -0.7], [0.1 0.05]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings. 
+xax1=datenum(['2018-01-01']); xax2=datenum(['2018-07-01']);     
 
-xax1=datenum(['2018-01-01']); xax2=datenum(['2018-08-15']);     
+subplot(2,1,1)
+    sz=linspace(1,60,100); 
+    A=SC.rai.PN'./4;
+    A(A<=.01)=.01; %replace values <0 with 0.01  
+    ii=~isnan(A); Aok=A(ii); 
+    Asz=zeros(length(Aok),1); 
+    for j=1:length(Asz)  
+         Asz(j)=sz(round(Aok(j)*length(sz)));
+    end
+    h=scatter(SC.rai.dn(ii)',ones(size(Asz)),Asz,'m','filled');
+    set(gca,'visible','off','xlim',[xax1 xax2],'ylim',[1 1.5],'xticklabel',{},...
+        'yticklabel',{},'fontsize',14);  
+    hold on  
+    
+subplot(2,1,2)    
+    h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
+    hold on
+    for i=1:length(yearlist)
+        ind_nan=find(~isnan(y_mat_manual(:,i)));
+        h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
+    end
+    hold on
+    h3=plot(SC.dn,SC.Pn*.001,'b^','Linewidth',2,'Markersize',5);
+    hold on
 
-h1=stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjusts the automated counts by the chosen slope. 
-hold on
-for i=1:length(yearlist)
-    ind_nan=find(~isnan(y_mat_manual(:,i)));
-    h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
-end
-hold on
-datetick('x','m','keeplimits');
-set(gca,'xgrid','on',...
-    'xlim',[xax1 xax2],'fontsize',14,'tickdir','out');  
-ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
-    'fontsize',16, 'fontname', 'Arial','fontweight','bold');    
-
-lh = legend([h1,h2], ['Machine Automated classification'],...
-    'Human Manual classification','location','northoutside');
-% lh = legend([h1,h2], ['Automated classification (' num2str(threlist(bin)) ')'],...
-%     'Manual classification','location','northoutside');
-set(lh,'fontsize',14,'box','off')
-hold on
-
+    set(gca,'xgrid','on','xlim',[xax1 xax2],'fontsize',14,'tickdir','out');  
+    ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}\bf'],...
+        'fontsize',16, 'fontname', 'Arial','fontweight','bold');    
+    hold on
+    datetick('x','m','keeplimits');
+     lh = legend([h1,h2,h3,h], ['Auto class'],...
+        'Manual class','Microscopy','RAI','location','Northeast');
+    set(lh,'fontsize',14,'box','off')
+    
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[filepath 'Figs/Manual_automated_' num2str(class2do_string) '.tif']);
 hold off
 
-%% plot cell counts
+%% plot Automatic classification cell counts
 
 figure('Units','inches','Position',[1 1 6 3.],'PaperPositionMode','auto');
 
@@ -179,6 +198,7 @@ h1=plot(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); %This adjust
 %     ind_nan=find(~isnan(y_mat_manual(:,i)));
 %     h2=plot(mdate_mat_manual(ind_nan,i), y_mat_manual(ind_nan,i),'r*','Markersize',6,'linewidth',.8);
 % end
+
 hold on
 datetick('x','m','keeplimits');
 set(gca,'xgrid','on',...

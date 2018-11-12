@@ -1,5 +1,5 @@
 %% imports all the data (except wind and IFCB) from Santa Cruz Wharf
-% T, sal, Chl, nit, amm, urea, ammon, phos, sil, DA, STX, RAI
+% T, SSS, Chl, nit, amm, urea, ammon, phos, sil, DA, STX, RAI
 
 filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
@@ -7,8 +7,9 @@ dn=(datenum('01-Jan-2003'):1:datenum('31-Dec-2018'))';
 SC.dn=dn;
 
 % preallocate space
+SC.SST=nan(size(SC.dn));
 SC.T=nan(size(SC.dn));
-SC.sal=nan(size(SC.dn));
+SC.SSS=nan(size(SC.dn));
 SC.CHL=nan(size(SC.dn));
 SC.nitrate=nan(size(SC.dn));
 SC.ammonium=nan(size(SC.dn));
@@ -43,24 +44,28 @@ SC.wind=nan(size(SC.dn));
 SC.wind42=nan(size(SC.dn));
 SC.windM1=nan(size(SC.dn));
 
+SC.PDO=nan(size(SC.dn));
+SC.NPGO=nan(size(SC.dn));
+
 %% step 1) import hourly river discharge data 1993-2018
 % Discharge (cubic feet per second)
 % Date,  dn=datenum(TimeUTC,'yyyy-mm-dd HH:MM');
-filename = [filepath 'Data/PajaroRiver_1993-2018.txt'];
-delimiter = {'\t',' '};
-startRow = 31;
-formatSpec = '%*s%*s%{yyyy-MM-dd}D%*s%*s%f%*s%*s%*s%*s%*s%*s%*s%*s%*s%[^\n\r]';
+filename = [filepath 'Data/PajaroRiver_2003-2018.txt'];
+delimiter = '\t';
+startRow = 33;
+formatSpec = '%*s%*s%{yyyy-MM-dd HH:mm}D%*s%f%*s%*s%*s%[^\n\r]';
 fileID = fopen(filename,'r');
 dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter,...
-    'MultipleDelimsAsOne', true, 'TextType', 'string', 'EmptyValue', NaN,...
+    'MultipleDelimsAsOne', true, 'TextType', 'string', 'EmptyValue', NaN, ...
     'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
 fclose(fileID);
-
 dt = dataArray{:, 1};
 Rii = dataArray{:, 2};
 
+clearvars filename delimiter startRow formatSpec fileID dataArray ans;
+
 Ri=pl33tn(Rii); % low pass filter
-[dn, R, ~, ~ ] = filltimeseriesgaps( datenum(dt), Ri ); % fill time gaps with NaNs
+[dn, R] = filltimeseriesgaps( datenum(dt), Ri ); % fill time gaps with NaNs
 
 %interpolate data unless gaps >4 
 index    = isnan(R);
@@ -169,7 +174,7 @@ data = reshape([raw{:}],size(raw));
 dn = data(:,1) +693960;
 
 T = data(:,3);
-sal = data(:,2);
+SSS = data(:,2);
 Paust = data(:,4);
 Pmult = data(:,5);
 Pn = data(:,6);
@@ -184,7 +189,7 @@ phosphate = data(:,13);
 for i=1:length(SC.dn)
     for j=1:length(dn)
         if dn(j) == SC.dn(i)
-            SC.sal(i)=sal(j);
+            SC.SSS(i)=SSS(j);
             SC.T(i)=T(j);            
             SC.Paust(i)=Paust(j);
             SC.Pmult(i)=Pmult(j);            
@@ -204,7 +209,7 @@ end
 idx=~isnan(SC.T);
 figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
 
-clearvars data raw stringVectors R dn nitrate Paust phosphate Pmult Pn sal silicate STX T i j;
+clearvars data raw stringVectors R dn nitrate Paust phosphate Pmult Pn silicate STX T i j;
 
 %% step 5) import weekly Chl, nutrients, PN and Alex from SCOOS Website 2008-2018
 filename = [filepath 'Data/Harmful Algal Blooms_2011-2018.csv'];
@@ -212,7 +217,8 @@ delimiter = ',';
 startRow = 9;
 formatSpec = '%q%q%q%*q%*q%*q%*q%*q%*q%q%q%q%q%q%q%q%q%*q%q%*q%*q%*q%*q%q%*q%*q%q%q%*q%q%[^\n\r]';
 fileID = fopen(filename,'r');
-dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType',...
+    'string', 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
 fclose(fileID);
 raw = repmat({''},length(dataArray{1}),length(dataArray)-1);
 for col=1:length(dataArray)-1
@@ -256,7 +262,9 @@ end
 R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
 raw(R) = {NaN}; % Replace non-numeric cells
 
-clearvars filename delimiter startRow formatSpec fileID dataArray ans col numericData rawData row regexstr result numbers invalidThousandsSeparator thousandsRegExp R;
+clearvars filename delimiter startRow formatSpec fileID dataArray ans col...
+    numericData rawData row regexstr result numbers invalidThousandsSeparator...
+    thousandsRegExp R;
 
 year = cell2mat(raw(:, 1));
 month = cell2mat(raw(:, 2));
@@ -396,7 +404,9 @@ raw = raw(4:end,[5:65,84:end]);
 raw(cellfun(@(x) ~isempty(x) && isnumeric(x) && isnan(x),raw)) = {''};
 stringVectors = string(raw(:,33));
 stringVectors(ismissing(stringVectors)) = '';
-raw = raw(:,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63]);
+raw = raw(:,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,...
+    24,25,26,27,28,29,30,31,32,34,35,36,37,38,39,40,41,42,43,44,45,46,47,...
+    48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63]);
 R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
 raw(R) = {NaN}; % Replace non-numeric cells
 d = reshape([raw{:}],size(raw));
@@ -490,7 +500,8 @@ delimiter = ',';
 startRow = 3;
 formatSpec = '%s%f%f%f%[^\n\r]';
 fileID = fopen(filename,'r');
-dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter,...
+    'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
 fclose(fileID);
 time = dataArray{:, 1};
 mass_concentration_of_chlorophyll_in_sea_water = dataArray{:, 2};
@@ -502,6 +513,8 @@ clearvars filename delimiter startRow formatSpec fileID dataArray ans;
 %%%% convert to useable format
 %deal with weird date format, flip vector direction, convert from F to Celcius
 dn = flipud(datenum(datetime(time,'InputFormat','yyyy-MM-dd''T''HH:mm:ss''Z')));
+
+[sst,dnn]=plfilt(sea_water_temperature,dn);
 
 [~,CHL,~] = ts_aggregation(dn,flipud(mass_concentration_of_chlorophyll_in_sea_water),1,'day',@mean);
 [~,T_F,~] = ts_aggregation(dn,flipud(sea_water_temperature),1,'day',@mean);
@@ -519,6 +532,9 @@ for i=1:length(DN)
         TUR(i) = NaN;        
     end       
 end
+
+T=SC.T;
+plfilt(SC.T)
 
 %remove the extra minutes. just keep the day
 d = dateshift(datetime(datestr(DN)),'start','day');
@@ -580,10 +596,14 @@ load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD_50m'],'ROMS');
 
 dn = [ROMS.dn]';
 
+SST=NaN*(ones(size(dn)));
+SSS=NaN*(ones(size(dn)));
 Zmax=NaN*(ones(size(dn)));
 maxdTdz=NaN*(ones(size(dn)));
 mld5=NaN*(ones(size(dn)));
 for i=1:length(ROMS)
+    SST(i)=ROMS(i).Ti(1);
+    SSS(i)=ROMS(i).Si(1);    
     Zmax(i)=ROMS(i).Zmax;
     maxdTdz(i)=ROMS(i).maxdTdz;
     mld5(i)=ROMS(i).mld5;    
@@ -593,6 +613,8 @@ end
 for i=1:length(SC.dn)
     for j=1:length(dn)
         if dn(j) == SC.dn(i)
+            SC.SST(i)=SST(j);      
+            SC.SSS(i)=SSS(j);                  
             SC.ZmaxS(i)=Zmax(j);      
             SC.maxdTdzS(i)=maxdTdz(j);   
             SC.mld5S(i)=mld5(j);                
@@ -602,7 +624,7 @@ for i=1:length(SC.dn)
     end
 end
 
-figure; plot(SC.dn,SC.ZmaxS,'-b')
+figure; plot(SC.dn,SC.SSS,'-k')
 datetick('x','yyyy');
 
 clearvars data raw R S dn i j M1;
@@ -686,6 +708,146 @@ for i=1:length(SC.dn)
 end
 
 clearvars d dn DN i j spd SPD w;
+
+%% 13) import PDO
+filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/PDO.txt';
+startRow = 23;
+endRow = 141;
+formatSpec = '%4s%9s%7s%7s%7s%7s%7s%7s%7s%7s%7s%7s%s%[^\n\r]';
+fileID = fopen(filename,'r');
+textscan(fileID, '%[^\n\r]', startRow-1, 'WhiteSpace', '', 'ReturnOnError', false);
+dataArray = textscan(fileID, formatSpec, endRow-startRow+1, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+
+raw = repmat({''},length(dataArray{1}),length(dataArray)-1);
+for col=1:length(dataArray)-1
+    raw(1:length(dataArray{col}),col) = mat2cell(dataArray{col}, ones(length(dataArray{col}), 1));
+end
+numericData = NaN(size(dataArray{1},1),size(dataArray,2));
+
+for col=[1,2,3,4,5,6,7,8,9,10,11,12,13]
+    % Converts text in the input cell array to numbers. Replaced non-numeric
+    % text with NaN.
+    rawData = dataArray{col};
+    for row=1:size(rawData, 1)
+        % Create a regular expression to detect and remove non-numeric prefixes and
+        % suffixes.
+        regexstr = '(?<prefix>.*?)(?<numbers>([-]*(\d+[\,]*)+[\.]{0,1}\d*[eEdD]{0,1}[-+]*\d*[i]{0,1})|([-]*(\d+[\,]*)*[\.]{1,1}\d+[eEdD]{0,1}[-+]*\d*[i]{0,1}))(?<suffix>.*)';
+        try
+            result = regexp(rawData(row), regexstr, 'names');
+            numbers = result.numbers;
+            
+            % Detected commas in non-thousand locations.
+            invalidThousandsSeparator = false;
+            if numbers.contains(',')
+                thousandsRegExp = '^\d+?(\,\d{3})*\.{0,1}\d*$';
+                if isempty(regexp(numbers, thousandsRegExp, 'once'))
+                    numbers = NaN;
+                    invalidThousandsSeparator = true;
+                end
+            end
+            % Convert numeric text to numbers.
+            if ~invalidThousandsSeparator
+                numbers = textscan(char(strrep(numbers, ',', '')), '%f');
+                numericData(row, col) = numbers{1};
+                raw{row, col} = numbers{1};
+            end
+        catch
+            raw{row, col} = rawData{row};
+        end
+    end
+end
+
+R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
+raw(R) = {NaN}; % Replace non-numeric cells
+
+PDO = cell2mat(raw);
+clearvars filename startRow endRow formatSpec fileID dataArray ans raw...
+    col numericData rawData row regexstr result numbers ...
+    invalidThousandsSeparator thousandsRegExp R;
+
+yr=PDO(:,1);
+PDO=PDO(:,2:end);
+PDO=PDO(:);
+dn=bsxfun(@(Month,Year) datenum(Year,Month,15),(1:12).',yr(1):yr(end))';
+dn=dn(:);
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.PDO(i)=PDO(j);       
+        else
+        end
+    end
+end
+
+%% 14) import NPGO
+filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/NPGO.txt';
+delimiter = {'  '};
+startRow = 27;
+formatSpec = '%*s%s%s%s%[^\n\r]';
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+
+raw = repmat({''},length(dataArray{1}),length(dataArray)-1);
+for col=1:length(dataArray)-1
+    raw(1:length(dataArray{col}),col) = mat2cell(dataArray{col}, ones(length(dataArray{col}), 1));
+end
+numericData = NaN(size(dataArray{1},1),size(dataArray,2));
+
+for col=[1,2,3]
+    % Converts text in the input cell array to numbers. Replaced non-numeric
+    % text with NaN.
+    rawData = dataArray{col};
+    for row=1:size(rawData, 1)
+        % Create a regular expression to detect and remove non-numeric prefixes and
+        % suffixes.
+        regexstr = '(?<prefix>.*?)(?<numbers>([-]*(\d+[\,]*)+[\.]{0,1}\d*[eEdD]{0,1}[-+]*\d*[i]{0,1})|([-]*(\d+[\,]*)*[\.]{1,1}\d+[eEdD]{0,1}[-+]*\d*[i]{0,1}))(?<suffix>.*)';
+        try
+            result = regexp(rawData(row), regexstr, 'names');
+            numbers = result.numbers;
+            
+            % Detected commas in non-thousand locations.
+            invalidThousandsSeparator = false;
+            if numbers.contains(',')
+                thousandsRegExp = '^\d+?(\,\d{3})*\.{0,1}\d*$';
+                if isempty(regexp(numbers, thousandsRegExp, 'once'))
+                    numbers = NaN;
+                    invalidThousandsSeparator = true;
+                end
+            end
+            % Convert numeric text to numbers.
+            if ~invalidThousandsSeparator
+                numbers = textscan(char(strrep(numbers, ',', '')), '%f');
+                numericData(row, col) = numbers{1};
+                raw{row, col} = numbers{1};
+            end
+        catch
+            raw{row, col} = rawData{row};
+        end
+    end
+end
+
+yr = cell2mat(raw(:, 1));
+month = cell2mat(raw(:, 2));
+NPGO = cell2mat(raw(:, 3));
+
+dn=datenum(yr,month,15);
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.NPGO(i)=NPGO(j);       
+        else
+        end
+    end
+end
+
+% Clear temporary variables
+clearvars filename delimiter startRow formatSpec fileID dataArray ans ...
+    raw col numericData rawData row regexstr result numbers ...
+    invalidThousandsSeparator thousandsRegExp;
 
 %%
 save([filepath 'Data/SCW_master'],'SC');
