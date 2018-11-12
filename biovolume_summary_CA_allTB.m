@@ -1,4 +1,4 @@
-%function [] = biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+function [] = biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 % resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
