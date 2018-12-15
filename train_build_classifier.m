@@ -5,12 +5,12 @@
 manualpath = 'F:\IFCB104\manual\'; % manual annotation file location
 feapath_base = 'F:\IFCB104\features\'; %feature file location, assumes \yyyy\ organization
 maxn = 1000; %maximum number of images per class to include
-minn = 30; %minimum number for inclusion
+minn = 100; %minimum number for inclusion
 class2skip = {'unclassified' 'Alexandrium_doublet' 'Alexandrium_triplet' ...
     'Alexandrium_quad' 'Azadinium' 'Beads' 'Boreadinium' ...
     'Centric<10' 'DinoMix' 'FlagMix' 'Fragilariopsis' 'Helicotheca' ... 
     'Leptocylindrus' 'Lio_Thal' 'Navicula' 'Noctiluca' 'Paralia' 'Torodinium'...
-    'small_misc' 'Ash_dark' 'Ash_glassy'};
+    'small_misc' 'Ash_dark' 'Ash_glassy' 'coccolithophore'};
 
 compile_train_features_user_training(manualpath,feapath_base,maxn,minn,class2skip);
 
@@ -23,7 +23,7 @@ nTrees = 100; %USER how many trees in your forest; choose enough to reach asympt
 make_TreeBaggerClassifier_user_training(result_path, train_filename, result_str, nTrees)
 
 %% If want to remake figures related to classifier output
-classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_25Jul2018');
+classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_12Nov2018');
 
 
 %% Find the volume sampled in milliliters for >1 IFCB files
