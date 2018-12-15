@@ -83,7 +83,7 @@ end
 % Dinoflagellates vs Diatoms vs Classes of interest
 
 n=4;
-maxgap=7;
+maxgap=10;
 
 %select total living biovolume 
 [ ind_cell, ~ ] = get_cell_ind_CA( class2useTB, class2useTB );
@@ -184,7 +184,8 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.015 0.015], [0.05 0.05], [0.07 0.27
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-xax1=datenum('2018-03-06'); xax2=datenum('2018-04-01');     
+%xax1=datenum('2018-01-01'); xax2=datenum('2018-11-10');     
+xax1=datenum('2018-02-25'); xax2=datenum('2018-04-01');     
 fxdino = ydino./(ymat);
 fxdiat = ydiat./(ymat);
 fx_other=(ymat-(ydino+ydiat))./ymat; %fraction not dinos or diatoms
@@ -237,7 +238,7 @@ set(h(15),'FaceColor',col_diat2(4,:),'BarWidth',1); %Pen
 set(h(16),'FaceColor',col_diat2(2,:),'BarWidth',1); %other diat
 set(h(17),'FaceColor',[100 100 100]./255,'BarWidth',1); %other cell derived
 
-datetick('x', 'dd', 'keeplimits')
+datetick('x', 'mmm', 'keeplimits')
 set(gca,'xaxislocation','top','xlim',[xax1 xax2],'ylim',[0 100],'ytick',25:25:100,...
     'fontsize', 14, 'fontname', 'arial','tickdir','out');
 ylabel('% Carbon', 'fontsize', 16, 'fontname', 'arial','fontweight','bold')
@@ -249,20 +250,22 @@ lh=legend('\itAkashiwo sanguinea','\itCeratium',...
 legend boxoff
 set(lh, 'fontsize',14);
 set(lh,'Position',[0.715423465423172 0.513211397125375 0.291666666666666 0.438271604938272]);
+datetick('x', 'mmm', 'keeplimits')
+
 hold on
 
 %total cell-derived biovolume
 subplot(7,1,4);
 % y=smooth(ymat./ymat_ml,1); 
 % idx=isnan(ymat); y(idx)=NaN;
-datetick('x','dd','keeplimits'); 
+datetick('x','mmm','keeplimits'); 
 hold on
 h=plot(xmat,ymat./ymat_ml,'k-',SC.dn,SC.CHL,'*r','linewidth', 1.5,'Markersize',8);
 set(gca,'xgrid','on','xlim',[xax1 xax2],'fontsize',14,'fontname','arial',...
-    'tickdir','out','ylim',[0 35],'ytick',5:10:35)
+    'tickdir','out','ylim',[0 30],'ytick',5:10:30)
 ylabel('Carbon (\mug/L)', 'fontsize', 16, 'fontname', 'arial','fontweight','bold')
 lh=legend('IFCB','weekly','Location','NorthWest'); legend boxoff
-datetick('x','dd','keeplimits'); 
+datetick('x','mmm','keeplimits'); 
 set(lh, 'fontsize',14);
 box on
 hold on
@@ -275,7 +278,7 @@ subplot(7,1,5); %SCW wind
     yax1=-4; yax2=4;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    
-    datetick('x','dd','keeplimits');   
+    datetick('x','mmm','keeplimits');   
     set(gca,'ytick',-3:3:3,'xticklabel',{},'fontsize',14);    
     ylabel('Wind (m/s)','fontsize',16,'fontname','arial','fontweight','bold');  
     hold on  
@@ -285,13 +288,13 @@ ax1=subplot(7,1,6); %SCW ROMS Temp
     Y=[ROMS(1).Zi]';
     C=[ROMS.Ti];
     pcolor(X,Y,C); shading interp;
-    colormap(ax1,parula); caxis([10 14]); datetick('x','dd');  grid on; 
+    colormap(ax1,parula); caxis([10 14]); datetick('x','mmm');  grid on; 
     hold on
     hh=plot(X,[ROMS.Zmax],'w-','linewidth',2);
     hold on     
     set(gca,'XLim',[xax1;xax2],'xticklabel',{},'Ydir','reverse',...
         'ylim',[0 ROMS(1).Zi(end)],'ytick',0:20:40,'fontsize',14,'tickdir','out');
-    datetick('x','dd','keeplimits')        
+    datetick('x','mmm','keeplimits')        
     ylabel('Depth (m)','fontsize',16,'fontweight','bold');
     h=colorbar('Position',[0.745726495726249 0.17929292929293 0.0170940170940171 0.116161616161616]);
     h.FontSize = 14;
@@ -301,7 +304,7 @@ ax1=subplot(7,1,6); %SCW ROMS Temp
     h.TickDirection = 'out';
     lh=legend(hh,'max(dTdz)','Location','NE');
     set(lh, 'fontsize',14);
-    legend boxoff
+%    legend boxoff
     hold on
 
 ax=subplot(7,1,7); %SCW ROMS Sal    
@@ -310,7 +313,7 @@ ax=subplot(7,1,7); %SCW ROMS Sal
     C=[ROMS.Si];
     pcolor(X,Y,C); shading interp;
     colormap(ax,parula);     
-    caxis([33.2 33.6]); datetick('x','dd','keeplimits');  grid on; 
+    caxis([33.2 33.6]); datetick('x','mmm','keeplimits'); grid on; 
     hold on     
     set(gca,'XLim',[xax1;xax2],'Ydir','reverse','ytick',0:20:40,...
         'ylim',[0 ROMS(1).Zi(end)],'fontsize',14,'tickdir','out');
@@ -323,8 +326,7 @@ ax=subplot(7,1,7); %SCW ROMS Sal
     h.Label.FontWeight = 'bold';
     h.TickDirection = 'out';
     hold on
-datetick('x', 'dd', 'keeplimits')
-    
+datetick('x','mmm','keeplimits');    
 
 % set figure parameters
 set(gcf,'color','w');

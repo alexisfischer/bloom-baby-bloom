@@ -102,7 +102,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.04 0.04], [0.12 0.03])
 xax1=datenum('01-Jan-2003');
 xax2=datenum('01-Oct-2018');
 
-subplot(7,1,1);
+subplot(8,1,1);
 anomaly(dino.dn14d,dino.tAnom);
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',16,'xaxislocation','top')
 datetick('x','yy','keeplimits')
@@ -110,7 +110,7 @@ box on
 ylabel({'Dino Chl'},'fontsize',16,'fontweight','bold')
 hold on
 
-subplot(7,1,2);
+subplot(8,1,2);
 anomaly(T.dn14d,T.tAnom);
 datetick('x','yy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -119,22 +119,14 @@ box on
 ylabel({'SST'},'fontsize',16,'fontweight','bold')
 hold on
 
-subplot(7,1,3);
+subplot(8,1,3);
 anomaly(upwell.dn14d,upwell.tAnom);
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
     'fontsize',16,'xticklabel',{})
 box on
 ylabel({'Upwelling'},'fontsize',16,'fontweight','bold')
 
-subplot(7,1,4);
-anomaly(river.dn14d,river.tAnom);
-datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
-    'fontsize',16,'xticklabel',{});
-box on
-ylabel({'River'},'fontsize',16,'fontweight','bold')
-
-subplot(7,1,5);
+subplot(8,1,4);
 anomaly(Zmax.dn14d,Zmax.tAnom);
 datetick('x','yy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -143,16 +135,24 @@ box on
 ylabel({'MLD'},'fontsize',16,'fontweight','bold')
 hold on
 
-% subplot(8,1,6);
-% anomaly(nit.dn14d,nit.tAnom);
-% datetick('x','yy','keeplimits')
-% set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
-%     'fontsize',16,'xticklabel',{});
-% box on
-% ylabel({'Nitrate (uM)'},'fontsize',16,'fontweight','bold')
-% hold on
+subplot(8,1,5);
+anomaly(river.dn14d,river.tAnom);
+datetick('x','yyyy','keeplimits')
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
+    'fontsize',16,'xticklabel',{});
+box on
+ylabel({'River'},'fontsize',16,'fontweight','bold')
 
-subplot(7,1,6);
+subplot(8,1,6);
+anomaly(nit.dn14d,nit.tAnom);
+datetick('x','yy','keeplimits')
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
+    'fontsize',16,'xticklabel',{});
+box on
+ylabel({'Nitrate'},'fontsize',16,'fontweight','bold')
+hold on
+
+subplot(8,1,7);
 anomaly(PDO.dn14d,PDO.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
@@ -160,7 +160,7 @@ set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
 box on
 ylabel({'PDO'},'fontsize',16,'fontweight','bold')
 
-subplot(7,1,7);
+subplot(8,1,8);
 anomaly(NPGO.dn14d,NPGO.tAnom);
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on',...
