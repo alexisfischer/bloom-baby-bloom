@@ -1,11 +1,11 @@
-function [ ] = biovolume_summary_manual(resultpath,out_dir,roibasepath,feapath_base)
+%function [ ] = biovolume_summary_manual(resultpath,out_dir,roibasepath,feapath_base)
 % Gives you a summary file of counts and biovolume from manually classified results
 %  Alexis D. Fischer, University of California - Santa Cruz, April 2018
 
-% resultpath = 'F:\IFCB104\manual\'; %USER
-% out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\'
-% roibasepath = 'F:\IFCB104\data\'; %USER
-% feapath_base = 'F:\IFCB104\features\XXXX\'; %USER
+resultpath = 'F:\IFCB113\manual\'; %USER
+out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\'
+roibasepath = 'F:\IFCB113\data\'; %USER
+feapath_base = 'F:\IFCB113\features\XXXX\'; %USER
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([resultpath 'D*.mat']);
 
@@ -19,7 +19,9 @@ classcount = NaN(length(filelist),numclass);  %initialize output
 classbiovol = classcount;
 ml_analyzed = NaN(length(filelist),1);
 
-for filecount = 1:length(filelist),
+for filecount = 1:length(filelist)
+%for filecount = 96:97
+
     filename = filelist(filecount).name;
     disp(filename)
     hdrname = [roibasepath filesep filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
@@ -32,33 +34,54 @@ for filecount = 1:length(filelist),
     [~,file] = fileparts(filename);
     feastruct = importdata([feapath file '_fea_v2.csv'], ',');
     ind = strmatch('Biovolume', feastruct.colheaders);
-    targets.Biovolume = feastruct.data(:,ind);
+    biovol = feastruct.data(:,ind);
     ind = strmatch('roi_number', feastruct.colheaders);
-    tind = feastruct.data(:,ind);
+    targets = feastruct.data(:,ind);
+    ind = strmatch('EquivDiameter', feastruct.colheaders);
+    eqdiam = feastruct.data(:,ind);
+        
+    % preferentially take manual files over class files
+
+list=nan*[targets,targets,targets];    
+for i=1:length(classlist)
+    for j=1:length(targets)
+        if targets(j) == classlist(i,1)
+            list(j,1)=classlist(i,1);      
+            list(j,2)=classlist(i,2);      
+            list(j,3)=classlist(i,3);      
+            
+        else
+        end
+    end
+end
+
+    count=nan*(list(:,1));
+    for i=1:length(list)
+        if ~isnan(list(i,2))
+            count(i) = list(i,2);  
+        else
+            count(i) = list(i,3);
+        end
+    end
     
-    classlist = classlist(tind,:);
-    if ~isequal(class2use_manual, class2use_manual_first)
-        disp('class2use_manual does not match previous files!!!')
-        %     keyboard
-    end;
-    temp = zeros(1,numclass); %init as zeros for case of subdivide checked but none found, classcount will only be zero if in class_cat, else NaN
-    tempvol = temp;
-    for classnum = 1:numclass,
-        cind = find(classlist(:,2) == classnum | (isnan(classlist(:,2)) & classlist(:,3) == classnum));
-        temp(classnum) = length(cind);
-        tempvol(classnum) = nansum(targets.Biovolume(cind)*micron_factor.^3);
-    end;
+    size(filecount).filename=filename;
+    size(filecount).matdate=matdate(filecount);
+    size(filecount).ml_analyzed=ml_analyzed(filecount);    
+    size(filecount).targets=list(:,1);
+    size(filecount).count=count;
+    size(filecount).eqdiam=eqdiam;
+    size(filecount).biovol=biovol;
     
-    classcount(filecount,:) = temp;
-    classbiovol(filecount,:) = tempvol;  
-    clear class2use_manual class2use_auto class2use_sub* classlist
-end;
+    clear rois count eqdiam biovol;
+end
 
 class2use = class2use_manual_first;
-if ~exist([resultpath 'summary\'], 'dir')
-    mkdir([resultpath 'summary\'])
-end;
 datestr = date; datestr = regexprep(datestr,'-','');
-notes = 'Biovolume in units of cubed micrometers';
-save([out_dir 'count_biovol_manual_' datestr], 'matdate', 'ml_analyzed', 'classcount', 'classbiovol', 'filelist', 'class2use', 'notes')
-end
+note1 = 'Biovolume in units of cubed micrometers';
+note2= 'Equivalent spherical diameter in micrometers';
+save([out_dir 'count_eqdiam_biovol_manual_' datestr], 'matdate', 'size', 'class2use', 'note1', 'note2')
+
+disp('Summary cell count file stored here:')
+disp([resultpath 'count_biovol_manual_' datestr])
+
+%end

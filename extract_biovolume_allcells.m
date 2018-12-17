@@ -53,7 +53,7 @@ for i=1:length(biovol_sum)
 end
 
 eqdiam=eqdiam';
-
+%%
 %Makes a summary folder within the resultpath
 % if ~exist([resultpath 'summary'], 'dir')
 %     mkdir([resultpath 'summary']);
