@@ -58,8 +58,6 @@ yrrange = 2017:2018;
 
 biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
-%extract_biovolume_allcells
-
 % PART 3: Evaluate classifier
 %% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
 yrrange = 2017:2018;

@@ -9,7 +9,7 @@ addpath(genpath('F:\IFCB104\data\2018\')); % add new data to search path
 %addpath(genpath('C:\Users\kudelalab\Documents\GitHub\MATLAB\dipum-toolbox\'));
 %addpath(genpath('C:\Users\kudelalab\Documents\GitHub\ifcb-analysis\'));
 
-% Step 2: Extract blobs
+%% Step 2: Extract blobs
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
