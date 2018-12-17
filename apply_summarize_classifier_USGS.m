@@ -10,14 +10,16 @@ addpath(genpath('F:\IFCB113\data\2018\'));
 start_blob_batch_user_training('F:\IFCB113\data\2016\','F:\IFCB113\blobs\2016\',true)
 start_blob_batch_user_training('F:\IFCB113\data\2017\','F:\IFCB113\blobs\2017\',true)
 start_blob_batch_user_training('F:\IFCB113\data\2018\','F:\IFCB113\blobs\2018\',true)
+addpath(genpath('F:\IFCB113\blobs\2018\'));
 
-% Step 3: Extract features
+%% Step 3: Extract features
 start_feature_batch_user_training('F:\IFCB113\data\2016\',...
    'F:\IFCB113\blobs\2016\','F:\IFCB113\features\2016\',true)
 start_feature_batch_user_training('F:\IFCB113\data\2017\',...
    'F:\IFCB113\blobs\2017\','F:\IFCB113\features\2017\',true)
 start_feature_batch_user_training('F:\IFCB113\data\2018\',...
    'F:\IFCB113\blobs\2018\','F:\IFCB113\features\2018\',true)
+addpath(genpath('F:\IFCB113\features\2018\'));
 
 % Step 4: Apply classifier
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_10Oct2018',...
@@ -26,6 +28,7 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
     'F:\IFCB113\features\2017\','F:\IFCB113\class\class2017_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_10Oct2018',...
     'F:\IFCB113\features\2018\','F:\IFCB113\class\class2018_v1\')
+addpath(genpath('F:\IFCB113\class\2018\'));
 
 %% PART 2: Summarize manual results 
 

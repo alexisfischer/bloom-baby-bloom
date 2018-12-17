@@ -19,8 +19,8 @@ matdate = IFCB_file2date({filelist.newname});
 ml_analyzed = NaN(length(filelist),1);
 
 %Loops over each file and pulls out, the parameters you want
-for filecount = 1:length(filelist) % If you want to do the whole filelist
-    %for filecount= 1:3; %If you want to use it on only a subset, look at the filelist variable and find what numbers your files of interest are
+%for filecount = 1:length(filelist) % If you want to do the whole filelist
+for filecount= 43:44 %If you want to use it on only a subset, look at the filelist variable and find what numbers your files of interest are
     filename = filelist(filecount).newname;
     disp(filename)
     %clear matdate_subset 
@@ -55,9 +55,9 @@ end
 eqdiam=eqdiam';
 
 %Makes a summary folder within the resultpath
-if ~exist([resultpath 'summary'], 'dir')
-    mkdir([resultpath 'summary']);
-end
+% if ~exist([resultpath 'summary'], 'dir')
+%     mkdir([resultpath 'summary']);
+% end
 datestr = date; datestr = regexprep(datestr,'-','');
 notes1 = 'Biovolume in units of cubed micrometers';
 notes2= 'Eqdiam and axis lengths in micrometers';
