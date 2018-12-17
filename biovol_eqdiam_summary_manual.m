@@ -20,7 +20,6 @@ classbiovol = classcount;
 ml_analyzed = NaN(length(filelist),1);
 
 for filecount = 1:length(filelist)
-%for filecount = 96:97
 
     filename = filelist(filecount).name;
     disp(filename)
@@ -68,8 +67,8 @@ for filecount = 1:length(filelist)
     BiEq(filecount).ml_analyzed=ml_analyzed(filecount);    
     BiEq(filecount).targets=list(:,1);
     BiEq(filecount).count=count;
-    BiEq(filecount).eqdiam=eqdiam;
-    BiEq(filecount).biovol=biovol;
+    BiEq(filecount).eqdiam=eqdiam*micron_factor;
+    BiEq(filecount).biovol=biovol*micron_factor.^3;
     
     clear rois count eqdiam biovol;
 end
