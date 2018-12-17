@@ -6,10 +6,10 @@ sort_data_into_folders('F:\IFCB113\data\raw\','F:\IFCB113\data\2018\');
 %add new data to search path
 addpath(genpath('F:\IFCB113\data\2018\'));
 
-%% Step 2: Extract blobs
-start_blob_batch_user_training('F:\IFCB113\data\2016\','F:\IFCB113\blobs\2016\',false)
-start_blob_batch_user_training('F:\IFCB113\data\2017\','F:\IFCB113\blobs\2017\',false)
-start_blob_batch_user_training('F:\IFCB113\data\2018\','F:\IFCB113\blobs\2018\',false)
+% Step 2: Extract blobs
+start_blob_batch_user_training('F:\IFCB113\data\2016\','F:\IFCB113\blobs\2016\',true)
+start_blob_batch_user_training('F:\IFCB113\data\2017\','F:\IFCB113\blobs\2017\',true)
+start_blob_batch_user_training('F:\IFCB113\data\2018\','F:\IFCB113\blobs\2018\',true)
 
 % Step 3: Extract features
 start_feature_batch_user_training('F:\IFCB113\data\2016\',...
@@ -27,26 +27,31 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_10Oct2018',...
     'F:\IFCB113\features\2018\','F:\IFCB113\class\class2018_v1\')
 
-%% PART 2: Summarize results 
-% Step 5: Summarize random forest classification results by class
+%% PART 2: Summarize manual results 
+
+% Step 5: classes
+countcells_manual_user_training('F:\IFCB113\manual\','F:\IFCB113\data\',...
+    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\'); 
+
+% Step 6: biovolume
+biovolume_summary_manual_user_training('F:\IFCB113\manual\',...
+        'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\',...
+        'F:\IFCB113\data\','F:\IFCB113\features\XXXX\');
+
+%% PART 3: Summarize random forest classification results 
+
+% Step 7: classes
 countcells_allTBnew_user_training('F:\IFCB113\class\classxxxx_v1\',...
     'F:\IFCB113\data\',...
     'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\class\',2017:2018)
 
-%countcells_manual_user_training
-
-%% Step 6: Summarize biovolume from Manual files
-% biovolume_summary_manual('F:\IFCB113\manual\',...
-%         'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Data\IFCB_summary\manual\',...
-%         'F:\IFCB113\data\','F:\IFCB113\features\XXXX\');
-
-% Step 7: Summarize biovolume from Classification results
+% Step 8: biovolume
 resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\class\'; %Where you want the summary file to go
 classpath_generic = 'F:\IFCB113\class\classxxxx_v1\';
 feapath_generic = 'F:\IFCB113\features\xxxx\'; %Put in your featurepath byyear
 roibasepath_generic = 'F:\IFCB113\data\xxxx\'; %Where you raw data is
 adhocthresh = 0.5;
-yrrange = 2018;
+yrrange = 2017:2018;
 
 biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 

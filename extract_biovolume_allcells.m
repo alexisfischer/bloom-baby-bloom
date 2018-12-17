@@ -2,9 +2,9 @@
 
 yr = 2018; %specify yr
 
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Exploratorium\Data\IFCB_summary\class\'; %Where you want the summary file to go
-roibasepath = ['F:\IFCB113\Exploratorium\data\' num2str(yr) '\']; %Where you raw data is
-feapath = ['F:\IFCB113\Exploratorium\features\' num2str(yr) '\']; %Put in your featurepath byyear
+resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\'; %Where you want the summary file to go
+roibasepath = ['F:\IFCB113\data\' num2str(yr) '\']; %Where you raw data is
+feapath = ['F:\IFCB113\features\' num2str(yr) '\']; %Put in your featurepath byyear
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath 'D*.csv']);
 

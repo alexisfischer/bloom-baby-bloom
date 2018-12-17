@@ -3,7 +3,7 @@ function [ ] = biovolume_summary_manual(resultpath,out_dir,roibasepath,feapath_b
 %  Alexis D. Fischer, University of California - Santa Cruz, April 2018
 
 % resultpath = 'F:\IFCB104\manual\'; %USER
-% out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\'
+% out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\'
 % roibasepath = 'F:\IFCB104\data\'; %USER
 % feapath_base = 'F:\IFCB104\features\XXXX\'; %USER
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
