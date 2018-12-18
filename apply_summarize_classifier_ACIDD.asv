@@ -35,15 +35,14 @@ biovolume_summary_CA_allTB('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom
 
 %% PART 4: Evaluate classifier
 % Step 9: Summarize counts for thresholds 0.1 to 1 for the specified class
-yrrange = 2017;
+yrrange = 2018;
 classpath_generic = 'F:\IFCB113\ACIDD2017\class\classxxxx_v1\';
 out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\class\';
 in_dir = 'F:\IFCB113\ACIDD2017\data\';
 
-countcells_allTB_class('Umbilicosphaera', yrrange, classpath_generic, out_path, in_dir)
+%countcells_allTB_class('Umbilicosphaera', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Gymnodinium', yrrange, classpath_generic, out_path, in_dir)
-countcells_allTB_class('Ciliates', yrrange, classpath_generic, out_path, in_dir)
-%%
+
 %dinos
 countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
 countcells_allTB_class('Ceratium', yrrange, classpath_generic, out_path, in_dir)
