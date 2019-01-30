@@ -3,8 +3,8 @@
 
 %% PART 1: Apply classifier
 %% Step 1: Sort data into folders
-sort_data_into_folders('F:\IFCB104\data\raw\','F:\IFCB104\data\2018\');
-addpath(genpath('F:\IFCB104\data\2018\')); % add new data to search path
+sort_data_into_folders('F:\IFCB104\data\raw\','F:\IFCB104\data\2019\');
+addpath(genpath('F:\IFCB104\data\2019\')); % add new data to search path
 
 %addpath(genpath('C:\Users\kudelalab\Documents\GitHub\MATLAB\dipum-toolbox\'));
 %addpath(genpath('C:\Users\kudelalab\Documents\GitHub\ifcb-analysis\'));
@@ -38,30 +38,30 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 addpath(genpath('F:\IFCB104\class\2018\'));
 
-%% PART 2: Summarize results SCW
-% Step 5: Summarize random forest classification results by class
-countcells_allTBnew_user_training('F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\',...
-    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',...
-    2017:2018)
+%% PART 2: Summarize manual results 
+% Step 5: classes
+countcells_manual_user_training('F:\IFCB104\manual\','F:\IFCB104\data\',...
+    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\'); 
 
-%% Step 6: Summarize biovolume from Manual files
+% Step 6: biovolume
 biovolume_summary_manual('F:\IFCB104\manual\',...
         'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\',...
         'F:\IFCB104\data\','F:\IFCB104\features\XXXX\');
 
-% Step 7: Summarize biovolume from Classification results
-resultpath = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\'; %Where you want the summary file to go
-classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
-feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
-roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
-adhocthresh = 0.5;
-yrrange = 2018;
+% PART 3: Summarize random forest classification results 
+% Step 7: classes    
+countcells_allTBnew_user_training('F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\data\',...
+    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',...
+    2017:2018)
 
-biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+% Step 8: biovolume
+biovolume_summary_CA_allTB('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',...
+    'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\features\xxxx\',...
+    'F:\IFCB104\data\xxxx\',0.5,2018)
 
 %% PART 3: Evaluate classifier
 % Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
-yrrange = 2016:2018;
+yrrange = 2017:2018;
 classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\';
 in_dir = 'F:\IFCB104\data\';

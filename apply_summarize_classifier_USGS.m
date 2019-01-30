@@ -33,13 +33,20 @@ addpath(genpath('F:\IFCB113\class\2018\'));
 %% PART 2: Summarize manual results 
 
 % Step 5: classes
-countcells_manual_user_training('F:\IFCB113\manual\','F:\IFCB113\data\',...
-    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\'); 
+% countcells_manual_user_training('F:\IFCB113\manual\','F:\IFCB113\data\',...
+%     'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\'); 
 
-% Step 6: biovolume
+% Step 6: biovolume and classes
 biovolume_summary_manual_user_training('F:\IFCB113\manual\',...
         'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\',...
         'F:\IFCB113\data\','F:\IFCB113\features\XXXX\');
+
+%% extract data for a certain date range
+filelist(1:140)=[];
+ml_analyzed(1:140)=[];
+matdate(1:140)=[];
+classbiovol(1:140,:)=[];
+classcount(1:140,:)=[];
 
 %% PART 3: Summarize random forest classification results 
 
