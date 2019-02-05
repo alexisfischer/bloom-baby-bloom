@@ -47,22 +47,72 @@ SC.windM1=nan(size(SC.dn));
 SC.PDO=nan(size(SC.dn));
 SC.NPGO=nan(size(SC.dn));
 
-%% step 1) import hourly river discharge data 1993-2018
+%% step 1) import hourly river discharge data 2003-2018
 % Discharge (cubic feet per second)
 % Date,  dn=datenum(TimeUTC,'yyyy-mm-dd HH:MM');
 filename = [filepath 'Data/PajaroRiver_2003-2018.txt'];
 delimiter = '\t';
 startRow = 33;
-formatSpec = '%*s%*s%{yyyy-MM-dd HH:mm}D%*s%f%*s%*s%*s%[^\n\r]';
+formatSpec = '%*q%*q%q%*q%q%[^\n\r]';
 fileID = fopen(filename,'r');
-dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter,...
-    'MultipleDelimsAsOne', true, 'TextType', 'string', 'EmptyValue', NaN, ...
-    'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
 fclose(fileID);
-dt = dataArray{:, 1};
-Rii = dataArray{:, 2};
+raw = repmat({''},length(dataArray{1}),length(dataArray)-1);
+for col=1:length(dataArray)-1
+    raw(1:length(dataArray{col}),col) = mat2cell(dataArray{col}, ones(length(dataArray{col}), 1));
+end
+numericData = NaN(size(dataArray{1},1),size(dataArray,2));
 
-clearvars filename delimiter startRow formatSpec fileID dataArray ans;
+% Converts text in the input cell array to numbers. Replaced non-numeric text with NaN.
+rawData = dataArray{2};
+for row=1:size(rawData, 1)
+    % Create a regular expression to detect and remove non-numeric prefixes and
+    % suffixes.
+    regexstr = '(?<prefix>.*?)(?<numbers>([-]*(\d+[\,]*)+[\.]{0,1}\d*[eEdD]{0,1}[-+]*\d*[i]{0,1})|([-]*(\d+[\,]*)*[\.]{1,1}\d+[eEdD]{0,1}[-+]*\d*[i]{0,1}))(?<suffix>.*)';
+    try
+        result = regexp(rawData(row), regexstr, 'names');
+        numbers = result.numbers;
+        
+        % Detected commas in non-thousand locations.
+        invalidThousandsSeparator = false;
+        if numbers.contains(',')
+            thousandsRegExp = '^[-/+]*\d+?(\,\d{3})*\.{0,1}\d*$';
+            if isempty(regexp(numbers, thousandsRegExp, 'once'))
+                numbers = NaN;
+                invalidThousandsSeparator = true;
+            end
+        end
+        % Convert numeric text to numbers.
+        if ~invalidThousandsSeparator
+            numbers = textscan(char(strrep(numbers, ',', '')), '%f');
+            numericData(row, 2) = numbers{1};
+            raw{row, 2} = numbers{1};
+        end
+    catch
+        raw{row, 2} = rawData{row};
+    end
+end
+
+% Convert the contents of columns with dates to MATLAB datetimes using the specified date format.
+try
+    dates{1} = datetime(dataArray{1}, 'Format', 'MM/dd/yy HH:mm', 'InputFormat', 'MM/dd/yy HH:mm');
+catch
+    try
+        % Handle dates surrounded by quotes
+        dataArray{1} = cellfun(@(x) x(2:end-1), dataArray{1}, 'UniformOutput', false);
+        dates{1} = datetime(dataArray{1}, 'Format', 'MM/dd/yy HH:mm', 'InputFormat', 'MM/dd/yy HH:mm');
+    catch
+        dates{1} = repmat(datetime([NaN NaN NaN]), size(dataArray{1}));
+    end
+end
+
+dates = dates(:,1);
+rawNumericColumns = raw(:, 2); % Split data into numeric and string columns.
+R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),rawNumericColumns); % Find non-numeric cells
+rawNumericColumns(R) = {NaN}; % Replace non-numeric cells
+dt = dates{:, 1};
+Rii = cell2mat(rawNumericColumns(:, 1));
+dn=datenum(dt);
 
 Ri=pl33tn(Rii); % low pass filter
 [dn, R] = filltimeseriesgaps( datenum(dt), Ri ); % fill time gaps with NaNs
@@ -86,8 +136,11 @@ end
 figure; plot(SC.dn,SC.river,'-b')
 datetick('x','yyyy');
 
-clearvars filename delimiter startRow formatSpec fileID dataArray ans...
-    i j dn dt Rii Ri R;
+clearvars filename delimiter startRow formatSpec fileID dataArray ans ...
+    raw col numericData rawData row regexstr result numbers ...
+    invalidThousandsSeparator thousandsRegExp dates blankDates ...
+    anyBlankDates invalidDates anyInvalidDates rawNumericColumns...
+    i j dn dt Rii Ri R index longRun n b;
 
 %% step 2) import weekly Temperature from SCOOS spreadsheet 2005-2018
 [~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_temp_2005-2018.xlsx','Sheet1');
@@ -211,7 +264,7 @@ figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
 
 clearvars data raw stringVectors R dn nitrate Paust phosphate Pmult Pn silicate STX T i j;
 
-%% step 5) import weekly Chl, nutrients, PN and Alex from SCOOS Website 2008-2018
+%% step 5) import weekly Chl, T, nutrients, PN and Alex from SCOOS Website 2008-2018
 filename = [filepath 'Data/Harmful Algal Blooms_2011-2018.csv'];
 delimiter = ',';
 startRow = 9;
@@ -300,8 +353,9 @@ for i=1:length(SC.dn)
     end
 end
 
- idx=~isnan(SC.CHL);
- figure; plot(SC.dn(idx),SC.CHL(idx)); datetick('x','yyyy');
+ idx=~isnan(SC.T);
+ figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
+
 
 clearvars T Alex CHL DA data dn i j nitrate phosphate ammonium day dinophysis month year Pn R raw silicate idx;
 
@@ -493,9 +547,9 @@ figure; plot(SC.dn(idx),SC.fxDino(idx)); datetick('x','yyyy');
 
 clearvars stringVectors data d dn fxDiat fxDino i j R rai raw;
 
-%% step 8) Import CENCOOS downloadable sensor data
+%% step 8) Import Temp, Chl, Turbidity SCW sensor data from ERDDAP CENCOOS portal
 
-filename = [filepath 'Data/SCW_weatherstation_cencoos/CENCOOS_09-18.csv'];
+filename = [filepath 'Data/SCW_weatherstation_cencoos/sensors_SCW_09-18.csv'];
 delimiter = ',';
 startRow = 3;
 formatSpec = '%s%f%f%f%[^\n\r]';
@@ -534,7 +588,7 @@ for i=1:length(DN)
 end
 
 T=SC.T;
-plfilt(SC.T)
+plfilt(SC.T);
 
 %remove the extra minutes. just keep the day
 d = dateshift(datetime(datestr(DN)),'start','day');
@@ -765,11 +819,11 @@ PDO = cell2mat(raw);
 clearvars filename startRow endRow formatSpec fileID dataArray ans raw...
     col numericData rawData row regexstr result numbers ...
     invalidThousandsSeparator thousandsRegExp R;
-
+%
 yr=PDO(:,1);
 PDO=PDO(:,2:end);
 PDO=PDO(:);
-dn=bsxfun(@(Month,Year) datenum(Year,Month,15),(1:12).',yr(1):yr(end))';
+dn=bsxfun(@(Month,Year) datenum(Year,Month,15),(1:12).',(yr(1):2018))';
 dn=dn(:);
 
 for i=1:length(SC.dn)
@@ -780,6 +834,11 @@ for i=1:length(SC.dn)
         end
     end
 end
+
+figure; plot(SC.dn,SC.PDO,'ok')
+datetick('x','yyyy');
+
+clearvars i j PDO yr;
 
 %% 14) import NPGO
 filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/NPGO.txt';
@@ -834,6 +893,9 @@ month = cell2mat(raw(:, 2));
 NPGO = cell2mat(raw(:, 3));
 
 dn=datenum(yr,month,15);
+
+figure; plot(dn,NPGO,'-b')
+datetick('x','yyyy');
 
 for i=1:length(SC.dn)
     for j=1:length(dn)
