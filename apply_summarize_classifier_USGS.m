@@ -4,7 +4,8 @@
 sort_data_into_folders('F:\IFCB113\data\raw\','F:\IFCB113\data\2018\');
 
 %add new data to search path
-addpath(genpath('F:\IFCB113\data\2018\'));
+addpath(genpath('F:\IFCB113\data\'));
+addpath(genpath('F:\IFCB113\manual\'));
 
 % Step 2: Extract blobs
 start_blob_batch_user_training('F:\IFCB113\data\2016\','F:\IFCB113\blobs\2016\',true)
