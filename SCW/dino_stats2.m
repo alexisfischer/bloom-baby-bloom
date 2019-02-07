@@ -22,7 +22,7 @@ load([filepath 'Data/Climatology_Zmax_S'],'C'); ZmaxS=C;
 load([filepath 'Data/Climatology_MixedLayerDepth'],'C'); MLD=C;
 load([filepath 'Data/Climatology_MixedLayerDepth_S'],'C'); MLDS=C;
 
-%% 2004-2011 partial least squares regression raw data
+%% 2004-2018 partial least squares regression raw data
 %type='Raw';
 type='Anom';
 
@@ -31,18 +31,18 @@ lim2=1;
 %lim1=0;
 %lim2=3;
 
-%yrrange='04-11';
+yrrange='04-11';
 %yrrange='12-19';
-yrrange='04-19';
+%yrrange='04-19';
 
 n=4;
 idx=~isnan(logdino.tAnom);
 y = logdino.tAnom(idx);
 DN = logdino.dn14d(idx);
  i0=find(DN>=datenum('01-Jan-2004'));
-% iend=find(DN>=datenum('01-Jan-2012'));
+ iend=find(DN>=datenum('01-Jan-2012'));
 % i0=find(DN>=datenum('01-Jan-2012'),1);
- iend=find(DN>=datenum('01-Jun-2018'),1);
+% iend=find(DN>=datenum('27-Aug-2018'),1);
 DN=DN(i0:iend); y=y(i0:iend);
 
 X=NaN*ones(length(y),n);
@@ -55,13 +55,14 @@ X=NaN*ones(length(y),n);
 [X(:,6)] = match_dates(PDO.dn14d, PDO.ti9, DN);
 [X(:,7)] = match_dates(NPGO.dn14d, NPGO.tAnom, DN);
 
-top=length(X)-7;
-  X(top:end,7)=-2;
-     top=length(X)-10;
-  X(top:end,5)=-2;
+if yrrange == '12-19' 
+    X(end-16:end,5)=-2;
+elseif yrrange == '04-19' 
+    X(end-16:end,5)=-2;    
+else
+end
  
 [XL,YL,XS,YS,beta,PCTVAR,MSE,stats] = plsregress(X,y,n);
-
 
 % plot component loadings
 figure('Units','inches','Position',[1 1 14 4],'PaperPositionMode','auto');
@@ -99,14 +100,14 @@ print(gcf,'-dtiff','-r600',...
 hold off
 
 %% plot MSE, residuals
-figure('Units','inches','Position',[1 1 3.5 6.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 3.5 5.5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04],[0.11 0.03], [0.24 .06]);
 
 subplot(2,1,1);
 plot(0:n,[0,cumsum(100*PCTVAR(2,:))],'-o','linewidth',2);
 set(gca,'fontsize',14,'xlim',[0 n],'xticklabel',{},'tickdir','out');
 %xlabel('Number of components','fontsize',16,'fontweight','bold');
-ylabel('% Variance Explained in y','fontsize',16,'fontweight','bold');
+ylabel('% Variance Explained in y','fontsize',14,'fontweight','bold');
 hold on
 
 % subplot(2,3,2);
@@ -135,8 +136,8 @@ hold on
 subplot(2,1,2);
 plot(0:n,MSE(2,:),'-o','linewidth',2);
 set(gca,'fontsize',14,'xlim',[0 n],'xtick',0:1:n,'tickdir','out');
-xlabel('Number of Components','fontsize',16,'fontweight','bold');
-ylabel('Estimated MSE','fontsize',16,'fontweight','bold');
+xlabel('Number of Components','fontsize',14,'fontweight','bold');
+ylabel('Estimated MSE','fontsize',14,'fontweight','bold');
 hold on
 % 
 % subplot(3,1,3);

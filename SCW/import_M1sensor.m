@@ -1,26 +1,26 @@
 %% import M1 data for particular years of interest
 filepath='~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
 
-%% M1 1990-2016
+%% M1 1990-2017
 in_dir='http://dods.mbari.org:80/opendap/data/OASISdata/netcdf/dailyAveragedM1.nc?';
 
 depth=ncread([in_dir 'DEPTH_TS_HR[0:1:8]'],'DEPTH_TS_HR'); %degrees_north
 
-time=ncread([in_dir 'TIME_DAY[0:1:9871]'],'TIME_DAY'); %units: days since 1901-01-15 00:00:00
+time=ncread([in_dir 'TIME_DAY[0:1:10215]'],'TIME_DAY'); %units: days since 1901-01-15 00:00:00
 dn=double(time) + datenum('1901-01-15 00:00:00');
    
-U=ncread([in_dir 'WIND_U_COMPONENT_DAY[0:1:9871][0:1:0][0:1:0][0:1:0]'],'WIND_U_COMPONENT_DAY');
+U=ncread([in_dir 'WIND_U_COMPONENT_DAY[0:1:10215][0:1:0][0:1:0][0:1:0]'],'WIND_U_COMPONENT_DAY');
 U=double(squeeze(U)); 
 
-V=ncread([in_dir 'WIND_V_COMPONENT_DAY[0:1:9871][0:1:0][0:1:0][0:1:0]'],'WIND_V_COMPONENT_DAY');
+V=ncread([in_dir 'WIND_V_COMPONENT_DAY[0:1:10215][0:1:0][0:1:0][0:1:0]'],'WIND_V_COMPONENT_DAY');
 V=double(squeeze(V)); 
 
-temp  = ncread([in_dir 'TEMPERATURE_DAY[0:1:9871][0:1:8][0:1:0][0:1:0]'],'TEMPERATURE_DAY');
+temp  = ncread([in_dir 'TEMPERATURE_DAY[0:1:10215][0:1:8][0:1:0][0:1:0]'],'TEMPERATURE_DAY');
 temp((temp==-9999))=NaN; %convert -9999 to NaNs
 temp((temp==0))=NaN; %convert 0 to NaNs
 temp=double(squeeze(temp))';  %invert these time series to make it easier to work with
 
-salt  = ncread([in_dir 'SALINITY_DAY[0:1:9871][0:1:8][0:1:0][0:1:0]'],'SALINITY_DAY');
+salt  = ncread([in_dir 'SALINITY_DAY[0:1:10215][0:1:8][0:1:0][0:1:0]'],'SALINITY_DAY');
 salt((salt==-9999))=NaN; %convert -9999 to NaNs
 salt=(squeeze(salt))';
 
@@ -169,9 +169,144 @@ end
 clearvars b deep depth dn DN i idx in_dir index j longRun n S salt sfilt...
     SS SSS T temp tfilt time TT TTT U V x xx y;
 
+%% IMPORT ROMS data to fill gaps
+% California ROMS Nowcast (3km): 2017 - 31 Dec 2018
+in_dir='http://thredds.cencoos.org/thredds/dodsC/CENCOOS_CA_ROMS_DAS.nc?';
+
+lat=ncread([in_dir 'lat[183]'],'lat'); %degrees_north
+lon=ncread([in_dir 'lon[180]'],'lon'); %degrees_east
+lon=lon-360; %degrees_west
+depth  = ncread([in_dir 'depth[0:1:9]'],'depth'); %200m
+depth(1)=1; %replace 0 with 1
+time=ncread([in_dir 'time[6000:1:9200]'],'time'); %units: hours since 1970-01-01 00:00:00 UTC
+dn=double(time)/24 + datenum('1970-01-01 00:00:00'); %7 hrs ahead of PT
+clearvars time
+
+temp = ncread([in_dir 'temp[6000:1:9200][0:1:9][183][180]'],'temp');
+salt  = ncread([in_dir 'salt[6000:1:9200][0:1:9][183][180]'],'salt');
+ 
+temp((temp==-9999))=NaN; %convert -9999 to NaNs
+temp=(squeeze(temp))';
+salt((salt==-9999))=NaN; %convert -9999 to NaNs
+salt=(squeeze(salt))';
+ 
+% take daily average and fill gaps with NaNs
+for i=1:length(depth)
+    [ DN, T(:,i)] = filltimeseriesgaps( dn, temp(:,i) );
+    [ ~, S(:,i)] = filltimeseriesgaps( dn, salt(:,i) );
+end
+
+%interpolate data unless gaps >3
+TT=NaN(size(T));
+for i=1:length(depth)
+    x=T(:,i);
+    index    = isnan(x);
+    x(index) = interp1(find(~index), x(~index), find(index), 'linear');
+    [b, n]     = RunLength(index);
+    longRun    = RunLength(b & (n > 3), n);
+    x(longRun) = NaN;
+    TT(:,i)=x;
+end
+
+SS=NaN(size(S));
+for i=1:length(depth)
+    x=S(:,i);
+    index    = isnan(x);
+    x(index) = interp1(find(~index), x(~index), find(index), 'linear');
+    [b, n]     = RunLength(index);
+    longRun    = RunLength(b & (n > 3), n);
+    x(longRun) = NaN;
+    SS(:,i)=x;
+end
+
+% smooth data, avoid nans
+TTT=NaN(size(TT));
+idx=~isnan(TT);
+TTT(idx)=smooth(TT(idx),10);
+
+SSS=NaN(size(SS));
+idx=~isnan(SS);
+SSS(idx)=smooth(SS(idx),10);
+
+%put in structure
+for i=1:length(DN)
+    ROMS(i).dn=DN(i);    
+    ROMS(i).lat=lat;
+    ROMS(i).lon=lon; 
+    ROMS(i).Z=double(depth);
+    ROMS(i).T=double(TTT(i,:))';
+    ROMS(i).S=double(SSS(i,:))'; 
+    ROMS(i).Zi =double((1:1:depth(end)))';            
+end
+
+%interpolate (avoiding the NaNs)
+for i=1:length(ROMS)
+     if ~isnan(ROMS(i).T)
+        ROMS(i).Ti = double(spline(ROMS(i).Z,ROMS(i).T,ROMS(i).Zi));
+     else    
+         ROMS(i).Ti=NaN*ones(size(ROMS(1).Zi));                   
+     end
+     
+     if ~isnan(ROMS(i).S)
+        ROMS(i).Si = double(spline(ROMS(i).Z,ROMS(i).S,ROMS(i).Zi));
+     else    
+         ROMS(i).Si=NaN*ones(size(ROMS(1).Zi));  
+     end
+        
+end
+
+clearvars depth salt temp dn i lat lon s t tt tfilt sfilt time T TTT S SSS DN DNN idx ii longRun x TT SS index b n var;
+
+% find where dT from the surface exceeds 0.5ºC, aka the MLD
+deep=max(ROMS(1).Zi);
+
+for i=1:length(ROMS)
+    if ~isnan(ROMS(i).Ti)        
+    for j=1:length(ROMS(i).Ti)
+       ROMS(i).diff(j)=abs(diff([ROMS(i).Ti(1) ROMS(i).Ti(j)]));
+    end
+    end
+end
+
+for i=1:length(ROMS)
+    
+    if ~isnan(ROMS(i).Ti)        
+    ROMS(i).dTdz=abs(diff(ROMS(i).Ti))';   
+    ROMS(i).dTdz=(ROMS(i).dTdz)';  
+    ROMS(i).diff=ROMS(i).diff';    
+        
+    ROMS(i).mld5=ROMS(i).Zi(find(ROMS(i).diff > 0.5,1));
+    ROMS(i).mld5(isempty(ROMS(i).mld5))=deep; %replace with deepest depth if empty    
+    [ROMS(i).maxdTdz,idx]=max(ROMS(i).dTdz);
+    ROMS(i).Zmax=ROMS(i).Zi(idx);   
+    ROMS(i).Tmax=ROMS(i).Ti(idx);    
+
+    else      
+        ROMS(i).diff = NaN*ones(size(ROMS(1).Zi));   
+        ROMS(i).mld5=NaN;
+        ROMS(i).dTdz=NaN*ones(length(ROMS(1).Zi)-1,1); 
+        ROMS(i).maxdTdz=NaN;        
+        ROMS(i).Zmax=NaN;
+        ROMS(i).Tmax=NaN;
+    
+    end
+    
+end
+
+mld5=smooth(medfilt(medfilt(medfilt([ROMS.mld5]))),9);
+maxdTdz=smooth(medfilt(medfilt(medfilt([ROMS.maxdTdz]))),9);
+Zmax=smooth(medfilt(medfilt(medfilt([ROMS.Zmax]))),9);
+Tmax=smooth(medfilt(medfilt(medfilt([ROMS.Tmax]))),9);
+
+for i=1:length(ROMS)
+    ROMS(i).mld5=mld5(i);
+    ROMS(i).maxdTdz=maxdTdz(i);
+    ROMS(i).Zmax=Zmax(i);
+    ROMS(i).Tmax=Tmax(i);
+    
+end 
+
 %% match up with ROMs data
-filepath='~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
-load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD'],'ROMS');
 
 % match up ROMS data with M1 data so don't overlap
 idx = find([ROMS.dn]>=[M1(end).dn],1); %id for where the points overlap
@@ -197,6 +332,5 @@ for i=1:length(dn)
     M1R(i).Tmax=(Tmax(i));    
     M1R(i).mld5=(mld5(i));  
 end
-
 %%
 save([filepath 'Data/M1_TS'],'M1','M1R');

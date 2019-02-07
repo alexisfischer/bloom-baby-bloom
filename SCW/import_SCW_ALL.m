@@ -4,6 +4,8 @@
 filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
 dn=(datenum('01-Jan-2003'):1:datenum('31-Dec-2018'))';
+
+%%
 SC.dn=dn;
 
 % preallocate space
@@ -645,7 +647,7 @@ datetick('x','yyyy');
 
 clearvars data raw R S dn i j M1;
 
-%% step 10) Import ROMS nearest SCW
+%% step 10) Import ROMS nearest SCW (2010-2018)
 load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD_50m'],'ROMS');
 
 dn = [ROMS.dn]';
@@ -678,7 +680,8 @@ for i=1:length(SC.dn)
     end
 end
 
-figure; plot(SC.dn,SC.SSS,'-k')
+idx=~isnan(SC.mld5S);
+figure; plot(SC.dn(idx),SC.mld5S(idx),'-k')
 datetick('x','yyyy');
 
 clearvars data raw R S dn i j M1;
@@ -815,16 +818,18 @@ end
 R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
 raw(R) = {NaN}; % Replace non-numeric cells
 
-PDO = cell2mat(raw);
+PDOraw = cell2mat(raw);
 clearvars filename startRow endRow formatSpec fileID dataArray ans raw...
     col numericData rawData row regexstr result numbers ...
     invalidThousandsSeparator thousandsRegExp R;
-%
-yr=PDO(:,1);
-PDO=PDO(:,2:end);
+
+PDOraw=PDOraw';
+PDOraw=PDOraw(1:end,1:116); %only take through 2018
+yr=PDOraw(1,:);
+PDO=PDOraw(2:end,:);
 PDO=PDO(:);
-dn=bsxfun(@(Month,Year) datenum(Year,Month,15),(1:12).',(yr(1):2018))';
-dn=dn(:);
+dn=bsxfun(@(Year,Month) datenum(Year,Month,15),yr',(1:12));
+dn=sort(dn(:));
 
 for i=1:length(SC.dn)
     for j=1:length(dn)

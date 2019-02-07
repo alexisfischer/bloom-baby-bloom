@@ -2,6 +2,8 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+%%
 year=2018; %USER
 
 %%%% Step 1: Load in data
@@ -184,8 +186,8 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.015 0.015], [0.05 0.05], [0.07 0.27
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-%xax1=datenum('2018-01-01'); xax2=datenum('2018-11-10');     
-xax1=datenum('2018-02-25'); xax2=datenum('2018-04-01');     
+xax1=datenum('2018-01-01'); xax2=datenum('2018-12-31');     
+%xax1=datenum('2018-02-25'); xax2=datenum('2018-04-01');     
 fxdino = ydino./(ymat);
 fxdiat = ydiat./(ymat);
 fx_other=(ymat-(ydino+ydiat))./ymat; %fraction not dinos or diatoms
@@ -253,7 +255,7 @@ set(lh,'Position',[0.715423465423172 0.513211397125375 0.291666666666666 0.43827
 datetick('x', 'mmm', 'keeplimits')
 
 hold on
-
+%%
 %total cell-derived biovolume
 subplot(7,1,4);
 % y=smooth(ymat./ymat_ml,1); 
@@ -333,108 +335,6 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/SCW2018_chl_class_wind_TS.tif']);
 hold off
 
-%% r2 chlorophyll sensor
-
-DN=SC.dn;
-chlM=SC.CHL;
-chlS=SC.CHLsensor;
-chlI=ymat./ymat_ml;
-i0=find(DN>=datenum('01-Jan-2018'),1);
-iend=find(DN>=datenum('01-Oct-2018'),1);
-DN=DN(i0:iend); chlM=chlM(i0:iend); chlS=chlS(i0:iend);
-i0=find(xmat>=datenum('01-Jan-2018'),1);
-iend=find(xmat>=datenum('01-Oct-2018'),1);
-xmat=xmat(i0:iend); chlI=chlI(i0:iend);
-
-idx=~isnan(chlI); chlI=chlI(idx); chlS=chlS(idx);  DN=DN(idx);
-idx=~isnan(chlS); chlI=log(chlI(idx)); chlS=log(chlS(idx));  DN=DN(idx);
-
-x=chlI; y=chlS;
-b1 = x\y;
-yCalc1 = b1*chlI;
-
-X = [ones(length(x),1) x];
-b = X\y;
-yCalc2 = X*b;
-b=b;
-b1=round(b1,2,'significant');
-
-Rsq1 = round(1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2),2,'significant');
-Rsq2 = round(1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2),2,'significant');
-
-figure('Units','inches','Position',[1 1 4 4.5],'PaperPositionMode','auto');
-scatter(x,y)
-hold on
-%ln=plot(x,yCalc1,'-',x,yCalc2,'-');
-
-ln=plot(x,yCalc1,'-')
-legend(ln,['y=' num2str(b1) 'x'],...
-    ['y=' num2str(b(2)) 'x + ' num2str(b(1)) ' (r^2=' num2str(Rsq2) ')'],...    
-    'Location','NorthOutside')
-%,'slope & intercept' num2str(b) ')'])
-legend boxoff
-
-set(gca, 'xlim',[0 3.2],'ylim',[0 3.2],'fontsize',14)
-box on
-xlabel('IFCB calculated')
-ylabel('in situ sensor')
-
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs/logChlorophyll_compare_IFCB_sensor.tif']);
-hold off
-
-%% r2 chlorophyll manual
-
-DN=SC.dn;
-chlM=SC.CHL;
-chlS=SC.CHLsensor;
-chlI=ymat./ymat_ml;
-i0=find(DN>=datenum('01-Jan-2018'),1);
-iend=find(DN>=datenum('01-Oct-2018'),1);
-DN=DN(i0:iend); chlM=chlM(i0:iend); chlS=chlS(i0:iend);
-i0=find(xmat>=datenum('01-Jan-2018'),1);
-iend=find(xmat>=datenum('01-Oct-2018'),1);
-xmat=xmat(i0:iend); chlI=chlI(i0:iend);
-
-idx=~isnan(chlI); chlI=chlI(idx); chlM=chlM(idx);  DN=DN(idx);
-idx=~isnan(chlM); chlI=log(chlI(idx)); chlM=log(chlM(idx));  DN=DN(idx);
-
-x=chlI; y=chlM;
-b1 = x\y;
-yCalc1 = b1*chlI;
-
-X = [ones(length(x),1) x];
-b = X\y;
-yCalc2 = X*b;
-b=b;
-b1=round(b1,5,'significant');
-
-Rsq1 = round(1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2),2,'significant');
-Rsq2 = round(1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2),2,'significant');
-
-figure('Units','inches','Position',[1 1 4 4.5],'PaperPositionMode','auto');
-scatter(x,y)
-hold on
-ln=plot(x,yCalc1,'-');
-%ln=plot(x,yCalc1,'-',x,yCalc2,'-');
-legend(ln,['y=' num2str(b1) 'x'],...
-    ['y=' num2str(b(2)) 'x + ' num2str(b(1)) ' (r^2=' num2str(Rsq2) ')'],...    
-    'Location','NorthOutside')
-%,'slope & intercept' num2str(b) ')'])
-legend boxoff
-
-set(gca, 'xlim',[0 3.2],'ylim',[0 3.2],'fontsize',14)
-box on
-xlabel('IFCB calculated')
-ylabel('manual (fluorometer)')
-
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs/logChlorophyll_compare_IFCB_manual.tif']);
-hold off
-
-%%
 %% 2018 plot fraction biovolume with Chlorophyll
 figure('Units','inches','Position',[1 1 13 11],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.015 0.015], [0.05 0.05], [0.07 0.27]);

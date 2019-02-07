@@ -2,20 +2,14 @@
 % 1) import MBARI M1 CTD Temperature data from 2000 to 2018
 
 filepath='~/Documents/MATLAB/bloom-baby-bloom/SCW/'; %change for whatever year
-
 delimiter = ',';
 startRow = 2;
-formatSpec = '%*q%q%*q%*q%q%q%[^\n\r]'; % Read columns of data as text:
-fileID = fopen([filepath 'Data/M1-46092/PCTD_M1_Tmp_TS.csv'],'r'); % Open the text file.
+formatSpec = '%*q%q%*q%*q%q%q%[^\n\r]';
+fileID = fopen([filepath 'Data/M1-46092/PCTD_M1_Tmp_TS.csv'],'r','n','UTF-8');
+fseek(fileID, 3, 'bof');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
 
-dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter,...
-    'TextType', 'string', 'HeaderLines' ,startRow-1, 'ReturnOnError',...
-    false, 'EndOfLine', '\r\n'); % Read columns of data according to the format.
-
-fclose(fileID); % Close the text file.
-
-% Convert the contents of columns containing numeric text to numbers.
-% Replace non-numeric text with NaN.
 raw = repmat({''},length(dataArray{1}),length(dataArray)-1);
 for col=1:length(dataArray)-1
     raw(1:length(dataArray{col}),col) = mat2cell(dataArray{col}, ones(length(dataArray{col}), 1));
@@ -37,7 +31,7 @@ for col=[2,3]
             % Detected commas in non-thousand locations.
             invalidThousandsSeparator = false;
             if numbers.contains(',')
-                thousandsRegExp = '^\d+?(\,\d{3})*\.{0,1}\d*$';
+                thousandsRegExp = '^[-/+]*\d+?(\,\d{3})*\.{0,1}\d*$';
                 if isempty(regexp(numbers, thousandsRegExp, 'once'))
                     numbers = NaN;
                     invalidThousandsSeparator = true;
@@ -55,37 +49,31 @@ for col=[2,3]
     end
 end
 
-% Convert the contents of columns with dates to MATLAB datetimes using the
-% specified date format.
 try
-    dates{1} = datetime(dataArray{1}, 'Format', 'yyyy-MM-dd HH:mm:ss', 'InputFormat', 'yyyy-MM-dd HH:mm:ss');
+    dates{1} = datetime(dataArray{1}, 'Format', 'MM/dd/yy HH:mm', 'InputFormat', 'MM/dd/yy HH:mm');
 catch
     try
         % Handle dates surrounded by quotes
         dataArray{1} = cellfun(@(x) x(2:end-1), dataArray{1}, 'UniformOutput', false);
-        dates{1} = datetime(dataArray{1}, 'Format', 'yyyy-MM-dd HH:mm:ss', 'InputFormat', 'yyyy-MM-dd HH:mm:ss');
+        dates{1} = datetime(dataArray{1}, 'Format', 'MM/dd/yy HH:mm', 'InputFormat', 'MM/dd/yy HH:mm');
     catch
         dates{1} = repmat(datetime([NaN NaN NaN]), size(dataArray{1}));
     end
 end
 
-dates = dates(:,1);
-
-rawNumericColumns = raw(:, [2,3]); % Split data into numeric and string columns.
-
+rawNumericColumns = raw(:, [2,3]);
 R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),rawNumericColumns); % Find non-numeric cells
 rawNumericColumns(R) = {NaN}; % Replace non-numeric cells
 
-% Allocate imported array to column variable names
-dt = dates{:, 1};
 depth = cell2mat(rawNumericColumns(:, 1));
 T = cell2mat(rawNumericColumns(:, 2));
 
+dates = dates(:,1);
+dt = dates{:, 1};
 d = dateshift(dt, 'start', 'day');
 d.Format = 'dd-MMM-yyyy';
 dn=datenum(d);
 
-% Clear temporary variables
 clearvars filename delimiter startRow formatSpec fileID dataArray ans raw...
     col numericData rawData row regexstr result numbers invalidThousandsSeparator... 
     thousandsRegExp dates blankDates anyBlankDates invalidDates...

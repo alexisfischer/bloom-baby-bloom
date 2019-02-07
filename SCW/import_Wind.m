@@ -262,19 +262,17 @@ w.scw.v = [[w.scw.v]; v(idx:end)];
 clearvars dir DIR dn dates DN spd SPD u v vars yr idx;
 
 %%
-%%%%(step 5) Import monthly data Aug-Oct 2018
-filename = [filepath 'SCW_weatherstation_cencoos/windSC_Aug-Oct2018.txt'];
+%%%%(step 5) Import monthly data Aug2018-Feb 2019
+filename = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/SCW_weatherstation_cencoos/windSC_Aug2018_Feb2019.txt';
 delimiter = ',';
 startRow = 2;
-formatSpec = '%*s%{yyyy-MM-dd HH:mm:ss}D%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%f%*s%*s%*s%f%[^\n\r]';
+formatSpec = '%*s%{yyyy-MM-dd HH:mm:ss}D%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%*s%f%f%*s%*s%*s%*s%[^\n\r]';
 fileID = fopen(filename,'r');
 dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-
 fclose(fileID);
-
 dates = dataArray{:, 1};
-spd = dataArray{:, 2};
-dir = dataArray{:, 3};
+dir = dataArray{:, 2};
+spd = dataArray{:, 3};
 
 dn=datenum(dates);
 
