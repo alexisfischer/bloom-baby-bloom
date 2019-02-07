@@ -27,7 +27,7 @@ nTrees = 100; %USER how many trees in your forest; choose enough to reach asympt
 make_TreeBaggerClassifier_user_training(result_path, train_filename, result_str, nTrees)
 
 %% If want to remake figures related to classifier output
-classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_12Nov2018');
+classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019');
 
 
 %% Find the volume sampled in milliliters for >1 IFCB files
