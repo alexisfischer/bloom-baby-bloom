@@ -231,7 +231,7 @@ for i=1:length(dn)
     ROMS(i).Si=double(Si(i,:))';    
 end
 
-%% find where dT from the surface exceeds 0.5ºC, aka the MLD
+% find where dT from the surface exceeds 0.5ºC, aka the MLD
 deep=max(ROMS(1).Zi);
 
 for i=1:length(ROMS)

@@ -6,12 +6,12 @@ n=14;
 %%
 
 var = SC.PDO; varname = 'PDO'; units = '';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 var = SC.NPGO; varname = 'NPGO'; units = '';
 [C] = extractClimatology(var,dn,filepath,varname,n);
 
-var = (SC.Zmax); varname = 'Zmax'; units = ' (m)';
+var = SC.Zmax; varname = 'Zmax'; units = ' (m)';
 [C] = extractClimatology(var,dn,filepath,varname,n);
 
 var = SC.maxdTdz; varname = 'maxdTdz'; units = ' (^oC/m)';
@@ -34,41 +34,38 @@ var = SC.upwell; varname = 'UpwellingIndex'; units = ' (m^3/s/100m coastline)';
 [C] = extractClimatology(var,dn,filepath,varname,n);
 
 var = SC.silicate; varname = 'Silicate'; units = ' (uM)';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 var = SC.ammonium; varname = 'Ammonium'; units = ' (uM)';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 var = SC.SSS; varname = 'SSS'; units = ' (ppt)';
 [C] = extractClimatology(var,dn,filepath,varname,n);
 
 var = SC.T; varname = 'Temperature'; units = ' (^oC)';
-[C] = extractClimatology(var,dn,filepath,varname,n);
-
-var = SC.SST; varname = 'SST'; units = ' (^oC)';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 var = log(SC.CHL); varname = 'log(Chlorophyll)'; units = ' (mg m^{-3})';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 var = SC.nitrate; varname = 'Nitrate'; units = '(uM)';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 var = log(SC.river); varname = 'Discharge'; units = ' (ft^3 s^{-1})';
 [C] = extractClimatology(var,dn,filepath,varname,n);
 
 idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; %make sure CHL and DINO have same points
 var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate Chl'; units = ' (mg m^{-3})';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 var = SC.fxDino.*SC.CHL; varname = 'Dinoflagellate CHL'; units = ' (mg m^{-3})';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 var = SC.wind; varname = 'Windspeed_SC'; units = ' (m/s)';
 [C] = extractClimatology(var,dn,filepath,varname,n);
 
 var = SC.wind42; varname = 'Windspeed_46042'; units = ' (m/s)';
-[C] = extractClimatology(var,dn,filepath,varname,n);
+[C] = extractClimatology_incompletedata(var,dn,filepath,varname,n);
 
 %% rename structures
 load([filepath 'Data/Climatology_Dinoflagellate log(CHL)'],'C'); dino=C;
@@ -76,6 +73,7 @@ load([filepath 'Data/Climatology_maxdTdz'],'C'); maxdTdz=C;
 load([filepath 'Data/Climatology_UpwellingIndex'],'C'); upwell=C;
 load([filepath 'Data/Climatology_Zmax'],'C'); Zmax=C;
 load([filepath 'Data/Climatology_Zmax_S'],'C'); ZmaxS=C;
+load([filepath 'Data/Climatology_Windspeed_SC'],'C'); windS=C;
 
 load([filepath 'Data/Climatology_NPGO'],'C'); NPGO=C;
 load([filepath 'Data/Climatology_PDO'],'C'); PDO=C;
@@ -90,7 +88,6 @@ load([filepath 'Data/Climatology_Dinoflagellate log(CHL)'],'C'); dino=C;
 load([filepath 'Data/Climatology_Discharge'],'C'); river=C;
 load([filepath 'Data/Climatology_Temperature'],'C'); T=C;
 load([filepath 'Data/Climatology_Windspeed_SC'],'C'); windSC=C;
-%load([filepath 'Data/Climatology_Windspeed_46042'],'C'); wind46042=C;
 
 %% Plot Climatology drought analysis
 
