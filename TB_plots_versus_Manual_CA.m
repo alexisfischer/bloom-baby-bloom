@@ -21,7 +21,7 @@ class2do_string = 'Pseudo-nitzschia'; ymax=30;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
 load([filepath 'Data/IFCB_summary/Coeff_' class2do_string]);
-load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_05Oct2018']); 
+load([filepath 'Data/IFCB_summary/manual/count_biovol_manual_05Feb2019']); 
 load([filepath 'Data/IFCB_summary/class/summary_allTB_bythre_' class2do_string]);
 load([filepath 'Data/SCW_master'],'SC');
 
