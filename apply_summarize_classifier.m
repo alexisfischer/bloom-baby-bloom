@@ -33,10 +33,12 @@ addpath(genpath([ifcbdir 'features\2019\']));
 % Step 4: Apply classifier
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
     [ifcbdir 'features\2019\'],[ifcbdir 'class\class2019_v1\']);
+addpath(genpath([ifcbdir 'class\2019\']));
 
 %%%% PART 2: Summarize manual results 
 %% Step 5: classes
-countcells_manual_user_training([ifcbdir 'manual\'],[ifcbdir 'data\2019\'],[summarydir 'manual\']); 
+countcells_manual_user_training([ifcbdir 'manual\'],...
+    [ifcbdir 'data\2019\'],[summarydir 'manual\']); 
 
 % Step 6: biovolume and classes
 biovolume_summary_manual_user_training([ifcbdir 'manual\'],[summarydir 'manual\'],...
@@ -50,10 +52,10 @@ biovolume_summary_manual_user_training([ifcbdir 'manual\'],[summarydir 'manual\'
 % biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
 %     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018); %ACIDD
 biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
-    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2018);
+    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2019);
 
 countcells_allTBnew_user_training([ifcbdir 'class\classXXXX_v1\'],...
-    [ifcbdir 'data\'],[summarydir 'class\'],2018)
+    [ifcbdir 'data\'],[summarydir 'class\'],2019);
 
 %%%% PART 3: Assign threshold scores to specific classes
 %% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
