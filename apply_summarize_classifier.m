@@ -1,89 +1,66 @@
 %% Applying and evaluating a classifier
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-%% PART 1: Apply classifier
+% modify according to dataset
+%ifcbdir='F:\IFCB104\'; %SCW
+%ifcbdir='F:\IFCB113\'; %USGS cruises
+%ifcbdir='F:\IFCB113\Exploratorium\'; %Exploratorium
+%ifcbdir='F:\IFCB113\ACIDD2017\'; %ACIDD
+ifcbdir='F:\IFCB117\'; %New Zealand
+
+%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
+%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\'; %USGS cruises
+%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Exploratorium\Data\IFCB_summary\'; %Exploratorium
+%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\'; %ACIDD
+summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\NZ\Data\IFCB_summary\'; %New Zealand
+
+%%%% PART 1: Apply classifier
 %% Step 1: Sort data into folders
-sort_data_into_folders('F:\IFCB104\data\raw\','F:\IFCB104\data\2019\');
-addpath(genpath('F:\IFCB104\data\2019\')); % add new data to search path
+sort_data_into_folders([ifcbdir 'data\raw\'],[ifcbdir 'data\2019\']);
+addpath(genpath([ifcbdir 'data\2019\']));
 
 %addpath(genpath('C:\Users\kudelalab\Documents\GitHub\MATLAB\dipum-toolbox\'));
 %addpath(genpath('C:\Users\kudelalab\Documents\GitHub\ifcb-analysis\'));
 
 %% Step 2: Extract blobs
-%start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
-%start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
-%start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
-%start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
-start_blob_batch_user_training('F:\IFCB104\data\2019\','F:\IFCB104\blobs\2019\',true)
-addpath(genpath('F:\IFCB104\blobs\2019\'));
+start_blob_batch_user_training([ifcbdir 'data\2019\'],[ifcbdir 'blobs\2019\'],true)
+addpath(genpath([ifcbdir 'blobs\2019\']));
 
 % Step 3: Extract features
-% start_feature_batch_user_training('F:\IFCB104\data\2015\',...
-%     'F:\IFCB104\blobs\2015\','F:\IFCB104\features\2015\',true)
-%  start_feature_batch_user_training('F:\IFCB104\data\2016\',...
-%      'F:\IFCB104\blobs\2016\','F:\IFCB104\features\2016\',true)
-%  start_feature_batch_user_training('F:\IFCB104\data\2017\',...
-%      'F:\IFCB104\blobs\2017\','F:\IFCB104\features\2017\',true)
-% start_feature_batch_user_training('F:\IFCB104\data\2018\',...
-%    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
-start_feature_batch_user_training('F:\IFCB104\data\2019\',...
-    'F:\IFCB104\blobs\2019\','F:\IFCB104\features\2019\',true)
-addpath(genpath('F:\IFCB104\features\2019\'));
+start_feature_batch_user_training([ifcbdir 'data\2019\'],[ifcbdir 'blobs\2019\'],[ifcbdir 'features\2019\'],true)
+addpath(genpath([ifcbdir 'features\2019\']));
 
 % Step 4: Apply classifier
-%  start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-%      'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
-%  start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-%      'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
-%  start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-%      'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-%     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-    'F:\IFCB104\features\2019\','F:\IFCB104\class\class2019_v1\')
+    [ifcbdir 'features\2019\'],[ifcbdir 'class\class2019_v1\']);
 
-%% PART 2: Summarize manual results 
-% Step 5: classes
-countcells_manual_user_training('F:\IFCB104\manual\','F:\IFCB104\data\',...
-    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\'); 
+%%%% PART 2: Summarize manual results 
+%% Step 5: classes
+countcells_manual_user_training([ifcbdir 'manual\'],[ifcbdir 'data\2019\'],[summarydir 'manual\']); 
 
 % Step 6: biovolume and classes
-biovolume_summary_manual_user_training('F:\IFCB104\manual\',...
-        'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\',...
-        'F:\IFCB104\data\','F:\IFCB104\features\XXXX\');
+biovolume_summary_manual_user_training([ifcbdir 'manual\'],[summarydir 'manual\'],...
+    [ifcbdir 'data\2019\'],[ifcbdir 'features\XXXX\']);
 
 %old
-% biovolume_summary_manual('F:\IFCB104\manual\',...
-%         'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\',...
-%         'F:\IFCB104\data\','F:\IFCB104\features\XXXX\');
+% biovolume_summary_manual([ifcbdir 'manual\'],[summarydir 'manual\'],[ifcbdir 'data\2019\'],[ifcbdir 'features\XXXX\']);
 
 %% PART 3: Summarize random forest classification results 
 % Step 7: classes    
+% biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
+%     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018); %ACIDD
+biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
+    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2018);
 
-biovolume_summary_CA_allTB('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',...
-    'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\features\xxxx\',...
-    'F:\IFCB104\data\xxxx\',0.5,2017)
+countcells_allTBnew_user_training([ifcbdir 'class\classXXXX_v1\'],...
+    [ifcbdir 'data\'],[summarydir 'class\'],2018)
 
-countcells_allTBnew_user_training('F:\IFCB104\class\classXXXX_v1\','F:\IFCB104\data\',...
-    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',2017)
-
-
-%%
-countcells_allTBnew_user_training('F:\IFCB104\class\classXXXX_v1\','F:\IFCB104\data\',...
-    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',2018)
-
-% Step 8: biovolume
-
-biovolume_summary_CA_allTB('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\',...
-    'F:\IFCB104\class\classxxxx_v1\','F:\IFCB104\features\xxxx\',...
-    'F:\IFCB104\data\xxxx\',0.5,2018)
-
-%% PART 3: Evaluate classifier
-% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
+%%%% PART 3: Assign threshold scores to specific classes
+%% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class
 yrrange = 2017:2018;
-classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
-out_path = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\';
-in_dir = 'F:\IFCB104\data\';
+classpath_generic = [indir 'class\classxxxx_v1\'];
+out_path = [summarydir 'class\'];
+in_dir = [indir 'data\'];
 
 %dinos
 %countcells_allTB_class('Akashiwo', yrrange, classpath_generic, out_path, in_dir)
@@ -111,3 +88,9 @@ countcells_allTB_class('Thalassiosira', yrrange, classpath_generic, out_path, in
 
 countcells_allTB_class('Umbilicosphaera', yrrange, classpath_generic, out_path, in_dir)
 
+%% extract data for a certain date range
+filelist(1:140)=[];
+ml_analyzed(1:140)=[];
+matdate(1:140)=[];
+classbiovol(1:140,:)=[];
+classcount(1:140,:)=[];
