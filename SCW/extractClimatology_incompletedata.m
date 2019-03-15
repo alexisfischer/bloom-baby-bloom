@@ -42,7 +42,7 @@ idx=find(dn14d >= DN(1),1);
 dn14d=dn14d(idx:end);
 t14d=t14d(idx:end);
 
-figure; plot(dn14d,t14d,'*r');
+%figure; plot(dn14d,t14d,'-r');
 
 %% (2) Grid the time series at 14day intervals using Stineman (1980) interpolation
 %ti=spline(DN,T,dn14d); ti=ti';
@@ -51,7 +51,7 @@ ti=stineman(DN,T,dn14d); ti=ti';
 ti(end)=NaN;
 i0=find(isnan(ti)); %find NaNs
 
-figure; plot(dn14d,t14d,'-b',dn14d,ti,'-r');
+%figure; plot(dn14d,t14d,'-b',dn14d,ti,'-r');
 
 %% (3) Smooth the gridded series with a moving average 
 ti37 =smooth(ti,37); ti37(i0) = NaN;

@@ -55,7 +55,7 @@ ti=stineman(DN,T,dn7d); ti=ti';
 ti(end)=NaN;
 i0=find(isnan(ti)); %find NaNs
 
-%figure; plot(dn7d,t7d,'-b',dn7d,ti,'-r');
+figure; plot(dn7d,t7d,'-b',dn7d,ti,'-r');
 
 %% (3) Smooth the gridded series with a moving average 
 ti37 =smooth(ti,37); ti37(i0) = NaN;
