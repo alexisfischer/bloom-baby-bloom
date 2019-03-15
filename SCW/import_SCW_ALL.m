@@ -2,6 +2,7 @@
 % T, SSS, Chl, nit, amm, urea, ammon, phos, sil, DA, STX, RAI
 
 filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/';
+load([filepath 'Data/SCW_master'],'SC');
 
 dn=(datenum('01-Jan-2003'):1:datenum('31-Dec-2018'))';
 
@@ -42,7 +43,11 @@ SC.mld5S=nan(size(SC.dn));
 
 SC.upwell=nan(size(SC.dn));
 SC.river=nan(size(SC.dn));
+
 SC.wind=nan(size(SC.dn));
+SC.winddir=nan(size(SC.dn));
+SC.windU=nan(size(SC.dn));
+SC.windV=nan(size(SC.dn));
 SC.wind42=nan(size(SC.dn));
 SC.windM1=nan(size(SC.dn));
 
@@ -589,9 +594,6 @@ for i=1:length(DN)
     end       
 end
 
-T=SC.T;
-plfilt(SC.T);
-
 %remove the extra minutes. just keep the day
 d = dateshift(datetime(datestr(DN)),'start','day');
 d.Format = 'dd-MMM-yyyy';
@@ -608,10 +610,20 @@ for i=1:length(SC.dn)
     end
 end
 
- idx=~isnan(SC.CHL);
+idx=~isnan(SC.T);
+Ti=interp1([SC.dn(idx)],[SC.T(idx)],[SC.dn]);
 
- figure; plot(SC.dn(idx),SC.CHL(idx),SC.dn,SC.CHLsensor); datetick('x','yyyy');
- 
+for i=1:length(SC.Tsensor)
+   if  isnan(SC.Tsensor(i))
+        SC.Tsensor(i) = Ti(i);
+    else
+    end
+end
+SC.Tsensor=smooth(SC.Tsensor,8);
+SC.Tsensor(1:5)=NaN;
+
+ figure; plot(SC.dn(idx),SC.T(idx),SC.dn,SC.Tsensor); datetick('x','yyyy');
+
 clearvars CHL d dn DN i mass_concentration_of_chlorophyll_in_sea_water sea_water_temperature T T_F time TUR turbidity j;
 
 %% step 9) Import M1 sensor: MLD, dTdz, Tmax, and Zmax
@@ -722,7 +734,10 @@ clearvars filename delimiter startRow formatSpec upwell dn fileID dataArray ans 
 
 %% 12) Import wind
 load([filepath 'Data/Wind_MB'],'w');
-[dn,spd,~] = ts_aggregation(w.scw.dn,w.scw.spd,1,'day',@mean);
+[~,spd,~] = ts_aggregation(w.scw.dn,w.scw.spd,1,'day',@mean);
+[~,dir,~] = ts_aggregation(w.scw.dn,w.scw.dir,1,'day',@mean);
+[~,U,~] = ts_aggregation(w.scw.dn,w.scw.u,1,'day',@mean);
+[dn,V,~] = ts_aggregation(w.scw.dn,w.scw.v,1,'day',@mean);
 d = dateshift(datetime(datestr(dn)),'start','day'); %remove the extra minutes. just keep the day
 d.Format = 'dd-MMM-yyyy';
 dn=datenum(d);
@@ -731,6 +746,9 @@ for i=1:length(SC.dn)
     for j=1:length(dn)
         if dn(j) == SC.dn(i)
             SC.wind(i)=spd(j);       
+            SC.winddir(i)=dir(j);    
+            SC.windU(i)=U(j);       
+            SC.windV(i)=V(j);       
         else
         end
     end

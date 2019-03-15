@@ -38,11 +38,13 @@ volC=volC./1000;
 % Dinoflagellates vs Diatoms vs Classes of interest
 
 % HIGH RESOLUTION
-n=14;
-maxgap=7;
 
-%n=10;
-%maxgap=10;
+% using this for full 2018
+% n=10;
+% maxgap=10;
+
+n=4;
+maxgap=8;
 
 %select total living biovolume 
 [ ind_cell, ~ ] = get_cell_ind_CA( class2useTB, class2useTB );
@@ -70,6 +72,7 @@ for i=1:length(BIO)
     [BIO(i).car_i] = interp1babygap(BIO(i).car,maxgap);
 end
 
+% % can comment
 % for i=1:length(BIO)
 %     [BIO(i).bio_i] = smooth(BIO(i).bio_i,3);
 %     [BIO(i).car_i] = smooth(BIO(i).car_i,3);
@@ -82,6 +85,7 @@ for i=1:length(ydino)
     [ymat_ml] = interp1babygap(ymat_ml,maxgap);
 end
 
+% % can comment
 % for i=1:length(ydino)
 %     [ydino] = smooth(ydino,2);
 %     [ydiat] = smooth(ydiat,2);
@@ -89,7 +93,13 @@ end
 %     [ymat_ml] = smooth(ymat_ml,2);
 % end
 
-% Spring Akashiwo bloom 
+for i=1:length(class2useTB)
+    BIO(i).class = class2useTB(i);
+    [~,BIO(i).bio,~] = ts_aggregation(mdateTB,volB(:,i),12,'hour',@mean);
+end
+
+
+%% Spring Akashiwo bloom 
 figure('Units','inches','Position',[1 1 13 11],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.015 0.015], [0.05 0.05], [0.07 0.27]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
@@ -183,10 +193,10 @@ box on
 hold on
 
 subplot(7,1,5); %SCW wind
-%     [U,~]=plfilt(w.scw.u, w.scw.dn);
-%     [V,DN]=plfilt(w.scw.v, w.scw.dn);
-%     [~,u,~] = ts_aggregation(DN,U,4,'hour',@mean);
-%     [time,v,~] = ts_aggregation(DN,V,4,'hour',@mean);
+    [U,~]=plfilt(w.scw.u, w.scw.dn);
+    [V,DN]=plfilt(w.scw.v, w.scw.dn);
+    [~,u,~] = ts_aggregation(DN,U,4,'hour',@mean);
+    [time,v,~] = ts_aggregation(DN,V,4,'hour',@mean);
     yax1=-4; yax2=4;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1 xax2])    
@@ -216,20 +226,21 @@ ax1=subplot(7,1,6); %SCW ROMS Temp
     h.TickDirection = 'out';
     lh=legend(hh,'MLD','Location','NW');
     set(lh, 'fontsize',14);
-  legend boxoff
-    hold on
+  legend boxoff    
 
-ax=subplot(7,1,7); %SCW ROMS Sal    
+ax2=subplot(7,1,7); %SCW ROMS Sal    
     X=[ROMS.dn]';
     Y=[ROMS(1).Zi]';
     C=[ROMS.Si];
     pcolor(X,Y,C); shading interp;
-    colormap(ax,parula);     
-    caxis([33.2 33.7]);  grid on; 
+    colormap(ax2,parula);     
+    caxis([33.2 33.7]); 
     hold on     
-    set(gca,'XLim',[xax1;xax2],'xtick',xtick,'XTickLabel',datestr(xtick,'dd-mmm'),...
-        'Ydir','reverse','ytick',0:20:40,...
-        'ylim',[0 ROMS(1).Zi(end)],'fontsize',14,'tickdir','out');
+    set(gca,'xaxislocation','bottom','XLim',[xax1;xax2],...
+        'ylim',[0 50],'xtick',xtick,...
+        'XTickLabel',{},'Ydir','reverse','ytick',0:20:50,...
+        'fontsize',14,'tickdir','out');
+    hold on
     ylabel('Depth (m)','fontsize',16,'fontweight','bold');
     h=colorbar('Position',[0.745726495726247 0.0505050505050505 0.0170940170940171 0.11489898989899]);
     h.Label.String = 'S (g/kg)';
@@ -238,8 +249,9 @@ ax=subplot(7,1,7); %SCW ROMS Sal
     h.Label.FontWeight = 'bold';
     h.TickDirection = 'out';
     hold on
-
-% set figure parameters
+set(gca,'TickDir','out')
+    
+    % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/Akashiwo_Spring2018_SCW.tif']);
 hold off

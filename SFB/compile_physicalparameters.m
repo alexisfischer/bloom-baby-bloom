@@ -1,10 +1,6 @@
-function [phys,s] = compile_physicalparameters(parameters)
+function [phys,s] = compile_physicalparameters(filepath,phys)
 
-%parameters= 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\sfb_raw.csv';
-
-[phys]=loadSFBparameters(parameters);
-
-%% sort data by survey dates
+% sort data by survey dates
 s(1).a=find([phys.dn]==datenum('31-Jul-2017'));
 s(2).a=find([phys.dn]==datenum('22-Aug-2017'));
 s(3).a=find([phys.dn]==datenum('30-Aug-2017'));
@@ -41,7 +37,7 @@ for i=1:length(s)
 end
 s=rmfield(s,'a');
 
-save('C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\physical_param','phys','s');
+save([filepath 'Data/physical_param'],'phys','s');
 
 end
 
