@@ -13,8 +13,9 @@ addpath(genpath('F:\IFCB104\data\2019\')); % add new data to search path
 %start_blob_batch_user_training('F:\IFCB104\data\2015\','F:\IFCB104\blobs\2015\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2016\','F:\IFCB104\blobs\2016\',true)
 %start_blob_batch_user_training('F:\IFCB104\data\2017\','F:\IFCB104\blobs\2017\',true)
-start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
-addpath(genpath('F:\IFCB104\blobs\2018\'));
+%start_blob_batch_user_training('F:\IFCB104\data\2018\','F:\IFCB104\blobs\2018\',true)
+start_blob_batch_user_training('F:\IFCB104\data\2019\','F:\IFCB104\blobs\2019\',true)
+addpath(genpath('F:\IFCB104\blobs\2019\'));
 
 % Step 3: Extract features
 % start_feature_batch_user_training('F:\IFCB104\data\2015\',...
@@ -23,19 +24,23 @@ addpath(genpath('F:\IFCB104\blobs\2018\'));
 %      'F:\IFCB104\blobs\2016\','F:\IFCB104\features\2016\',true)
 %  start_feature_batch_user_training('F:\IFCB104\data\2017\',...
 %      'F:\IFCB104\blobs\2017\','F:\IFCB104\features\2017\',true)
-start_feature_batch_user_training('F:\IFCB104\data\2018\',...
-   'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
-addpath(genpath('F:\IFCB104\features\2018\'));
+% start_feature_batch_user_training('F:\IFCB104\data\2018\',...
+%    'F:\IFCB104\blobs\2018\','F:\IFCB104\features\2018\',true)
+start_feature_batch_user_training('F:\IFCB104\data\2019\',...
+    'F:\IFCB104\blobs\2019\','F:\IFCB104\features\2019\',true)
+addpath(genpath('F:\IFCB104\features\2019\'));
 
-%% Step 4: Apply classifier
- start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-     'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
- start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-     'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
- start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-     'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
+% Step 4: Apply classifier
+%  start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
+%      'F:\IFCB104\features\2015\','F:\IFCB104\class\class2015_v1\')
+%  start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
+%      'F:\IFCB104\features\2016\','F:\IFCB104\class\class2016_v1\')
+%  start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
+%      'F:\IFCB104\features\2017\','F:\IFCB104\class\class2017_v1\')
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
+%     'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
 start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_05Feb2019',...
-    'F:\IFCB104\features\2018\','F:\IFCB104\class\class2018_v1\')
+    'F:\IFCB104\features\2019\','F:\IFCB104\class\class2019_v1\')
 
 %% PART 2: Summarize manual results 
 % Step 5: classes
