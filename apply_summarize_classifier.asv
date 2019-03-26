@@ -47,9 +47,19 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 %addpath(genpath([ifcbdir 'manual\']));
 countcells_manual_user_training([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
+%%
 % Step 6: biovolume and classes
-biovolume_summary_manual_user_training([ifcbdir 'manual\'],...
-    [ifcbdir 'data\'],[ifcbdir 'features\XXXX\'],[summarydir 'manual\']);
+biovolume_summary_manual_user_training([ifcbdir 'manual\'],[summarydir 'manual\'],...
+    [ifcbdir 'data\2018\'],[ifcbdir 'features\XXXX\']);
+
+manualpath, datapath, feapath, summary_dir)
+
+
+manualpath = 'F:\IFCB104\manual\'; %USER manual file location
+datapath = 'F:\IFCB104\data\'; %USER where to access data (hdr files) (url for web services, full path for local)
+feapath = 'F:\IFCB104\features\2018\'; %USER
+summary_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\'; %where summary file goes
+
 
 %old
 %biovolume_summary_manual([ifcbdir 'manual\'],[summarydir 'manual\'],[ifcbdir 'data\2019\'],[ifcbdir 'features\XXXX\']);
