@@ -13,8 +13,8 @@ load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB2018'],...
 [ cellC ] = biovol2carbon(classbiovolTB, ind_diatom ); 
 
 %convert from per cell to per mL
-volC=zeros(size([cellC]));
-volB=zeros(size([cellC]));
+volC=zeros(size(cellC));
+volB=zeros(size(cellC));
 
 for i=1:length(cellC)
     volC(i,:)=cellC(i,:)./ml_analyzedTB(i);
@@ -28,49 +28,42 @@ volC=volC./1000;
 [ ind_cell, ~ ] = get_cell_ind_CA( class2useTB, class2useTB );
 [~, ymat ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_cell),2));
 [xmat, ymat_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
+ymat(ymat==Inf)=NaN;
 
 %%% Step 4: select correct 2018 time period for all data
-DN=SC.dn; extract=SC.CHL; fluor=SC.CHLsensor; carbon=ymat./ymat_ml;
-i0=find(DN>=datenum('01-Jan-2018'),1);
-iend=find(DN>=datenum('17-Oct-2018'),1);
-DN=DN(i0:iend); extract=extract(i0:iend); fluor=fluor(i0:iend);
-
-i0=find(xmat>=datenum('01-Jan-2018'),1);
-iend=find(xmat>=datenum('17-Oct-2018'),1);
-xmat=xmat(i0:iend); carbon=carbon(i0:iend);
-
-% remove nans and Inf from IFCB data
-idx=~isnan(carbon); carbon=carbon(idx); fluor=fluor(idx); extract=extract(idx);  DN=DN(idx); 
-idx=~(carbon==Inf); carbon=carbon(idx); fluor=fluor(idx); extract=extract(idx); DN=DN(idx); 
+[idx]=~isnan(ymat); carbon=ymat(idx)./ymat_ml(idx); xmat=xmat(idx);
+[idx]=~isnan(SC.CHLsensor); fluor=SC.CHLsensor(idx); dnf=SC.dn(idx);
+[idx]=~isnan(SC.CHL); extract=SC.CHL(idx); dne=SC.dn(idx);
 
 clearvars ind_cell ind_diatom class2useTB classcountTB classbiovolTB ...
-    ml_analyzedTB mdateTB filelistTB volC volB cellC i xmat ymat ymat_ml...
+    ml_analyzedTB mdateTB filelistTB volC volB cellC i ymat ymat_ml...
     iend i0 idx;
 
 %% r2 chlorophyll fluorometer
+[~,ia,ib]=intersect(dnf,xmat); y=log(fluor(ia)); x=log(carbon(ib));
 
-%remove nans from fluorometer data
-idx=~isnan(fluor); x=log(carbon(idx)); y=log(fluor(idx));
-
-b1 = x\y; %least-squares regression
+b1 = round(x\y,2,'significant');
 yCalc1 = b1*x;
-b1=round(b1,2,'significant');
 
-Rsq1 = 1-sum((y - yCalc1).^2)/sum((y - mean(y)).^2);
+X = [ones(length(x),1) x];
+b2 = round(X\y,2,'significant');
+yCalc2 = X*b2;
+
+Rsq1 = round(1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2),2,'significant')
+Rsq2 = round(1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2),2,'significant')
 
 figure('Units','inches','Position',[1 1 4 4.5],'PaperPositionMode','auto');
 scatter(x,y,20,'linewidth',2)
+hold on 
+%l1=plot(x,yCalc1,'linewidth',1.5);
 hold on
-%ln=plot(x,yCalc1,'-',x,yCalc2,'-');
+l2=plot(x,yCalc2,'--','linewidth',1.5);
 
-ln=plot(x,yCalc1,'-','linewidth',2);
-legend(ln,['y=' num2str(b1) 'x'],'Location','SouthEast'); legend boxoff;
-
-set(gca,'xlim',[0 3.2],'xtick',0:1:3,'ylim',[0 3.2],'ytick',0:1:3,...
-    'fontsize',14,'tickdir','out');
-box on
-xlabel('Carbon (IFCB)')
-ylabel('Chlorophyll fluorescence')
+legend(l2,['y=' num2str(b2(1)) '+' num2str(b2(2)) ' (R^2=' num2str(Rsq2) ')'],'Location','NorthOutside'); legend boxoff
+xlabel('log Carbon (IFCB)');
+ylabel('log Chlorophyll Fluorescence')
+set(gca,'xlim',[-1 3.2],'xtick',-1:1:3,'ylim',[0 3.2],'ytick',0:1:3,...
+     'fontsize',14,'tickdir','out'); box on
 
 % set figure parameters
 set(gcf,'color','w');
@@ -78,34 +71,30 @@ print(gcf,'-dtiff','-r200',[filepath 'Figs/IFCB_vs_ChlFluorometer.tif']);
 hold off
 
 %% r2 chlorophyll extract chlorophyll
+[~,ia,ib]=intersect(dne,xmat); y=log(extract(ia)); x=log(carbon(ib));
 
-idx=~isnan(extract); x=log(carbon(idx)); y=log(extract(idx)); 
-b1 = x\y;
+b1 = round(x\y,2,'significant');
 yCalc1 = b1*x;
-b1=round(b1,2,'significant');
-Rsq1 = round(1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2),2,'significant');
 
 X = [ones(length(x),1) x];
-b = X\y;
-yCalc2 = X*b;
-Rsq2 = round(1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2),2,'significant');
+b2 = round(X\y,2,'significant');
+yCalc2 = X*b2;
+
+Rsq1 = round(1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2),2,'significant')
+Rsq2 = round(1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2),2,'significant')
 
 figure('Units','inches','Position',[1 1 4 4.5],'PaperPositionMode','auto');
 scatter(x,y,20,'linewidth',2)
+hold on 
+%l1=plot(x,yCalc1,'linewidth',1.5);
 hold on
-ln1=plot(x,yCalc1,'-','linewidth',2);
-hold on
-%legend(ln,['y=' num2str(b1) 'x'],'Location','SouthEast'); legend boxoff;
-ln2=plot(x,yCalc1,'-',x,yCalc2,'-'); hold on
-legend({ln1,ln2},['y=' num2str(b1) 'x'],...
-    ['y=' num2str(b(2)) 'x + ' num2str(b(1)) ' (r^2=' num2str(Rsq2) ')'],...    
-    'Location','SouthEast')
+l2=plot(x,yCalc2,'--','linewidth',1.5);
 
-set(gca,'xlim',[0 3.2],'xtick',0:1:3,'ylim',[0 3.2],'ytick',0:1:3,...
-    'fontsize',14,'tickdir','out');
-box on
-xlabel('Carbon (IFCB)')
-ylabel('Extracted Chlorophyll')
+legend(l2,['y=' num2str(b2(1)) '+' num2str(b2(2)) ' (R^2=' num2str(Rsq2) ')'],'Location','NorthOutside'); legend boxoff
+set(gca,'xlim',[-1 3.2],'xtick',-1:1:3,'ylim',[0 3.2],'ytick',0:1:3,...
+     'fontsize',14,'tickdir','out'); box on
+xlabel('log Carbon (IFCB)')
+ylabel('log Extracted Chlorophyll')
 
 % set figure parameters
 set(gcf,'color','w');

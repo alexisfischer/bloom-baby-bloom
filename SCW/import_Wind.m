@@ -5,18 +5,22 @@
 
 filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/';
 %% 46042 
-%%%%(step 1) Import annual data 2012-2017
-yr=[2012:2017]';
-
+%%%%(step 1) Import annual data 2002-2018
+yr=(2002:2018)';
 for i=1:length(yr)
     filename = [filepath '46042/46042_' num2str(yr(i)) '.txt'];
-    startRow = 3;
-    formatSpec = '%4f%3f%3f%3f%3f%4f%5f%[^\n\r]';
+    
+    if yr(i) <=2006
+        startRow = 2;
+    else
+        startRow = 3;
+    end
+
+    formatSpec = '%4f%3f%3f%3f%3f%7f%7f%[^\n\r]';
     fileID = fopen(filename,'r');
     dataArray = textscan(fileID, formatSpec, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
     fclose(fileID);
-
-    YY = dataArray{:, 1};
+    YYYY = dataArray{:, 1};
     MM = dataArray{:, 2};
     DD = dataArray{:, 3};
     hh = dataArray{:, 4};
@@ -24,7 +28,7 @@ for i=1:length(yr)
     dir = dataArray{:, 6};
     spd = dataArray{:, 7};
 
-    dn=datenum(YY,MM,DD,hh,mm,zeros(size(YY)));
+    dn=datenum(YYYY,MM,DD,hh,mm,zeros(size(YYYY)));
 
     for j=1:length(dn)
         if dir(j) == 999
@@ -37,7 +41,7 @@ for i=1:length(yr)
 
     [u,v] = UVfromDM(dir,spd);
 
-    W(i).yr=YY(end);
+    W(i).yr=YYYY(end);
     W(i).dn=dn;
     W(i).dir=dir;
     W(i).spd=spd;
@@ -47,52 +51,7 @@ for i=1:length(yr)
     clearvars ans dataArray DD dir DIR dn DN fileID filename formatSpec hh j mm MM spd SPD startRow u v YY;
 end
 
-%%%%(step 2) Import monthly data 2018
-mo=[1:6]';
-
-for i=1:length(mo)
-    filename = [filepath '46042/46042_' num2str(mo(i,:)) '_2018.txt'];
-    startRow = 3;
-    formatSpec = '%4f%3f%3f%3f%3f%4f%5f%[^\n\r]';
-    fileID = fopen(filename,'r');
-    dataArray = textscan(fileID, formatSpec, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-    fclose(fileID);
-
-    YY = dataArray{:, 1};
-    MM = dataArray{:, 2};
-    DD = dataArray{:, 3};
-    hh = dataArray{:, 4};
-    mm = dataArray{:, 5};
-    dir = dataArray{:, 6};
-    spd = dataArray{:, 7};
-
-    dn=datenum(YY,MM,DD,hh,mm,zeros(size(YY)));
-
-    for j=1:length(dn)
-        if dir(j) == 999
-            dir(j) = NaN;        
-        end
-        if spd(j) == 999
-            spd(j) = NaN;        
-        end    
-    end
-    
-    [u,v] = UVfromDM(dir,spd);
-
-    W(7).yr=YY(end);
-    W(7).dn=[W(7).dn;dn];
-    W(7).dir=[W(7).dir;dir];
-    W(7).spd=[W(7).spd;spd];
-    W(7).u=[W(7).u;u];
-    W(7).v=[W(7).v;v];
-
-    clearvars ans dataArray DD dir DIR dn DN fileID filename formatSpec hh j mm MM spd SPD startRow u v YY;
-end
-
-clearvars i mo yr
-
-%%%%(step 3) Combine data into single column
-
+%%%%(step 2) Combine data into single column
 w.s42.dn=W(1).dn;
 w.s42.dir=W(1).dir;
 w.s42.spd=W(1).spd;

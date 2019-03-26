@@ -29,6 +29,7 @@ Tmean = nanmean(y_mat,2); %average same day for all years
 t14d = arrayfun(@(i) nanmean(Tmean(i:i+n-1)),1:n:length(Tmean)-n+1)'; % the averaged vector
 t14d = repmat(t14d,1,size(mdate_mat,2));
 t14d = t14d(:);
+t14d=smooth(t14d,4);
 
 dn14d = mdate_mat((1:n:end),:);
 dn14d(27,:)=[];

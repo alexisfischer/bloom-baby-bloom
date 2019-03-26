@@ -4,61 +4,76 @@ in_dir = 'http://oceanmodeling.pmc.ucsc.edu:8080/thredds/dodsC/CCSRA_NEM_2017a_a
 time = ncread(in_dir, 'time');
 % ncreadatt(in_dir, 'time', 'units')  % get the units for time
 % length(time) % how many time entries are present?
-dn=time/24 + datenum('2013-01-01 00:00:00'); %7 hrs ahead of PT
+DN=time/24 + datenum('2013-01-01 00:00:00'); %7 hrs ahead of PT
 
-z = ncread(in_dir, 'z'); %depth
+Z = ncread(in_dir, 'z'); %depth
 
 %best coordinates lon=121 lat=70
 
 %ncdisp(in_dir, 'lon_rho')
 %lon = ncread(in_dir, 'lon_rho', [1,1], [inf,inf]); %all longitudes
-lat=ncread(in_dir, 'lat_rho', [121,70], [1,1])
+LAT=ncread(in_dir, 'lat_rho', [121,70], [1,1])
 
 %ncdisp(in_dir, 'lat_rho')
 %lat = ncread(in_dir, 'lat_rho', [1,1], [inf,inf]); %all latitudes
-lon=ncread(in_dir, 'lon_rho', [122,70], [1,1])
+LON=ncread(in_dir, 'lon_rho', [122,70], [1,1])
 
+%% load in specific variable (can only do 2 yr intervals bc of server)
+%i0=find(dn==datenum('01-Jan-2013'));
+%iend=find(dn==datenum('31-Dec-2014'));
+% i0=find(dn==datenum('01-Jan-2015'));
+% iend=find(dn==datenum('31-Dec-2016'));
+% i0=find(dn==datenum('01-Jan-2017'));
+% iend=find(dn==datenum('31-Dec-2018'));
+ i0=find(DN==datenum('01-Jan-2019'));
+ iend=length(DN);
+ 
+total=length(i0:iend);
+
+%% NO3
 %ncdisp(in_dir, 'NO3')
-var = ncread(in_dir,'NO3',[121,70,11,1], [1,1,1,inf]); %all times, at surface (2m) and at specific lat long
-NO3_2 = reshape(var,[length(dn),1]);
+var = ncread(in_dir,'NO3',[121,70,11,i0], [1,1,1,total]); %all times, at surface (2m) and at specific lat long
+%NO3_1314 = reshape(var,[total,1]);
+%N03_1516 = reshape(var,[total,1]);
+%N03_1718 = reshape(var,[total,1]);
+NO3_19 = reshape(var,[total,1]);
+NO3=[NO3_1314;NO3_1516;NO3_1718;NO3_19];
 
-%%
-var = ncread(in_dir,'NO3',[121,70,10,1], [1,1,1,inf]); %all times, at surface (2m) and at specific lat long
-NO3_5 = reshape(var,[length(dn),1]);
+clearvars NO3_1314 NO3_1516 NO3_1718 NO3_19
 
-var = ncread(in_dir,'NH4',[121,70,11,1], [1,1,1,inf]); %all times, at surface (2m) and at specific lat long
-NH4_2 = reshape(var,[length(dn),1]);
+%% NH4
+%ncdisp(in_dir, 'NO3')
+var = ncread(in_dir,'NH4',[121,70,11,i0], [1,1,1,total]); %all times, at surface (2m) and at specific lat long
+%NH4_1314 = reshape(var,[total,1]);
+%NH4_1516 = reshape(var,[total,1]);
+%NH4_1718 = reshape(var,[total,1]);
+NH4_19 = reshape(var,[total,1]);
 
-var = ncread(in_dir,'NH4',[121,70,10,1], [1,1,1,inf]); %all times, at surface (2m) and at specific lat long
-NH4_5 = reshape(var,[length(dn),1]);
+%NH4=[NH4_1314;NH4_1516;NH4_1718;NH4_19];
 
-clearvars var time in_dir
+clearvars NH4_1314 NH4_1516 NH4_1718 NH4_19
 
-save([filepath 'Data/NEMURO'],'dn','lat','lon','z','NO3_2','NO3_5','NH4_2','NH4_5');
+save([filepath 'Data/NEMURO'],'DN','LAT','LON','Z','NO3','NH4');
 
 %% compare with SCW sampling
 
-load([filepath 'Data/NEMURO'],'dn','lat','lon','z','NO3_2','NO3_5','NH4_2','NH4_5');
+load([filepath 'Data/NEMURO'],'LAT','LON','NO3','NH4');
 load([filepath 'Data/SCW_master'],'SC');
 
 [C,ia,ib]=intersect(dn,SC.dn); %C = A(ia) and C = B(ib).
-NO3_2=NO3_2(ia);
-%NO3_5=NO3_5(ia);
-no3_sc=SC.nitrate(ib);
+NO3=NO3(ia);
+no3s=SC.nitrate(ib);
 
-NH4_2=NH4_2(ia);
-NH4_5=NH4_5(ia);
-nh4_sc=SC.ammonium(ib);
+NH4=NH4(ia);
+nh4s=SC.ammonium(ib);
 
 %% plot NO3
-%remove NaNs from SCW
-[idx]=~isnan(no3_sc); no3_sc=no3_sc(idx); DN_no3=C(idx); NO3_2=NO3_2(idx); 
+%x=no3s; y=NO3; label='Nitrate';
+x=nh4s; y=NH4; label='Ammonium';
 
-%remove NaNs from NEMURO
-[idx]=~isnan(NO3_2); no3_sc=no3_sc(idx); DN_no3=C(idx); NO3_2=NO3_2(idx);
+[idx]=~isnan(x); x=x(idx); y=y(idx); %remove NaNs from SCW
+[idx]=~isnan(y); x=x(idx); y=y(idx); %remove NaNs from NEMURO
 
-x=no3_sc;
-y=NO3_2;
 b1 = x\y
 yCalc1 = b1*x;
 
@@ -66,25 +81,25 @@ X = [ones(length(x),1) x];
 b = X\y
 yCalc2 = X*b;
 
-figure; 
+Rsq1 = round(1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2),2,'significant')
+Rsq2 = round(1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2),2,'significant')
+
+figure('Units','inches','Position',[1 1 4 4],'PaperPositionMode','auto');
 scatter(x,y);
 hold on 
 plot(x,yCalc1)
 hold on
 plot(x,yCalc2,'--')
-legend('Data','Slope','Slope & Intercept','Location','best');
+
+legend('Data',['Slope (R^2=' num2str(Rsq1) ')'],...
+    ['Slope & Intercept (R^2=' num2str(Rsq2) ')'],'Location','NE'); legend boxoff
 xlabel('SCW discrete sample');
 ylabel('NEMURO modeled (2m)');
-title('Nitrate')
-Rsq1 = 1 - sum((y - yCalc1).^2)/sum((y - mean(y)).^2)
+title(label)
 
-Rsq2 = 1 - sum((y - yCalc2).^2)/sum((y - mean(y)).^2)
-
-%%
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs/NEMURO_Discrete_Nitrate.tif']);
+print(gcf,'-dtiff','-r200',[filepath 'Figs/NEMURO_Discrete_' num2str(label) '.tif']);
 hold off
-
 
 %% plot cool map of ocean surface temperatures
 url          = 'http://oceanmodeling.pmc.ucsc.edu:8080/thredds/dodsC/CCSRA_NEM_2017a_agg_catalog_zlevs/fmrc/CCSRA_NEM_2017a_Historical_Reanalysis_Phys-Bio_ROMS_NEMURO_Aggregation_best.ncd';

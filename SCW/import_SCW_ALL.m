@@ -32,6 +32,11 @@ SC.Tsensor=nan(size(SC.dn));
 SC.CHLsensor=nan(size(SC.dn));
 SC.TURsensor=nan(size(SC.dn));
 
+SC.NO3_nemuro=nan(size(SC.dn));
+SC.NH4_nemuro=nan(size(SC.dn));
+
+SC.SwD=nan(size(SC.dn));
+
 SC.maxdTdz=nan(size(SC.dn));
 SC.Zmax=nan(size(SC.dn));
 SC.mld5=nan(size(SC.dn));
@@ -47,11 +52,15 @@ SC.wind=nan(size(SC.dn));
 SC.winddir=nan(size(SC.dn));
 SC.windU=nan(size(SC.dn));
 SC.windV=nan(size(SC.dn));
-SC.wind42=nan(size(SC.dn));
+SC.wind42U=nan(size(SC.dn));
+SC.wind42V=nan(size(SC.dn));
 SC.windM1=nan(size(SC.dn));
 
 SC.PDO=nan(size(SC.dn));
 SC.NPGO=nan(size(SC.dn));
+SC.MEI=nan(size(SC.dn));
+
+SC.AKA=nan(size(SC.dn));
 
 %% step 1) import hourly river discharge data 2003-2018
 % Discharge (cubic feet per second)
@@ -270,82 +279,33 @@ figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
 
 clearvars data raw stringVectors R dn nitrate Paust phosphate Pmult Pn silicate STX T i j;
 
-%% step 5) import weekly Chl, T, nutrients, PN and Alex from SCOOS Website 2008-2018
-filename = [filepath 'Data/Harmful Algal Blooms_2011-2018.csv'];
-delimiter = ',';
-startRow = 9;
-formatSpec = '%q%q%q%*q%*q%*q%*q%*q%*q%q%q%q%q%q%q%q%q%*q%q%*q%*q%*q%*q%q%*q%*q%q%q%*q%q%[^\n\r]';
-fileID = fopen(filename,'r');
-dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType',...
-    'string', 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-fclose(fileID);
-raw = repmat({''},length(dataArray{1}),length(dataArray)-1);
-for col=1:length(dataArray)-1
-    raw(1:length(dataArray{col}),col) = mat2cell(dataArray{col}, ones(length(dataArray{col}), 1));
-end
-numericData = NaN(size(dataArray{1},1),size(dataArray,2));
+%% step 5) import weekly Chl, T, nutrients, PN and Alex from SCOOS Website 2011-2018
+filename = [filepath 'Data/SCW_HABSCCOOS_190313.xls'];
+opts = detectImportOptions(filename);   
+opts.SelectedVariableNames = {'DateCollected','Temp__C_',...
+    'AvgChloro_mg_m3_','Nitrate_uM_','Phosphate_uM_','Silicate_uM_',...
+    'Ammonia_uM_','DomoicAcid_ng_mL_','AlexandriumSpp__cells_L_',...
+    'DinophysisSpp__cells_L_','Pseudo_nitzschiaSeriataGroup_cells_L_'};
 
-for col=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-    % Converts text in the input cell array to numbers. Replaced non-numeric
-    % text with NaN.
-    rawData = dataArray{col};
-    for row=1:size(rawData, 1)
-        % Create a regular expression to detect and remove non-numeric prefixes and
-        % suffixes.
-        regexstr = '(?<prefix>.*?)(?<numbers>([-]*(\d+[\,]*)+[\.]{0,1}\d*[eEdD]{0,1}[-+]*\d*[i]{0,1})|([-]*(\d+[\,]*)*[\.]{1,1}\d+[eEdD]{0,1}[-+]*\d*[i]{0,1}))(?<suffix>.*)';
-        try
-            result = regexp(rawData(row), regexstr, 'names');
-            numbers = result.numbers;
-            
-            % Detected commas in non-thousand locations.
-            invalidThousandsSeparator = false;
-            if numbers.contains(',')
-                thousandsRegExp = '^\d+?(\,\d{3})*\.{0,1}\d*$';
-                if isempty(regexp(numbers, thousandsRegExp, 'once'))
-                    numbers = NaN;
-                    invalidThousandsSeparator = true;
-                end
-            end
-            % Convert numeric text to numbers.
-            if ~invalidThousandsSeparator
-                numbers = textscan(char(strrep(numbers, ',', '')), '%f');
-                numericData(row, col) = numbers{1};
-                raw{row, col} = numbers{1};
-            end
-        catch
-            raw{row, col} = rawData{row};
-        end
-    end
-end
+T=readtable(filename,opts);
 
-R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),raw); % Find non-numeric cells
-raw(R) = {NaN}; % Replace non-numeric cells
-
-clearvars filename delimiter startRow formatSpec fileID dataArray ans col...
-    numericData rawData row regexstr result numbers invalidThousandsSeparator...
-    thousandsRegExp R;
-
-year = cell2mat(raw(:, 1));
-month = cell2mat(raw(:, 2));
-day = cell2mat(raw(:, 3));
-
-dn=datenum(datetime(year,month,day));
-Alex = cell2mat(raw(:, 4));
-ammonium = cell2mat(raw(:, 5));
-CHL = cell2mat(raw(:, 6));
-dinophysis = cell2mat(raw(:, 10));
-DA = cell2mat(raw(:, 11));
-nitrate = cell2mat(raw(:, 12));
-phosphate = cell2mat(raw(:, 13));
-Pn = cell2mat(raw(:, 14));
-silicate = cell2mat(raw(:, 15));
-T = cell2mat(raw(:, 16));
+dn=datenum(T.DateCollected);
+Alex = T.AlexandriumSpp__cells_L_;
+ammonia = T.Ammonia_uM_;
+CHL = T.AvgChloro_mg_m3_;
+dinophysis = T.DinophysisSpp__cells_L_;
+DA = T.DomoicAcid_ng_mL_;
+nitrate = T.Nitrate_uM_;
+phosphate = T.Phosphate_uM_;
+Pn = T.Pseudo_nitzschiaSeriataGroup_cells_L_;
+silicate = T.Silicate_uM_;
+T = T.Temp__C_;
 
 for i=1:length(SC.dn)
     for j=1:length(dn)
         if dn(j) == SC.dn(i)
             SC.Alex(i)=Alex(j);
-            SC.ammonium(i)=ammonium(j);
+            SC.ammonia(i)=ammonia(j);
             SC.CHL(i)=CHL(j);
             SC.dinophysis(i)=dinophysis(j);
             SC.DA(i)=DA(j);
@@ -362,10 +322,9 @@ end
  idx=~isnan(SC.T);
  figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
 
-
 clearvars T Alex CHL DA data dn i j nitrate phosphate ammonium day dinophysis month year Pn R raw silicate idx;
 
-%% step 6) import RAI fx Dinoflagellated and Diatoms
+%% step 6) import RAI fx DinoflagellateS and Diatoms
 
 load([filepath 'Data/RAI'],'FX','DN');
 Dino=FX(:,end-1);
@@ -385,6 +344,21 @@ idx=~isnan(SC.fxDino);
 figure; plot(SC.dn(idx),SC.fxDino(idx)); datetick('x','yyyy');
 
 clearvars DN Diat Dino i j;
+
+%% step 7) Import Swell direction from Point Sur
+load([filepath 'Data/SwellDirection'],'DN','SWD');
+
+for i=1:length(SC.dn)
+    for j=1:length(DN)
+        if DN(j) == SC.dn(i)
+            SC.SwD(i)=SWD(j);       
+        else
+        end
+    end
+end
+
+idx=~isnan(SC.SwD);
+figure; plot(SC.dn(idx),SC.SwD(idx)); datetick('x','yyyy');
 
 %% step 8) Import Temp, Chl, Turbidity SCW sensor data from ERDDAP CENCOOS portal
 
@@ -457,6 +431,23 @@ SC.Tsensor(1:5)=NaN;
  figure; plot(SC.dn(idx),SC.T(idx),SC.dn,SC.Tsensor); datetick('x','yyyy');
 
 clearvars CHL d dn DN i mass_concentration_of_chlorophyll_in_sea_water sea_water_temperature T T_F time TUR turbidity j;
+
+%% step 9) import NEMURO modeled nutrients
+load([filepath 'Data/NEMURO'],'DN','NO3','NH4');
+
+for i=1:length(SC.dn)
+    for j=1:length(DN)
+        if DN(j) == SC.dn(i)
+            SC.NO3_nemuro(i)=NO3(j);           
+            SC.NH4_nemuro(i)=NH4(j);           
+        else
+        end
+    end
+end
+
+idx=~isnan(SC.NO3_nemuro);
+figure; plot(SC.dn(idx),SC.NO3_nemuro(idx)); datetick('x','yyyy');
+figure; plot(SC.dn(idx),SC.NH4_nemuro(idx)); datetick('x','yyyy');
 
 %% step 9) Import M1 sensor: MLD, dTdz, Tmax, and Zmax
 load([filepath 'Data/M1_TS'],'M1R');
@@ -586,7 +577,9 @@ for i=1:length(SC.dn)
     end
 end
 
-[dn,spd,~] = ts_aggregation(w.s42.dn,w.s42.spd,1,'day',@mean);
+%46042
+[~,U,~] = ts_aggregation(w.s42.dn,w.s42.u,1,'day',@mean);
+[dn,V,~] = ts_aggregation(w.s42.dn,w.s42.v,1,'day',@mean);
 d = dateshift(datetime(datestr(dn)),'start','day'); %remove the extra minutes. just keep the day
 d.Format = 'dd-MMM-yyyy';
 dn=datenum(d);
@@ -594,7 +587,8 @@ dn=datenum(d);
 for i=1:length(SC.dn)
     for j=1:length(dn)
         if dn(j) == SC.dn(i)
-            SC.wind42(i)=spd(j);       
+            SC.wind42U(i)=U(j);       
+            SC.wind42V(i)=V(j);       
         else
         end
     end
@@ -765,6 +759,58 @@ end
 clearvars filename delimiter startRow formatSpec fileID dataArray ans ...
     raw col numericData rawData row regexstr result numbers ...
     invalidThousandsSeparator thousandsRegExp;
+
+%% step 15) import El Nino Southern Oscillation 
+
+opts = spreadsheetImportOptions("NumVariables", 13);
+opts.Sheet = "Sheet1";
+opts.DataRange = "A2:M70";
+opts.VariableNames = ["YEAR", "DECJAN", "JANFEB", "FEBMAR", "MARAPR", "APRMAY", "MAYJUN", "JUNJUL", "JULAUG", "AUGSEP", "SEPOCT", "OCTNOV", "NOVDEC"];
+opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double"];
+
+MEIraw = readtable("/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/MEI.xlsx", opts, "UseExcel", false);
+MEIraw = table2array(MEIraw);
+clear  opts
+
+MEIraw=MEIraw';
+yr=MEIraw(1,:);
+MEI=MEIraw(2:end,:);
+MEI=MEI(:);
+
+dn=bsxfun(@(Year,Month) datenum(Year,Month,01),yr',(1:12));
+dn=sort(dn(:));
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.MEI(i)=MEI(j);      
+        else
+        end
+    end
+end
+
+idx=~isnan(SC.MEI);
+figure; plot(SC.dn(idx),SC.MEI(idx),'-k')
+datetick('x','yyyy');
+
+%% step 16) import select RAI
+load([filepath 'Data/RAI'],'FX','DN','class');
+
+id=strmatch('Akashiwo',class); %classifier index
+rai=FX(:,id);
+
+for i=1:length(SC.dn)
+    for j=1:length(DN)
+        if DN(j) == SC.dn(i)
+            SC.AKA(i)=SC.CHL(i)*rai(j);      
+        else
+        end
+    end
+end
+
+idx=~isnan(SC.AKA);
+figure; plot(SC.dn(idx),SC.AKA(idx),'-k')
+datetick('x','yyyy');
 
 %%
 save([filepath 'Data/SCW_master'],'SC');

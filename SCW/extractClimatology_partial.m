@@ -5,7 +5,7 @@ function [C] = extractClimatology_partial(var,dn,filepath,varname,n)
 %% fine for weekly data without mega gaps
 i = ~isnan(var); t = var(i); dn = dn(i); %remove NaNs
 t(t==-Inf)=0; %replace all -Inf with 0
-DN=[dn(1):1:dn(end)]';
+DN=(dn(1):1:dn(end))';
 T = interp1(dn,t,DN);
 
 % %% for data with mega gaps
@@ -61,6 +61,8 @@ ti3 =smooth(ti,3); ti3(i0) = NaN;
 %% (4) Difference the gridded and smoothed bin values from the 
 % corresponding mean annual cycle, thus creating an anomaly time series
 tAnom = ti9-t14d;
+
+%figure; plot(dn14d,tAnom,'-k');
 
 %% Save the output file
 C.dn=dn;
