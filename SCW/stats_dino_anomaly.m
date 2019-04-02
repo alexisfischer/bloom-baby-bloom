@@ -1,7 +1,8 @@
 %% PLSR 
+clear;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-%addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 load([filepath 'Data/SCW_master'],'SC');
 
 dn=SC.dn;
@@ -49,19 +50,14 @@ yrrange = 1219;
 
 %set ranges according to dates
 if yrrange == 0419 
-    i0=find(DN>=datenum('01-Jan-2004'));
-    iend=find(DN>=datenum('27-Aug-2018'),1);  
+   id=find(DN>=datenum('01-Jan-2004'));
 elseif yrrange == 0411 
-    i0=find(DN>=datenum('01-Jan-2004'));
-    iend=find(DN>=datenum('01-Jan-2012'));
+    id=find(DN>=datenum('01-Jan-2004') & DN>=datenum('01-Jan-2012'));
 elseif yrrange == 1219 
-    i0=find(DN>=datenum('01-Jan-2012'),1);
-    iend=length(DN);
-    datestr(DN(end))
+    id=find(DN>=datenum('01-Jan-2012'));
 else
 end
-
-DN=DN(i0:iend); y=y(i0:iend);
+DN=DN(id); y=y(id);
 
 if lim1 == -1 %if anomaly
     n=2; 
@@ -107,16 +103,14 @@ TSS = sum((Y-mean(Y)).^2);
 RSS_PLS = sum((Y-YfitPLS).^2);
 rsquaredPLS = round(1 - RSS_PLS/TSS,2,'significant')
 
-%% plot timeseries
+%% plot timeseries (season)
 figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
 
-plot(DN,XS(:,1),'r:',DN,XS(:,2),'b:','linewidth',2)
-
-%plot(DN,Y,'k-',DN,Yfit,'r-','linewidth',2)
+plot(DN,Y,'ko',DN,Yfit,'r*','linewidth',2)
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
     'xgrid','on','fontsize',14); box on
-%legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
+legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
 title(labelst,'fontsize',16,'fontweight','bold')
 ylabel(['Dino Chl ' num2str(type) ''],'fontsize',16,'fontweight','bold')
 hold on
@@ -126,11 +120,48 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',...
     [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
 hold off
-%     [filepath 'Figs\dino_' num2str(labelst) '_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
+
+%% plot timeseries (season) just one variable
+figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
+
+plot(DN,Y,'ko',DN,Yfit,'r*','linewidth',2)
+datetick('x','yyyy','keeplimits')
+set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
+    'xgrid','on','fontsize',14); box on
+legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
+title(labelst,'fontsize',16,'fontweight','bold')
+ylabel(['Dino Chl ' num2str(type) ''],'fontsize',16,'fontweight','bold')
+hold on
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',...
+    [filepath 'Figs\dino_' num2str(labelst) '_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
+hold off
+
+%% plot timeseries (all)
+figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
+
+%plot(DN,XS(:,1),'r:',DN,XS(:,2),'b:','linewidth',2)
+
+plot(DN,Y,'k-',DN,Yfit,'r-','linewidth',2)
+datetick('x','yyyy','keeplimits')
+set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
+    'xgrid','on','fontsize',14); box on
+legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
+title(labelst,'fontsize',16,'fontweight','bold')
+ylabel(['Dino Chl ' num2str(type) ''],'fontsize',16,'fontweight','bold')
+hold on
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',...
+    [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
+hold off
 
 %% plots Loadings
-figure('Units','inches','Position',[1 1 5.5 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.15 .09], [0.14 0.01]);
+figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.14 0.02]);
 
     subplot(1,n,1); barh(XL(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)
@@ -149,8 +180,11 @@ print(gcf,'-dtiff','-r200',...
 hold off
 
 %% plots weights
-figure('Units','inches','Position',[1 1 5.5 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.15 .09], [0.14 0.01]);
+% The PLS weights are the linear combinations of the original variables
+% that that define the PLS components, i.e., they describe how strongly
+% each component in the PLSR depends on the original variables, and in what direction.
+figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.15 .09], [0.14 0.02]);
 
     subplot(1,n,1); barh(stats.W(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)
@@ -204,24 +238,6 @@ hold on
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',...
     [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_PLSR.tif']);
-hold off
-
-%% Model Parsimony
-% The PLS weights are the linear combinations of the original variables
-% that that define the PLS components, i.e., they describe how strongly
-% each component in the PLSR depends on the original variables, and in what direction.
-figure('Units','inches','Position',[1 1 6 4],'PaperPositionMode','auto');
-
-plot(1:length(stats.W),stats.W,'-o','Linewidth',2,'Markersize',5);
-ylabel('PLS Weight','fontsize',16);
-legend({'1st Component' '2nd Component' '3rd Component'},  ...
-	'location','NW'); legend boxoff
-set(gca,'xtick',1:1:8,'ylim',[-.07 .07],'ytick',-0.05:.05:.05,'xticklabels',label,'fontsize',14)
-
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',...
-    [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_ModelParsimony.tif']);    
 hold off
 
 %%

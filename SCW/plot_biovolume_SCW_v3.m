@@ -2,7 +2,7 @@
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+%addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
 %%%% Step 1: Load in data
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
@@ -11,6 +11,10 @@ load([filepath 'Data/SCW_master'],'SC');
 load([filepath 'Data/Wind_MB'],'w');
 load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB2018'],...
     'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
+
+%convert to PST (UTC is 7 hrs ahead)
+time=datetime(mdateTB,'ConvertFrom','datenum'); time=time-hours(7); 
+time.TimeZone='America/Los_Angeles'; mdateTB=datenum(time);
     
 %%%% Step 2: Convert Biovolume (cubic microns/cell) to Carbon (picograms/cell)
 [ ind_diatom, ~ ] = get_diatom_ind_CA( class2useTB, class2useTB );
@@ -23,7 +27,7 @@ for i=1:length(cellC)
 end  
 volC=volC./1000; %convert from pg/mL to ug/L 
 
-%% Step 3: Take daily average and determine what fraction of Cell-derived carbon is 
+% Step 3: Take daily average and determine what fraction of Cell-derived carbon is 
 % Dinoflagellates vs Diatoms vs Classes of interest
 
 %select total living biovolume 
@@ -32,12 +36,12 @@ volC=volC./1000; %convert from pg/mL to ug/L
 [xmat, ymat_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
 %select only diatoms
-[ ind_diatom, class_label_diat ] = get_diatom_ind_CA( class2useTB, class2useTB );
+[ ind_diatom, ~ ] = get_diatom_ind_CA( class2useTB, class2useTB );
 [~, ydiat ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_diatom),2));
 [xdiat, ydiat_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
 %select only dinoflagellates
-[ ind_dino, class_label_dino ] = get_dino_ind_CA( class2useTB, class2useTB );
+[ ind_dino, ~ ] = get_dino_ind_CA( class2useTB, class2useTB );
 [~, ydino ] = timeseries2ydmat(mdateTB, nansum(volC(:,ind_dino),2));
 [xdino, ydino_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
@@ -363,13 +367,12 @@ subplot(7,1,4);
     % y=smooth(ymat./ymat_ml,1); 
     % idx=isnan(ymat); y(idx)=NaN;
     hold on
-    h=plot(xmat,ymat./ymat_ml,'k-',SC.dn,SC.CHL,'*r',SC.dn,SC.CHLsensor,':r',...
-        'linewidth', 1.5,'Markersize',8);
-    set(h(3),'linewidth',2);
+    h=plot(xmat,ymat./ymat_ml,'k:',SC.dn,SC.CHL,'*r',...
+        'linewidth', 2,'Markersize',6);
     set(gca,'xgrid','on','xlim',[xax1 xax2],'XTickLabel',{},'fontsize',12,...
         'fontname','arial','tickdir','out','ylim',[0 30],'ytick',5:10:25)
-    ylabel({'Carbon (\mug/L)'}, 'fontsize', 14, 'fontname', 'arial','fontweight','bold')
-    lh=legend('IFCB Carbon','Extracted Chl','Fluorometer Chl','Location','NorthEast'); legend boxoff
+    ylabel({'(\mug/L)'}, 'fontsize', 14, 'fontname', 'arial','fontweight','bold')
+    lh=legend('Carbon (IFCB)','Chl (extracted)','Location','NorthEast'); legend boxoff
     datetick('x','mmm','keeplimits'); 
         set(gca, 'XTickLabel',{})
     lh.FontSize = 12;               
@@ -379,10 +382,10 @@ subplot(7,1,4);
     hold on
 
 subplot(7,1,5); %SCW wind
-%     [U,~]=plfilt(w.scw.u, w.scw.dn);
-%     [V,DN]=plfilt(w.scw.v, w.scw.dn);
-%     [~,u,~] = ts_aggregation(DN,U,12,'hour',@mean);
-%     [time,v,~] = ts_aggregation(DN,V,12,'hour',@mean);
+    [U,~]=plfilt(w.scw.u, w.scw.dn);
+    [V,DN]=plfilt(w.scw.v, w.scw.dn);
+    [~,u,~] = ts_aggregation(DN,U,12,'hour',@mean);
+    [time,v,~] = ts_aggregation(DN,V,12,'hour',@mean);
     yax1=-2; yax2=3;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
     xlim([xax1;xax2])    

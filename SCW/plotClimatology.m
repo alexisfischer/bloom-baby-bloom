@@ -7,7 +7,7 @@ n=14;
 idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; %make sure CHL and DINO have same points
 var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate Chl'; [dinoC] = extractClimatology_partial(var,dn,filepath,varname,n);
 
-var = log(SC.AKA); varname = 'Akashiwo'; [akaC] = extractClimatology_partial(var,dn,filepath,varname,n);
+%var = log(SC.AKA); varname = 'Akashiwo'; [akaC] = extractClimatology_partial(var,dn,filepath,varname,n);
 
 var = SC.NPGO; varname = 'NPGO'; [NPGO] = extractClimatology(var,dn,filepath,varname,n);
 
@@ -21,9 +21,9 @@ var = SC.windU; varname = 'U wind-vector'; [Uwind] = extractClimatology(var,dn,f
 
 var = SC.windV; varname = 'V wind-vector'; [Vwind] = extractClimatology(var,dn,filepath,varname,n);
 
-var = SC.wind42U; varname = 'U 42 wind-vector'; [U42wind] = extractClimatology(var,dn,filepath,varname,n);
+%var = SC.wind42U; varname = 'U 42 wind-vector'; [U42wind] = extractClimatology(var,dn,filepath,varname,n);
 
-var = SC.wind42V; varname = 'V 42 wind-vector'; [V42wind] = extractClimatology(var,dn,filepath,varname,n);
+%var = SC.wind42V; varname = 'V 42 wind-vector'; [V42wind] = extractClimatology(var,dn,filepath,varname,n);
 
 %var = SC.Zmax; varname = 'Zmax'; [Zmax] = extractClimatology(var,dn,filepath,varname,n);
 
@@ -70,32 +70,17 @@ set(gca,'xlim',[xax1 xax2],'xgrid','on','fontsize',14,'xticklabel',{}); box on
 ylabel({'V-wind'},'fontsize',16,'fontweight','bold')
 hold on
 
-subplot(all,1,4); anomaly(U42wind.dn14d(1:end-1),zscore(U42wind.tAnom(1:end-1)));
-vfill([datenum('01-Oct-2016') datenum('01-Sep-2017')],'w','edgecolor','w')
+subplot(all,1,4); anomaly(NPGO.dn14d(1:end-1),zscore(NPGO.tAnom(1:end-1)));
 datetick('x','yy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xgrid','on','fontsize',14,'xticklabel',{}); box on
-ylabel({'U 42'},'fontsize',16,'fontweight','bold')
-box on
+ylabel({'NPGO'},'fontsize',16,'fontweight','bold')
 hold on
 
-subplot(all,1,5); anomaly(V42wind.dn14d(1:end-1),zscore(V42wind.tAnom(1:end-1)));
-vfill([datenum('01-Oct-2016') datenum('01-Sep-2017')],'w','edgecolor','w')
+subplot(all,1,5); anomaly(PDO.dn14d(1:end-1),zscore(PDO.tAnom(1:end-1)));
 datetick('x','yy','keeplimits')
 set(gca,'xlim',[xax1 xax2],'xgrid','on','fontsize',14,'xticklabel',{}); box on
-ylabel({'V 42'},'fontsize',16,'fontweight','bold')
+ylabel({'PDO'},'fontsize',16,'fontweight','bold')
 hold on
-
-% subplot(all,1,4); anomaly(NPGO.dn14d(1:end-1),zscore(NPGO.tAnom(1:end-1)));
-% datetick('x','yy','keeplimits')
-% set(gca,'xlim',[xax1 xax2],'xgrid','on','fontsize',14,'xticklabel',{}); box on
-% ylabel({'NPGO'},'fontsize',16,'fontweight','bold')
-% hold on
-% 
-% subplot(all,1,5); anomaly(PDO.dn14d(1:end-1),zscore(PDO.tAnom(1:end-1)));
-% datetick('x','yy','keeplimits')
-% set(gca,'xlim',[xax1 xax2],'xgrid','on','fontsize',14,'xticklabel',{}); box on
-% ylabel({'PDO'},'fontsize',16,'fontweight','bold')
-% hold on
 
 subplot(all,1,6); anomaly(MEI.dn14d(1:end-1),zscore(MEI.tAnom(1:end-1)));
 datetick('x','yy','keeplimits')
@@ -120,8 +105,8 @@ hold off
 
 %% Plot Climatology (generic)
 
-C=Uwind;
-varname='U-wind';
+C=NPGO;
+varname='NPGO';
 units=' ';
 figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.05], [0.1 0.04]);

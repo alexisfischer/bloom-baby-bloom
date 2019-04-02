@@ -1,5 +1,5 @@
 %% import RAI data from SCW
-% Alexis D. Fischer, 15 Mar 2019
+% Alexis D. Fischer, March 2019
 
 outdir='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/';
 
@@ -93,5 +93,8 @@ clearvars fxx dailysum max min rai dnn T D Dino Diat opts avg i
 idx = find(dni>dn(end),1); %id for where the points overlap
 DN = [dn;dni(idx:end)];   
 FX = [fx;fxi(idx:end,:)];   
+
+id=strmatch('Pseudonitzschia',class);
+class(id)={'Pseudo-nitzschia'};
 
 save([outdir 'Data/RAI'],'FX','DN','class');
