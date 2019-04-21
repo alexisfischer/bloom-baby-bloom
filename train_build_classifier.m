@@ -11,7 +11,8 @@ class2skip = {'unclassified' 'Alexandrium_doublet' 'Alexandrium_triplet' ...
     'Centric<10' 'DinoMix' 'FlagMix' 'Fragilariopsis' 'Helicotheca' 'Ciliates'... 
     'Leptocylindrus' 'Lio_Thal' 'Navicula' 'Noctiluca' 'Paralia' 'Torodinium'...
     'small_misc' 'Ash_dark' 'Ash_glassy' 'bubbles' 'cyst' 'Clusterflagellate'...
-    'Gyrosigma' 'Dolichospermum' 'Desmid' 'Plagiolemma' 'small_misc' 'zooplankton_misc'};
+    'Gyrosigma' 'Corethron' 'Entomoneis' 'Dolichospermum' 'Desmid' ...
+    'Plagiolemma' 'small_misc' 'zooplankton_misc'};
 
 class2group = {'NanoP_less10' 'Cryptophyte'};
 
@@ -20,7 +21,7 @@ addpath(genpath('F:\IFCB104\manual\summary\')); % add new data to search path
 
 %% Step 2: Train (make) the classifier
 result_path = 'F:\IFCB104\manual\summary\'; %USER location of training file and classifier output
-train_filename = 'UserExample_Train_26Mar2019'; %USER what file contains your training features
+train_filename = 'UserExample_Train_05Apr2019'; %USER what file contains your training features
 result_str = 'UserExample_Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 

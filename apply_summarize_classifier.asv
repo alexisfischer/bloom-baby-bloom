@@ -60,15 +60,15 @@ start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_
 % %old
 % %biovolume_summary_manual([ifcbdir 'manual\'],[summarydir 'manual\'],[ifcbdir 'data\2019\'],[ifcbdir 'features\XXXX\']);
 
-%% PART 3: Summarize random forest classification results 
+% PART 3: Summarize random forest classification results 
 % Step 7: classes    
 % biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
 %     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018); %ACIDD
 biovolume_summary_CA_allTB(summarydir,[ifcbdir 'class\classxxxx_v1\'],...
-    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2018);
+    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2019);
 
 countcells_allTBnew_user_training([ifcbdir 'class\classXXXX_v1\'],...
-    [ifcbdir 'data\'],summarydir,2018);
+    [ifcbdir 'data\'],summarydir,2019);
 
 %%%% PART 3: Assign threshold scores to specific classes
 %% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class

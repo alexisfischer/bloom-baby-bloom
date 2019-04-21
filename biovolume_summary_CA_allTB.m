@@ -1,12 +1,12 @@
-%function [] = biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+function [] = biovolume_summary_CA_allTB(resultpath,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-resultpath = 'F:\IFCB104\class\summary\'; %Where you want the summary file to go
-classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
-feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
-roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
-yrrange=2018;
-adhocthresh = 0.5;
+% resultpath = 'F:\CAWTHRON\summary\'; %Where you want the summary file to go
+% classpath_generic = 'F:\CAWTHRON\class\classxxxx_v1\';
+% feapath_generic = 'F:\CAWTHRON\features\xxxx\'; %Put in your featurepath byyear
+% roibasepath_generic = 'F:\CAWTHRON\data\xxxx\'; %Where you raw data is
+% yrrange=2019;
+%adhocthresh = 0.5;
 
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath_generic 'D*.csv']);
