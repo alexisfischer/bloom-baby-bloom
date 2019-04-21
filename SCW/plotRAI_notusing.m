@@ -121,7 +121,7 @@ name={r(species).name}
 
 figure('Units','inches','Position',[1 1 7 5],'PaperPositionMode','auto'); 
 X=[r(1).yd_wk ;r(1).yd_wk(end)+7]; %365 days in a year
-Y=[1:12];
+Y=1:12;
 C=[[M; zeros(1,52)] zeros(12,1)];
 
 pcolor(X,Y,C); caxis([0 1]); colormap(flipud(hot));

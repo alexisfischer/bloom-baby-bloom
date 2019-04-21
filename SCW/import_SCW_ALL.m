@@ -12,6 +12,7 @@ SC.dn=dn;
 % preallocate space
 SC.SST=nan(size(SC.dn));
 SC.T=nan(size(SC.dn));
+SC.N2=nan(size(SC.dn));
 SC.SSS=nan(size(SC.dn));
 SC.CHL=nan(size(SC.dn));
 SC.nitrate=nan(size(SC.dn));
@@ -54,6 +55,8 @@ SC.windU=nan(size(SC.dn));
 SC.windV=nan(size(SC.dn));
 SC.wind42U=nan(size(SC.dn));
 SC.wind42V=nan(size(SC.dn));
+SC.windoU=nan(size(SC.dn));
+SC.windoV=nan(size(SC.dn));
 SC.windM1=nan(size(SC.dn));
 
 SC.PDO=nan(size(SC.dn));
@@ -320,21 +323,19 @@ for i=1:length(SC.dn)
 end
 
  idx=~isnan(SC.T);
- figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
+ figure; plot(SC.dn(idx),SC.CHL(idx)); datetick('x','yyyy');
 
-clearvars T Alex CHL DA data dn i j nitrate phosphate ammonium day dinophysis month year Pn R raw silicate idx;
+%clearvars T Alex CHL DA data dn i j nitrate phosphate ammonium day dinophysis month year Pn R raw silicate idx;
 
 %% step 6) import RAI fx DinoflagellateS and Diatoms
 
-load([filepath 'Data/RAI'],'FX','DN');
-Dino=FX(:,end-1);
-Diat=FX(:,end);
+load([filepath 'Data/RAI'],'DN','DINO','DIAT');
 
 for i=1:length(SC.dn)
     for j=1:length(DN)
         if DN(j) == SC.dn(i)
-            SC.fxDino(i)=Dino(j);
-            SC.fxDiat(i)=Diat(j);
+            SC.fxDino(i)=DINO(j);
+            SC.fxDiat(i)=DIAT(j);
         else
         end
     end
@@ -492,14 +493,18 @@ SSS=NaN*(ones(size(dn)));
 Zmax=NaN*(ones(size(dn)));
 maxdTdz=NaN*(ones(size(dn)));
 mld5=NaN*(ones(size(dn)));
+N2=NaN*(ones(size(dn)));
+
 for i=1:length(ROMS)
     SST(i)=ROMS(i).Ti(1);
     SSS(i)=ROMS(i).Si(1);    
     Zmax(i)=ROMS(i).Zmax;
     maxdTdz(i)=ROMS(i).maxdTdz;
     mld5(i)=ROMS(i).mld5;    
-
+    N2(i)=ROMS(i).logN2(1);    
 end
+
+N2=smooth(N2,10); %10 pt running average as in Graff & Behrenfeld 2018 and log transform
 
 for i=1:length(SC.dn)
     for j=1:length(dn)
@@ -509,14 +514,14 @@ for i=1:length(SC.dn)
             SC.ZmaxS(i)=Zmax(j);      
             SC.maxdTdzS(i)=maxdTdz(j);   
             SC.mld5S(i)=mld5(j);                
-            
+            SC.N2(i)=N2(j);                
         else
         end
     end
 end
 
-idx=~isnan(SC.mld5S);
-figure; plot(SC.dn(idx),SC.mld5S(idx),'-k')
+idx=~isnan(SC.SST);
+figure; plot(SC.dn(idx),SC.SST(idx),'-k')
 datetick('x','yyyy');
 
 clearvars data raw R S dn i j M1;
@@ -589,6 +594,23 @@ for i=1:length(SC.dn)
         if dn(j) == SC.dn(i)
             SC.wind42U(i)=U(j);       
             SC.wind42V(i)=V(j);       
+        else
+        end
+    end
+end
+
+% Oneill Sea Odyssey
+[~,U,~] = ts_aggregation(w.oso.dn,w.oso.u,1,'day',@mean);
+[dn,V,~] = ts_aggregation(w.oso.dn,w.oso.v,1,'day',@mean);
+d = dateshift(datetime(datestr(dn)),'start','day'); %remove the extra minutes. just keep the day
+d.Format = 'dd-MMM-yyyy';
+dn=datenum(d);
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.windoU(i)=U(j);       
+            SC.windoV(i)=V(j);       
         else
         end
     end
@@ -761,16 +783,12 @@ clearvars filename delimiter startRow formatSpec fileID dataArray ans ...
     invalidThousandsSeparator thousandsRegExp;
 
 %% step 15) import El Nino Southern Oscillation 
-
-opts = spreadsheetImportOptions("NumVariables", 13);
-opts.Sheet = "Sheet1";
-opts.DataRange = "A2:M70";
-opts.VariableNames = ["YEAR", "DECJAN", "JANFEB", "FEBMAR", "MARAPR", "APRMAY", "MAYJUN", "JUNJUL", "JULAUG", "AUGSEP", "SEPOCT", "OCTNOV", "NOVDEC"];
-opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double"];
-
-MEIraw = readtable("/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/MEI.xlsx", opts, "UseExcel", false);
-MEIraw = table2array(MEIraw);
-clear  opts
+startRow = 2; endRow = 42;
+formatSpec = '%4f%9f%9f%9f%9f%9f%9f%9f%9f%9f%9f%9f%f%[^\n\r]';
+fileID = fopen('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/meiv2.txt','r');
+dataArray = textscan(fileID, formatSpec, endRow-startRow+1, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'HeaderLines', startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+MEIraw = table2array(table(dataArray{1:end-1}));
 
 MEIraw=MEIraw';
 yr=MEIraw(1,:);
@@ -791,7 +809,7 @@ end
 
 idx=~isnan(SC.MEI);
 figure; plot(SC.dn(idx),SC.MEI(idx),'-k')
-datetick('x','yyyy');
+datetick('x','yyyy'); datetick;
 
 %% step 16) import select RAI
 load([filepath 'Data/RAI'],'FX','DN','class');

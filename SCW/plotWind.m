@@ -8,26 +8,13 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.08 0.06], [0.09 0.04])
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-xax1=datenum('2012-01-01'); xax2=datenum('2018-10-01');
-
-subplot(3,1,1); %M1
-    [U,~]=plfilt(w.M1.u, w.M1.dn);
-    [V,DN]=plfilt(w.M1.v, w.M1.dn);
-    [~,u,~] = ts_aggregation(DN,U,2,'day',@mean);
-    [time,v,~] = ts_aggregation(DN,V,2,'day',@mean);
-    yax1=-10; yax2=10;
-    stick(time,u,v,xax1,xax2,yax1,yax2,'');
-        legend('M1','Location','NW')
-        legend boxoff
-    datetick('x','yy','keeplimits');   
-    set(gca,'xlim',[xax1 xax2],'xgrid','on','ytick',-8:8:8);
-    hold on
+xax1=datenum('2012-01-01'); xax2=datenum('2018-12-31');
     
-subplot(3,1,2); %46042
+subplot(3,1,1); %46042
     [U,~]=plfilt(w.s42.u, w.s42.dn);
     [V,DN]=plfilt(w.s42.v, w.s42.dn);
-    [~,u,~] = ts_aggregation(DN,U,2,'day',@mean);
-    [time,v,~] = ts_aggregation(DN,V,2,'day',@mean);
+    [~,u,~] = ts_aggregation(DN,U,4,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,4,'day',@mean);
     yax1=-10; yax2=10;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
         legend('46042','Location','NW')
@@ -35,18 +22,31 @@ subplot(3,1,2); %46042
     datetick('x','yy','keeplimits');   
     set(gca,'xlim',[xax1 xax2],'xgrid', 'on','ytick',-8:8:8);   
     hold on
+    
+subplot(3,1,2); %OSO
+    [U,~]=plfilt(w.oso.u, w.oso.dn);
+    [V,DN]=plfilt(w.oso.v, w.oso.dn);
+    [~,u,~] = ts_aggregation(DN,U,4,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,4,'day',@mean);
+    yax1=-10; yax2=10;
+    stick(time,u,v,xax1,xax2,yax1,yax2,'');
+        legend('Oneill','Location','NW')
+        legend boxoff
+    datetick('x','yy','keeplimits');   
+    set(gca,'xlim',[xax1 xax2],'xgrid','on','ytick',-8:8:8);
+    hold on    
 
 subplot(3,1,3); %SCW
     [U,~]=plfilt(w.scw.u, w.scw.dn);
     [V,DN]=plfilt(w.scw.v, w.scw.dn);
-    [~,u,~] = ts_aggregation(DN,U,2,'day',@mean);
-    [time,v,~] = ts_aggregation(DN,V,2,'day',@mean);
-    yax1=-5; yax2=5;
+    [~,u,~] = ts_aggregation(DN,U,4,'day',@mean);
+    [time,v,~] = ts_aggregation(DN,V,4,'day',@mean);
+    yax1=-3; yax2=3;
     stick(time,u,v,xax1,xax2,yax1,yax2,'');
         legend('SCW','Location','NW')
         legend boxoff
     datetick('x','yyyy','keeplimits');   
-    set(gca,'xgrid', 'on','xlim',[xax1 xax2],'ytick',-4:4:4);
+    set(gca,'xgrid', 'on','xlim',[xax1 xax2],'ytick',-2:2:2);
     hold on    
 
 % set figure parameters

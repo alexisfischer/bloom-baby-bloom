@@ -112,29 +112,33 @@ clearvars depth salt temp dn i lat lon s SSS TTT t tt tfilt sfilt time T S DN DN
 %% California ROMS Nowcast (3km): 31 July 2012 - 31 Dec 2018
 in_dir='http://thredds.cencoos.org/thredds/dodsC/CENCOOS_CA_ROMS_DAS.nc?';
 
-lat=ncread([in_dir 'lat[187]'],'lat'); %degrees_north
-lon=ncread([in_dir 'lon[181]'],'lon'); %degrees_east
-lon=lon-360; %degrees_west
-depth  = ncread([in_dir 'depth[0:1:5]'],'depth');
-depth(1)=1; %replace 0 with 1
-time=ncread([in_dir 'time[1:1:9200]'],'time'); %units: hours since 1970-01-01 00:00:00 UTC
-dn=double(time)/24 + datenum('1970-01-01 00:00:00'); %7 hrs ahead of PT
-clearvars time
-
-temp = ncread([in_dir 'temp[1:1:9200][0:1:5][187][181]'],'temp');
-salt  = ncread([in_dir 'salt[1:1:9200][0:1:5][187][181]'],'salt');
- 
-% lat=ncread([in_dir 'lat[183]'],'lat'); %degrees_north
-% lon=ncread([in_dir 'lon[180]'],'lon'); %degrees_east
+%%%% full time series
+% lat=ncread([in_dir 'lat[187]'],'lat'); %degrees_north
+% lon=ncread([in_dir 'lon[181]'],'lon'); %degrees_east
 % lon=lon-360; %degrees_west
-% depth  = ncread([in_dir 'depth[0:1:9]'],'depth');
+% depth  = ncread([in_dir 'depth[0:1:5]'],'depth');
 % depth(1)=1; %replace 0 with 1
-% time=ncread([in_dir 'time[0:1:8719]'],'time'); %units: hours since 1970-01-01 00:00:00 UTC
+% time=ncread([in_dir 'time[1:1:9200]'],'time'); %units: hours since 1970-01-01 00:00:00 UTC
 % dn=double(time)/24 + datenum('1970-01-01 00:00:00'); %7 hrs ahead of PT
 % clearvars time
 % 
-% temp = ncread([in_dir 'temp[0:1:8719][0:1:9][183][180]'],'temp');
-% salt  = ncread([in_dir 'salt[0:1:8719][0:1:9][183][180]'],'salt');
+% temp = ncread([in_dir 'temp[1:1:9200][0:1:5][187][181]'],'temp');
+% salt  = ncread([in_dir 'salt[1:1:9200][0:1:5][187][181]'],'salt');
+ 
+t0=find(dn>=datenum('04-Aug-2018'),1);
+tend=find(dn>=datenum('10-Aug-2018'),1);
+
+lat=ncread([in_dir 'lat[183]'],'lat'); %degrees_north
+lon=ncread([in_dir 'lon[180]'],'lon'); %degrees_east
+lon=lon-360; %degrees_west
+depth  = ncread([in_dir 'depth[0:1:9]'],'depth');
+depth(1)=1; %replace 0 with 1
+time=ncread([in_dir 'time[0:1:8719]'],'time'); %units: hours since 1970-01-01 00:00:00 UTC
+dn=double(time)/24 + datenum('1970-01-01 00:00:00'); %7 hrs ahead of PT
+clearvars time
+
+temp = ncread([in_dir 'temp[0:1:7500][0:1:9][183][180]'],'temp');
+salt  = ncread([in_dir 'salt[0:1:8719][0:1:9][183][180]'],'salt');
 
 temp((temp==-9999))=NaN; %convert -9999 to NaNs
 temp=(squeeze(temp))';
@@ -231,6 +235,8 @@ for i=1:length(dn)
     ROMS(i).Si=double(Si(i,:))';    
 end
 
+
+%%
 % find where dT from the surface exceeds 0.5ºC, aka the MLD
 deep=max(ROMS(1).Zi);
 
@@ -281,5 +287,18 @@ for i=1:length(ROMS)
     
 end 
 
+
+%% calculate Brunt-Väisälä frequency
+
+p=sw_pres(ROMS(1).Zi,ROMS(1).lat); % convert depth (m) to pressure (dbar)
+
+for i=1:length(ROMS)
+    ROMS(i).CT = gsw_CT_from_t( ROMS(i).Si, ROMS(i).Ti, p ); %calculate Conservative Temperature 
+    [ROMS(i).N2, ~] = gsw_Nsquared( ROMS(i).Si, ROMS(i).CT, p, ROMS(1).lat );
+    ROMS(i).N2 = smooth(ROMS(i).N2,10); %10 pt running average as in Graff & Behrenfeld 2018 and log transform
+    ROMS(i).logN2=log10(abs(ROMS(i).N2));
+end
+
+%%
 filepath='~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
 save([filepath 'Data/ROMS/SCW_ROMS_TS_MLD_50m'],'ROMS','CA','MB');

@@ -3,7 +3,7 @@
 % SCW
 % M1
 
-filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/';
+filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/';
 %% 46042 
 %%%%(step 1) Import annual data 2002-2018
 yr=(2002:2018)';
@@ -354,5 +354,71 @@ end
 
 clearvars W i mo yr
 
+
+%% Oneill Sea Odyssey
+% roof of OSO office next to the Santa Cruz Yacht Harbor
+
+%%%%(step 1) Import annual data 2012-2017
+filename="/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/OneillOdyssey-Hourly-Wind-Data.xlsx";
+
+yr=(2007:2018)';
+
+for i=1:length(yr)
+    opts = spreadsheetImportOptions("NumVariables", 7);
+    opts.Sheet = ['OSO_' num2str(yr(i)) ''];
+    opts.DataRange = "A2:G8761";
+    opts.VariableNames = ["Year", "Day", "Time", "AvgWS", "AvgWDir", "MaxGst", "DirofGst"];
+    opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double"];
+    T = readtable(filename, opts, "UseExcel", false);
+    
+    DDD=T.Day; 
+    H=T.Time;    
+    dir=T.AvgWDir;
+    knots=T.AvgWS; 
+    idx=isnan(DDD); DDD(idx)=[]; H(idx)=[]; dir(idx)=[]; knots(idx)=[]; %remove NaNs
+    
+    Date=datenum(['01-Jan-' num2str(yr(i)) ''])+DDD-1;
+    dt=datetime(datestr(Date));
+    [Y,M,D] = ymd(dt);
+    
+    %convert horrible hour format to something that works for datetime
+    H(H==100)=1; H(H==200)=2; H(H==300)=3; H(H==400)=4; H(H==500)=5; H(H==600)=6;
+    H(H==700)=7; H(H==800)=8; H(H==900)=9; H(H==1000)=10; H(H==1100)=11; H(H==1200)=12;
+    H(H==1300)=13; H(H==1400)=14; H(H==1500)=15; H(H==1600)=16; H(H==1700)=17; H(H==1800)=18;
+    H(H==1900)=19; H(H==2000)=20; H(H==2100)=21; H(H==2200)=22; H(H==2300)=23; H(H==2400)=24;
+    
+    MI=zeros(size(H)); S=MI;
+    dt=datetime(Y,M,D,H,MI,S);
+    
+    spd=knots./0.514444; %convert from knots to m/s
+    [u,v] = UVfromDM(dir,spd);
+    
+    W(i).yr=yr(i);
+    W(i).dn=datenum(dt);
+    W(i).dir=dir;
+    W(i).spd=spd;
+    W(i).u=u;
+    W(i).v=v;    
+
+    clearvars opts T  u v dir spd MI dt S H Y M D dt Date DDD H knots idx
+    
+end
+
 %%
-save([filepath 'Wind_MB'],'w');
+%%%%(step 2) Combine data into single column
+w.oso.dn=W(1).dn;
+w.oso.dir=W(1).dir;
+w.oso.spd=W(1).spd;
+w.oso.u=W(1).u;
+w.oso.v=W(1).v;
+
+for i=2:length(W)    
+    w.oso.dn=[w.oso.dn;W(i).dn];
+    w.oso.dir=[w.oso.dir;W(i).dir];
+    w.oso.spd=[w.oso.spd;W(i).spd];
+    w.oso.u=[w.oso.u;W(i).u];
+    w.oso.v=[w.oso.v;W(i).v];
+end
+
+%%
+save([filepath 'Data/Wind_MB'],'w');

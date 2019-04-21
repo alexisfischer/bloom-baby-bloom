@@ -10,39 +10,29 @@ n=14;
 
 %%%% load in Climatology data
 idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; %make sure CHL and DINO have same points
-var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate Chl'; [dinoC] = extractClimatology_partial(var,dn,filepath,varname,n);
+var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate Chl'; [dinoC] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-var = SC.MEI; varname = 'MEI'; [MEI] = extractClimatology(var,dn,filepath,varname,n);
+var = SC.windU; varname = 'U wind-vector'; [Uwind] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-var = SC.NPGO; varname = 'NPGO'; [NPGO] = extractClimatology(var,dn,filepath,varname,n);
+var = SC.windV; varname = 'V wind-vector'; [Vwind] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-var = SC.Tsensor; varname = 'Temperature'; [temp] = extractClimatology(var,dn,filepath,varname,n);
+%var = SC.windoU; varname = 'U oso wind-vector'; [Uowind] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-lag=0;vari = [NaN*ones(lag,1);log(SC.river)]; var=vari(1:end-lag); %add lag to upwelling
-varname = 'Discharge'; [river] = extractClimatology(var,dn,filepath,varname,n);
-%var=log(SC.river); varname = 'Discharge'; [river] = extractClimatology(var,dn,filepath,varname,n);
+%var = SC.windoV; varname = 'V oso wind-vector'; [Vowind] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-var = SC.windU; varname = 'U wind-vector'; [Uwind] = extractClimatology(var,dn,filepath,varname,n);
+var = SC.NPGO; varname = 'NPGO'; [NPGO] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-var = SC.windV; varname = 'V wind-vector'; [Vwind] = extractClimatology(var,dn,filepath,varname,n);
+var = SC.MEI; varname = 'MEI'; [MEI] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-var = SC.PDO; varname = 'PDO'; [PDO] = extractClimatology_partial(var,dn,filepath,varname,n);
+var = SC.Tsensor; varname = 'Temperature'; [temp] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-%var = SC.Zmax; varname = 'Zmax'; [Zmax] = extractClimatology(var,dn,filepath,varname,n);
+var=log(SC.river); varname = 'Discharge'; [river] = extractClimatology_v1(var,dn,filepath,varname,n);
 
-%var = SC.mld5S; varname = 'MixedLayerDepth'; [MLD] = extractClimatology(var,dn,filepath,varname,n);
-
-%lag=0;vari = [NaN*ones(lag,1);SC.upwell]; var=vari(1:end-lag); %add lag to upwelling
-%varname = 'UpwellingIndex'; [upwell] = extractClimatology(var,dn,filepath,varname,n);
-var=(SC.upwell); varname = 'UpwellingIndex'; [upwell] = extractClimatology(var,dn,filepath,varname,n);
-
-%var = SC.SwD; varname = 'SwellDirection'; [SwD] = extractClimatology(var,dn,filepath,varname,n);
-
-%var = SC.ammonium; varname = 'Ammonium'; [ammon] = extractClimatology_partial(var,dn,filepath,varname,n);
+var = SC.PDO; varname = 'PDO'; [PDO] = extractClimatology_v1(var,dn,filepath,varname,n);
 
 % set input parameters
 %type=''; lim1=0; lim2=3;  idx=~isnan(dinoC.ti9); y = dinoC.ti9(idx); DN = dinoC.dn14d(idx);
-type='Anom'; lim1=-1; lim2=1; idx=~isnan(dinoC.tAnom); y = dinoC.tAnom(idx); DN = dinoC.dn14d(idx);
+type='Anom'; lim1=-1; lim2=1; idx=~isnan(dinoC.tAnom); Y = dinoC.tAnom(idx); DN = dinoC.dn14d(idx);
 
 %yrrange = 0411;
 yrrange = 1219;
@@ -57,69 +47,58 @@ elseif yrrange == 1219
     id=find(DN>=datenum('01-Jan-2012'));
 else
 end
-DN=DN(id); y=y(id);
+DN=DN(id); Y=Y(id);
 
 if lim1 == -1 %if anomaly
-    n=2; 
-    [x(:,1)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);
-    [x(:,2)] = match_dates(Vwind.dn14d, Vwind.tAnom, DN);
-    [x(:,3)] = match_dates(NPGO.dn14d, NPGO.tAnom, DN);    
-    [x(:,4)] = match_dates(MEI.dn14d, MEI.tAnom, DN);    
-    [x(:,5)] = match_dates(PDO.dn14d, PDO.tAnom, DN);    
-    [x(:,6)] = match_dates(river.dn14d, river.tAnom, DN);
-    [x(:,7)] = match_dates(temp.dn14d, temp.tAnom, DN);      
+    n=3; 
+    [X(:,1)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);
+    [X(:,2)] = match_dates(Vwind.dn14d, Vwind.tAnom, DN);
+    [X(:,3)] = match_dates(river.dn14d, river.tAnom, DN);
+    [X(:,4)] = match_dates(temp.dn14d, temp.tAnom, DN);        
+    [X(:,5)] = match_dates(NPGO.dn14d, NPGO.tAnom, DN);    
+    [X(:,6)] = match_dates(MEI.dn14d, MEI.tAnom, DN);    
+    [X(:,7)] = match_dates(PDO.dn14d, PDO.tAnom, DN);    
     
+X(end,:)=[]; Y(end)=[]; DN(end)=[];    
+X(end,6)=X(end-1,6);
+X(end-5:end,7)=X(end-6,7);
+
 else %if regular data
     n=3;   
-    [x(:,1)] = match_dates(Uwind.dn14d, Uwind.ti9, DN);
-    [x(:,2)] = match_dates(Vwind.dn14d, Vwind.ti9, DN);
-    [x(:,3)] = match_dates(NPGO.dn14d, NPGO.ti9, DN);    
-    [x(:,4)] = match_dates(MEI.dn14d, MEI.ti9, DN);    
-    [x(:,5)] = match_dates(PDO.dn14d, PDO.ti9, DN);    
-    [x(:,6)] = match_dates(river.dn14d, river.ti9, DN);
-    [x(:,7)] = match_dates(temp.dn14d, temp.ti9, DN);      
+    [X(:,1)] = match_dates(Uwind.dn14d, Uwind.ti9, DN);
+    [X(:,2)] = match_dates(Vwind.dn14d, Vwind.ti9, DN);
+    [X(:,3)] = match_dates(NPGO.dn14d, NPGO.ti9, DN);    
+    [X(:,4)] = match_dates(MEI.dn14d, MEI.ti9, DN);    
+    [X(:,5)] = match_dates(PDO.dn14d, PDO.ti9, DN);    
+    [X(:,6)] = match_dates(river.dn14d, river.ti9, DN);
+    [X(:,7)] = match_dates(temp.dn14d, temp.ti9, DN);      
 end
 
-label={'Uwind','Vwind','NPGO','MEI','PDO','River','Temp'};
-labelst='Wind, NPGO, MEI, PDO, River, Temp';   
+label={'Uwind','Vwind','River','SST','NPGO','MEI','PDO'};
+labelst='Wind, River, SST, NPGO, MEI, PDO';   
     
-Z=zscore([x,y]); %standardize data
-X=Z(:,1:end-1); Y=Z(:,end); 
-
 % figure; plot(DN,y,'k-',DN,Y,'r-');
 % for i=1:size(X,2)
 %     figure; plot(DN,x(:,i),'k-',DN,X(:,i),'r-');
 % end
 
+%deal with NaNs
+X(end,3)=X(end-1,3); X(end-1:end,4)= X(end-3:end-2,4);
+X(end-6:end,5)= X(end-7,5);
 [XL,YL,XS,YS,beta,PCTVAR,MSE,stats] = plsregress(X,Y,n);
 
 % calculate stats
 [N,~] = size(X);
-test=[ones(N,1) X];
+%test=[ones(N,1) X];
+
 Yfit = [ones(N,1) X]*beta; %compute the fitted response values
+Yfit(1)=[]; Yfit(end)=[]; Y(1)=[]; Y(end)=[]; X(1,:)=[]; X(end,:)=[]; DN(1)=[]; 
+DN(end)=[]; XS(1,:)=[]; XS(end,:)=[]; YS(1,:)=[]; YS(end,:)=[]; N=N-2;
 residuals = Y - Yfit;
 YfitPLS = [ones(N,1) X]*beta;
 TSS = sum((Y-mean(Y)).^2);
 RSS_PLS = sum((Y-YfitPLS).^2);
 rsquaredPLS = round(1 - RSS_PLS/TSS,2,'significant')
-
-%% plot timeseries (season)
-figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
-
-plot(DN,Y,'ko',DN,Yfit,'r*','linewidth',2)
-datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
-    'xgrid','on','fontsize',14); box on
-legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
-title(labelst,'fontsize',16,'fontweight','bold')
-ylabel(['Dino Chl ' num2str(type) ''],'fontsize',16,'fontweight','bold')
-hold on
-
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',...
-    [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
-hold off
 
 %% plot timeseries (season) just one variable
 figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
@@ -157,26 +136,6 @@ hold on
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',...
     [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
-hold off
-
-%% plots Loadings
-figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.14 0.02]);
-
-    subplot(1,n,1); barh(XL(:,1),'k')
-    set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)
-    title(['Component ' num2str(1) ''],'fontsize',16)
-    
-for i=2:n
-    subplot(1,n,i); barh(XL(:,i),'k')
-    set(gca,'yaxislocation','left','yticklabel',{},'fontsize',14)
-    title(['Component ' num2str(i) ''],'fontsize',16)
-end
-
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',...
-    [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Loadings.tif']);    
 hold off
 
 %% plots weights
@@ -238,6 +197,26 @@ hold on
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',...
     [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_PLSR.tif']);
+hold off
+
+%% plots Loadings
+figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.14 0.02]);
+
+    subplot(1,n,1); barh(XL(:,1),'k')
+    set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)
+    title(['Component ' num2str(1) ''],'fontsize',16)
+    
+for i=2:n
+    subplot(1,n,i); barh(XL(:,i),'k')
+    set(gca,'yaxislocation','left','yticklabel',{},'fontsize',14)
+    title(['Component ' num2str(i) ''],'fontsize',16)
+end
+
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',...
+    [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Loadings.tif']);    
 hold off
 
 %%

@@ -19,22 +19,31 @@ opts.MissingRule = "omitrow";
 opts = setvaropts(opts, [3, 4, 5, 6, 7, 8], "TreatAsMissing", '');
 T = readtable(filename, opts, "UseExcel", false);
 
-g=T.Genus;
-genus=unique(g)';
-cells=T.cellsL*.001; %convert to cells/mL
-
 dn=datenum(datetime(T.Year,T.Month,T.Day));
 dnM=unique(dn);
+g=T.Genus;
+genus=unique(g)';
+cellsml=T.cellsL*.001; %convert to cells/mL
+count=T.count;
 
 micro=NaN*ones([length(dnM),length(genus)]); %create empty matrix
+n=NaN*ones([length(dnM),length(genus)]); %create empty matrix
 
 %organize data into a Matrix of date x genus
 for i = 1:length(dn)
     iD = find(dn(i)==dnM);
     iC = strmatch(g(i), genus); %classifier index
-    micro(iD,iC) = cells(i);
+    micro(iD,iC) = cellsml(i);
+    n(iD,iC) = count(i);    
 end
 
-clearvars opts cells dn iD iC g i T
+err=200./sqrt(n); % percent error for each species (Willen, 1976, Lund et al. 1958)
+iD=find(err>=20); % restrict data to +/- 20% or 30%
+micro(iD)=NaN; n(iD)=NaN; err(iD)=NaN; 
 
-save([outdir 'Data/Microscopy_SCW'],'micro','genus','dnM');
+% n(isnan(n))=0; % replace NaN with 0
+% micro(isnan(micro))=0; % replace NaN with 0
+
+clearvars opts cellsml count dn iD iC g i T dn chain g
+
+save([outdir 'Data/Microscopy_SCW'],'micro','genus','dnM','err','n');

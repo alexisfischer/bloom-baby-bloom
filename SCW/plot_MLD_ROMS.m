@@ -19,7 +19,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.06 0.04], [0.1 0.12]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-xax1=datenum('2010-10-01'); xax2=datenum('2018-10-01');     
+xax1=datenum('2010-10-01'); xax2=datenum('2019-01-01');     
   
 ax1=subplot(6,1,1); %SCW ROMS Temp
     X=[ROMS.dn]';
@@ -159,7 +159,7 @@ figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings. 
 
 xax1= datenum('01-Sep-2010');
-xax2= datenum('01-Oct-2018');
+xax2= datenum('01-Jan-2019');
 
 yax1= 0;
 yax2= ROMS(1).Zi(end);
@@ -169,7 +169,7 @@ ax1=subplot(2,1,1);
     Y=[ROMS(1).Zi]';
     C=[ROMS.Ti];
     pcolor(X,Y,C); shading interp;
-    colormap(ax1,jet);     
+    colormap(ax1,parula);     
     caxis([10 16]); datetick('x','yyyy');  
     hold on
     set(gca,'Ydir','reverse','ylim',[yax1 yax2],'xlim',[xax1 xax2],...
@@ -189,10 +189,10 @@ ax2=subplot(2,1,2);
     Y=[ROMS(1).Zi(1:end-1)]';
     C=[ROMS.dTdz];
     pcolor(X,Y,C); shading interp;    
-    colormap(ax2,jet); 
+    colormap(ax2,parula); 
     caxis([0 0.2]); datetick('x','yy');
     hold on
-    plot(X,[ROMS.Zmax],'w-','linewidth',1.5);
+ %   plot(X,[ROMS.Zmax],'w-','linewidth',1.5);
     hold on
     set(gca,'Ydir','reverse','ylim',[yax1 yax2],...
             'xlim',[xax1 xax2],'ytick',yax1:yax2/2:yax2,'fontsize',10,'tickdir','out');    
@@ -205,7 +205,7 @@ ax2=subplot(2,1,2);
     h.TickDirection = 'out';
     hold on
 
-% set figure parameters
+%% set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r600',[filepath 'Figs/ROMS_CTD_SCW_Temp_dTdz.tif']);
 hold off
@@ -217,12 +217,12 @@ figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');
 % %where opt = {gap, width_h, width_w} describes the inner and outer spacings. 
 
 xax1= datenum('01-Sep-2010');
-xax2= datenum('01-Oct-2018');
+xax2= datenum('01-Jan-2019');
 
 % yax1= ROMS(1).Zi(1);
 % yax2= ROMS(1).Zi(end);
 yax1=0;
-yax2=200;
+yax2=50;
     
 ax1=subplot(2,1,1);   
     X=[ROMS.dn]';
