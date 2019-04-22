@@ -15,8 +15,8 @@ summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_s
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\NZ\Data\IFCB_summary\'; %New Zealand
 %summarydir='F:\CAWTHRON\summary\'; %New Zealand
 
-%addpath(genpath(summarydir));
-%addpath(genpath([ifcbdir 'data\']));
+addpath(genpath(summarydir));
+addpath(genpath([ifcbdir 'data\']));
 
 %%%% PART 1: Apply classifier
 %% Step 1: Sort data into folders
@@ -35,6 +35,7 @@ addpath(genpath([ifcbdir 'blobs\2018\']));
 %%% Step 3: Extract features
 start_feature_batch_user_training([ifcbdir 'data\2018\'],[ifcbdir 'blobs\2018\'],[ifcbdir 'features\2018\'],true)
 addpath(genpath([ifcbdir 'features\2018\']));
+addpath(genpath([ifcbdir 'class\2018\']));
 
 % Step 4: Apply classifier
 % start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_27Mar2019',...
