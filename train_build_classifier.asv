@@ -4,8 +4,8 @@
 %% Step 1: Compile features for the training set
 manualpath = 'F:\IFCB104\manual\'; % manual annotation file location
 feapath_base = 'F:\IFCB104\features\'; %feature file location, assumes \yyyy\ organization
-maxn = 10000; %maximum number of images per class to include
-minn = 300; %minimum number for inclusion
+maxn = 5000; %maximum number of images per class to include
+minn = 200; %minimum number for inclusion
 class2skip = {'Alexandrium_doublet','Alexandrium_quad','Alexandrium_triplet',...
     'Ash_dark','Ash_glassy','Azadinium','Beads','Boreadinium','Centric<10',...
     'Ciliates','Clusterflagellate','Corethron','Desmid','Detritus','DinoMix',...
@@ -20,7 +20,7 @@ addpath(genpath('F:\IFCB104\manual\summary\')); % add new data to search path
 
 % Step 2: Train (make) the classifier
 result_path = 'F:\IFCB104\manual\summary\'; %USER location of training file and classifier output
-train_filename = 'UserExample_Train_25Apr2019'; %USER what file contains your training features
+train_filename = 'UserExample_Train_23Apr2019'; %USER what file contains your training features
 result_str = 'UserExample_Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
