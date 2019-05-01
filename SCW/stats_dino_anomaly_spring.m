@@ -81,8 +81,8 @@ DN=DN(id); Y=Y(id);
 %     [X(:,8)] = match_dates(N2.dn14d, N2.ti9, DN);      
 % end
 % 
-% label={'U-wind','V-wind','River','SST','NPGO','MEI'};
-% labelst='Wind, River, SST, NPGO, MEI';   
+% label={'U-wind','V-wind','River Discharge','Temperature','NPGO','MEI'};
+% labelst='Wind, River Discharge, Temperature, NPGO, MEI';   
 
 % X(1,:)=[];
 % DN(1,:)=[];
@@ -91,7 +91,7 @@ DN=DN(id); Y=Y(id);
 n=1;
 [X(:,1)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);
 [X(:,2)] = match_dates(Vwind.dn14d, Vwind.tAnom, DN);
-label={'Uwind','Vwind'};
+label={'U-wind','V-wind'};
 labelst='Wind';   
 
 [XL,YL,XS,YS,beta,PCTVAR,MSE,stats] = plsregress(X,Y,n);
@@ -114,8 +114,8 @@ datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
     'xgrid','on','fontsize',14); box on
 legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
-title(labelst,'fontsize',16,'fontweight','bold')
-ylabel(['Dino Chl ' num2str(type) ''],'fontsize',16,'fontweight','bold')
+%title(labelst,'fontsize',16,'fontweight','bold')
+ylabel({'Dinoflagellate';'Chlorophyll Anomaly'},'fontsize',16)
 hold on
 
 % set figure parameters
@@ -130,13 +130,13 @@ figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
 plot(DN,Y,'ko',DN,Yfit,'b*','linewidth',2)
 datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
-    'xgrid','on','fontsize',14); box on
+    'ylim',[-1 2],'xgrid','on','fontsize',14); box on
 legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
-title(labelst,'fontsize',16,'fontweight','bold')
-ylabel(['Dino Chl ' num2str(type) ''],'fontsize',16,'fontweight','bold')
+%title(labelst,'fontsize',16,'fontweight','bold')
+ylabel({'Dinoflagellate';'Chlorophyll Anomaly'},'fontsize',16)
 hold on
 
-%% set figure parameters
+% set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',...
     [filepath 'Figs\dino_' num2str(labelst) '_' num2str(yrrange) '_' num2str(type) '_' num2str(season) '_Timeseries.tif']);    
@@ -147,7 +147,7 @@ hold off
 % that that define the PLS components, i.e., they describe how strongly
 % each component in the PLSR depends on the original variables, and in what direction.
 figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.15 .09], [0.14 0.02]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.15 .09], [0.25 0.02]);
 
     subplot(1,n,1); barh(stats.W(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)
@@ -159,7 +159,7 @@ for i=2:n
     title(['Component ' num2str(i) ''],'fontsize',16)
 end
 
-%% set figure parameters
+% set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',...
     [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_' num2str(season) '_Weights.tif']);    
@@ -206,7 +206,7 @@ hold off
 
 %% plots Loadings
 figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.14 0.02]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.25 0.02]);
 
     subplot(1,n,1); barh(XL(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)

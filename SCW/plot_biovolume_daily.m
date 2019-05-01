@@ -3,7 +3,8 @@
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+%%
 %%%% Step 1: Load in data
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
 load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD_50m'],'ROMS');
@@ -57,35 +58,33 @@ volC=volC./1000; %convert from pg/mL to ug/L
 [xdino, ydino_ml ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
 
 %extract biovolume and carbon for each class (daily average)
-for i=1:length(class2useTB)
-    BIO(i).class = class2useTB(i);
-    [~,BIO(i).bio ] = timeseries2ydmat(mdateTB, volB(:,i));
-    [~,BIO(i).car ] = timeseries2ydmat(mdateTB, volC(:,i));    
-end
+    for i=1:length(class2useTB)
+        BIO(i).class = class2useTB(i);
+        [~,BIO(i).bio ] = timeseries2ydmat(mdateTB, volB(:,i));
+        [~,BIO(i).car ] = timeseries2ydmat(mdateTB, volC(:,i));    
+    end
 
 %%%% Interpolate data for small data gaps 
-n=4;
+    maxgap=3;
+    [ydino] = interp1babygap(ydino,maxgap);
+    [ydino_ml] = interp1babygap(ydino_ml,maxgap);
+    [ydiat] = interp1babygap(ydiat,maxgap);
+    [ydiat_ml] = interp1babygap(ydiat_ml,maxgap);
+    [ymat] = interp1babygap(ymat,maxgap);
+    [ymat_ml] = interp1babygap(ymat_ml,maxgap);
 for i=1:length(BIO)
-    [BIO(i).bio_i] = interp1babygap(BIO(i).bio,n);
-    [BIO(i).car_i] = interp1babygap(BIO(i).car,n);
-end
-
-for i=1:length(ydino)
-    [ydino] = interp1babygap(ydino,n);
-    [ydino_ml] = interp1babygap(ydino_ml,n);
-    [ydiat] = interp1babygap(ydiat,n);
-    [ydiat_ml] = interp1babygap(ydiat_ml,n);
-    [ymat] = interp1babygap(ymat,n);
-    [ymat_ml] = interp1babygap(ymat_ml,n);
+    [BIO(i).bio_i] = interp1babygap(BIO(i).bio,maxgap);
+    [BIO(i).car_i] = interp1babygap(BIO(i).car,maxgap);
 end
 
 %% 2018 plot fraction biovolume with Chlorophyll
 figure('Units','inches','Position',[1 1 14 11],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.04 0.04], [0.06 0.21]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.04 0.04], [0.06 0.24]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
 xax1=datenum('2018-01-01'); xax2=datenum('2018-12-31');     
+%xax1=datenum('2018-04-01'); xax2=datenum('2018-05-31');     
 
 subplot(6,1,[1 2 3]); %species breakdown
 select_dino=[BIO(strmatch('Akashiwo',class2useTB)).car_i,...
@@ -156,28 +155,29 @@ set(h(20),'FaceColor',[100 100 100]./255,'BarWidth',1); %other cell derived
         '\itProrocentrum','\itPeridinium','\itScrippsiella/Heterocapsa','other dinoflagellates',...
         '\itChaetoceros','\itDetonula/Cerataulina/Lauderia','\itEucampia',...
         '\itGuinardia/Dactyliosolen','\itPseudo-nitzschia','\itSkeletonema',...
-        '\itThalassiosira','Centric diatoms','Pennate diatoms',...
+        '\itThalassiosira','centric','pennate',...
         'other diatoms','other cell-derived');
     datetick('x','mmm','keeplimits'); 
     set(gca, 'XTickLabel',{})       
     legend boxoff
     lh.FontSize = 14;               
     hp=get(lh,'pos'); 
-    lh.Position = [hp(1) hp(2) hp(3)+.44 hp(4)]; 
+    lh.Position = [hp(1) hp(2) hp(3)+.49 hp(4)]; 
     datetick('x', 'mmm', 'keeplimits')
     hold on
-%%
+
 subplot(6,1,4); % total cell-derived biovolume
-    plot(xmat,ymat./ymat_ml,'k:',SC.dn,SC.CHL,'*r','linewidth', 2,'Markersize',6);
-    set(gca,'xgrid','on','xlim',[xax1 xax2],'XTickLabel',{},'fontsize',12,...
-        'fontname','arial','tickdir','out','ylim',[0 30],'ytick',5:10:25)
-    ylabel({'(\mug/L)'}, 'fontsize', 16, 'fontname', 'arial','fontweight','bold')
-    lh=legend('Carbon (IFCB)','Chl (extracted)','Location','NorthEast'); legend boxoff
+    h=plot(xmat,ymat./ymat_ml,'ko',SC.dn,SC.CHL,'*r','linewidth', 1.5,'Markersize',6);
+    set(h(1),'linewidth', 1,'Markersize',4)
+    set(gca,'xgrid','on','xlim',[xax1 xax2],'XTickLabel',{},'fontsize',14,...
+        'fontname','arial','tickdir','out','ylim',[0 25],'ytick',5:10:25)
+    ylabel({'\mug/L'}, 'fontsize', 16, 'fontname', 'arial','fontweight','bold')
+    lh=legend('Carbon biomass (IFCB)','Chlorophyll','Location','NorthEast'); legend boxoff
     datetick('x','mmm','keeplimits'); 
     set(gca, 'XTickLabel',{})   
     hp=get(lh,'pos'); 
     lh.FontSize = 14;                   
-    lh.Position = [hp(1) hp(2) hp(3)+.3 hp(4)];
+    lh.Position = [hp(1) hp(2) hp(3)+.38 hp(4)];
     box on
     hold on
 
@@ -220,7 +220,7 @@ ax=subplot(6,1,5); %Brunt-Väisälä frequency
     set(gca,'XLim',[xax1;xax2],'Ydir','reverse',...
         'ylim',[0 ROMS(1).Zi(end)],'ytick',10:20:50,'fontsize',14,'tickdir','out');
     datetick('x','mmm','keeplimits')    
-    ylabel('Depth (m)','fontsize',14,'fontweight','bold');
+    ylabel('Depth (m)','fontsize',16,'fontweight','bold');
     hold on
     h=colorbar('east','AxisLocation','out');
     hp=get(h,'pos'); 

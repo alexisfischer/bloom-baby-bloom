@@ -121,9 +121,9 @@ hold off
 
 C=dinoC;
 varname='Dinoflagellate Chl';
-units='(mg m^{-3})';
-figure('Units','inches','Position',[1 1 8 8],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.05], [0.1 0.04]);
+units='(\mug/L)';
+figure('Units','inches','Position',[1 1 8 6.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.08 0.08], [0.05 0.02], [0.1 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
@@ -132,31 +132,32 @@ xax2=datenum('01-Jan-2019');
 
 subplot(3,1,1);
 anomaly(C.dn14d,C.tAnom);
-set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',12)
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'ylim',[-2.3 3.1],'xgrid','on','fontsize',14)
 datetick('x','yy','keeplimits')
 box on
-ylabel('Anomalies','fontsize',14,'fontweight','bold')
-%title(['' num2str(varname) ''],'fontsize',12,'fontweight','bold');
+ylabel('Anomalies','fontsize',14)
 hold on
 
 subplot(3,1,2);
 h=plot(C.dn,C.t,'o-',C.dn14d,C.ti9,'-','linewidth',1.5,'markersize',3);
 set(h(2),'linewidth',2);
-set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',12)
+set(gca,'xlim',[xax1 xax2],'xtick',xax1:365:xax2,'xgrid','on','fontsize',14)
 datetick('x','yy','keeplimits')
-ylabel({['' num2str(varname) ''];['' num2str(units) '']},'fontsize',14,'fontweight','bold')
-title('weekly raw (blue), 9pt running average (red)','fontsize',12,'fontweight','normal');
+ylabel({['' num2str(units) '']},'fontsize',14)
+legend('weekly raw','9pt running average','Location','N')
+legend boxoff
 hold on
 
 subplot(3,1,3);
-h=plot(C.dn14d,C.t14d,'--k',C.dn14d,C.ti3,'-','linewidth',1.5);
-set(h(1),'linewidth',3);
+h=plot(C.dn14d,C.t14d,':k',C.dn14d,C.ti3,'-','linewidth',1.5);
+set(h(1),'linewidth',2.5);
 set(gca,'xlim',[datenum('01-Jan-2015') datenum('01-Jan-2019')],...
     'xtick',datenum('01-Jan-2015'):365:datenum('01-Jan-2019'),...
-    'xgrid','on','fontsize',12)
+    'xgrid','on','fontsize',14)
 datetick('x','yyyy','keeplimits')
-ylabel({['' num2str(varname) ''];['' num2str(units) '']},'fontsize',14,'fontweight','bold')
-title('climatology (black dashed), 3pt running average (blue)','fontsize',12,'fontweight','normal');
+ylabel({['' num2str(units) '']},'fontsize',14)
+legend('climatology','3pt running average','Location','N')
+legend boxoff
 hold on
 
 % set figure parameters

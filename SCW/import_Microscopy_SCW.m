@@ -37,9 +37,9 @@ for i = 1:length(dn)
     n(iD,iC) = count(i);    
 end
 
-err=200./sqrt(n); % percent error for each species (Willen, 1976, Lund et al. 1958)
-iD=find(err>=20); % restrict data to +/- 20% or 30%
-micro(iD)=NaN; n(iD)=NaN; err(iD)=NaN; 
+err=2./sqrt(n); % percent error for each species (Willen, 1976, Lund et al. 1958)
+% iD=find(err>=20); % restrict data to +/- 20% or 30%
+% micro(iD)=NaN; n(iD)=NaN; err(iD)=NaN; 
 
 % n(isnan(n))=0; % replace NaN with 0
 % micro(isnan(micro))=0; % replace NaN with 0

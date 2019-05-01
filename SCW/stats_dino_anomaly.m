@@ -2,7 +2,9 @@
 clear;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); 
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); 
+
 load([filepath 'Data/SCW_master'],'SC');
 
 dn=SC.dn;
@@ -49,6 +51,7 @@ else
 end
 DN=DN(id); Y=Y(id);
 
+
 if lim1 == -1 %if anomaly
     n=3; 
     [X(:,1)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);
@@ -74,17 +77,9 @@ else %if regular data
     [X(:,7)] = match_dates(temp.dn14d, temp.ti9, DN);      
 end
 
-label={'Uwind','Vwind','River','SST','NPGO','MEI','PDO'};
-labelst='Wind, River, SST, NPGO, MEI, PDO';   
+label={'U-wind','V-wind','River Discharge','Temperature','NPGO','MEI','PDO'};
+labelst='Wind, River Discharge, Temperature, NPGO, MEI, PDO';  
     
-% figure; plot(DN,y,'k-',DN,Y,'r-');
-% for i=1:size(X,2)
-%     figure; plot(DN,x(:,i),'k-',DN,X(:,i),'r-');
-% end
-
-%deal with NaNs
-X(end,3)=X(end-1,3); X(end-1:end,4)= X(end-3:end-2,4);
-X(end-6:end,5)= X(end-7,5);
 [XL,YL,XS,YS,beta,PCTVAR,MSE,stats] = plsregress(X,Y,n);
 
 % calculate stats
@@ -108,8 +103,8 @@ datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
     'xgrid','on','fontsize',14); box on
 legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
-title(labelst,'fontsize',16,'fontweight','bold')
-ylabel(['Dino Chl ' num2str(type) ''],'fontsize',16,'fontweight','bold')
+%title(labelst,'fontsize',16,'fontweight','bold')
+ylabel({'Dinoflagellate';'Chlorophyll Anomaly'},'fontsize',16)
 hold on
 
 % set figure parameters
@@ -128,8 +123,8 @@ datetick('x','yyyy','keeplimits')
 set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
     'xgrid','on','fontsize',14); box on
 legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
-title(labelst,'fontsize',16,'fontweight','bold')
-ylabel(['Dino Chl ' num2str(type) ''],'fontsize',16,'fontweight','bold')
+%title(labelst,'fontsize',16,'fontweight','bold')
+ylabel({'Dinoflagellate';'Chlorophyll Anomaly'},'fontsize',16)
 hold on
 
 % set figure parameters
@@ -142,8 +137,8 @@ hold off
 % The PLS weights are the linear combinations of the original variables
 % that that define the PLS components, i.e., they describe how strongly
 % each component in the PLSR depends on the original variables, and in what direction.
-figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.06 0.06], [0.15 .09], [0.14 0.02]);
+figure('Units','inches','Position',[1 1 8 3.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.20 0.02]);
 
     subplot(1,n,1); barh(stats.W(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)
@@ -200,8 +195,8 @@ print(gcf,'-dtiff','-r600',...
 hold off
 
 %% plots Loadings
-figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.14 0.02]);
+figure('Units','inches','Position',[1 1 8 3.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.20 0.02]);
 
     subplot(1,n,1); barh(XL(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)

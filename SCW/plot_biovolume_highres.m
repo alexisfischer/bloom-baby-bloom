@@ -13,82 +13,67 @@ load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB2018'],...
     'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');
 
 %%%% convert to PST (UTC is 7 hrs ahead)
-time=datetime(mdateTB,'ConvertFrom','datenum'); time=time-hours(7); 
-time.TimeZone='America/Los_Angeles'; 
-time.Format = 'dd-MMM-uuuu HH:mm:ss'; 
-mdateTB = datenum(dateshift(time, 'start', 'hour')); %round to the nearest hour
+    time=datetime(mdateTB,'ConvertFrom','datenum'); time=time-hours(7); 
+    time.TimeZone='America/Los_Angeles'; 
+    time.Format = 'dd-MMM-uuuu HH:mm:ss'; 
+    mdateTB = datenum(dateshift(time, 'start', 'hour')); %round to the nearest hour
 
 %%%% eliminate samples where tina was likely not taking in new samples
-total=NaN*ones(size(mdateTB));
-for i=1:length(mdateTB)
-    total(i)=sum(classcountTB(i,:)); %find number of triggers per sample
-end
-idx=find(total<=100); %find totals where tina was likely not taking in new samples 
-mdateTB(idx)=[];
-filelistTB(idx)=[];
-ml_analyzedTB(idx)=[];
-classcountTB(idx,:)=[];
-classbiovolTB(idx,:)=[];
+    total=NaN*ones(size(mdateTB));
+    for i=1:length(mdateTB)
+        total(i)=sum(classcountTB(i,:)); %find number of triggers per sample
+    end
+    idx=find(total<=100); %find totals where tina was likely not taking in new samples 
+    mdateTB(idx)=[];
+    filelistTB(idx)=[];
+    ml_analyzedTB(idx)=[];
+    classcountTB(idx,:)=[];
+    classbiovolTB(idx,:)=[];
 
 %%%% Convert Biovolume (cubic microns/cell) to Carbon (picograms/cell)
-[ ind_diatom, ~ ] = get_diatom_ind_CA( class2useTB, class2useTB );
-[ cellC ] = biovol2carbon(classbiovolTB, ind_diatom ); 
-volC=zeros(size(cellC)); %convert from per cell to per mL
-volB=zeros(size(cellC)); %convert from per cell to per mL
-for i=1:length(cellC)
-    volC(i,:)=cellC(i,:)./ml_analyzedTB(i);
-    volB(i,:)=classbiovolTB(i,:)./ml_analyzedTB(i);    
-end  
-volC=volC./1000; %convert from pg/mL to ug/L 
+    [ ind_diatom, ~ ] = get_diatom_ind_CA( class2useTB, class2useTB );
+    [ cellC ] = biovol2carbon(classbiovolTB, ind_diatom ); 
+    volC=zeros(size(cellC)); %convert from per cell to per mL
+    volB=zeros(size(cellC)); %convert from per cell to per mL
+    for i=1:length(cellC)
+        volC(i,:)=cellC(i,:)./ml_analyzedTB(i);
+        volB(i,:)=classbiovolTB(i,:)./ml_analyzedTB(i);    
+    end  
+    volC=volC./1000; %convert from pg/mL to ug/L 
+ 
+%%%% Take n hr average for various groups
+    n=4; 
+    %select total living biovolume 
+    [ ind_cell, ~ ] = get_cell_ind_CA( class2useTB, class2useTB );
+    [xmat,ymat,~] =  ts_aggregation(mdateTB,nansum(volC(:,ind_cell),2),n,'hour',@mean);
+    [~,ymat_ml,~] =  ts_aggregation(mdateTB,ml_analyzedTB,n,'hour',@mean);
 
-%  Take daily average and determine what fraction of Cell-derived carbon is 
-% Dinoflagellates vs Diatoms vs Classes of interest
-n=4; maxgap=10;
+    % select only diatoms
+    [ ind_diatom, class_label_diat ] = get_diatom_ind_CA( class2useTB, class2useTB );
+    [~,ydiat,~] =  ts_aggregation(mdateTB,nansum(volC(:,ind_diatom),2),n,'hour',@mean);
 
-%select total living biovolume 
-[ ind_cell, ~ ] = get_cell_ind_CA( class2useTB, class2useTB );
-[xmat,ymat,~] =  ts_aggregation(mdateTB,nansum(volC(:,ind_cell),2),n,'hour',@mean);
-[~,ymat_ml,~] =  ts_aggregation(mdateTB,ml_analyzedTB,n,'hour',@mean);
+    %select only dinoflagellates
+    [ ind_dino, class_label_dino ] = get_dino_ind_CA( class2useTB, class2useTB );
+    [~,ydino,~] =  ts_aggregation(mdateTB,nansum(volC(:,ind_dino),2),n,'hour',@mean);
 
-% select only diatoms
-[ ind_diatom, class_label_diat ] = get_diatom_ind_CA( class2useTB, class2useTB );
-[~,ydiat,~] =  ts_aggregation(mdateTB,nansum(volC(:,ind_diatom),2),n,'hour',@mean);
+    for i=1:length(class2useTB)
+        BIO(i).class = class2useTB(i);
+        [~,BIO(i).bio,~] = ts_aggregation(mdateTB,volB(:,i),n,'hour',@mean);
+        [~,BIO(i).car,~] = ts_aggregation(mdateTB,volC(:,i),n,'hour',@mean);
+    end    
 
-%select only dinoflagellates
-[ ind_dino, class_label_dino ] = get_dino_ind_CA( class2useTB, class2useTB );
-[~,ydino,~] =  ts_aggregation(mdateTB,nansum(volC(:,ind_dino),2),n,'hour',@mean);
-
-% extract biovolume and carbon for each class (daily average)
-for i=1:length(class2useTB)
-    BIO(i).class = class2useTB(i);
-    [~,BIO(i).bio,~] = ts_aggregation(mdateTB,volB(:,i),n,'hour',@mean);
-    [~,BIO(i).car,~] = ts_aggregation(mdateTB,volC(:,i),n,'hour',@mean);
-end
-
-%%%% Step 4: Interpolate data for small data gaps 
-for i=1:length(BIO)
-    [BIO(i).bio_i] = interp1babygap(BIO(i).bio,maxgap);
-    [BIO(i).car_i] = interp1babygap(BIO(i).car,maxgap);
-end
-
-% for i=1:length(BIO)
-%     [BIO(i).bio_i] = smooth(BIO(i).bio_i,3);
-%     [BIO(i).car_i] = smooth(BIO(i).car_i,3);
-% end
-
-for i=1:length(ydino)
+%%%% Interpolate data for small data gaps 
+    maxgap=5;
     [ydino] = interp1babygap(ydino,maxgap);
     [ydiat] = interp1babygap(ydiat,maxgap);
     [ymat] = interp1babygap(ymat,maxgap);
     [ymat_ml] = interp1babygap(ymat_ml,maxgap);
-end
+    for i=1:length(BIO)
+        [BIO(i).bio_i] = interp1babygap(BIO(i).bio,maxgap);
+        [BIO(i).car_i] = interp1babygap(BIO(i).car,maxgap);
+    end    
 
-% for i=1:length(ydino)
-%     [ydino] = smooth(ydino,2);
-%     [ydiat] = smooth(ydiat,2);
-%     [ymat] = smooth(ymat,2);
-%     [ymat_ml] = smooth(ymat_ml,2);
-% end
+    clearvars ind_dino ind_diat ind_cell
 
 %% 2018 plot fraction biovolume with Chlorophyll
 figure('Units','inches','Position',[1 1 16 11],'PaperPositionMode','auto');
