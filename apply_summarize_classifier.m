@@ -19,8 +19,7 @@ addpath(genpath(summarydir));
 addpath(genpath([ifcbdir 'data\']));
 addpath(genpath('C:\Users\kudelalab\Documents\GitHub\'));
 
-%%
-remove_empty_blob_folders([ifcbdir 'blobs\2019\'])
+%remove_empty_blob_folders([ifcbdir 'blobs\2019\'])
  
 %%%% PART 1: Apply classifier
 %% Step 1: Sort data into folders
@@ -38,15 +37,15 @@ addpath(genpath([ifcbdir 'blobs\2019\']));
 start_feature_batch_user_training([ifcbdir 'data\2019\'],[ifcbdir 'blobs\2019\'],[ifcbdir 'features\2019\'],true)
 
 % Step 4: Apply classifier
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jun2019',...
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
 %     [ifcbdir 'features\2015\'],[ifcbdir 'class\class2015_v1\']);
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jun2019',...
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
 %     [ifcbdir 'features\2016\'],[ifcbdir 'class\class2016_v1\']);
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jun2019',...
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
 %     [ifcbdir 'features\2017\'],[ifcbdir 'class\class2017_v1\']);
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jun2019',...
+% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
 %     [ifcbdir 'features\2018\'],[ifcbdir 'class\class2018_v1\']);
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_25Jun2019',...
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
     [ifcbdir 'features\2019\'],[ifcbdir 'class\class2019_v1\']);
 
 %% PART 2: Summarize manual results 
@@ -58,15 +57,20 @@ countcells_manual_user_training([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydi
 biovolume_summary_manual_user_training([ifcbdir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\XXXX\'],[summarydir 'manual\']);
 
-% PART 3: Summarize random forest classification results 
+%% PART 3: Summarize random forest classification results 
 % Step 7: classes    
 % biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
 %     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018); %ACIDD
 biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
-    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2018);
+    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2019);
 
 countcells_allTBnew_user_training([ifcbdir 'class\classXXXX_v1\'],...
-    [ifcbdir 'data\'],[summarydir 'class\'],2018);
+    [ifcbdir 'data\'],[summarydir 'class\'],2019);
+
+%% Export Eqdiam and biovolume from feature files
+biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2017\'])
+biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2018\'])
+biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2019\'])
 
 %%%% PART 3: Assign threshold scores to specific classes
 %% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class

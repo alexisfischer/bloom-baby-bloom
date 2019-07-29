@@ -1,11 +1,11 @@
-%function [ ] = biovol_eqdiam_summary_manual(resultpath,out_dir,roibasepath,feapath_base)
+function [ ] = biovol_eqdiam_summary_manual(resultpath,out_dir,roibasepath,feapath_base)
 % Gives you a summary file of counts and biovolume from manually classified results
 %  Alexis D. Fischer, University of California - Santa Cruz, April 2018
 
- resultpath = 'F:\IFCB113\manual\'; %USER
- out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\';
- roibasepath = 'F:\IFCB113\data\'; %USER
- feapath_base = 'F:\IFCB113\features\XXXX\'; %USER
+%  resultpath = 'F:\IFCB113\manual\'; %USER
+%  out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\';
+%  roibasepath = 'F:\IFCB113\data\'; %USER
+%  feapath_base = 'F:\IFCB113\features\XXXX\'; %USER
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([resultpath 'D*.mat']);
 
@@ -40,7 +40,6 @@ for filecount = 1:length(filelist)
     eqdiam = feastruct.data(:,ind);
         
     % preferentially take manual files over class files
-
     list=nan*[targets,targets,targets];    
     for i=1:length(classlist)
         for j=1:length(targets)
@@ -82,4 +81,4 @@ save([out_dir 'count_eqdiam_biovol_manual_' datestr], 'BiEq', 'class2use', 'note
 disp('Summary cell count file stored here:')
 disp([resultpath 'count_biovol_manual_' datestr])
 
-%end
+end
