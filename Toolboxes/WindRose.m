@@ -221,7 +221,7 @@ for i=1:2:numel(varargin)
             if k
                 warning('Specified CMAP is not being used, since ''colors'' argument has been set by user');
             end
-            colors           = varargin{i+1};
+            colors           =varargin{i+1};
         case 'anglenorth'
             k = any(arrayfun(@(x) strcmpi(x,'angleeast'),varargin));
             if ~k
@@ -249,6 +249,7 @@ if ~isempty(vwinds)
     vwinds  = unique(reshape(vwinds(:),1,[]));    % ?? Should have used vwinds  = unique([0 reshape(vwinds(:),1,[])]); to ensure that values in the interval [0 vmin) appear. If user want hat range to appear, 0 must be included.
     NSpeeds = length(vwinds);
 end
+
 
 if ~isempty(colors)
     if ~isequal(size(colors),[NSpeeds 3])
@@ -393,7 +394,7 @@ function [color,axs] = DrawPatches(N,n,vwinds,count,colorfun,figcolor,min_radius
     if isempty(colors)
         inv = strcmp(colorfun(1:3),'inv');                                     % INV = First three letters in cmap are inv
         if inv; colorfun = colorfun(4:end); end                                % if INV, cmap is the rest, excluding inv
-        color = feval(colorfun,256);                                           % Create color map
+        color = flipud(feval(colorfun,256));                                           % Create color map
         color = interp1(linspace(1,length(vwinds),256),color,1:length(vwinds));% Get the needed values.
         if inv; color = flipud(color); end;                                    % if INV, flip upside down the colormap
     else

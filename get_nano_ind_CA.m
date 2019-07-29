@@ -4,7 +4,7 @@ function [ ind_out, class_label ] = get_nano_ind_CA( class2use, class_label )
 % parts modified from 'get_diatom_ind'
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-class2get = {'Cryptophyte' 'NanoP_less10'};
+class2get = {'Cryptophyte,NanoP_less10,small_misc'};
 
 [~,ind_out1] = intersect(class2use, class2get);
 % ind_out2 = get_Chaetoceros_ind( class2use, class_label );

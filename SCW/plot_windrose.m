@@ -5,7 +5,7 @@
 
 %addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/MiscFunctions/')); % add new data to search path
 
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
+filepath = '~/MATLAB/bloom-baby-bloom/SCW/'; 
 load([filepath 'Data/Wind_MB'],'w');
 
 %% SCW import and organize data
@@ -20,20 +20,76 @@ idx=isnan(spd); dn(idx)=[]; spd(idx)=[]; dir(idx)=[];
 
 % only select certain months
 season='Jan-May'; [~,M] = datevec(dn);
-id = find(ismember(M,1:5));
+id = find(ismember(M,1:12));
 dn=dn(id); dir=dir(id); spd=spd(id);
 
-idx=find(dn>=datenum('01-Oct-2017') & dn<=datenum('31-Dec-2018'));
-Direction=dir(idx); Speed=spd(idx);
-W_1718=table(Direction,Speed);
+idx=find(dn>=datenum('01-Jan-2012') & dn<=datenum('31-Dec-2012'));
+Direction=dir(idx); Speed=spd(idx); W_12=table(Direction,Speed);
 
-idx=find(dn>=datenum('01-Jan-2012') & dn<=datenum('01-Oct-2017'));
-Direction=dir(idx); Speed=spd(idx);
-W_other=table(Direction,Speed);
+idx=find(dn>=datenum('01-Jan-2013') & dn<=datenum('31-Dec-2013'));
+Direction=dir(idx); Speed=spd(idx); W_13=table(Direction,Speed);
+
+idx=find(dn>=datenum('01-Jan-2014') & dn<=datenum('31-Dec-2014'));
+Direction=dir(idx); Speed=spd(idx); W_14=table(Direction,Speed);
+
+idx=find(dn>=datenum('01-Jan-2015') & dn<=datenum('31-Dec-2015'));
+Direction=dir(idx); Speed=spd(idx); W_15=table(Direction,Speed);
+
+idx=find(dn>=datenum('01-Jan-2016') & dn<=datenum('31-Dec-2016'));
+Direction=dir(idx); Speed=spd(idx); W_16=table(Direction,Speed);
+
+idx=find(dn>=datenum('01-Jan-2017') & dn<=datenum('31-Dec-2017'));
+Direction=dir(idx); Speed=spd(idx); W_17=table(Direction,Speed);
+
+idx=find(dn>=datenum('01-Jan-2018') & dn<=datenum('31-Dec-2018'));
+Direction=dir(idx); Speed=spd(idx); W_18=table(Direction,Speed);
+
+% idx=find(dn>=datenum('01-Oct-2017') & dn<=datenum('31-Dec-2018'));
+% Direction=dir(idx); Speed=spd(idx);
+% W_1718=table(Direction,Speed);
+
+% idx=find(dn>=datenum('01-Jan-2012') & dn<=datenum('01-Oct-2017'));
+% Direction=dir(idx); Speed=spd(idx);
+% W_other=table(Direction,Speed);
 
 clearvars DN DIR SPD Direction Speed w id idx
 
-%% plot SCW 
+%% plot SCW each year 2012-2018 (Jan-May)
+close all
+vwind=[0 1 2 3 4 5]; %SCW
+
+Options1 = {'anglenorth',0,'angleeast',90,'cMap','gray',...
+    'freqlabelangle',45,'Min_Radius',0,'vWinds',vwind,...
+    'LegendType',2,'TitleString',{'2018';''},'MaxFrequency',12,'nFreq',4};
+WindRose(W_18.Direction,W_18.Speed,Options1);
+set(gcf,'Units','inches','Position',[1 1 5.3 5],'PaperPositionMode','auto','menubar','none','toolbar','none');
+
+set(legend,'visible','off')
+%set(legend,'Position',[-0.0224971064814815 0.596310763888889 0.31712962962963 0.411111111111111],'FontSize',12);
+   
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',[filepath 'Figs/WindRose_2018_' num2str(site) '.tif']);
+hold off
+
+%% plot SCW each year 2012-2018
+close all
+vwind=[0 1 2 3 4]; %SCW
+
+Options1 = {'anglenorth',0,'angleeast',90,'cMap','gray',...
+    'freqlabelangle',45,'Min_Radius',0,'vWinds',vwind,...
+    'LegendType',2,'TitleString',{'2012';''},'MaxFrequency',10,'nFreq',2};
+
+WindRose(W_12.Direction,W_12.Speed,Options1);
+set(gcf,'Units','inches','Position',[1 1 5.3 5],'PaperPositionMode','auto','menubar','none','toolbar','none');
+
+set(legend,'visible','off')
+%set(legend,'Position',[-0.0224971064814815 0.596310763888889 0.31712962962963 0.411111111111111],'FontSize',12);
+
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',[filepath 'Figs/WindRose_2012_' num2str(site) 'all.tif']);
+hold off
+
+%% plot SCW 2012-2017 vs 2018
 close all
 subplot = @(m,n,p) subtightplot (m, n, p, [0.07 0.07], [0.02 0.1], [0.12 0.03]);
 
@@ -57,7 +113,7 @@ Options2 = {'anglenorth',0,'angleeast',90,'cMap','parula',...
     'LegendType',0,'TitleString',{'2018';''},'MaxFrequency',12,'nFreq',4};
 [figure_handle,~,~,~,~] = WindRose(W_1718.Direction,W_1718.Speed,Options2);
 hold on
-%%
+
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/WindRose_2hr_jan-may_12-18_' num2str(site) '.tif']);
 hold off

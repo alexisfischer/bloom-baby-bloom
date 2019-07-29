@@ -1,5 +1,5 @@
-$LastChangedDate: 2016-07-20 20:57:43 -0700 (Wed, 20 Jul 2016) $
-$Revision: 641 $
+$LastChangedDate: 2017-06-14 17:11:54 -1000 (Wed, 14 Jun 2017) $
+$Revision: 679 $
 
 Note: If you are adding the gshhg-gmt-x.x.x BEFORE you install GMT
 then make sure to set the GSHHG_PATH setting in cmake/ConfigUser.cmake
@@ -9,13 +9,21 @@ GMT then you need to specify its path via gmt.conf's DIR_GSHHG setting.
 --------------------------------------------------------------------
 Global Self-consistent Hierarchical High-resolution Geography, GSHHG
 
-                Version 2.3.6 August 17, 2016
+                Version 2.3.7 June 15, 2017
          Distributed under the Lesser GNU Public License
 
-Fixed 11 crossings in Antarctica grounding line and one in the ice front.
-
+Updates the Northern Mariana Islands with CUPS data from NOAA, adds
+two missing islands to northern Norway, and adds in the missing
+Kosovo-Serbia boundary.
 
 Earlier GSHHG Version-specific comments:
+====================================================================
+Version 2.3.6 August 19, 2016
+
+Fixed 11 crossings in Antarctica grounding line and one in the ice front.
+Added missing islands Georgetown and MacMahan, ME, and updated Jan Mayen, Norway
+[thanks to Norwegian Polar Institute]
+
 ====================================================================
 Version 2.3.5 April 12, 2016
 

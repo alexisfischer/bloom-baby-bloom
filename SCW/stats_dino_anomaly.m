@@ -1,85 +1,77 @@
 %% PLSR 
 clear;
 
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/';
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); 
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); 
-
+filepath = '~/MATLAB/bloom-baby-bloom/SCW/';
+addpath(genpath('~/MATLAB/bloom-baby-bloom/')); 
+addpath(genpath('~/MATLAB/ifcb-analysis/')); 
 load([filepath 'Data/SCW_master'],'SC');
 
-dn=SC.dn;
-n=14;
+dn=SC.dn; n=14; gap=30;
 
 %%%% load in Climatology data
 idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; %make sure CHL and DINO have same points
-var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate Chl'; [dinoC] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate Chl'; [dinoC] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-var = SC.windU; varname = 'U wind-vector'; [Uwind] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.windU; varname = 'Alongshore wind'; [Uwind] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+var = SC.windV; varname = 'Crossshore wind'; [Vwind] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+%Uwind.tAnom(1)=Uwind.tAnom(2); Vwind.tAnom(1)=Vwind.tAnom(2);
 
-var = SC.windV; varname = 'V wind-vector'; [Vwind] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.wind42V; varname = 'Upwelling wind'; [UpwellW] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-%var = SC.windoU; varname = 'U oso wind-vector'; [Uowind] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.curU; varname = 'Alongshore current'; [Ucur] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+var = SC.curV; varname = 'Crossshore current'; [Vcur] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-%var = SC.windoV; varname = 'V oso wind-vector'; [Vowind] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.N2; varname = 'N2'; [N2] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-var = SC.NPGO; varname = 'NPGO'; [NPGO] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.NPGO; varname = 'NPGO'; [NPGO] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-var = SC.MEI; varname = 'MEI'; [MEI] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.MEI; varname = 'MEI'; [MEI] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-var = SC.Tsensor; varname = 'Temperature'; [temp] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.Tsensor; varname = 'Temperature'; [temp] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-var=log(SC.river); varname = 'Discharge'; [river] = extractClimatology_v1(var,dn,filepath,varname,n);
+var=log(SC.sanlorR); varname = 'Discharge'; [sanlorR] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-var = SC.PDO; varname = 'PDO'; [PDO] = extractClimatology_v1(var,dn,filepath,varname,n);
+var = SC.PDO; varname = 'PDO'; [PDO] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-% set input parameters
+var = SC.ammonia; varname = 'Ammonium'; [ammon] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+var = SC.nitrate; varname = 'Nitrate'; [nitrate] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+
+var = SC.upwell; varname = 'UI'; [UI] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+
+%% set input parameters
+clearvars X;
 %type=''; lim1=0; lim2=3;  idx=~isnan(dinoC.ti9); y = dinoC.ti9(idx); DN = dinoC.dn14d(idx);
 type='Anom'; lim1=-1; lim2=1; idx=~isnan(dinoC.tAnom); Y = dinoC.tAnom(idx); DN = dinoC.dn14d(idx);
 
-%yrrange = 0411;
-yrrange = 1219;
-%yrrange = 0419;
+yrrange = 0411; id=find(DN>=datenum('01-Jan-2004') & DN<=datenum('01-Jan-2012'));
+%yrrange = 1219; id=find(DN>=datenum('01-Jan-2012'));
+%yrrange = 0419; id=find(DN>=datenum('01-Jan-2004'));
 
-%set ranges according to dates
-if yrrange == 0419 
-   id=find(DN>=datenum('01-Jan-2004'));
-elseif yrrange == 0411 
-    id=find(DN>=datenum('01-Jan-2004') & DN>=datenum('01-Jan-2012'));
-elseif yrrange == 1219 
-    id=find(DN>=datenum('01-Jan-2012'));
-else
-end
 DN=DN(id); Y=Y(id);
 
+    n=2;     
+%     [X(:,1)] = match_dates(Vwind.dn14d, Vwind.tAnom, DN);    
+ %    [X(:,2)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);    
+    [X(:,1)] = match_dates(UI.dn14d, UI.tAnom, DN);     
+    [X(:,2)] = match_dates(sanlorR.dn14d, sanlorR.tAnom, DN);
+    [X(:,3)] = match_dates(temp.dn14d, temp.tAnom, DN);      
+    [X(:,4)] = match_dates(nitrate.dn14d, nitrate.tAnom, DN);             
+    [X(:,5)] = match_dates(NPGO.dn14d, NPGO.ti9, DN);    
+    [X(:,6)] = match_dates(MEI.dn14d, MEI.tAnom, DN);  
+%    
+   X=fillmissing(X,'linear');
 
-if lim1 == -1 %if anomaly
-    n=3; 
-    [X(:,1)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);
-    [X(:,2)] = match_dates(Vwind.dn14d, Vwind.tAnom, DN);
-    [X(:,3)] = match_dates(river.dn14d, river.tAnom, DN);
-    [X(:,4)] = match_dates(temp.dn14d, temp.tAnom, DN);        
-    [X(:,5)] = match_dates(NPGO.dn14d, NPGO.tAnom, DN);    
-    [X(:,6)] = match_dates(MEI.dn14d, MEI.tAnom, DN);    
-    [X(:,7)] = match_dates(PDO.dn14d, PDO.tAnom, DN);    
-    
-X(end,:)=[]; Y(end)=[]; DN(end)=[];    
-X(end,6)=X(end-1,6);
-X(end-5:end,7)=X(end-6,7);
+% X(end,:)=[]; Y(end)=[]; DN(end)=[];    
+% X(end,6)=X(end-1,6);
+% X(end-5:end,7)=X(end-6,7);
+% 
+  label={'Upwelling Index','River Discharge','Temperature','Nitrate','NPGO','MEI'};
+  labelst='River Discharge, Temperature, NPGO, MEI, Nitrate, Upwelling';  
 
-else %if regular data
-    n=3;   
-    [X(:,1)] = match_dates(Uwind.dn14d, Uwind.ti9, DN);
-    [X(:,2)] = match_dates(Vwind.dn14d, Vwind.ti9, DN);
-    [X(:,3)] = match_dates(NPGO.dn14d, NPGO.ti9, DN);    
-    [X(:,4)] = match_dates(MEI.dn14d, MEI.ti9, DN);    
-    [X(:,5)] = match_dates(PDO.dn14d, PDO.ti9, DN);    
-    [X(:,6)] = match_dates(river.dn14d, river.ti9, DN);
-    [X(:,7)] = match_dates(temp.dn14d, temp.ti9, DN);      
-end
+%  label={'Cross-shore wind','Alongshore wind',...
+%      'River Discharge','Temperature','Nitrate','NPGO','MEI'};
+%  labelst='Local Wind, River Discharge, Temperature, NPGO, MEI, Nitrate';  
 
-label={'U-wind','V-wind','River Discharge','Temperature','NPGO','MEI','PDO'};
-labelst='Wind, River Discharge, Temperature, NPGO, MEI, PDO';  
-    
 [XL,YL,XS,YS,beta,PCTVAR,MSE,stats] = plsregress(X,Y,n);
 
 % calculate stats
@@ -98,19 +90,19 @@ rsquaredPLS = round(1 - RSS_PLS/TSS,2,'significant')
 %% plot timeseries (season) just one variable
 figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
 
-plot(DN,Y,'ko',DN,Yfit,'r*','linewidth',2)
+plot(DN,Y,'k-',DN,Yfit,'b-','linewidth',2)
 datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
+set(gca,'xlim',[datenum('01-Jan-2012') datenum('01-Jan-2019')],...
     'xgrid','on','fontsize',14); box on
 legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
 %title(labelst,'fontsize',16,'fontweight','bold')
 ylabel({'Dinoflagellate';'Chlorophyll Anomaly'},'fontsize',16)
 hold on
 
-% set figure parameters
+%% set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',...
-    [filepath 'Figs\dino_' num2str(labelst) '_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
+    [filepath 'Figs\dino_' num2str(labelst) '_wind_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
 hold off
 
 %% plot timeseries (all)
@@ -120,14 +112,14 @@ figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
 
 plot(DN,Y,'k-',DN,Yfit,'r-','linewidth',2)
 datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[datenum('01-Jan-2012') datenum('31-Dec-2018')],...
+set(gca,'xlim',[datenum('01-Jan-2004') datenum('31-Dec-2011')],...
     'xgrid','on','fontsize',14); box on
 legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
 %title(labelst,'fontsize',16,'fontweight','bold')
 ylabel({'Dinoflagellate';'Chlorophyll Anomaly'},'fontsize',16)
 hold on
 
-% set figure parameters
+%% set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',...
     [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
@@ -137,8 +129,8 @@ hold off
 % The PLS weights are the linear combinations of the original variables
 % that that define the PLS components, i.e., they describe how strongly
 % each component in the PLSR depends on the original variables, and in what direction.
-figure('Units','inches','Position',[1 1 8 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.20 0.02]);
+figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.31 0.02]);
 
     subplot(1,n,1); barh(stats.W(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)
@@ -195,8 +187,8 @@ print(gcf,'-dtiff','-r600',...
 hold off
 
 %% plots Loadings
-figure('Units','inches','Position',[1 1 8 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.20 0.02]);
+figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.31 0.02]);
 
     subplot(1,n,1); barh(XL(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)

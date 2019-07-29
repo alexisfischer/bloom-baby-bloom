@@ -1,7 +1,7 @@
 %% imports all the data (except wind and IFCB) from Santa Cruz Wharf
 % T, SSS, Chl, nit, amm, urea, ammon, phos, sil, DA, STX, RAI
 
-filepath='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/';
+filepath='/Users/afischer/MATLAB/bloom-baby-bloom/SCW/';
 load([filepath 'Data/SCW_master'],'SC');
 
 dn=(datenum('01-Jan-2003'):1:datenum('31-Dec-2018'))';
@@ -45,9 +45,12 @@ SC.mld5=nan(size(SC.dn));
 SC.maxdTdzS=nan(size(SC.dn));
 SC.ZmaxS=nan(size(SC.dn));
 SC.mld5S=nan(size(SC.dn));
-
 SC.upwell=nan(size(SC.dn));
-SC.river=nan(size(SC.dn));
+
+SC.pajaroR=nan(size(SC.dn));
+SC.salinasR=nan(size(SC.dn));
+SC.sanlorR=nan(size(SC.dn));
+SC.soquelR=nan(size(SC.dn));
 
 SC.wind=nan(size(SC.dn));
 SC.winddir=nan(size(SC.dn));
@@ -65,100 +68,128 @@ SC.MEI=nan(size(SC.dn));
 
 SC.AKA=nan(size(SC.dn));
 
-%% step 1) import hourly river discharge data 2003-2018
-% Discharge (cubic feet per second)
-% Date,  dn=datenum(TimeUTC,'yyyy-mm-dd HH:MM');
-filename = [filepath 'Data/PajaroRiver_2003-2018.txt'];
-delimiter = '\t';
-startRow = 33;
-formatSpec = '%*q%*q%q%*q%q%[^\n\r]';
-fileID = fopen(filename,'r');
-dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
-fclose(fileID);
-raw = repmat({''},length(dataArray{1}),length(dataArray)-1);
-for col=1:length(dataArray)-1
-    raw(1:length(dataArray{col}),col) = mat2cell(dataArray{col}, ones(length(dataArray{col}), 1));
-end
-numericData = NaN(size(dataArray{1},1),size(dataArray,2));
+SC.curU=nan(size(SC.dn));
+SC.curV=nan(size(SC.dn));
 
-% Converts text in the input cell array to numbers. Replaced non-numeric text with NaN.
-rawData = dataArray{2};
-for row=1:size(rawData, 1)
-    % Create a regular expression to detect and remove non-numeric prefixes and
-    % suffixes.
-    regexstr = '(?<prefix>.*?)(?<numbers>([-]*(\d+[\,]*)+[\.]{0,1}\d*[eEdD]{0,1}[-+]*\d*[i]{0,1})|([-]*(\d+[\,]*)*[\.]{1,1}\d+[eEdD]{0,1}[-+]*\d*[i]{0,1}))(?<suffix>.*)';
-    try
-        result = regexp(rawData(row), regexstr, 'names');
-        numbers = result.numbers;
-        
-        % Detected commas in non-thousand locations.
-        invalidThousandsSeparator = false;
-        if numbers.contains(',')
-            thousandsRegExp = '^[-/+]*\d+?(\,\d{3})*\.{0,1}\d*$';
-            if isempty(regexp(numbers, thousandsRegExp, 'once'))
-                numbers = NaN;
-                invalidThousandsSeparator = true;
-            end
-        end
-        % Convert numeric text to numbers.
-        if ~invalidThousandsSeparator
-            numbers = textscan(char(strrep(numbers, ',', '')), '%f');
-            numericData(row, 2) = numbers{1};
-            raw{row, 2} = numbers{1};
-        end
-    catch
-        raw{row, 2} = rawData{row};
-    end
-end
+%% step 1) import hourly river discharge data 2003-2018, Discharge (cubic feet per second)
 
-% Convert the contents of columns with dates to MATLAB datetimes using the specified date format.
-try
-    dates{1} = datetime(dataArray{1}, 'Format', 'MM/dd/yy HH:mm', 'InputFormat', 'MM/dd/yy HH:mm');
-catch
-    try
-        % Handle dates surrounded by quotes
-        dataArray{1} = cellfun(@(x) x(2:end-1), dataArray{1}, 'UniformOutput', false);
-        dates{1} = datetime(dataArray{1}, 'Format', 'MM/dd/yy HH:mm', 'InputFormat', 'MM/dd/yy HH:mm');
-    catch
-        dates{1} = repmat(datetime([NaN NaN NaN]), size(dataArray{1}));
-    end
-end
-
-dates = dates(:,1);
-rawNumericColumns = raw(:, 2); % Split data into numeric and string columns.
-R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),rawNumericColumns); % Find non-numeric cells
-rawNumericColumns(R) = {NaN}; % Replace non-numeric cells
-dt = dates{:, 1};
-Rii = cell2mat(rawNumericColumns(:, 1));
-dn=datenum(dt);
-
-Ri=pl33tn(Rii); % low pass filter
-[dn, R] = filltimeseriesgaps( datenum(dt), Ri ); % fill time gaps with NaNs
-
-%interpolate data unless gaps >4 
-index    = isnan(R);
-R(index) = interp1(find(~index), R(~index), find(index), 'linear');
-[b, n]     = RunLength(index);
-longRun    = RunLength(b & (n > 4), n);
-R(longRun) = NaN;
-
+%%%% Pajaro River %%%%
+fileID = [filepath 'Data/PajaroRiver_2003-2018.txt'];
+opts = delimitedTextImportOptions("NumVariables", 8);
+opts.DataLines = [33, Inf];
+opts.Delimiter = "\t";
+opts.VariableNames = ["Var1", "Var2", "datetime", "VarName4", "var", "Var6", "Var7", "Var8"];
+opts.SelectedVariableNames = ["datetime", "VarName4", "var"];
+opts.VariableTypes = ["string", "string", "datetime", "categorical", "double", "string", "string", "string"];
+opts = setvaropts(opts, 3, "InputFormat", "MM/dd/yy HH:mm");
+opts = setvaropts(opts, [1, 2, 6, 7, 8], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, [1, 2, 4, 6, 7, 8], "EmptyFieldRule", "auto");
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
+T = readtable(fileID, opts); % Import the data
+dt=T.datetime;
+Ri=pl33tn(T.var); % low pass filter
+[dn, R]=filltimeseriesgaps( datenum(dt), Ri ); % fill time gaps with NaNs
+R=interp1babygap(R,4); %interpolate data unless gaps >4 
 for i=1:length(SC.dn)
     for j=1:length(dn)
         if dn(j) == SC.dn(i)
-            SC.river(i)=R(j);       
+            SC.pajaroR(i)=R(j);       
         else
         end
     end
 end
 
-figure; plot(SC.dn,SC.river,'-b')
-datetick('x','yyyy');
+figure; plot(SC.dn,SC.pajaroR,'-b'); datetick('x','yyyy'); title('Pajaro R');
+clearvars opts R Ri T dt dn fileID i j
 
-clearvars filename delimiter startRow formatSpec fileID dataArray ans ...
-    raw col numericData rawData row regexstr result numbers ...
-    invalidThousandsSeparator thousandsRegExp dates blankDates ...
-    anyBlankDates invalidDates anyInvalidDates rawNumericColumns...
-    i j dn dt Rii Ri R index longRun n b;
+%%%% San Lorenzo River %%%%
+fileID = [filepath 'Data/SanLorenzoRiver_2003-2018.txt'];
+opts = delimitedTextImportOptions("NumVariables", 6);
+opts.DataLines = [32, Inf];
+opts.Delimiter = "\t";
+opts.VariableNames = ["Var1", "Var2", "datetime", "tz_cd", "var", "Var6"];
+opts.SelectedVariableNames = ["datetime", "tz_cd", "var"];
+opts.VariableTypes = ["string", "string", "datetime", "categorical", "double", "string"];
+opts = setvaropts(opts, 3, "InputFormat", "yyyy-MM-dd HH:mm");
+opts = setvaropts(opts, [1, 2, 6], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, [1, 2, 4, 6], "EmptyFieldRule", "auto");
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
+T = readtable(fileID, opts); % Import the data
+dt=T.datetime;
+Ri=pl33tn(T.var); % low pass filter
+[dn, R]=filltimeseriesgaps( datenum(dt), Ri ); % fill time gaps with NaNs
+R=interp1babygap(R,4); %interpolate data unless gaps >4 
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.sanlorR(i)=R(j);       
+        else
+        end
+    end
+end
+
+figure; plot(SC.dn,SC.sanlorR,'-b'); datetick('x','yyyy'); title('San Lorenzo R');
+clearvars opts R Ri T dt dn fileID i j
+
+%%%% Salinas River %%%%
+fileID = [filepath 'Data/SalinasRiver_2003-2018.txt'];
+opts = delimitedTextImportOptions("NumVariables", 6);
+opts.DataLines = [34, Inf];
+opts.Delimiter = "\t";
+opts.VariableNames = ["Var1", "Var2", "datetime", "tz_cd", "var", "Var6"];
+opts.SelectedVariableNames = ["datetime", "tz_cd", "var"];
+opts.VariableTypes = ["string", "string", "datetime", "categorical", "double", "string"];
+opts = setvaropts(opts, 3, "InputFormat", "yyyy-MM-dd HH:mm");
+opts = setvaropts(opts, [1, 2, 6], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, [1, 2, 4, 6], "EmptyFieldRule", "auto");
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
+T=readtable(fileID, opts); % Import the data
+Ri=pl33tn(T.var); % low pass filter
+[dn, R]=filltimeseriesgaps( datenum(T.datetime), Ri ); % fill time gaps with NaNs
+R=interp1babygap(R,4); %interpolate data unless gaps >4 
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.salinasR(i)=R(j);       
+        else
+        end
+    end
+end
+
+figure; plot(SC.dn,SC.salinasR,'-b'); datetick('x','yyyy'); title('Salinas R');
+clearvars opts R Ri T dt dn fileID i j
+
+%%%% Soquel River %%%%
+fileID = [filepath 'Data/SoquelRiver_2003-2018.txt'];
+opts = delimitedTextImportOptions("NumVariables", 6);
+opts.DataLines = [32, Inf];
+opts.Delimiter = "\t";
+opts.VariableNames = ["Var1", "Var2", "datetime", "Var4", "var", "Var6"];
+opts.SelectedVariableNames = ["datetime", "var"];
+opts.VariableTypes = ["string", "string", "datetime", "string", "double", "string"];
+opts = setvaropts(opts, 3, "InputFormat", "yyyy-MM-dd HH:mm");
+opts = setvaropts(opts, [1, 2, 4, 6], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, [1, 2, 4, 6], "EmptyFieldRule", "auto");
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
+T=readtable(fileID, opts); % Import the data
+Ri=pl33tn(T.var); % low pass filter
+[dn, R]=filltimeseriesgaps( datenum(T.datetime), Ri ); % fill time gaps with NaNs
+R=interp1babygap(R,4); %interpolate data unless gaps >4 
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.soquelR(i)=R(j);       
+        else
+        end
+    end
+end
+
+figure; plot(SC.dn,SC.soquelR,'-b'); datetick('x','yyyy'); title('Soquel R');
+clearvars opts R Ri T dt dn fileID i j
 
 %% step 2) import weekly Temperature from SCOOS spreadsheet 2005-2018
 [~, ~, raw] = xlsread('/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/SCW_temp_2005-2018.xlsx','Sheet1');
@@ -283,7 +314,7 @@ figure; plot(SC.dn(idx),SC.T(idx)); datetick('x','yyyy');
 clearvars data raw stringVectors R dn nitrate Paust phosphate Pmult Pn silicate STX T i j;
 
 %% step 5) import weekly Chl, T, nutrients, PN and Alex from SCOOS Website 2011-2018
-filename = [filepath 'Data/SCW_HABSCCOOS_190313.xls'];
+filename = [filepath 'Data/SCW_HABSCCOOS_190522.xls'];
 opts = detectImportOptions(filename);   
 opts.SelectedVariableNames = {'DateCollected','Temp__C_',...
     'AvgChloro_mg_m3_','Nitrate_uM_','Phosphate_uM_','Silicate_uM_',...
@@ -323,7 +354,7 @@ for i=1:length(SC.dn)
 end
 
  idx=~isnan(SC.T);
- figure; plot(SC.dn(idx),SC.CHL(idx)); datetick('x','yyyy');
+ figure; plot(SC.dn(idx),SC.nitrate(idx)); datetick('x','yyyy');
 
 %clearvars T Alex CHL DA data dn i j nitrate phosphate ammonium day dinophysis month year Pn R raw silicate idx;
 
@@ -588,12 +619,14 @@ end
 d = dateshift(datetime(datestr(dn)),'start','day'); %remove the extra minutes. just keep the day
 d.Format = 'dd-MMM-yyyy';
 dn=datenum(d);
+[vfilt,df]=plfilt(V,dn); [ufilt,df]=plfilt(U,dn);    
+[up,across]=rotate_current(ufilt,vfilt,44);
 
 for i=1:length(SC.dn)
-    for j=1:length(dn)
-        if dn(j) == SC.dn(i)
-            SC.wind42U(i)=U(j);       
-            SC.wind42V(i)=V(j);       
+    for j=1:length(df)
+        if df(j) == SC.dn(i)
+            SC.wind42U(i)=across(j);       
+            SC.wind42V(i)=up(j);       
         else
         end
     end
@@ -829,6 +862,19 @@ end
 idx=~isnan(SC.AKA);
 figure; plot(SC.dn(idx),SC.AKA(idx),'-k')
 datetick('x','yyyy');
+
+%% step 17) import surface currents
+load([filepath 'Data/Hfr_daily_SCW_2012-2018'],'dn','u','v','lat','lon');
+
+for i=1:length(SC.dn)
+    for j=1:length(dn)
+        if dn(j) == SC.dn(i)
+            SC.curU(i)=u(j);      
+            SC.curV(i)=v(j);      
+        else
+        end
+    end
+end
 
 %%
 save([filepath 'Data/SCW_master'],'SC');

@@ -1,4 +1,5 @@
 function m_gshhs_f(varargin);
+
 % M_GSHHS_F Add a coastline to a given map using the 'full' resolution of
 %           the Global Self-consistant Hierarchical High-resolution 
 %           Shorelines.

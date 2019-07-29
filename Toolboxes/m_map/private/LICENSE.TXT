@@ -1,4 +1,4 @@
-$LastChangedDate: 2013-11-24 11:26:07 -0800 (Sun, 24 Nov 2013) $
+$LastChangedDate: 2013-11-24 09:26:07 -1000 (Sun, 24 Nov 2013) $
 $Revision: 594 $
 
 As of GSHHG 2.2.2, GSHHG is distributed under the GNU Lesser General Public

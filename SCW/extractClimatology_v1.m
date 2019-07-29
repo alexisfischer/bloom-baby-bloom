@@ -1,11 +1,11 @@
-function [C] = extractClimatology_v1(var,dn,filepath,varname,n)
+function [C] = extractClimatology_v1(var,dn,filepath,varname,n,gap)
 %% Extracts Climatology for generic variables
 %  Alexis D. Fischer, University of California - Santa Cruz, July 2018
 % 
 idx = strmatch(varname,'Dinoflagellate Chl'); %classifier index
 if idx == 1
     var(var<0)=NaN; 
-    i0=find(dn>=datenum('01-Jun-2004'),1); 
+    i0=find(dn>=datenum('01-Jan-2004'),1); 
     dn=dn(i0:end); var=var(i0:end); 
 else
 end
@@ -13,7 +13,7 @@ end
 i0=find(~isnan(var),1);
 dn=dn(i0:end); var=var(i0:end); 
 
-[t] = interp1babygap(var,30);
+[t] = interp1babygap(var,gap);
 
 %figure; plot(dn,t,'-r'); datetick;
 
@@ -25,7 +25,7 @@ Tmean = nanmean(y_mat,2); %average same day for all years
 t14d = arrayfun(@(i) nanmean(Tmean(i:i+n-1)),1:n:length(Tmean)-n+1)'; % the averaged vector
 t14d = repmat(t14d,1,size(mdate_mat,2));
 t14d = t14d(:);
-t14d=smooth(t14d,6);
+t14d=smooth(t14d,8);
 
 dn14d = mdate_mat((1:n:end),:);
 dn14d(27,:)=[];
