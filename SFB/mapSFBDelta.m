@@ -1,15 +1,15 @@
 %% plot contours of different variables in the SF Bay-Delta
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+%addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
-filepath = '/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SFB/';
+filepath = '/Users/afischer/MATLAB/bloom-baby-bloom/SFB/';
 load([filepath 'Data/SFBDelta_bathymetry'], 'LON', 'LAT', 'BATHY'); % map
 load([filepath 'Data/physical_param'],'s'); % parameters
 load([filepath 'Data/Phytoflash_summary'],'P'); % parameters
 load([filepath 'Data/microscopy_SFB'],'BACI','CHLO','CHRY','CILI','CRYP',...
     'CYAN','DINO','ent','EUGL','EUST','HAPT','M','RAPH','tha');
 
-%[phys]=import_USGS_cruisedata([filepath 'Data/sfb_raw_2013-present.xls']);
-%['s','S','Si'] = compile_physicalparameters_v2(filepath,phys);
+%[phys]=import_USGS_cruisedata("/Users/afischer/MATLAB/bloom-baby-bloom/SFB/Data/sfb_raw_2013-present.xlsx",[filepath 'Data/']);
+%[s] = compile_physicalparameters_v2(filepath,[filepath 'Data/parameters'],[filepath 'Data/NetDeltaFlow'],[filepath 'Data/distance_st18']);
 
 %% Phytoflash data
 % uncomment variable to plot

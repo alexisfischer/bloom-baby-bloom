@@ -5,7 +5,7 @@
 year=2018; %USER
 
 %%%% Step 1: Load in data
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/Exploratorium/';
+filepath = '~/MATLAB/bloom-baby-bloom/Exploratorium/';
 
 load([filepath 'Data/IFCB_summary/class/summary_biovol_allTB' num2str(year) ''],...
     'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB','filelistTB');

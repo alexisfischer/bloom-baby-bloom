@@ -4,7 +4,8 @@
 filepath='/Users/afischer/MATLAB/bloom-baby-bloom/SCW/';
 load([filepath 'Data/SCW_master'],'SC');
 
-dn=(datenum('01-Jan-2003'):1:datenum('31-Dec-2018'))';
+%dn=(datenum('01-Jan-2003'):1:datenum('31-Dec-2018'))';
+dn=(datenum('01-Jan-2000'):1:datenum('31-Dec-2018'))';
 
 %%
 SC.dn=dn;
@@ -815,10 +816,10 @@ clearvars filename delimiter startRow formatSpec fileID dataArray ans ...
     raw col numericData rawData row regexstr result numbers ...
     invalidThousandsSeparator thousandsRegExp;
 
-%% step 15) import El Nino Southern Oscillation 
+%% step 15) import MEIv2
 startRow = 2; endRow = 42;
 formatSpec = '%4f%9f%9f%9f%9f%9f%9f%9f%9f%9f%9f%9f%f%[^\n\r]';
-fileID = fopen('/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/Data/meiv2.txt','r');
+fileID = fopen('/Users/afischer/MATLAB/bloom-baby-bloom/SCW/Data/meiv2.txt','r');
 dataArray = textscan(fileID, formatSpec, endRow-startRow+1, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'HeaderLines', startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
 fclose(fileID);
 MEIraw = table2array(table(dataArray{1:end-1}));

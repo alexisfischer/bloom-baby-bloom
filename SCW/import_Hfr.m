@@ -31,7 +31,7 @@ v2=100*double(ncread(in_dir,'v',[ilon(1) ilat(1) itime2(1)],[length(ilon) length
 uu=cat(3,u1,u2); vv=cat(3,v1,v2); dn=[DN1;DN2];
 uuu=inpaintn(uu); vvv=inpaintn(vv);
 
-replace nans on land segments
+%replace nans on land segments
 for i=1:length(dn)
     uuu(2:6,13,i)=NaN;    
     uuu(9,13,i)=NaN;    
@@ -58,7 +58,7 @@ for i=1:length(dn)
     vvv(13:end,13,i)=NaN;    
 end
 
-take daily average of U and V
+%take daily average of U and V
 dn=datenum(datestr(datenum(dn),'dd-mmm-yyyy'));
 [dnn,~,c]=unique(dn); % c corresponds to ids to be averaged
 DN=datetime(dnn,'ConvertFrom','datenum'); DN.TimeZone='America/Los_Angeles';       

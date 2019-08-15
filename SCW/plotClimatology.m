@@ -53,7 +53,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.05 0.05], [0.07 0.03])
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
     
 all=9;
-xax1=datenum('01-Jan-2004');
+xax1=datenum('01-Jan-2000');
 %xax1=datenum('01-Jan-2012');
 xax2=datenum('01-Jan-2019');
 tick=datenum(2004:1:2019,1,1);

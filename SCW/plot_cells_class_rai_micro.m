@@ -3,13 +3,13 @@ clear;
 addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
-%class2do_string = 'Akashiwo'; chain=1; ymax=100; error=1; 
+% class2do_string = 'Akashiwo'; chain=1; ymax=100; error=.9; step=25; max=100;
 %class2do_string = 'Alexandrium'; chain=1;  ymax=5;  error=.6; 
-% class2do_string = 'Dinophysis'; chain=1;  ymax=10;  error=1; 
-% class2do_string = 'Ceratium'; chain=1;  ymax=16;  error=.9; 
-% class2do_string = 'Pseudo-nitzschia'; chain=4; ymax=72; error=1;
+% class2do_string = 'Dinophysis'; chain=1;  ymax=9.2;  error=.9; step=3; max=9;
+% class2do_string = 'Ceratium'; chain=1;  ymax=16;  error=.9; step=4; max=16;
+ class2do_string = 'Pseudo-nitzschia'; chain=4; ymax=75; error=.9; step=25; max=75;
 % class2do_string = 'Prorocentrum';chain=1; ymax=215; error=1; 
-class2do_string = 'Cochlodinium'; chain=1; ymax=53; error=1; 
+%class2do_string = 'Cochlodinium'; chain=1; ymax=53; error=1; 
 
 filepath = '~/MATLAB/bloom-baby-bloom/SCW/';
 [cellsmL,class2useTB,mdate] = extract_daily_cellsml_SCW2018([filepath 'Data/IFCB_summary/class/summary_allTB_2018']);
@@ -23,10 +23,10 @@ idx=isnan(cellsmL(:,1)); y_mat(idx)=[]; mdate(idx)=[];
 
 %%%% (2) extract Microscopy data for class of interest
 m=micro(:,strmatch(class2do_string,genus)); errM=err(:,strmatch(class2do_string,genus)).*m;
-idx=find(errM>=error); errM(idx)=[]; m(idx)=[]; dnM(idx)=[];
+idx=(errM>=error); errM(idx)=[]; m(idx)=[]; dnM(idx)=[];
 idx=isnan(m); m(idx)=[]; errM(idx)=[]; dnM(idx)=[];
 [~,idx,~]=intersect(dnM,mdate); m=m(idx); dnM=dnM(idx); errM=errM(idx); %microscopy   
-mcrpy.dn=dnM; mcrpy.cells=m; mcrpy.err=errM;
+mcrpy.dn=dnM; mcrpy.cells=m; mcrpy.err=errM.*m;
 
 %%%% (3) extract RAI class of interest
 avg=AVG(:,strmatch(class2do_string,class)); 
@@ -73,7 +73,7 @@ clearvars cellsmL micro idx iD n iAlex iPn iDphy AVG MIN MAX errM m dnM...
 
 % Plot automated vs manual classification vs RAI vs FISH vs microscopy with chlorophyll!
 figure('Units','inches','Position',[1 1 8.5 3],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.07 0.07], [0.11 -0.5], [0.08 0.17]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.1 0.1], [0.11 -0.5], [0.08 0.17]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 xax1=datenum('2018-01-01'); xax2=datenum('2018-12-31');     
@@ -84,10 +84,10 @@ subplot(2,1,1)
     pcolor(chl.dn,[1,2],[chl.c';0*chl.c']); caxis(cax); colormap(flipud(gray));
     datetick('x','m','keeplimits'); shading flat;
     set(gca,'xlim',[xax1 xax2],'ylim',[1 2],'ytick',1:1:2,...
-        'xticklabel',{},'yticklabel',{},'tickdir','out'); box on
+        'xticklabel',{},'yticklabel',{}); box on
     h=colorbar('south'); 
     hp=get(h,'pos'); 
-    hp(1)=.76+hp(1); hp(2)=hp(2); hp(3)=.18*hp(3); hp(4)=hp(4);
+    hp(1)=.75+hp(1); hp(2)=hp(2)+.03; hp(3)=.16*hp(3); hp(4)=hp(4);
     set(h,'pos',hp,'xaxisloc','bottom','fontsize',10); 
     hold on
     h.Ticks=linspace(cax(1),cax(2),3); 
@@ -97,30 +97,33 @@ subplot(2,1,1)
 
 subplot(2,1,2)
 yyaxis left
-    h1=stem(mdate, y_mat,'k-','Linewidth',1,'Marker','none'); hold on
+    h1=plot(mdate, y_mat,'ko','Linewidth',1,'markersize',5); hold on
     hold on
-    h2=errorbar(mcrpy.dn,mcrpy.cells,mcrpy.err,'*','Color',col(2,:),'Linestyle','none',...
-        'MarkerFaceColor',col(2,:),'Linewidth',1.5,'Markersize',9); %microscopy
-         ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}'],'fontsize',16);   
+    h2=errorbar(mcrpy.dn,mcrpy.cells,mcrpy.err,'o','Color',col(2,:),'Linestyle','none',...
+        'MarkerFaceColor',col(2,:),'Linewidth',1.5,'Markersize',5); %microscopy
          set(gca,'Ylim',[0 ymax],'fontsize',12); hold on
 
     idx=contains(class2do_string,{'Pseudo-nitzschia','Alexandrium','Dinophysis'});
     if idx == 1       
-        h3 = errorbar(fish.dn,fish.cells,fish.err,'o','Linestyle','none','Linewidth',2,...
-            'Color',col(4,:),'Markersize',6); hold on  
+        h3 = errorbar(fish.dn,fish.cells,fish.err,'o','Linestyle','none','Linewidth',1.5,...
+            'Color',col(4,:),'MarkerFaceColor',col(4,:),'Markersize',5); hold on  
     else
     end
-    set(gca,'xlim',[xax1 xax2],'fontsize',13,'tickdir','out','ycolor','k');  
+    set(gca,'xlim',[xax1 xax2],'ytick',0:step:max,'fontsize',13,'ycolor','k');  
     datetick('x','m','keeplimits');
 
 yyaxis right
-    errorbar(rai.dn,rai.avg,rai.neg,rai.pos,'Color',col(1,:),'Linewidth',2,...
+    errorbar(rai.dn,rai.avg,rai.neg,rai.pos,'Color',col(1,:),'Linewidth',1.5,...
         'Linestyle','none','Markersize',5,'Capsize',0); hold on
        set(gca,'ylim',[0 100],'ytick',0:25:100,'xlim',[xax1 xax2],...
-       'fontsize',12,'tickdir','out','ycolor',col(1,:));
+       'fontsize',12,'ycolor',col(1,:));
     datetick('x','m','keeplimits');
-    ylabel({'RAI (% total cells)'},'fontsize',16);  
+    ylabel({'RAI (% total cells)'},'fontsize',14);  
     hold on
+    
+yyaxis left
+ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}'],'fontsize',14);   
+
 % 
 % if idx == 1
 %     lh = legend([h1 h2 h3],'Classifier','Microscopy','FISH','location','NE');

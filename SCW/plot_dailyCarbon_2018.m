@@ -28,14 +28,14 @@ load([filepath 'Data/Wind_MB'],'w');
 % nansum(nano(itime))/nansum(total(itime))
 
 %% Option 3: (top) legend (middle1) fraction phytoplankton, (middle2) carbon (bottom) environmental variables
-figure('Units','inches','Position',[1 1 9 11],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.04 0.04], [0.08 0.08]);
+figure('Units','inches','Position',[1 1 9 12],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.04 0.04], [0.09 0.08]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
 xax1=datenum('2018-01-01'); xax2=datenum('2018-12-31');     
 
-subplot(8,1,[4 5 6]); %species breakdown
+subplot(9,1,[4 5 6]); %species breakdown
 select_dino=[carbonml(:,strmatch('Akashiwo',class2useTB)),...
     carbonml(:,strmatch('Ceratium',class2useTB)),...
     carbonml(:,strmatch('Dinophysis',class2useTB)),...    
@@ -112,10 +112,10 @@ set(h(20),'FaceColor',[100 100 100]./255,'BarWidth',1); %nanoplankton
         '\itPseudo-nitzschia \rmspp.','\itSkeletonema \rmspp.',...
         '\itThalassiosira \rmspp.','centric diatoms','pennate diatoms','nanoplankton');
     legend boxoff
-    lh.FontSize = 10; hp=get(lh,'pos'); lh.Position=[hp(1)-.49 hp(2)+.38 hp(3) hp(4)]; 
+    lh.FontSize = 10; hp=get(lh,'pos'); lh.Position=[hp(1)-.49 hp(2)+.35 hp(3) hp(4)]; 
     hold on
 
-subplot(8,1,7); % total cell-derived biovolume
+subplot(9,1,7); % total cell-derived biovolume
 yyaxis left
     plot(mdate,phytoTotal,'ko','linewidth', 1,'Markersize',3.5);
     set(gca,'xgrid','on','xlim',[xax1 xax2],'fontsize',12,'xticklabel',{},...
@@ -129,8 +129,7 @@ yyaxis right
         'fontname','arial','tickdir','out','ylim',[0 25],'ytick',5:10:25,'xticklabel',{})    
     box on; hold on  
         
- subplot(8,1,8) %regional upwelling
-% col1=brewermap(3,'Greys');
+ subplot(9,1,8) %regional upwelling
      itime=find(w.s42.dn>=xax1 & w.s42.dn<=xax2);
      [time,v,~] = ts_aggregation(w.s42.dn(itime),w.s42.v(itime),1,'hour',@mean); 
      [~,u,~] = ts_aggregation(w.s42.dn(itime),w.s42.u(itime),1,'hour',@mean); 
@@ -140,17 +139,31 @@ yyaxis right
     [up,across]=rotate_current(ufilt,vfilt,44); 
     upp = interp1babygap(up,24); 
     [DF,UP,~] = ts_aggregation(df,upp,1,'day',@mean); 
-
     h1=plot(DF,UP,'-','Color','k','linewidth',2); 
     hold on
-    xL = get(gca, 'XLim');
-    plot(xL, [0 0], 'k--')      
+    xL = get(gca, 'XLim'); plot(xL, [0 0], 'k--')      
+    
+    datetick('x', 'm', 'keeplimits')
     set(gca,'xlim',[xax1 xax2],'ylim',[-11 10],'ytick',-7:7:7,'fontsize',12,'tickdir','out');    
-    datetick('x','m','keeplimits');   
-    ylabel('(m s^{-1})','fontsize',14);
+    ylabel('m s^{-1}','fontsize',14);
     hold on    
     
-%% set figure parameters
+subplot(9,1,9) %regional upwelling  
+yyaxis left
+    plot(SC.dn,SC.sanlorR,'-k','linewidth',2);
+    set(gca,'xgrid','on','ylim',[0 1500],'ytick',500:500:1500,'XLim',[xax1;xax2],...
+       'fontsize',12,'tickdir','out','ycolor','k'); 
+    ylabel({'ft^3 s^{-1}'},'fontsize',14);
+    datetick('x','m','keeplimits');       
+    hold on  
+yyaxis right
+    plot(SC.dn,SC.nitrate,'ob','linewidth',2,'markersize',4);
+    set(gca,'xgrid','on','XLim',[xax1;xax2],...
+        'ylim',[0 15],'fontsize',12,'tickdir','out','ycolor','b'); 
+    ylabel({'uM'},'fontsize',14);
+    hold on       
+    
+% set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/SCW2018_all_upwell.tif']);
 hold off
@@ -369,7 +382,6 @@ Lfit = fitlm(x,y,'RobustOpts','on');
 [~,outliers] = maxk((Lfit.Residuals.Raw),4);
 x(outliers)=[]; y(outliers)=[];
 
-
 Lfit = fitlm(x,y,'RobustOpts','on');
 b = round(Lfit.Coefficients.Estimate(1),2,'significant');
 m = round(Lfit.Coefficients.Estimate(2),2,'significant');    
@@ -419,7 +431,7 @@ legend(L,['slope=' num2str(m) '; Int=' num2str(b) '; r^2=' num2str(Rsq) ''],...
 ylabel('Log [C] (\mug L^{-1})','fontsize',14);
 xlabel('Log [Chl \ita\rm] (\mug L^{-1})','fontsize',14);
 
-% set figure parameters
+%% set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/IFCB_vs_ChlExtracted_log.tif']);
 hold off

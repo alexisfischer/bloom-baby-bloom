@@ -1,7 +1,7 @@
 %% Import 2018 Microscopy data from SCW
 % Alexis D. Fischer, March 2019
 
-outdir='/Users/afischer/Documents/MATLAB/bloom-baby-bloom/SCW/';
+outdir='/Users/afischer/MATLAB/bloom-baby-bloom/SCW/';
 
 filename ='/Users/afischer/Documents/UCSC_research/SCW_Dino_Project/Data/Microscopy_SCW_2018_ADF.xlsx';
 opts = spreadsheetImportOptions("NumVariables", 8); % Setup the Import Options
@@ -37,6 +37,7 @@ for i = 1:length(dn)
     n(iD,iC) = count(i);    
 end
 
+%%
 err=2./sqrt(n); % percent error for each species (Willen, 1976, Lund et al. 1958)
 % iD=find(err>=20); % restrict data to +/- 20% or 30%
 % micro(iD)=NaN; n(iD)=NaN; err(iD)=NaN; 
