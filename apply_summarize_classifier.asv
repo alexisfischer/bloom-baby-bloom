@@ -2,16 +2,16 @@
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 % modify according to dataset
-ifcbdir='F:\IFCB104\'; %SCW
+%ifcbdir='F:\IFCB104\'; %SCW
 %ifcbdir='F:\IFCB113\'; %USGS cruises
 %ifcbdir='F:\IFCB113\Exploratorium\'; %Exploratorium
-%ifcbdir='F:\IFCB113\ACIDD2017\'; %ACIDD
+ifcbdir='F:\IFCB113\ACIDD2017\'; %ACIDD
 %ifcbdir='F:\CAWTHRON\'; %New Zealand
 
-summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
+%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\'; %USGS cruises
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Exploratorium\Data\IFCB_summary\'; %Exploratorium
-%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\'; %ACIDD
+summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\'; %ACIDD
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\NZ\Data\IFCB_summary\'; %New Zealand
 %summarydir='F:\CAWTHRON\summary\'; %New Zealand
 
@@ -59,10 +59,10 @@ biovolume_summary_manual_user_training([ifcbdir 'manual\'],...
 
 %% PART 3: Summarize random forest classification results 
 % Step 7: classes    
-% biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
-%     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018); %ACIDD
 biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
-    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2016);
+    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018); %ACIDD
+% biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
+%     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2016);
 
 biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2016:2019);
