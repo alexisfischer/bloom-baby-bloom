@@ -6,25 +6,33 @@ load([filepath 'Data/Hfr_daily_SCW_Feb2018'],'dn','u','v','lat','lon','iilat','i
 load([filepath 'Figs/coast_montereybay'],'ncst');
 
 %% test figure for a specific date
-date='25-Feb-2018'; 
+date='20-Feb-2018'; 
+ch=char(date);
 factor=.002;
 iilat=[36.5 37.05]; iilon=[-122.29 -121.77];
 itime=find(dn==datenum(date));
 
-figure('Units','inches','Position',[1 1 5 6],'PaperPositionMode','auto');   
+figure('Units','inches','Position',[1 1 3 4],'PaperPositionMode','auto');   
 plot(ncst(:,1),ncst(:,2),'k-'); dasp(42); xlim(iilon); ylim(iilat);
 hold on
 q=quiver(lon,lat,factor*squeeze(u(:,:,itime)),factor*squeeze(v(:,:,itime)),'k');
 q.AutoScale='off';
+q.LineWidth=1;
+q.MaxHeadSize=.5;
 
 hold on
 plot(-122.02,36.96,'.','Markersize',20,'Color','r');
-text(-122.1,36.97, {'SCMW'},'fontsize',12);
-title(date,'fontsize',14)
+text(-122.1,36.99, {'SCMW'},'fontsize',12);
+title(ch(1:6),'fontsize',14)
 hold on
-    
+
+% q=quiver(-121.92,37,factor*25,0,'k');
+% q.AutoScale='off';
+% q.LineWidth=1;
+% q.MaxHeadSize=.5;
+% text(-121.95,37.019, {'25 cm/s'},'fontsize',12);
+
 % Set figure parameters
-ch=char(date);
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r100',[filepath 'Figs/Hfr_MB_' ch(1:2) ch(4:6) ch(8:11) '.tif'])
 hold off

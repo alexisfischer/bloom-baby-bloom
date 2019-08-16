@@ -1,19 +1,17 @@
 %% Plot daily carbon, chlorophyll, and phytoplaknton for 2018 at SCW
-% also plots carbon to chlorophyll comparison
 % parts modified from "compile_biovolume_summaries"
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
-clear
+clear;
 
-%%%% Step 1: Load in data
+%%%% Load in data
 filepath = '~/MATLAB/bloom-baby-bloom/SCW/'; 
-load([filepath 'Data/SCW_master'],'SC');
 load([filepath 'Data/SCW_master'],'SC');
 load([filepath 'Data/Wind_MB'],'w');
 
-[phytoTotal,dino,diat,nano,zoop,carbonml,class2useTB,mdate] = extract_daily_carbon_SCW2018(...
+[phytoTotal,dino,diat,nano,zoop,carbonml,class2useTB,mdate] = extract_daily_carbon(...
     [filepath 'Data/IFCB_summary/class/summary_biovol_allTB2018']);
 
 %%%% find monthly/annual fractions of interest
@@ -27,7 +25,7 @@ load([filepath 'Data/Wind_MB'],'w');
 % nansum(diat(itime))/nansum(total(itime))
 % nansum(nano(itime))/nansum(total(itime))
 
-%% Option 3: (top) legend (middle1) fraction phytoplankton, (middle2) carbon (bottom) environmental variables
+%% Option 1: (top) legend (middle1) fraction phytoplankton, (middle2) carbon (bottom) environmental variables
 figure('Units','inches','Position',[1 1 9 12],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.04 0.04], [0.09 0.08]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
@@ -168,7 +166,7 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/SCW2018_all_upwell.tif']);
 hold off
 
-%% Option 1: (top) carbon, (middle) fraction phytoplankton, (bottom) legend
+%% Option 2: (top) carbon, (middle) fraction phytoplankton, (bottom) legend
 figure('Units','inches','Position',[1 1 9 9.5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.01 0.01], [0.04 0.04], [0.08 0.08]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
@@ -275,7 +273,7 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/SCW2018_all.tif']);
 hold off
 
-%% Option 2: (top) fraction phytoplankton and legend, (bottom) carbon
+%% Option 3: (top) fraction phytoplankton and legend, (bottom) carbon
 figure('Units','inches','Position',[1 1 11 6.2],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02], [0.06 0.07], [0.07 0.28]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
@@ -370,68 +368,4 @@ set(h(20),'FaceColor',[100 100 100]./255,'BarWidth',1); %other cell derived
 % set figure parameters
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/SCW2018_all.tif']);
-hold off
-
-%% plot chlorophyll to carbon comparison
-col1=brewermap(1,'Greys');
-
-[idx]=~isnan(SC.CHL); chl=SC.CHL(idx); dne=SC.dn(idx); % remove NaNs
-[idx]=~isnan(phytoTotal); carbon=phytoTotal(idx); dni=mdate(idx); % remove NaNs
-[~,ia,ib]=intersect(dne,dni); x=(chl(ia)); y=(carbon(ib));
-Lfit = fitlm(x,y,'RobustOpts','on');
-[~,outliers] = maxk((Lfit.Residuals.Raw),4);
-x(outliers)=[]; y(outliers)=[];
-
-Lfit = fitlm(x,y,'RobustOpts','on');
-b = round(Lfit.Coefficients.Estimate(1),2,'significant');
-m = round(Lfit.Coefficients.Estimate(2),2,'significant');    
-Rsq = round(Lfit.Rsquared.Ordinary,2,'significant')
-xfit = linspace(min(x),max(x),100); 
-yfit = m*xfit+b; 
-
-figure('Units','inches','Position',[1 1 3.5 4],'PaperPositionMode','auto');
-scatter(x,y,8,'k','linewidth',2); hold on 
-L=plot(xfit,yfit,'-','Color',col1,'linewidth',1.5);
-legend(L,['slope=' num2str(m) '; Int=' num2str(b) '; r^2=' num2str(Rsq) ''],...
-    'Location','NorthOutside'); legend boxoff
- set(gca,'fontsize',12,'tickdir','out',...
-     'ylim',[0 50],'ytick',0:10:50,'xlim',[0 20],'xtick',0:5:20); box on
-ylabel('C (\mug L^{-1})','fontsize',14);
-xlabel('Chl \ita \rm(\mug L^{-1})','fontsize',14);
-
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs/IFCB_vs_ChlExtracted.tif']);
-hold off
-
-%% plot chlorophyll to carbon comparison
-col1=brewermap(1,'Greys');
-
-[idx]=~isnan(SC.CHL); chl=SC.CHL(idx); dne=SC.dn(idx); % remove NaNs
-[idx]=~isnan(phytoTotal); carbon=phytoTotal(idx); dni=mdate(idx); % remove NaNs
-[~,ia,ib]=intersect(dne,dni); x=log(chl(ia)); y=log(carbon(ib));
-Lfit = fitlm(x,y,'RobustOpts','on');
-[~,outliers] = maxk((Lfit.Residuals.Raw),2);
-x(outliers)=[]; y(outliers)=[];
-
-Lfit = fitlm(x,y,'RobustOpts','on');
-b = round(Lfit.Coefficients.Estimate(1),2,'significant');
-m = round(Lfit.Coefficients.Estimate(2),2,'significant');    
-Rsq = round(Lfit.Rsquared.Ordinary,2,'significant')
-xfit = linspace(min(x),max(x),100); 
-yfit = m*xfit+b; 
-
-figure('Units','inches','Position',[1 1 3.5 4],'PaperPositionMode','auto');
-scatter(x,y,8,'k','linewidth',2); hold on 
-L=plot(xfit,yfit,'-','Color',col1,'linewidth',1.5);
-legend(L,['slope=' num2str(m) '; Int=' num2str(b) '; r^2=' num2str(Rsq) ''],...
-    'Location','NorthOutside'); legend boxoff
- set(gca,'fontsize',12,'tickdir','out',...
-     'ylim',[1 4],'ytick',0:1:4,'xlim',[0 3],'xtick',0:1:3); box on
-ylabel('Log [C] (\mug L^{-1})','fontsize',14);
-xlabel('Log [Chl \ita\rm] (\mug L^{-1})','fontsize',14);
-
-%% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs/IFCB_vs_ChlExtracted_log.tif']);
 hold off

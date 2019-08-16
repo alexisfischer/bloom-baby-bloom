@@ -2,9 +2,9 @@ function [P,Pi] = merge_Phytoflash(data1215,data1519,outdir)
 %% merge Phytoflash data from 2012-2015 and 2015-2019 into one file
 
 %Example inputs
-data1215='~/MATLAB/bloom-baby-bloom/SFB/Data/Phytoflash_2012-2015';
-data1519='~/MATLAB/bloom-baby-bloom/SFB/Data/Phytoflash_2015-2019';
-outdir='~/MATLAB/bloom-baby-bloom/SFB/';
+% data1215='~/MATLAB/bloom-baby-bloom/SFB/Data/Phytoflash_2012-2015';
+% data1519='~/MATLAB/bloom-baby-bloom/SFB/Data/Phytoflash_2015-2019';
+% outdir='~/MATLAB/bloom-baby-bloom/SFB/';
 
 %load in data
 load(data1215,'p');
