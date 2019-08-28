@@ -3,7 +3,7 @@ function [phytoTotal,dino,diat,nano,zoop,carbonml,class2useTB,mdate] = extract_d
 %  Alexis D. Fischer June 2019
 
 %%%% example inputs
-%biovol_path = '~/MATLAB/bloom-baby-bloom/SCW/Data/IFCB_summary/class/summary_biovol_allTB2017';
+%biovol_path = '~/MATLAB/bloom-baby-bloom/SCW/Data/IFCB_summary/class/summary_biovol_allTB2018';
 
 load(biovol_path,'class2useTB','classcountTB','classbiovolTB','ml_analyzedTB','mdateTB');
 

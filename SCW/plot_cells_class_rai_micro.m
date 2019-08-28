@@ -1,5 +1,4 @@
 clear;
-
 addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
@@ -12,7 +11,7 @@ addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
 %class2do_string = 'Cochlodinium'; chain=1; ymax=53; error=1; 
 
 filepath = '~/MATLAB/bloom-baby-bloom/SCW/';
-[cellsmL,class2useTB,mdate] = extract_daily_cellsml_SCW2018([filepath 'Data/IFCB_summary/class/summary_allTB_2018']);
+[cellsmL,class2useTB,mdate] = extract_daily_cellsml([filepath 'Data/IFCB_summary/class/summary_allTB_2018']);
 load([filepath 'Data/SCW_master'],'SC');
 load([filepath 'Data/RAI'],'DN','MAX','AVG','MIN','class');
 load([filepath 'Data/Microscopy_SCW'],'micro','genus','dnM','err');
@@ -123,7 +122,6 @@ yyaxis right
     
 yyaxis left
 ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}'],'fontsize',14);   
-
 % 
 % if idx == 1
 %     lh = legend([h1 h2 h3],'Classifier','Microscopy','FISH','location','NE');
@@ -176,48 +174,109 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/Pseudo-nitschia_RAI_IFCB_FISH.tif']);
 hold off
 
-%% Probability distribution (not using)
-figure('Units','inches','Position',[1 1 9 3],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.02 0.02],[0.17 0.03], [0.08 0.03]);
-%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
-%where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
+%% special PN plots
+clear;
+class2do_string = 'Pseudo-nitzschia'; chain=4; ymax=75; error=.9; step=25; max=75;
 
-[mdate_mat,y_matt,~,~] = timeseries2ydmat(mdateTB,y_mat*chain); %take daily average IFCB
+filepath = '~/MATLAB/bloom-baby-bloom/SCW/';
+[cellsmL,class2useTB,mdate] = extract_daily_cellsml([filepath 'Data/IFCB_summary/class/summary_allTB_2018']);
+load([filepath 'Data/SCW_master'],'SC');
+load([filepath 'Data/Microscopy_SCW'],'micro','genus','dnM','err');
 
-df=5;
-subplot(1,4,1); % IFCB
-ifcb=y_mat; x=sort(ifcb); y = chi2pdf(x,df);
+%%%% (1) extract Classifier data for class of interest
+y_mat=cellsmL(:,strmatch(class2do_string, class2useTB)).*chain; %class
+idx=isnan(cellsmL(:,1)); y_mat(idx)=[]; mdate(idx)=[];
 
-plot(x,y,'.-'); set(gca,'xlim',[0 40],'ylim',[0 .16],'tickdir','out')
-xlabel('IFCB cells/mL','fontsize',14)
-ylabel('Probability Density (df = 5)','fontsize',14)
-hold on
+%%%% (2) extract Microscopy data for class of interest
+m=micro(:,strmatch(class2do_string,genus)); errM=err(:,strmatch(class2do_string,genus)).*m;
+idx=(errM>=error); errM(idx)=[]; m(idx)=[]; dnM(idx)=[];
+idx=isnan(m); m(idx)=[]; errM(idx)=[]; dnM(idx)=[];
+[~,idx,~]=intersect(dnM,mdate); m=m(idx); dnM=dnM(idx); errM=errM(idx); %microscopy   
+mcrpy.dn=dnM; mcrpy.cells=m; mcrpy.err=errM.*m;
 
-subplot(1,4,2); %FISH
-x=sort(FISH); y = chi2pdf(x,df);
-plot(x,y,'.-','Markersize',10); set(gca,'xlim',[0 40],'ylim',[0 .16],'tickdir','out','yticklabel',{})
-xlabel('FISH cells/mL','fontsize',14)
-hold on
+%%%% (4) calculate errors for FISH
+idx=contains(class2do_string,{'Pseudo-nitzschia','Alexandrium','Dinophysis'});
+if idx == 1
+    dnF=SC.dn;
+    iPn = strmatch(class2do_string,'Pseudo-nitzschia'); %classifier index
+    iAlex = strmatch(class2do_string,'Alexandrium'); %classifier index
+    iDphy = strmatch(class2do_string,'Dinophysis'); %classifier index
+    if iPn == 1  
+        F=SC.Pn*.001; %convert from cells/L to cells/mL        
+        n=F*10; %how many cells in 10mLs?
+    elseif iAlex == 1
+        F=SC.Alex*.001; 
+        n=F*100; %how many cells in 100mLs?
+    elseif iDphy == 1
+        F=SC.dinophysis*.001; 
+        n=F*100; %how many cells in 100mLs?
+    end
+    iD=isnan(F); dnF(iD)=[]; F(iD)=[]; n(iD)=[]; %eliminate NaNs
+    errF=2./sqrt(n); % percent error for each species (Willen, 1976, Lund et al. 1958)    
+    errF=errF.*F;
+else
+end
 
-subplot(1,4,3); % Microscopy
-x=sort(M); y = chi2pdf(x,df); 
-plot(x,y,'.-','Markersize',10); set(gca,'xlim',[0 40],'ylim',[0 .16],'tickdir','out','yticklabel',{});
-xlabel('Microscopy cells/mL','fontsize',14)
-hold on
+idx=contains(class2do_string,{'Pseudo-nitzschia','Alexandrium','Dinophysis'});
+if idx == 1
+    [~,iD,~] = intersect(dnF, mdate); F=F(iD); dnF=dnF(iD); errF=errF(iD); %microscopy
+    fish.dn=dnF; fish.cells=F; fish.err=errF;
+else
+end
 
-subplot(1,4,4); % RAI
-x=sort(rai); y = chi2pdf(x,df); 
-plot(x,y,'.-','Markersize',10); set(gca,'xlim',[0 40],'ylim',[0 .16],'tickdir','out','yticklabel',{})
-xlabel('Relative percent of cells','fontsize',14)
-hold on
+idx=~isnan(SC.CHL); chl.c=SC.CHL(idx); chl.dn=SC.dn(idx); %remove NaNs
 
-% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs/Pseudo-nitschia_Probability_density.tif']);
-hold off
+clearvars cellsmL micro idx iD n iAlex iPn iDphy AVG MIN MAX errM m dnM...
+    DN avg pos neg dnF F errF micro genus class err error chain
 
 %%
-%%%% (2) extract Manual data for class of interest
+figure('Units','inches','Position',[1 1 8.5 3],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.1 0.1], [0.11 -0.5], [0.08 0.17]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
+xax1=datenum('2018-01-01'); xax2=datenum('2018-12-31');     
+col=(brewermap(4,'Dark2'));
+
+subplot(2,1,1)
+    cax=[0 20];
+    pcolor(chl.dn,[1,2],[chl.c';0*chl.c']); caxis(cax); colormap(flipud(gray));
+    datetick('x','m','keeplimits'); shading flat;
+    set(gca,'xlim',[xax1 xax2],'ylim',[1 2],'ytick',1:1:2,...
+        'xticklabel',{},'yticklabel',{}); box on
+    h=colorbar('south'); 
+    hp=get(h,'pos'); 
+    hp(1)=.75+hp(1); hp(2)=hp(2)+.03; hp(3)=.16*hp(3); hp(4)=hp(4);
+    set(h,'pos',hp,'xaxisloc','bottom','fontsize',10); 
+    hold on
+    h.Ticks=linspace(cax(1),cax(2),3); 
+    h.Label.FontSize = 11;               
+    h.Label.FontWeight = 'bold';       
+    hold on
+
+subplot(2,1,2)
+    h1=plot(mdate, y_mat,'ko','Linewidth',1,'markersize',5); hold on
+    hold on
+    h2=errorbar(mcrpy.dn,mcrpy.cells,mcrpy.err,'o','Color',col(2,:),'Linestyle','none',...
+        'MarkerFaceColor',col(2,:),'Linewidth',1.5,'Markersize',5); %microscopy
+         set(gca,'Ylim',[0 ymax],'fontsize',12); hold on
+
+    idx=contains(class2do_string,{'Pseudo-nitzschia','Alexandrium','Dinophysis'});
+    if idx == 1       
+        h3 = errorbar(fish.dn,fish.cells,fish.err,'o','Linestyle','none','Linewidth',1.5,...
+            'Color',col(4,:),'MarkerFaceColor',col(4,:),'Markersize',5); hold on  
+    else
+    end
+    set(gca,'xlim',[xax1 xax2],'ylim',[0 max],'ytick',0:step:max,'fontsize',13,'ycolor','k');  
+    datetick('x','m','keeplimits');
+
+    ylabel(['\it' num2str(class2do_string) '\rm cells mL^{-1}'],'fontsize',14);   
+   
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',[filepath 'Figs/Manual_automated_micro_rai_' num2str(class2do_string) 'fish_micro.tif']);
+hold off
+
+
+%% special extract Manual data for class of interest
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
 end

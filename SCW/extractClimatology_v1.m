@@ -1,21 +1,12 @@
 function [C] = extractClimatology_v1(var,dn,filepath,varname,n,gap)
 %% Extracts Climatology for generic variables
-%  Alexis D. Fischer, University of California - Santa Cruz, July 2018
-% 
-idx = strmatch(varname,'Dinoflagellate Chl'); %classifier index
-if idx == 1
-    var(var<0)=NaN; 
-    i0=find(dn>=datenum('01-Jan-2004'),1); 
-    dn=dn(i0:end); var=var(i0:end); 
-else
-end
+%  Alexis D. Fischer, University of California - Santa Cruz, July 2018 
 
 i0=find(~isnan(var),1);
 dn=dn(i0:end); var=var(i0:end); 
-
 [t] = interp1babygap(var,gap);
 
-%figure; plot(dn,t,'-r'); datetick;
+%figure; plot(dn,t,'-r'); datetick('x','yy');
 
 %% (1) Create a mean annual cycle by binning the time series into 14 day 
 %bins spread over a calendar year and averaging each bin's contents 
@@ -38,13 +29,13 @@ if dn(1) > dn14d(1)
 else
 end
 
-%figure; plot(dn14d,t14d,'-b'); datetick;
+%figure; plot(dn14d,t14d,'-b'); datetick('x','yy');
 
 %% (2) Grid the time series at 14day intervals using Stineman (1980) interpolation
 ti=stineman(dn,t,dn14d); ti=ti';
 i0=find(isnan(ti)); %find NaNs
 
-%figure; plot(dn14d,t14d,'-b',dn14d,ti,'-r'); datetick;
+%figure; plot(dn14d,t14d,'-b',dn14d,ti,'-r'); datetick('x','yy');
 
 %% (3) Smooth the gridded series with a moving average 
 ti37 =smooth(ti,37); 
@@ -62,7 +53,7 @@ ti3(i0) = NaN;
 
 tAnom=normalize(tA);
 
-%figure; plot(dn14d,ti9); datetick;
+%figure; plot(dn14d,ti9); datetick('x','yy');
 
 %% Save the output file
 C.dn=dn;

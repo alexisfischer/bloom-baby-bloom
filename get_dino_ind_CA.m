@@ -4,8 +4,8 @@ function [ ind_out, class_label ] = get_dino_ind_CA( class2use, class_label )
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 class2get = {'Akashiwo';'Alexandrium_singlet';'Amy_Gony_Protoc';'Ceratium';...
-    'Cochlodinium';'Dinophysis';'Gymnodinium';'Lingulodinium';...
-    'Peridinium';'Prorocentrum';'Scrip_Het'};
+    'Cochlodinium';'Dinophysis';'Gymnodinium';'Gymnodinium,Peridinium';...
+    'Lingulodinium';'Margalefidinium';'Peridinium';'Prorocentrum';'Scrip_Het'};
 
 % class2get = {'Akashiwo' 'Alexandrium_singlet' 'Amy_Gony_Protoc' 'Ceratium'...
 %     'Cochlodinium' 'DinoMix' 'Dinophysis' 'Gymnodinium' 'Gyrodinium' 'Karenia'...
@@ -15,27 +15,29 @@ class2get = {'Akashiwo';'Alexandrium_singlet';'Amy_Gony_Protoc';'Ceratium';...
 [~,ind_out] = intersect(class2use, class2get);
 ind_out = sort(ind_out);
 
-class_label(strmatch('Akashiwo', class_label, 'exact')) = {'\itAkashiwo \itsanguinea'};
-class_label(strmatch('Alexandrium_singlet', class_label, 'exact')) = {'\itAlexandrium spp.'};
-class_label(strmatch('Amy_Gony_Protoc', class_label, 'exact')) = {'\itAmy_Gony_Protoc'};
-class_label(strmatch('Ceratium', class_label, 'exact')) = {'\itCeratium'};
-class_label(strmatch('Cochlodinium', class_label, 'exact')) = {'\itMargalefidinium'};
-class_label(strmatch('DinoMix', class_label, 'exact')) = {'\itDinoMix'};
-class_label(strmatch('Dinophysis', class_label, 'exact')) = {'\itDinophysis'};
-class_label(strmatch('Gymnodinium', class_label, 'exact')) = {'\itGymnodinium'};
-class_label(strmatch('Gyrodinium', class_label, 'exact')) = {'\itGyrodinium'};
-class_label(strmatch('Karenia', class_label, 'exact')) = {'\itKarenia'};
-class_label(strmatch('Lingulodinium', class_label, 'exact')) = {'\itLingulodinium'};
-class_label(strmatch('Noctiluca', class_label, 'exact')) = {'\itNoctiluca'};
-class_label(strmatch('Peridinium', class_label, 'exact')) = {'\itPeridinium'};
-class_label(strmatch('Polykrikos', class_label, 'exact')) = {'\itPolykrikos'};
-class_label(strmatch('Prorocentrum', class_label, 'exact')) = {'\itProrocentrum'};
-class_label(strmatch('Protoperidinium', class_label, 'exact')) = {'\itProtoperidinium'};
-class_label(strmatch('Pyrocystis', class_label, 'exact')) = {'\itPyrocystis'};
-class_label(strmatch('Scrip_Het', class_label, 'exact')) = {'\itScrip_Het'};
-class_label(strmatch('Boreadinium', class_label, 'exact')) = {'\itBoreadinium'};
-class_label(strmatch('Azadinium', class_label, 'exact')) = {'\itAzadinium'};
-class_label(strmatch('Torodinium', class_label, 'exact')) = {'\itTorodinium'};
-class_label(strmatch('Oxyp_Oxyt', class_label, 'exact')) = {'\itOxyp_Oxyt'};
+class_label(strcmp('Akashiwo', class_label)) = {'\itAkashiwo \itsanguinea'};
+class_label(strcmp('Alexandrium_singlet', class_label)) = {'\itAlexandrium \rmspp.'};
+class_label(strcmp('Amy_Gony_Protoc', class_label)) = {'\itAmy_Gony_Protoc \rmspp.'};
+class_label(strcmp('Ceratium', class_label)) = {'\itCeratium \rmspp.'};
+class_label(strcmp('Cochlodinium', class_label)) = {'\itMargalefidinium \rmspp.'};
+class_label(strcmp('DinoMix', class_label)) = {'\itDinoMix'};
+class_label(strcmp('Dinophysis', class_label)) = {'\itDinophysis \rmspp.'};
+class_label(strcmp('Gymnodinium', class_label)) = {'\itGymnodinium \rmspp.'};
+class_label(strcmp('Gymnodinium,Peridinium', class_label)) = {'\itGymnodinium \rmspp.'};
+class_label(strcmp('Gyrodinium', class_label)) = {'\itGyrodinium \rmspp.'};
+class_label(strcmp('Karenia', class_label)) = {'\itKarenia \rmspp.'};
+class_label(strcmp('Lingulodinium', class_label)) = {'\itLingulodinium \rmspp.'};
+class_label(strcmp('Margalefidinium', class_label)) = {'\itMargalefidinium \rmspp.'};
+class_label(strcmp('Noctiluca', class_label)) = {'\itNoctiluca \rmspp.'};
+class_label(strcmp('Peridinium', class_label)) = {'\itPeridinium \rmspp.'};
+class_label(strcmp('Polykrikos', class_label)) = {'\itPolykrikos \rmspp.'};
+class_label(strcmp('Prorocentrum', class_label)) = {'\itProrocentrum \rmspp.'};
+class_label(strcmp('Protoperidinium', class_label)) = {'\itProtoperidinium \rmspp.'};
+class_label(strcmp('Pyrocystis', class_label)) = {'\itPyrocystis \rmspp.'};
+class_label(strcmp('Scrip_Het', class_label)) = {'\itScrippsiella, Heterocapsa \rmspp.'};
+class_label(strcmp('Boreadinium', class_label)) = {'\itBoreadinium \rmspp.'};
+class_label(strcmp('Azadinium', class_label)) = {'\itAzadinium \rmspp.'};
+class_label(strcmp('Torodinium', class_label)) = {'\itTorodinium \rmspp.'};
+class_label(strcmp('Oxyp_Oxyt', class_label)) = {'\itOxyp_Oxyt \rmspp.'};
 
 end

@@ -10,7 +10,9 @@ filepath = '~/MATLAB/bloom-baby-bloom/';
 load([filepath 'SCW/Figs/coast_montereybay'],'ncst');
 
 figure('Units','inches','Position',[1 1 7 7],'PaperPositionMode','auto');        
+%m_proj('albers equal-area','lat',[36.5 37.14],'long',[-122.44 -121.7],'rect','on');
 m_proj('albers equal-area','lat',[36.5 37.14],'long',[-122.44 -121.7],'rect','on');
+
 m_gshhs_f('patch',[.8 .8 .8],'edgecolor','none');  
 m_grid('linestyle','none','linewidth',1,'tickdir','out',...
      'xaxisloc','top','yaxisloc','left','fontsize',16);  

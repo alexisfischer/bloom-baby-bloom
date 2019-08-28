@@ -80,8 +80,6 @@ itime=find(mdate>=datenum('01-Nov-2018') & mdate<=datenum('01-Dec-2018'));
 AKA(AKA==Inf)=[];
 max(AKA(itime))
 
-
-%%
 DN=mdate(itime); CHL=SC.CHL(itime);
 id=find(CHL>11); val=CHL(id);  dnn=datestr(DN(id))
 
@@ -275,3 +273,93 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs/SCW_March2018_justcells.tif']);
 hold off   
 
+%% special plot for presentations
+
+%% plot Dinoflagellate cells, wind, current, temperature, stability (Winter-Spring 2018) 
+figure('Units','inches','Position',[1 1 10 8],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.05 0.05], [0.08 0.24]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
+
+xax1=datenum('2018-02-15'); xax2=datenum('2018-06-01'); xtick=(xax1+2:14:xax2);
+
+col_dino1=flipud(brewermap(10,'PiYG'));
+col_dino2=(brewermap(7,'YlOrBr'));
+col_diat1=flipud(brewermap(7,'YlGn'));
+col_diat2=(brewermap(7,'Blues'));
+col_diat3=(brewermap(5,'Purples'));
+
+subplot(5,1,[1 3])    
+    h=plot(mdate,[AKA GYM PRO],'-k','linewidth',2);  
+    set(h(1),'Color',col_dino1(9,:));
+    set(h(2),'Color',col_dino2(7,:)); 
+    set(h(3),'Color',col_dino2(4,:));
+    hold on        
+    
+    dlin=linspace(datenum('01-Jan-2018'),datenum('31-Dec-2018'),...
+        (datenum('31-Dec-2018')-datenum('01-Jan-2018')+1));
+    dates=[datenum('01-Jan-2018'):datenum('13-Jan-2018'),...
+        datenum('29-Jan-2018'):datenum('31-Jan-2018'),...
+        datenum('10-Feb-2018'):datenum('14-Feb-2018'),...    
+        datenum('29-Apr-2018'):datenum('06-May-2018'),...   
+        datenum('08-Aug-2018'):datenum('15-Aug-2018')]';
+    [~,ia,~]=intersect(dlin,dates);  
+    dlin(ia)=NaN;    
+    plot(dlin,zeros(length(dlin),1),'-k','Linewidth',3);    
+    hold on    
+   set(gca,'xaxislocation','top','xlim',[xax1 xax2],...
+       'ylim',[0 300],'ytick',50:50:300,...
+       'xtick',xtick,'xticklabel',datestr(xtick,'dd-mmm'),'fontsize', 14);
+   
+    ylabel('cells mL^{-1}', 'fontsize', 16, 'fontname', 'arial');
+    lh=legend(h,'\itAkashiwo sanguinea','\itGymnodinium',...
+        '\itProrocentrum'); legend boxoff
+    lh.FontSize = 14;               
+    hp=get(lh,'pos'); lh.Position = [hp(1) hp(2) hp(3)+.5 hp(4)]; 
+    hold on        
+
+subplot(5,1,4); %wind
+col1=brewermap(3,'Greys');
+     itime=find(w.s42.dn>=datenum('01-Jan-2018') & w.s42.dn<=datenum('01-Jul-2018'));
+     [time,v,~] = ts_aggregation(w.s42.dn(itime),w.s42.v(itime),4,'hour',@mean); 
+     [~,u,~] = ts_aggregation(w.s42.dn(itime),w.s42.u(itime),4,'hour',@mean); 
+
+    [vfilt,df]=plfilt(v,time); [ufilt,df]=plfilt(u,time);        
+    [up,across]=rotate_current(ufilt,vfilt,44); 
+    h1=plot(df,up,'-','Color',col1(2,:),'linewidth',3);  
+    hold on
+    set(gca,'xlim',[xax1 xax2],'ylim',[-10 9],'ytick',-7:7:7,'xtick',xtick,'xticklabel',{},'fontsize',14);    
+    hold on
+    xL = get(gca, 'XLim');
+    plot(xL, [0 0], 'k--')    
+    ylabel({'m s^{-1}'},'fontsize',16,'fontname','arial');  
+    hold on    
+
+ ax1=subplot(5,1,5); %SCW ROMS Temp
+    cax=[10 14]; 
+    X=[ROMS.dn]';
+    Y=[ROMS(1).Zi]';
+    C=[ROMS.Ti];
+    pcolor(X,Y,C); shading interp;
+    colormap(ax1,parula); caxis(cax); grid on; 
+    hold on
+    hh=plot(X,[ROMS.mld5],'w-','linewidth',2);
+    hold on     
+    set(gca,'xlim',[xax1 xax2],'xtick',xtick,'xticklabel',datestr(xtick,'dd-mmm'),...
+        'Ydir','reverse','ylim',[0 ROMS(1).Zi(end)],'ytick',[10 20 40],'fontsize',14)
+    ylabel('m','fontsize',16);
+    hold on
+    h=colorbar('east','AxisLocation','out');
+    hp=get(h,'pos'); 
+    h.Position = [hp(1)+.04 hp(2) hp(3) hp(4)];    
+    h.TickDirection = 'out';         
+    h.FontSize = 14;
+    h.Label.String = '^oC';     
+    h.Label.FontSize = 16;
+    h.Ticks=linspace(cax(1),cax(2),3);       
+    hold on    
+    
+% set figure parameters
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',[filepath 'Figs/SCW_cells_highres_minimal.tif']);
+hold off

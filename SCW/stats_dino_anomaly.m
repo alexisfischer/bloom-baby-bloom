@@ -6,22 +6,13 @@ addpath(genpath('~/MATLAB/bloom-baby-bloom/'));
 addpath(genpath('~/MATLAB/ifcb-analysis/')); 
 load([filepath 'Data/SCW_master'],'SC');
 
-dn=SC.dn; n=14; gap=30;
+gap=30; n=14; dn=SC.dn;
 
-%%%% load in Climatology data
-idx=isnan(SC.fxDino); SC.CHL(idx)=NaN; %make sure CHL and DINO have same points
-var = SC.fxDino.*log(SC.CHL); varname = 'Dinoflagellate Chl'; [dinoC] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+var= SC.DINOrai; varname = 'Dinoflagellate Chl'; [dinoC] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
 var = SC.windU; varname = 'Alongshore wind'; [Uwind] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+
 var = SC.windV; varname = 'Crossshore wind'; [Vwind] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
-%Uwind.tAnom(1)=Uwind.tAnom(2); Vwind.tAnom(1)=Vwind.tAnom(2);
-
-var = SC.wind42V; varname = 'Upwelling wind'; [UpwellW] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
-
-var = SC.curU; varname = 'Alongshore current'; [Ucur] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
-var = SC.curV; varname = 'Crossshore current'; [Vcur] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
-
-var = SC.N2; varname = 'N2'; [N2] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
 var = SC.NPGO; varname = 'NPGO'; [NPGO] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
@@ -29,108 +20,144 @@ var = SC.MEI; varname = 'MEI'; [MEI] = extractClimatology_v1(var,dn,filepath,var
 
 var = SC.Tsensor; varname = 'Temperature'; [temp] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-var=log(SC.sanlorR); varname = 'Discharge'; [sanlorR] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+var=log(SC.sanlorR); var(var<0)=0; varname = 'Discharge'; [sanlorR] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+
+var = SC.nitrate; varname = 'Nitrate'; [nitrate] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
+var = SC.upwell; varname = 'UI'; [UI] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
 var = SC.PDO; varname = 'PDO'; [PDO] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
 
-var = SC.ammonia; varname = 'Ammonium'; [ammon] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
-var = SC.nitrate; varname = 'Nitrate'; [nitrate] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
-
-var = SC.upwell; varname = 'UI'; [UI] = extractClimatology_v1(var,dn,filepath,varname,n,gap);
-
+clearvars var varname gap n dn SC;
 %% set input parameters
-clearvars X;
-%type=''; lim1=0; lim2=3;  idx=~isnan(dinoC.ti9); y = dinoC.ti9(idx); DN = dinoC.dn14d(idx);
-type='Anom'; lim1=-1; lim2=1; idx=~isnan(dinoC.tAnom); Y = dinoC.tAnom(idx); DN = dinoC.dn14d(idx);
+clearvars X wind spring yrrange;
 
-yrrange = 0411; id=find(DN>=datenum('01-Jan-2004') & DN<=datenum('01-Jan-2012'));
-%yrrange = 1219; id=find(DN>=datenum('01-Jan-2012'));
-%yrrange = 0419; id=find(DN>=datenum('01-Jan-2004'));
+%%%% 1) anomaly or regular?
+%type=''; idx=~isnan(dinoC.ti9); y = dinoC.ti9(idx); DN = dinoC.dn14d(idx);
+type='Anom'; Y = dinoC.tAnom; DN = dinoC.dn14d;
 
-DN=DN(id); Y=Y(id);
+%%%% 2) what range of years?
+% yrrange = 0111; id=find(DN>=datenum('01-Jan-2001') & DN<=datenum('30-Dec-2011'));
+yrrange = 1219; id=find(DN>=datenum('01-Jan-2012'));
+% yrrange = 0119; id=find(DN>=datenum('01-Jan-2001'));
 
-    n=2;     
+%%%% 3) just wind?
+%wind=1; 
+wind=0;
+
+%%%% 4) just spring?
+%spring=1;
+spring=0;
+
+% run PLSR
+DN=DN(id); Y=Y(id);    
+
+if spring == 1
+    season='Jan-May';
+    [~,M] = datevec(DN);
+    id = find(ismember(M,1:5)); %only select Jan-May months
+    DN=DN(id); Y=Y(id);
+else
+    season='all';
+end
+
+istart=datestr(DN(1))
+iend=datestr(DN(end))
+
+n=2;     
+if yrrange == 1219
 %     [X(:,1)] = match_dates(Vwind.dn14d, Vwind.tAnom, DN);    
- %    [X(:,2)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);    
+%     [X(:,2)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);    
+    [X(:,1)] = match_dates(sanlorR.dn14d, sanlorR.tAnom, DN);
+    [X(:,2)] = match_dates(temp.dn14d, temp.tAnom, DN);      
+    [X(:,3)] = match_dates(nitrate.dn14d, nitrate.tAnom, DN);             
+    [X(:,4)] = match_dates(NPGO.dn14d, NPGO.ti9, DN);    
+    [X(:,5)] = match_dates(MEI.dn14d, MEI.tAnom, DN);  
+    label={'River Discharge','Temperature','Nitrate','NPGO','MEI'};
+    labelst='River Discharge, Temperature, NPGO, MEI, Nitrate';  
+else    
     [X(:,1)] = match_dates(UI.dn14d, UI.tAnom, DN);     
     [X(:,2)] = match_dates(sanlorR.dn14d, sanlorR.tAnom, DN);
     [X(:,3)] = match_dates(temp.dn14d, temp.tAnom, DN);      
     [X(:,4)] = match_dates(nitrate.dn14d, nitrate.tAnom, DN);             
     [X(:,5)] = match_dates(NPGO.dn14d, NPGO.ti9, DN);    
     [X(:,6)] = match_dates(MEI.dn14d, MEI.tAnom, DN);  
-%    
-   X=fillmissing(X,'linear');
+    label={'Upwelling Index','River Discharge','Temperature','Nitrate','NPGO','MEI'};
+    labelst='River Discharge, Temperature, NPGO, MEI, Nitrate, Upwelling';      
+end
 
-% X(end,:)=[]; Y(end)=[]; DN(end)=[];    
-% X(end,6)=X(end-1,6);
-% X(end-5:end,7)=X(end-6,7);
-% 
-  label={'Upwelling Index','River Discharge','Temperature','Nitrate','NPGO','MEI'};
-  labelst='River Discharge, Temperature, NPGO, MEI, Nitrate, Upwelling';  
+if wind == 1
+    n=1;
+    clearvars X;
+    [X(:,1)] = match_dates(Vwind.dn14d, Vwind.tAnom, DN);    
+    [X(:,2)] = match_dates(Uwind.dn14d, Uwind.tAnom, DN);    
+    label={'Cross-shore wind','Alongshore wind'};
+    labelst='Local Wind';  
+else
+end
 
-%  label={'Cross-shore wind','Alongshore wind',...
-%      'River Discharge','Temperature','Nitrate','NPGO','MEI'};
-%  labelst='Local Wind, River Discharge, Temperature, NPGO, MEI, Nitrate';  
+X=fillmissing(X,'linear');
 
+% calculate stats]
 [XL,YL,XS,YS,beta,PCTVAR,MSE,stats] = plsregress(X,Y,n);
-
-% calculate stats
 [N,~] = size(X);
-%test=[ones(N,1) X];
-
 Yfit = [ones(N,1) X]*beta; %compute the fitted response values
 Yfit(1)=[]; Yfit(end)=[]; Y(1)=[]; Y(end)=[]; X(1,:)=[]; X(end,:)=[]; DN(1)=[]; 
 DN(end)=[]; XS(1,:)=[]; XS(end,:)=[]; YS(1,:)=[]; YS(end,:)=[]; N=N-2;
-residuals = Y - Yfit;
+%residuals = Y - Yfit;
 YfitPLS = [ones(N,1) X]*beta;
 TSS = sum((Y-mean(Y)).^2);
 RSS_PLS = sum((Y-YfitPLS).^2);
 rsquaredPLS = round(1 - RSS_PLS/TSS,2,'significant')
 
-%% plot timeseries (season) just one variable
+component1=PCTVAR(end,1);
+component2=PCTVAR(end,end);
+
+clearvars beta YfitPLS TSS RSS_PLS XL YL XS YS MSE istart iend id M N;
+
+%% plot timeseries 
 figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
 
-plot(DN,Y,'k-',DN,Yfit,'b-','linewidth',2)
-datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[datenum('01-Jan-2012') datenum('01-Jan-2019')],...
-    'xgrid','on','fontsize',14); box on
+if wind == 1 && spring == 1
+    plot(DN,Y,'ko',DN,Yfit,'b*','linewidth',2)
+elseif wind == 1 && spring == 0
+    plot(DN,Y,'k-',DN,Yfit,'b-','linewidth',2)  
+elseif wind == 0 && spring == 1
+    plot(DN,Y,'ko',DN,Yfit,'r*','linewidth',2)   
+elseif wind == 0 && spring == 0
+    plot(DN,Y,'k-',DN,Yfit,'r-','linewidth',2)       
+end
+
+if yrrange == 1219
+    set(gca,'xlim',[datenum('01-Jan-2012') datenum('01-Jan-2019')],'ylim',[-2 2.3],'xgrid','on','fontsize',14); box on
+elseif yrrange ==0111
+    set(gca,'xlim',[datenum('01-Jan-2004') datenum('01-Jan-2012')],'xgrid','on','fontsize',14); box on
+end
+
+if spring == 1
+    set(gca,'ylim',[-1 2]);
+else
+end
+
+datetick('x','yy','keeplimits')
 legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
-%title(labelst,'fontsize',16,'fontweight','bold')
 ylabel({'Dinoflagellate';'Chlorophyll Anomaly'},'fontsize',16)
 hold on
 
-%% set figure parameters
+% set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',...
-    [filepath 'Figs\dino_' num2str(labelst) '_wind_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
-hold off
-
-%% plot timeseries (all)
-figure('Units','inches','Position',[1 1 6 3],'PaperPositionMode','auto');
-
-%plot(DN,XS(:,1),'r:',DN,XS(:,2),'b:','linewidth',2)
-
-plot(DN,Y,'k-',DN,Yfit,'r-','linewidth',2)
-datetick('x','yyyy','keeplimits')
-set(gca,'xlim',[datenum('01-Jan-2004') datenum('31-Dec-2011')],...
-    'xgrid','on','fontsize',14); box on
-legend('Observed',['Predicted (R^2=' num2str(rsquaredPLS) ')'],'location','NW'); 
-%title(labelst,'fontsize',16,'fontweight','bold')
-ylabel({'Dinoflagellate';'Chlorophyll Anomaly'},'fontsize',16)
-hold on
-
-%% set figure parameters
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',...
-    [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
-hold off
+if wind == 1
+    print(gcf,'-dtiff','-r200',[filepath 'Figs\dino_wind_' num2str(season) '_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);        
+else
+    print(gcf,'-dtiff','-r200',[filepath 'Figs\dino_' num2str(season) '_' num2str(yrrange) '_' num2str(type) '_Timeseries.tif']);    
+end
+    hold off
 
 %% plots weights
 % The PLS weights are the linear combinations of the original variables
 % that that define the PLS components, i.e., they describe how strongly
 % each component in the PLSR depends on the original variables, and in what direction.
 figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.31 0.02]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.15 .09], [0.28 0.04]);
 
     subplot(1,n,1); barh(stats.W(:,1),'k')
     set(gca,'yaxislocation','left','yticklabel',label,'fontsize',14)
@@ -144,10 +171,14 @@ end
 
 % set figure parameters
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',...
-    [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Weights.tif']);    
-hold off
+if wind == 1
+    print(gcf,'-dtiff','-r200',[filepath 'Figs\dino_wind_' num2str(season) '_' num2str(yrrange) '_' num2str(type) '_Weights.tif']);        
+else
+    print(gcf,'-dtiff','-r200',[filepath 'Figs\dino_' num2str(season) '_' num2str(yrrange) '_' num2str(type) '_Weights.tif']);    
+end
+    hold off
 
+%% other plots, not using
 %% plot stats
 % plot MSE, residuals
 figure('Units','inches','Position',[1 1 3.5 6],'PaperPositionMode','auto');
@@ -160,25 +191,12 @@ set(gca,'fontsize',12,'xlim',[0 n],'xticklabel',{},'tickdir','out');
 ylabel('% Variance Explained in Y','fontsize',14,'fontweight','bold');
 hold on
 
-% subplot(2,2,2);
-% stem(residuals); set(gca,'fontsize',12)
-% xlabel('Observation','fontsize',14,'fontweight','bold');
-% ylabel('Residual','fontsize',14,'fontweight','bold');
-% hold on
-
 subplot(2,1,2);
 plot(0:n,MSE(2,:),'-o','linewidth',2);
 set(gca,'fontsize',12,'xlim',[0 n],'xtick',0:1:n,'tickdir','out');
 xlabel('Component Number','fontsize',14,'fontweight','bold');
 ylabel({'Estimated Mean Squared';'Prediction Error'},'fontsize',14,'fontweight','bold');
 hold on
-
-% subplot(2,2,4);
-% plot(Y,YfitPLS,'o');
-% set(gca,'xlim',[lim1 lim2],'ylim',[lim1 lim2],'fontsize',12);
-% xlabel('Observed Response','fontsize',14,'fontweight','bold');
-% ylabel('Fitted Response','fontsize',14,'fontweight','bold');
-% legend(['R^2 = ' num2str(rsquaredPLS) ''],'location','NW'); legend boxoff
 
 % set figure parameters
 set(gcf,'color','w');
@@ -205,13 +223,3 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',...
     [filepath 'Figs\dino_' num2str(yrrange) '_' num2str(type) '_Loadings.tif']);    
 hold off
-
-%%
-figure('Units','inches','Position',[1 1 6 4],'PaperPositionMode','auto');
-
-plot(stats.W(:,1),stats.W(:,2),'o','Linewidth',2,'Markersize',5);
-ylabel('PLS Weight','fontsize',16);
-% legend({'1st Component' '2nd Component' '3rd Component'},  ...
-% 	'location','NW'); legend boxoff
-set(gca,'xlim',[-.07 .07],'xtick',-0.05:.05:.05,'ylim',[-.07 .07],'ytick',-0.05:.05:.05,'fontsize',14)
-
