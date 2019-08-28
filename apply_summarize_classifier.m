@@ -2,16 +2,16 @@
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 % modify according to dataset
-%ifcbdir='F:\IFCB104\'; %SCW
+ifcbdir='F:\IFCB104\'; %SCW
 %ifcbdir='F:\IFCB113\'; %USGS cruises
 %ifcbdir='F:\IFCB113\Exploratorium\'; %Exploratorium
-ifcbdir='F:\IFCB113\ACIDD2017\'; %ACIDD
+%ifcbdir='F:\IFCB113\ACIDD2017\'; %ACIDD
 %ifcbdir='F:\CAWTHRON\'; %New Zealand
 
-%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
+summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\'; %USGS cruises
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Exploratorium\Data\IFCB_summary\'; %Exploratorium
-summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\'; %ACIDD
+%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\'; %ACIDD
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\NZ\Data\IFCB_summary\'; %New Zealand
 %summarydir='F:\CAWTHRON\summary\'; %New Zealand
 
@@ -37,21 +37,21 @@ addpath(genpath([ifcbdir 'blobs\2019\']));
 start_feature_batch_user_training([ifcbdir 'data\2019\'],[ifcbdir 'blobs\2019\'],[ifcbdir 'features\2019\'],true)
 
 % Step 4: Apply classifier
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
-%     [ifcbdir 'features\2015\'],[ifcbdir 'class\class2015_v1\']);
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
-%     [ifcbdir 'features\2016\'],[ifcbdir 'class\class2016_v1\']);
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
-%     [ifcbdir 'features\2017\'],[ifcbdir 'class\class2017_v1\']);
-% start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
-%     [ifcbdir 'features\2018\'],[ifcbdir 'class\class2018_v1\']);
-start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_24Jul2019',...
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019',...
+    [ifcbdir 'features\2015\'],[ifcbdir 'class\class2015_v1\']);
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019',...
+    [ifcbdir 'features\2016\'],[ifcbdir 'class\class2016_v1\']);
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019',...
+    [ifcbdir 'features\2017\'],[ifcbdir 'class\class2017_v1\']);
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019',...
+    [ifcbdir 'features\2018\'],[ifcbdir 'class\class2018_v1\']);
+start_classify_batch_user_training('F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019',...
     [ifcbdir 'features\2019\'],[ifcbdir 'class\class2019_v1\']);
 
 %% PART 2: Summarize manual results 
 % Step 5: classes
 %addpath(genpath([ifcbdir 'manual\']));
-countcells_manual_user_training([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
+%countcells_manual_user_training([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
 % Step 6: biovolume and classes
 biovolume_summary_manual_user_training([ifcbdir 'manual\'],...
@@ -60,13 +60,8 @@ biovolume_summary_manual_user_training([ifcbdir 'manual\'],...
 %% PART 3: Summarize random forest classification results 
 % Step 7: classes    
 biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
-    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018); %ACIDD
-% biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
-%     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2016);
-
-biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2016:2019);
-%%
+
 countcells_allTBnew_user_training([ifcbdir 'class\classXXXX_v1\'],...
     [ifcbdir 'data\'],[summarydir 'class\'],2019);
 
