@@ -1,84 +1,80 @@
-function [ ] = biovol_eqdiam_summary_manual(resultpath,out_dir,roibasepath,feapath_base)
+function [ ] = biovol_eqdiam_summary_manual(manualpath,out_dir,roibasepath,feapath_base,yr)
 % Gives you a summary file of counts and biovolume from manually classified results
 %  Alexis D. Fischer, University of California - Santa Cruz, April 2018
 
-%  resultpath = 'F:\IFCB113\manual\'; %USER
-%  out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\manual\';
-%  roibasepath = 'F:\IFCB113\data\'; %USER
-%  feapath_base = 'F:\IFCB113\features\XXXX\'; %USER
+% manualpath = 'F:\IFCB113\ACIDD2017\manual\'; %USER
+% out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\manual\';
+% roibasepath = 'F:\IFCB113\ACIDD2017\data\'; %USER
+% feapath_base = 'F:\IFCB113\ACIDD2017\features\2017\'; %USER
+% yr='2017';
+
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
-filelist = dir([resultpath 'D*.mat']);
-
-%calculate date
-matdate = IFCB_file2date({filelist.name});
-
-load([resultpath filelist(1).name]) %read first file to get classes
-numclass = length(class2use_manual);
-class2use_manual_first = class2use_manual;
-classcount = NaN(length(filelist),numclass);  %initialize output
-classbiovol = classcount;
+filelist = dir([feapath_base 'D*.csv']);
+matdate = IFCB_file2date({filelist.name}); %calculate date
 ml_analyzed = NaN(length(filelist),1);
 
-for filecount = 1:length(filelist)
+load([manualpath filelist(1).name(1:24) '.mat'],'class2use_manual') %read first file to get classes
 
-    filename = filelist(filecount).name;
+for i = 1:length(filelist)
+
+    filename = filelist(i).name;
     disp(filename)
-    hdrname = [roibasepath filesep filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
-    ml_analyzed(filecount) = IFCB_volume_analyzed(hdrname);
+    hdrname = [roibasepath filename(2:5) filesep filename(1:9) filesep regexprep(filename,'_fea_v2.csv','.hdr')];
+    ml_analyzed(i) = IFCB_volume_analyzed(hdrname);
      
-    load([resultpath filename])
-    yr = str2num(filename(2:5)); % changed this from filename(7:10)
-    clear targets
-   feapath = regexprep(feapath_base, 'XXXX', filename(2:5)); % changed this from filename(7:10)
     [~,file] = fileparts(filename);
-    feastruct = importdata([feapath file '_fea_v2.csv'], ',');
+    feastruct = importdata([feapath_base file '.csv'], ',');
     ind = strmatch('Biovolume', feastruct.colheaders);
     biovol = feastruct.data(:,ind);
     ind = strmatch('roi_number', feastruct.colheaders);
-    targets = feastruct.data(:,ind);
+    roi = feastruct.data(:,ind);
     ind = strmatch('EquivDiameter', feastruct.colheaders);
     eqdiam = feastruct.data(:,ind);
         
-    % preferentially take manual files over class files
-    list=nan*[targets,targets,targets];    
-    for i=1:length(classlist)
-        for j=1:length(targets)
-            if targets(j) == classlist(i,1)
-                list(j,1)=classlist(i,1);      
-                list(j,2)=classlist(i,2);      
-                list(j,3)=classlist(i,3);      
+        clearvars ind hdrname file
+
+    load([manualpath filename(1:24) '.mat'],'classlist')
+    
+    list=nan*[roi,roi,roi];
+    for ii=1:length(classlist)
+        for j=1:length(roi)
+            if roi(j) == classlist(ii,1)
+                list(j,1)=classlist(ii,1);      
+                list(j,2)=classlist(ii,2);      
+                list(j,3)=classlist(ii,3);      
             else
             end
         end
     end
-
-    count=nan*(list(:,1));
-    for i=1:length(list)
-        if ~isnan(list(i,2))
-            count(i) = list(i,2);  
+    
+    % preferentially take manual files over class files
+    class=nan*(list(:,1));
+    for ii=1:length(list)
+        if ~isnan(list(ii,2))
+            class(ii) = list(ii,2);  
         else
-            count(i) = list(i,3);
+            class(ii) = list(ii,3);
         end
     end
     
-    BiEq(filecount).filename=filename;
-    BiEq(filecount).matdate=matdate(filecount);
-    BiEq(filecount).ml_analyzed=ml_analyzed(filecount);    
-    BiEq(filecount).targets=list(:,1);
-    BiEq(filecount).count=count;
-    BiEq(filecount).eqdiam=eqdiam*micron_factor;
-    BiEq(filecount).biovol=biovol*micron_factor.^3;
+    BiEq(i).filename=[filename(1:24) '.mat'];
+    BiEq(i).matdate=matdate(i);
+    BiEq(i).ml_analyzed=ml_analyzed(i);    
+    BiEq(i).roi=list(:,1);
+    BiEq(i).class=class;
+    BiEq(i).eqdiam=eqdiam*micron_factor;
+    BiEq(i).biovol=biovol*micron_factor.^3;
     
-    clear rois count eqdiam biovol;
+    clearvars roi filename class eqdiam biovol;
 end
 
-class2use = class2use_manual_first';
-datestr = date; datestr = regexprep(datestr,'-','');
-note1 = 'Biovolume in units of cubed micrometers';
-note2= 'Equivalent spherical diameter in micrometers';
-save([out_dir 'count_eqdiam_biovol_manual_' datestr], 'BiEq', 'class2use', 'note1', 'note2')
 
-disp('Summary cell count file stored here:')
-disp([resultpath 'count_biovol_manual_' datestr])
+%%
+note1 = 'Biovolume: cubed micrometers';
+note2= 'Equivalent spherical diameter: micrometers';
+save([out_dir 'class_eqdiam_biovol_manual_' yr], 'BiEq', 'class2use_manual', 'note1', 'note2')
+
+disp('Summary file stored here:')
+disp([manualpath 'class_biovol_manual_' yr])
 
 end

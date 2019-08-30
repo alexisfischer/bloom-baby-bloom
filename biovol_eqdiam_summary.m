@@ -6,10 +6,6 @@ function [ ] = biovol_eqdiam_summary(out_dir,roibasepath,feapath_base,yr)
 % roibasepath = 'F:\IFCB113\data\'; %USER
 % feapath_base = 'F:\IFCB113\features\2019\'; %USER
 
-% out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\';
-% roibasepath = 'F:\IFCB113\ACIDD2017\data\'; %USER
-% feapath_base = 'F:\IFCB113\ACIDD2017\features\2017\'; %USER
-
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath_base 'D*.csv']);
 matdate = IFCB_file2date({filelist.name}); %calculate date
