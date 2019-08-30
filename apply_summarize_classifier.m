@@ -2,16 +2,16 @@
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 % modify according to dataset
-ifcbdir='F:\IFCB104\'; %SCW
+%ifcbdir='F:\IFCB104\'; %SCW
 %ifcbdir='F:\IFCB113\'; %USGS cruises
 %ifcbdir='F:\IFCB113\Exploratorium\'; %Exploratorium
-%ifcbdir='F:\IFCB113\ACIDD2017\'; %ACIDD
+ifcbdir='F:\IFCB113\ACIDD2017\'; %ACIDD
 %ifcbdir='F:\CAWTHRON\'; %New Zealand
 
-summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
+%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\'; %USGS cruises
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\Exploratorium\Data\IFCB_summary\'; %Exploratorium
-%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\'; %ACIDD
+summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\'; %ACIDD
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\NZ\Data\IFCB_summary\'; %New Zealand
 %summarydir='F:\CAWTHRON\summary\'; %New Zealand
 
@@ -66,9 +66,9 @@ countcells_allTBnew_user_training([ifcbdir 'class\classXXXX_v1\'],...
     [ifcbdir 'data\'],[summarydir 'class\'],2017);
 
 %% Export Eqdiam and biovolume from feature files
-biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2017\'])
-biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2018\'])
-biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2019\'])
+biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2017\'],'2017')
+biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2018\'],'2018')
+biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2019\'],'2019')
 
 %%%% PART 3: Assign threshold scores to specific classes
 %% Step 8: Summarize counts for thresholds 0.1 to 1 for the specified class

@@ -1,4 +1,4 @@
-function [ ] = biovol_eqdiam_summary(out_dir,roibasepath,feapath_base)
+function [ ] = biovol_eqdiam_summary(out_dir,roibasepath,feapath_base,yr)
 % Gives you a summary file of counts and biovolume from feature files
 %  Alexis D. Fischer, University of California - Santa Cruz, April 2018
 
@@ -6,9 +6,12 @@ function [ ] = biovol_eqdiam_summary(out_dir,roibasepath,feapath_base)
 % roibasepath = 'F:\IFCB113\data\'; %USER
 % feapath_base = 'F:\IFCB113\features\2019\'; %USER
 
+% out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\';
+% roibasepath = 'F:\IFCB113\ACIDD2017\data\'; %USER
+% feapath_base = 'F:\IFCB113\ACIDD2017\features\2017\'; %USER
+
 micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath_base 'D*.csv']);
-yr = feapath_base(21:24);
 matdate = IFCB_file2date({filelist.name}); %calculate date
 ml_analyzed = NaN(length(filelist),1);
 
