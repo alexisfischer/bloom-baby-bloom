@@ -63,7 +63,7 @@ biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\']
     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2016:2019);
 
 countcells_allTBnew_user_training([ifcbdir 'class\classXXXX_v1\'],...
-    [ifcbdir 'data\'],[summarydir 'class\'],2018);
+    [ifcbdir 'data\'],[summarydir 'class\'],2017);
 
 %% Export Eqdiam and biovolume from feature files
 biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2017\'])

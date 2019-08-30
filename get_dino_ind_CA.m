@@ -17,7 +17,7 @@ ind_out = sort(ind_out);
 
 class_label(strcmp('Akashiwo', class_label)) = {'\itAkashiwo \itsanguinea'};
 class_label(strcmp('Alexandrium_singlet', class_label)) = {'\itAlexandrium \rmspp.'};
-class_label(strcmp('Amy_Gony_Protoc', class_label)) = {'\itAmy_Gony_Protoc \rmspp.'};
+class_label(strcmp('Amy_Gony_Protoc', class_label)) = {'\itAmylax_Gonyaulax_Protoceratium \rmspp.'};
 class_label(strcmp('Ceratium', class_label)) = {'\itCeratium \rmspp.'};
 class_label(strcmp('Cochlodinium', class_label)) = {'\itMargalefidinium \rmspp.'};
 class_label(strcmp('DinoMix', class_label)) = {'\itDinoMix'};
