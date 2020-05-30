@@ -46,7 +46,7 @@ addpath(genpath([ifcbdir 'features\2020\']));
 % start_classify_batch_user_training(classifier,[ifcbdir 'features\2019\'],[ifcbdir 'class\class2019_v1\']);
 start_classify_batch_user_training(classifier,[ifcbdir 'features\2020\'],[ifcbdir 'class\class2020_v1\']);
 
-%% Step 2: Summarize manual and classifier results for cell counts
+%% Step 5: Summarize manual and classifier results for cell counts
 %addpath(genpath([ifcbdir 'manual\']));
 summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
