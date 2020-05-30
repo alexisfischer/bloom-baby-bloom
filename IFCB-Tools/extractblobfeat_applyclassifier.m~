@@ -53,3 +53,14 @@ summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'm
 summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
     [ifcbdir 'data\'],[summarydir 'class\'],2020); %you will need to do this separately for each year of data
 
+%% Step 3: Summarize manual and classifier results for biovolume 
+biovolume_summary_manual_user_training([ifcbdir 'manual\'],...
+    [ifcbdir 'data\'],[ifcbdir 'features\XXXX\'],[summarydir 'manual\']);
+   
+summarize_biovol_from_classifier([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
+    [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018);
+
+%% Step 3: Plot comparisons!
+
+load([filepath 'Data/IFCB_summary/class/summary_allTB_2018'],...
+    'class2useTB','ml_analyzedTB','mdateTB','classcountTB_above_optthresh');

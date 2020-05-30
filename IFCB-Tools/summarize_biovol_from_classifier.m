@@ -1,14 +1,17 @@
-function [] = biovolume_summary_CA_allTB(summarydir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
-%  Alexis D. Fischer, University of California - Santa Cruz, June 2018
-
+function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+%function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+%
+% Inputs automatic classified results and outputs a summary file of counts and biovolume
+% Alexis D. Fischer, University of California - Santa Cruz, June 2018
+%
+%Example inputs
 % summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
 % classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
 % feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
-% roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %Where you raw data is
+% roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %location of raw data
 % yrrange = 2018;
 % adhocthresh = 0.5;
 
-micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath_generic 'D*.csv']);
 
 % for yrcount = 1:length(yrrange), %USER not tested yet for multiple years, but should work

@@ -19,22 +19,19 @@ addpath(genpath(summarydir));
 addpath(genpath([ifcbdir 'data\']));
 addpath(genpath('C:\Users\kudelalab\Documents\GitHub\'));
 
-%% Summarize manual results 
-% classes
+%% Step 2: Summarize manual and classifier results for cell counts
 %addpath(genpath([ifcbdir 'manual\']));
-%countcells_manual_user_training([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
+summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
-% biovolume and classes
+summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
+    [ifcbdir 'data\'],[summarydir 'class\'],2020); %you will need to do this separately for each year of data
+
+%% Step 3: Summarize manual and classifier results for biovolume 
 biovolume_summary_manual_user_training([ifcbdir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\XXXX\'],[summarydir 'manual\']);
-
-%% Summarize random forest classification results 
-% classes    
-biovolume_summary_CA_allTB([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
+   
+summarize_biovol_from_classifier([summarydir 'class\'],[ifcbdir 'class\classxxxx_v1\'],...
     [ifcbdir 'features\xxxx\'],[ifcbdir 'data\xxxx\'],0.5,2017:2018);
-
-countcells_allTBnew_user_training([ifcbdir 'class\classXXXX_v1\'],...
-    [ifcbdir 'data\'],[summarydir 'class\'],2017);
 
 %% Export Eqdiam and biovolume from feature files
 biovol_eqdiam_summary(summarydir,[ifcbdir 'data\'],[ifcbdir 'features\2017\'],'2017')

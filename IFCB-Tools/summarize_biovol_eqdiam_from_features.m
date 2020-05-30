@@ -1,7 +1,10 @@
-function [ ] = biovol_eqdiam_summary(out_dir,roibasepath,feapath_base,yr)
-% Gives you a summary file of counts and biovolume from feature files
-%  Alexis D. Fischer, University of California - Santa Cruz, April 2018
-
+function [ ] = summarize_biovol_eqdiam_from_features(out_dir,roibasepath,feapath_base,yr)
+%function [ ] = summarize_biovol_eqdiam_from_features(out_dir,roibasepath,feapath_base,yr)
+%
+% Inputs Features files and outputs a summary file of biovolume and equivalent spherical diameter
+% Alexis D. Fischer, University of California - Santa Cruz, April 2018
+%
+%Example inputs
 % out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SFB\Data\IFCB_summary\';
 % roibasepath = 'F:\IFCB113\data\'; %USER
 % feapath_base = 'F:\IFCB113\features\2019\'; %USER

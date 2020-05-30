@@ -1,14 +1,17 @@
-function [ ] = biovol_eqdiam_summary_manual(manualpath,out_dir,roibasepath,feapath_base,yr)
-% Gives you a summary file of counts and biovolume from manually classified results
-%  Alexis D. Fischer, University of California - Santa Cruz, April 2018
-
+function [ ] = summarize_biovol_eqdiam_from_manual(manualpath,out_dir,roibasepath,feapath_base,yr,micron_factor)
+%function [ ] = summarize_biovol_eqdiam_from_manual(manualpath,out_dir,roibasepath,feapath_base,yr,micron_factor)
+%
+% Inputs manually classified results and outputs a summary file of counts, biovolume, and equivalent spherical diameter
+% Alexis D. Fischer, University of California - Santa Cruz, April 2018
+%
+%Example inputs
 % manualpath = 'F:\IFCB113\ACIDD2017\manual\'; %USER
 % out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\manual\';
 % roibasepath = 'F:\IFCB113\ACIDD2017\data\'; %USER
 % feapath_base = 'F:\IFCB113\ACIDD2017\features\2017\'; %USER
 % yr='2017';
+% micron_factor = 1/3.4; %microns per pixel conversion
 
-micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath_base 'D*.csv']);
 matdate = IFCB_file2date({filelist.name}); %calculate date
 ml_analyzed = NaN(length(filelist),1);

@@ -1,9 +1,8 @@
 function [Yi] = interp1babygap(Y,maxgap)
+%  Alexis D. Fischer, University of California - Santa Cruz, July 2018 
+
 % Y = input data, 1 column with nans
 % maxgap = maximum gap size that you want to exclude from interpolation    
-    
-%Y=BIO(1).bio;
-%n=3;
 
 Yi=Y; %output
 Yi(Yi==Inf)=NaN;
