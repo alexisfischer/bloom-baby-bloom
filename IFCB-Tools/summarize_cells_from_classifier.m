@@ -10,6 +10,11 @@ function [ ] = summarize_cells_from_classifier(classpath_generic, in_dir, path_o
 % path_out = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\class\';
 % yrrange = 2018; %one value or range (e.g., 2017:2018)
 
+classpath_generic = '/Users/afischer/GoogleDriveWHOI/Shimada/class/classXXXX_v1/';
+in_dir = '/Users/afischer/GoogleDriveWHOI/Shimada/data/'; %where to access data (hdr files)
+path_out = '/Users/afischer/GoogleDriveWHOI/Shimada/summary/';
+yrrange = 2019; %one value or range (e.g., 2017:2018)
+
 %check whether in directory
 urlflag = 0;
 if strcmp('http', in_dir(1:4))
@@ -22,7 +27,7 @@ end
 if (~isequal(in_dir(end), filesep) && ~urlflag)
     in_dir = [in_dir filesep];
 end
-
+%%
 classfiles = [];
 filelist = [];
 for yrcount = 1:length(yrrange) %USER not tested yet for multiple years, but should work
@@ -37,7 +42,7 @@ for yrcount = 1:length(yrrange) %USER not tested yet for multiple years, but sho
         filelist = [filelist; temp(:,1:24)];
     end
     clear temp pathall classpath
-end;
+end
 if urlflag
     hdrfiles = cellstr(strcat( in_dir, filelist, '.hdr'));
     %hdrfiles = cellstr([repmat(in_dir,length(filelist),1) filelist repmat('.hdr', length(filelist), 1)]);

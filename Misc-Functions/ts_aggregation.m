@@ -1,5 +1,6 @@
 function [dn_acc,y_acc,subs] = ts_aggregation(dn,y,n,target_fmt,fct_handle)
- 
+% Alexis D. Fischer, UCSC, Jun 2018 
+
 % dn=mdateTB;
 % y=ml_analyzedTB;
 % n=4;

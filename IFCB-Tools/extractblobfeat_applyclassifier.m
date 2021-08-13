@@ -2,20 +2,20 @@
 %  Alexis D. Fischer, University of California - Santa Cruz, April 2020
 
 % modify according to dataset
-ifcbdir='F:\IFCB104\'; %SCW
+%ifcbdir='F:\IFCB104\'; %SCW
 %ifcbdir='F:\IFCB113\'; %USGS cruises
 %ifcbdir='F:\IFCB113\Exploratorium\'; %Exploratorium
 %ifcbdir='F:\IFCB113\ACIDD2017\'; %ACIDD
 %ifcbdir='F:\CAWTHRON\'; %New Zealand
 
-summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\IFCB-Data\SCW\'; %SCW
+%summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\IFCB-Data\SCW\'; %SCW
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\IFCB-Data\SFB\'; %USGS cruises
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Exploratorium\'; %Exploratorium
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\IFCB-Data\ACIDD\'; %ACIDD
 %summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\IFCB-Data\NZ\'; %New Zealand
 %summarydir='F:\CAWTHRON\summary\'; %New Zealand
 
-classifier = 'F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019';
+%classifier = 'F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019';
 
 addpath(genpath(summarydir));
 addpath(genpath([ifcbdir 'data\']));

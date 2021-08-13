@@ -125,7 +125,7 @@ eval(f_str)
 stat.param=BETA';
 
 % confidence interval of the parameters
-stat.paramCI = nlparci(BETA,RESID,'Jacobian',J);
+stat.paramCI = nlparci(BETA,RESID,'Jacobian',J,'alpha',.1);
 
 % confidence interval of the estimation
 [stat.ypred,delta] = nlpredci(f,x,BETA,RESID,'Covar',COVB);

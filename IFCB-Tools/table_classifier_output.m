@@ -6,7 +6,7 @@
 %Pd = Probability of Detection TP./(TP+FN)
 %Pr = Precision TP/(TP+FP)
     
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/SCW/'; 
+filepath = '~/MATLAB/bloom-baby-bloom/SCW/'; 
 load([filepath 'Data/IFCB_summary/summary_classifier'],'classes2','total','Pd3','Pr3','FP','FN','TP','TN')
 
 classes2(end)=[];
