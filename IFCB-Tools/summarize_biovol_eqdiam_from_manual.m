@@ -2,27 +2,33 @@ function [ ] = summarize_biovol_eqdiam_from_manual(manualpath,out_dir,roibasepat
 %function [ ] = summarize_biovol_eqdiam_from_manual(manualpath,out_dir,roibasepath,feapath_base,yr,micron_factor)
 %
 % Inputs manually classified results and outputs a summary file of counts, biovolume, and equivalent spherical diameter
-% Alexis D. Fischer, University of California - Santa Cruz, April 2018
+% Alexis D. Fischer, NOAA, August 2021
 %
 %Example inputs
-% manualpath = 'F:\IFCB113\ACIDD2017\manual\'; %USER
-% out_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\ACIDD2017\Data\IFCB_summary\manual\';
-% roibasepath = 'F:\IFCB113\ACIDD2017\data\'; %USER
-% feapath_base = 'F:\IFCB113\ACIDD2017\features\2017\'; %USER
-% yr='2017';
-% micron_factor = 1/3.4; %microns per pixel conversion
+%  manualpath = 'D:\Shimada\manual\'; %USER
+%  out_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\';
+%  roibasepath = 'D:\Shimada\data\'; %USER
+%  feapath_base = 'D:\Shimada\features\2019\'; %USER
+%  yr='2019';
+%  micron_factor = 1/3.4; %microns per pixel conversion
 
-filelist = dir([feapath_base 'D*.csv']);
+% determine where MC and feature files intersect
+fefilelist = dir([feapath_base 'D*.csv']);
+mcfilelist = dir(manualpath);
+A={fefilelist(:).name}'; AA = cellfun(@(x) x(1:end-11), A, 'un', 0);
+B={mcfilelist(:).name}'; BB = cellfun(@(x) x(1:end-4), B, 'un', 0);
+[~,ia,~] = intersect(AA,BB, 'stable');
+filelist=fefilelist(ia);
+clearvars fefilelist A B AA BB ia;
+
 matdate = IFCB_file2date({filelist.name}); %calculate date
 ml_analyzed = NaN(length(filelist),1);
-
 load([manualpath filelist(1).name(1:24) '.mat'],'class2use_manual') %read first file to get classes
 
 for i = 1:length(filelist)
-
     filename = filelist(i).name;
     disp(filename)
-    hdrname = [roibasepath filename(2:5) filesep filename(1:9) filesep regexprep(filename,'_fea_v2.csv','.hdr')];
+    hdrname = [roibasepath filename(2:5) filesep filename(1:9) filesep regexprep(filename,'_fea_v2.csv','.hdr')]
     ml_analyzed(i) = IFCB_volume_analyzed(hdrname);
      
     [~,file] = fileparts(filename);
@@ -78,6 +84,6 @@ note2= 'Equivalent spherical diameter: micrometers';
 save([out_dir 'class_eqdiam_biovol_manual_' yr], 'BiEq', 'class2use_manual', 'note1', 'note2')
 
 disp('Summary file stored here:')
-disp([manualpath 'class_biovol_manual_' yr])
+disp([out_dir 'class_eqdiam_biovol_manual_' yr])
 
 end

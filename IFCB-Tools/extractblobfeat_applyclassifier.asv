@@ -1,0 +1,47 @@
+%% Extacting Blobs and Features and Applying a Classifier
+%  Alexis D. Fischer, University of California - Santa Cruz, April 2020
+yr='2021';
+
+% modify according to dataset
+%ifcbdir='D:\Shimada\'; 
+ifcbdir='D:\BuddInlet\'; 
+%ifcbdir='D:\SCW\'; 
+
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+
+classifier = 'D:\SCW\manual\summary\UserExample_Trees_27Aug2019';
+
+addpath(genpath(summarydir));
+addpath(genpath([ifcbdir 'data\']));
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
+addpath(genpath(classifier));
+
+%remove_empty_blob_folders([ifcbdir 'blobs\' yr '\'])
+ 
+%% Step 1: Sort data into folders
+sort_data_into_folders([ifcbdir 'data\raw\'],[ifcbdir 'data\' yr '\']);
+addpath(genpath([ifcbdir 'data\' yr '\']));
+addpath(genpath([ifcbdir 'blobs\' yr '\']));
+addpath(genpath([ifcbdir 'features\' yr '\']));
+addpath(genpath([ifcbdir 'class\' yr '\']));
+
+%% Step 2: Extract blobs
+start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true)
+addpath(genpath([ifcbdir 'blobs\' yr '\']));
+
+% Step 3: Extract features
+start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\2019\'],[ifcbdir 'features\2019\'],true)
+addpath(genpath([ifcbdir 'features\2019\']));
+
+% Step 4: Apply classifier
+start_classify_batch_user_training(classifier,[ifcbdir 'features\2019\'],[ifcbdir 'class\class2019_v1\']);
+
+%% Step 5: Summarize manual and classifier results for cell counts
+addpath(genpath([ifcbdir 'manual\']));
+summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
+
+%%
+summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
+    [ifcbdir 'data\'],[summarydir 'class\'],2019); %you will need to do this separately for each year of data
+
