@@ -4,7 +4,6 @@ function [ ind_out, class_label ] = get_diatom_ind_CA( class2use, class_label )
 % parts modified from 'get_diatom_ind'
 %  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
-
 class2get = {'Asterionellopsis';'Centric';'Chaetoceros';...
 'Cyl_Nitz';'Det_Cer_Lau';'Dictyocha';'Eucampia';'Guin_Dact';'Pennate';...
 'Pseudo-nitzschia';'Skeletonema';'Thalassionema';'Thalassiosira'};
