@@ -1,25 +1,29 @@
 %% Training and Making a classifier
 %  Alexis D. Fischer, NOAA, August 2021
+clear
+filepath='C:\Users\ifcbuser\Documents\';
 
-addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
+addpath(genpath(filepath));
 
-load([filepath 'bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class'); 
-SCWclass = convert_class_PNW2SCW( class );
+load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class'); 
+load([filepath 'GitHub\bloom-baby-bloom\IFCB-Tools\PNW2SCWclassconversion'],'PNWclass2use','SCWconversion','SCWclass2use');
+
+
+class2use = convert_class_PNW2SCW(class,PNWclass2use,SCWclass2use,SCWconversion );
+clearvars PNWclass2use SCWconversion class;
 
 %% Step 1: Compile features for the training set
-manualpath = 'F:\IFCB104\manual\'; % manual annotation file location
-feapath_base = 'F:\IFCB104\features\'; %feature file location, assumes \yyyy\ organization
+manualpath = 'D:\SCW\manual\'; % manual annotation file location
+feapath_base = 'D:\SCW\features\'; %feature file location, assumes \yyyy\ organization
 maxn = 5000; %maximum number of images per class to include
 minn = 330; %minimum number for inclusion
 class2skip = {'Beads' 'Detritus' 'bubbles' 'Ash_dark' 'Ash_glassy'...
     'Centric<10' 'unclassified' 'Pollen' 'Clusterflagellate'...
     'DinoMix' 'FlagMix' 'Leptocylindrus' 'zooplankton_misc'...
     'Ciliates' 'Strombidium' 'Mesodinium' 'Tiarina' 'Tintinnid' 'Tontonia'};
-
 class2group = {{'NanoP_less10' 'Cryptophyte' 'small_misc'} {'Gymnodinium' 'Peridinium'}};
 
-compile_train_features_user_training(manualpath,feapath_base,maxn,minn,class2skip,class2group);
+compile_train_features_user_training(manualpath,feapath_base,maxn,minn);
 addpath(genpath('F:\IFCB104\manual\summary\')); % add new data to search path
 
 % Step 2: Train (make) the classifier
