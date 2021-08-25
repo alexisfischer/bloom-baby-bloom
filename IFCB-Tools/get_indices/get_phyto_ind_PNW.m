@@ -25,7 +25,7 @@ class2get = {'Actinoptychus';'Asterioplanus';'Asteromphalus';'Attheya';...
     'Nematodinium';'Noctiluca';'Oxyphysis';'Phaeocystis';'Polykrikos';...
     'Prorocentrum';'Proterythropsis';'Protoceratium';'Protoperidinium';...
     'Pyrophacus';'Scrippsiella';'Thecadinium';'Torodinium';...
-    'Cryptophyte';'Nanoplankton_<10'};
+    'Cryptophyte';'Nanoplankton_<10';'Dictyocha'};
 
 [~,ind_out] = intersect(class2use, class2get);
 ind_out = sort(ind_out);
@@ -78,7 +78,6 @@ class_label(strcmp('Thalassionema', class_label)) = {'\itThalassionema \rmspp.'}
 class_label(strcmp('Thalassiosira', class_label)) = {'\itThalassiosira \rmspp.'};
 class_label(strcmp('Tropidoneis', class_label)) = {'\itTropidoneis \rmspp.'};
 
-
 class_label(strcmp('Actiniscus', class_label)) = {'\itActiniscus \rmspp.'};
 class_label(strcmp('Akashiwo', class_label)) = {'\itAkashiwo \itsanguinea'};
 class_label(strcmp('Alexandrium', class_label)) = {'\itAlexandrium \rmspp.'};
@@ -116,5 +115,6 @@ class_label(strcmp('Torodinium', class_label)) = {'\itTorodinium \rmspp.'};
 
 class_label(strcmp('Cryptophyte', class_label)) = {'Cryptophytes'};
 class_label(strcmp('Nanoplankton_<10', class_label)) = {'misc nanoplankton'};
+class_label(strcmp('Dictyocha', class_label)) = {'\itDictyocha \rmspp.'};
 
 end

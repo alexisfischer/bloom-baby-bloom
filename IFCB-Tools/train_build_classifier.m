@@ -8,27 +8,21 @@ addpath(genpath(filepath));
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class'); 
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Tools\PNW2SCWclassconversion'],'PNWclass2use','SCWconversion','SCWclass2use');
 
-
-class2use = convert_class_PNW2SCW(class,PNWclass2use,SCWclass2use,SCWconversion );
+[class2use,class2skip] = convert_class_PNW2SCW(class,PNWclass2use,SCWclass2use,SCWconversion);
 clearvars PNWclass2use SCWconversion class;
 
 %% Step 1: Compile features for the training set
 manualpath = 'D:\SCW\manual\'; % manual annotation file location
 feapath_base = 'D:\SCW\features\'; %feature file location, assumes \yyyy\ organization
 maxn = 5000; %maximum number of images per class to include
-minn = 330; %minimum number for inclusion
-class2skip = {'Beads' 'Detritus' 'bubbles' 'Ash_dark' 'Ash_glassy'...
-    'Centric<10' 'unclassified' 'Pollen' 'Clusterflagellate'...
-    'DinoMix' 'FlagMix' 'Leptocylindrus' 'zooplankton_misc'...
-    'Ciliates' 'Strombidium' 'Mesodinium' 'Tiarina' 'Tintinnid' 'Tontonia'};
-class2group = {{'NanoP_less10' 'Cryptophyte' 'small_misc'} {'Gymnodinium' 'Peridinium'}};
+minn = 500; %minimum number for inclusion
 
-compile_train_features_user_training(manualpath,feapath_base,maxn,minn);
-addpath(genpath('F:\IFCB104\manual\summary\')); % add new data to search path
+compile_train_features_user_training(manualpath,feapath_base,maxn,minn,class2skip);
+addpath(genpath('D:\Shimada\manual\summary\')); % add new data to search path
 
 % Step 2: Train (make) the classifier
-result_path = 'F:\IFCB104\manual\summary\'; %USER location of training file and classifier output
-train_filename = 'UserExample_Train_27Aug2019'; %USER what file contains your training features
+result_path = 'D:\Shimada\manual\summary\'; %USER location of training file and classifier output
+train_filename = 'UserExample_Train_25Aug2021'; %USER what file contains your training features
 result_str = 'UserExample_Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
