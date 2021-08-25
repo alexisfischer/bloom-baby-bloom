@@ -1,11 +1,5 @@
 %% Training and Making a classifier
-%  Alexis D. Fischer, NOAA, August 2021
-
-addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
-
-load([filepath 'bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class'); 
-SCWclass = convert_class_PNW2SCW( class );
+%  Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 %% Step 1: Compile features for the training set
 manualpath = 'F:\IFCB104\manual\'; % manual annotation file location
