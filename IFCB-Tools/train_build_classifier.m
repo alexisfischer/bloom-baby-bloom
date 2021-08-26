@@ -7,26 +7,28 @@ addpath(genpath(filepath));
 
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class'); 
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Tools\PNW2SCWclassconversion'],'PNWclass2use','SCWconversion','SCWclass2use');
-
 [class2use,class2skip] = convert_class_PNW2SCW(class,PNWclass2use,SCWclass2use,SCWconversion);
 clearvars PNWclass2use SCWconversion class;
 
 %% Step 1: Compile features for the training set
+%*note this is currently configured
 manualpath = 'D:\SCW\manual\'; % manual annotation file location
 feapath_base = 'D:\SCW\features\'; %feature file location, assumes \yyyy\ organization
+outpath = 'D:\Shimada\manual\summary\'; % manual annotation file location
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
+%class2group = {{'NanoP_less10' 'Cryptophyte' 'small_misc'} {'Gymnodinium' 'Peridinium'}};
 
-compile_train_features_user_training(manualpath,feapath_base,maxn,minn,class2skip);
-addpath(genpath('D:\Shimada\manual\summary\')); % add new data to search path
+compile_train_features(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
+addpath(genpath(outpath)); % add new data to search path
 
-% Step 2: Train (make) the classifier
+%% Step 2: Train (make) the classifier
 result_path = 'D:\Shimada\manual\summary\'; %USER location of training file and classifier output
-train_filename = 'UserExample_Train_25Aug2021'; %USER what file contains your training features
-result_str = 'UserExample_Trees_';
+train_filename = 'Train_25Aug2021'; %USER what file contains your training features
+result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
-make_TreeBaggerClassifier_user_training(result_path, train_filename, result_str, nTrees)
+make_TreeBaggerClassifier(result_path, train_filename, result_str, nTrees)
 
 %% If want to remake figures related to classifier output
 classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019',...
