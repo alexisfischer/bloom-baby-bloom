@@ -35,7 +35,7 @@ fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
 manual_files = regexprep(manual_files, '.mat', '');
 %this presumes all the files have the same class to use
 class2use = load([manualpath manual_files{1}], 'class2use_manual');
-class2use = class2use.class2use_manual
+class2use = class2use.class2use_manual;
 %alternatively load your file
 %class2use = load('class2use_TAMUG1', 'class2use');
 %class2use = class2use.class2use;
