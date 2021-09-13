@@ -57,7 +57,7 @@ if ~exist([feapath fea_files{1}], 'file')
     end
 end
     
-for filecount = 1:length(manual_files), %looping over the manual files
+for filecount = 1:length(manual_files) %looping over the manual files
     if feapath_flag
         feapath=[feapath_base 'features' manual_files{filecount}(2:5) '_v2' filesep];
     else

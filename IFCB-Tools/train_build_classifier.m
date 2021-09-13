@@ -19,7 +19,7 @@ maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
 %class2group = {{'NanoP_less10' 'Cryptophyte' 'small_misc'} {'Gymnodinium' 'Peridinium'}};
 
-compile_train_features(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
+compile_train_features_PNW(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
 %% Step 2: Train (make) the classifier
