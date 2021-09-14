@@ -11,8 +11,8 @@ ifcbdir='D:\BuddInlet\';
 summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 addpath(genpath(summarydir));
 
-classifier = 'D:\SCW\manual\summary\UserExample_Trees_27Aug2019';
-addpath(genpath(classifier));
+%classifier = 'D:\SCW\manual\summary\UserExample_Trees_27Aug2019';
+%addpath(genpath(classifier));
 
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
 %remove_empty_blob_folders([ifcbdir 'blobs\2021\'])
@@ -21,12 +21,12 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
 addpath(genpath([ifcbdir 'raw\']));
 sort_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\2021\']);
 
-%% Step 2: Extract blobs
+% Step 2: Extract blobs
 addpath(genpath([ifcbdir 'data\2021\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
-start_blob_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\'],true)
+start_blob_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\'],true);
 
-%% Step 3: Extract features
+% Step 3: Extract features
 addpath(genpath([ifcbdir 'blobs\2021\']));
 addpath(genpath([ifcbdir 'data\2021\']));
 start_feature_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\'],[ifcbdir 'features\2021\'],true)

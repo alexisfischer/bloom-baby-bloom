@@ -6,15 +6,6 @@ function [ SCW2PNWclass ] = convert_class_SCW2PNW( SCWclass2use )
 % SCW2PNWclass: conversion to PNW classlist
 %  Alexis D. Fischer, NOAA, August 2021
 
-%% %find first file in manual
-% manualpath = 'D:\SCW\manual\';
-% manual_files = dir([manualpath 'D*104.mat']); %only select SCW files
-% manual_files = {manual_files.name}';
-% manual_files = regexprep(manual_files, '.mat', '');
-% %this presumes all the files have the same class to use
-% SCWclass2use = load([manualpath manual_files{1}], 'class2use_manual');
-% SCWclass2use = SCWclass2use.class2use_manual;
-
 %% convert SCW classes to PNW classes
 SCW2PNWclass=SCWclass2use;
 
@@ -32,9 +23,10 @@ SCW2PNWclass(strcmp('Centric', SCW2PNWclass)) = {'Centric_diatom'};
 SCW2PNWclass(strcmp('Centric<10', SCW2PNWclass)) = {'Nanoplankton_<10'};
 SCW2PNWclass(strcmp('Chaetoceros socialis', SCW2PNWclass)) = {'Chaetoceros'};
 SCW2PNWclass(strcmp('Ciliates', SCW2PNWclass)) = {'Ciliate'};
-SCW2PNWclass(strcmp('Cryptophyte,NanoP_less10,small_misc', SCW2PNWclass)) = {'unclassified'};
+SCW2PNWclass(strcmp('Cryptophyte,NanoP_less10,small_misc', SCW2PNWclass)) = {'Nanoplankton_<10'};
 SCW2PNWclass(strcmp('Cyano_filament', SCW2PNWclass)) = {'unclassified'};
-SCW2PNWclass(strcmp('cyst', SCW2PNWclass)) = {'unclassified'};
+SCW2PNWclass(strcmp('Cyl_Nitz', SCW2PNWclass)) = {'unclassified'};
+SCW2PNWclass(strcmp('cyst', SCW2PNWclass)) = {'Cyst'};
 SCW2PNWclass(strcmp('Desmid', SCW2PNWclass)) = {'unclassified'};
 SCW2PNWclass(strcmp('Det_Cer_Lau', SCW2PNWclass)) = {'unclassified'};
 SCW2PNWclass(strcmp('DinoMix', SCW2PNWclass)) = {'Dinoflagellate_mix'};
@@ -57,7 +49,9 @@ SCW2PNWclass(strcmp('Pyrocystis', SCW2PNWclass)) = {'unclassified'};
 SCW2PNWclass(strcmp('Rhiz_Prob', SCW2PNWclass)) = {'unclassified'};
 SCW2PNWclass(strcmp('Scrip_Het', SCW2PNWclass)) = {'unclassified'};
 SCW2PNWclass(strcmp('small_misc', SCW2PNWclass)) = {'unclassified'};
+SCW2PNWclass(strcmp('Steph_Melo', SCW2PNWclass)) = {'unclassified'};
 SCW2PNWclass(strcmp('Umbilicosphaera', SCW2PNWclass)) = {'unclassified'};
+SCW2PNWclass(strcmp('Vicicitus', SCW2PNWclass)) = {'unclassified'};
 SCW2PNWclass(strcmp('zooplankton_misc', SCW2PNWclass)) = {'Zooplankton'};
 
 end

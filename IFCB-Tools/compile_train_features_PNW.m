@@ -1,4 +1,4 @@
-function [  ] = compile_train_features( manualpath , feapath_base, outpath, maxn, minn, varargin)
+function [  ] = compile_train_features_PNW( manualpath , feapath_base, outpath, maxn, minn, varargin)
 % function [  ] = compile_train_features_user_training( manualpath , feapath_base, maxn, minn, class2skip, class2group)
 % class2skip and class2merge are optional inputs
 % For example:
@@ -7,14 +7,14 @@ function [  ] = compile_train_features( manualpath , feapath_base, outpath, maxn
 %Heidi M. Sosik, Woods Hole Oceanographic Institution, converted to function Jan 2016
 %
 %Example inputs:
-%manualpath = 'C:\work\IFCB\user_training_test_data\manual\'; % manual annotation file location
-%feapath_base = 'C:\work\IFCB\user_training_test_data\features\'; %feature file location, assumes \yyyy\ organization
-%maxn = 100; %maximum number of images per class to include
-%minn = 30; %minimum number for inclusion
-%Optional inputs;
-%class2skip = {'other'}; % for multiple use: {'myclass1' 'myclass2'}
-%class2skip = {}; %for case to skip none and include class2merge
-%class2group = {{'class1a' 'class1b'} {'class2a' 'class2b' 'class2c'}}; %use nested cells for multiple groups of 2 or more classes 
+% manualpath = 'D:\Shimada\testShimadamanual\'; % manual annotation file location
+% feapath_base = 'D:\Shimada\features\'; %feature file location, assumes \yyyy\ organization
+% outpath = 'D:\Shimada\manual\summary\'; % manual annotation file location
+% maxn = 5000; %maximum number of images per class to include
+% minn = 10; %minimum number for inclusion
+% varargin{1}={'Actiniscus','Actinoptychus','Akashiwo','Amphidinium'}; %class2skip
+% varargin{2}=[]; %class2group with nothing to group
+% varargin{2}={{'NanoP_less10' 'Cryptophyte' 'small_misc'} {'Gymnodinium' 'Peridinium'}};  %class2group
 
 class2skip = []; %initialize
 class2group = {[]};
@@ -29,16 +29,12 @@ if length(class2group{1}) > 1 && ischar(class2group{1}{1}) %input of one group w
     class2group = {class2group};
 end
 
-manual_files = dir([manualpath 'D*104.mat']);
+manual_files = dir([manualpath 'D*.mat']);
 manual_files = {manual_files.name}';
 fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
 manual_files = regexprep(manual_files, '.mat', '');
-%this presumes all the files have the same class to use
 class2use = load([manualpath manual_files{1}], 'class2use_manual');
 class2use = class2use.class2use_manual;
-%alternatively load your file
-%class2use = load('class2use_TAMUG1', 'class2use');
-%class2use = class2use.class2use;
 
 if ~(manualpath(end) == filesep), manualpath = [manualpath filesep]; end
 
@@ -80,8 +76,8 @@ for filecount = 1:length(manual_files) %looping over the manual files
         else
             disp('error here: class2use entries do not match')
             keyboard
-        end;
-    end;
+        end
+    end
     %ind_nan=isnan(manual_temp.classlist(fea_temp.data(:,1),2));
     class_temp = manual_temp.classlist(fea_temp.data(:,1),2);
     ind_nan = find(isnan(class_temp));
@@ -93,7 +89,9 @@ for filecount = 1:length(manual_files) %looping over the manual files
     fea_all = [fea_all; fea_temp.data];
     files_all = [files_all; repmat(manual_files(filecount),size(fea_temp.data,1),1)];
 
-end;
+end
+
+%%
 
 featitles = fea_temp.textdata;
 [~,i] = setdiff(featitles, {'FilledArea' 'summedFilledArea' 'Area' 'ConvexArea' 'MajorAxisLength' 'MinorAxisLength' 'Perimeter', 'roi_number'}');
