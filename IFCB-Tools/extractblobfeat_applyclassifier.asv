@@ -21,30 +21,28 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
 addpath(genpath([ifcbdir 'raw\']));
 sort_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\2021\']);
 
-%% Step 2: Extract blobs
-addpath(genpath([ifcbdir 'data\2019\']));
+% Step 2: Extract blobs
+addpath(genpath([ifcbdir 'data\2021\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
-start_blob_batch_user_training([ifcbdir 'data\2019\'],[ifcbdir 'blobs\2019\'],true);
+start_blob_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\'],true);
 
 % Step 3: Extract features
-addpath(genpath([ifcbdir 'blobs\2019\']));
-addpath(genpath([ifcbdir 'data\2019\']));
-start_feature_batch_user_training([ifcbdir 'data\2019\'],[ifcbdir 'blobs\2021\'],[ifcbdir 'features\2021\'],true)
+addpath(genpath([ifcbdir 'blobs\2021\']));
+addpath(genpath([ifcbdir 'data\2021\']));
+start_feature_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\'],[ifcbdir 'features\2021\'],true)
 
-% Step 4: Apply classifier
+%% Step 4: Apply classifier
 addpath(genpath([ifcbdir 'features\2019\']));
 start_classify_batch_user_training(classifier,[ifcbdir 'features\2019\'],[ifcbdir 'class\class2019_v1\']);
 
-
 %% Step 5: Summarize manual and classifier results for cell counts
-addpath(genpath(ifcbdir));
-
+addpath(genpath([ifcbdir 'manual\']));
 summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
 summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
     [ifcbdir 'data\'],[summarydir 'class\'],2019); %you will need to do this separately for each year of data
 
-%% Step 6: Summarize manual and classifier results for biovolume
+% Step 6: Summarize manual and classifier results for biovolume
 summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\2019\'],2019,1/3.4)
 
