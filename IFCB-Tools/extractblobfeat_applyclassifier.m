@@ -41,17 +41,19 @@ addpath(genpath(ifcbdir));
 
 summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
-summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
-    [ifcbdir 'data\'],[summarydir 'class\'],2019); %you will need to do this separately for each year of data
-
 %% Step 6: Summarize manual and classifier results for biovolume
 summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\2019\'],2019,1/3.4)
 
+%%
+summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
+    [ifcbdir 'data\'],[summarydir 'class\'],2021); %you will need to do this separately for each year of data
+
+
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
-yrrange = 2019;
+yrrange = 2021;
 adhocthresh = 0.5;
 summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
