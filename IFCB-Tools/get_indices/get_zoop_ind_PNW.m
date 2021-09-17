@@ -4,14 +4,13 @@ function [ ind_out, class_label ] = get_zoop_ind_PNW( class2use )
 % parts modified from 'get_diatom_ind'
 %  Alexis D. Fischer, NOAA, August 2021
 
-class_label=class2use;
-
 class2get = {'Ciliate';'Mesodinium';'Strombidium';'Tiarina';'Tintinnid';...
     'Tontonia';'Zooplankton'};
 
 [~,ind_out] = intersect(class2use, class2get);
-ind_out = sort(ind_out);
+%ind_out = sort(ind_out);
 
+class_label=class2use(ind_out);
 class_label(strcmp('Ciliate', class_label)) = {'misc ciliates'};
 class_label(strcmp('Mesodinium', class_label)) = {'\itMesodinium \rmspp.'};
 class_label(strcmp('Strombidium', class_label)) = {'\itStrombidium \rmspp.'};

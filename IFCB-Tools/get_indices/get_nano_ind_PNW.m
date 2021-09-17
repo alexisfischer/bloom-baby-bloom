@@ -4,13 +4,12 @@ function [ ind_out, class_label ] = get_nano_ind_PNW( class2use )
 % parts modified from 'get_diatom_ind'
 %  Alexis D. Fischer, NOAA, August 2021
 
-class_label=class2use;
-
 class2get = {'Cryptophyte';'Nanoplankton_<10'};
 
 [~,ind_out] = intersect(class2use, class2get);
-ind_out = sort(ind_out);
+%ind_out = sort(ind_out);
 
+class_label=class2use(ind_out);
 class_label(strcmp('Cryptophyte', class_label)) = {'Cryptophytes'};
 class_label(strcmp('Nanoplankton_<10', class_label)) = {'misc nanoplankton'};
 

@@ -3,8 +3,6 @@ function [ ind_out, class_label ] = get_dino_ind_PNW( class2use )
 % California class list specific to return of indices that correspond to dinoflagellate taxa
 %  Alexis D. Fischer, NOAA, August 2021
 
-class_label=class2use;
-
 class2get = {'Actiniscus';'Akashiwo';'Alexandrium';'Amphidinium';'Amylax';...
     'Azadinium';'Boreadinium';'Ceratium';'Cochlodinium';'Cyst';...
     'Dinoflagellate_mix';'Diplopsalis';'Dinophysis';'Dissodinium';...
@@ -15,8 +13,9 @@ class2get = {'Actiniscus';'Akashiwo';'Alexandrium';'Amphidinium';'Amylax';...
     'Pyrophacus';'Scrippsiella';'Thecadinium';'Torodinium'};
 
 [~,ind_out] = intersect(class2use, class2get);
-ind_out = sort(ind_out);
+%ind_out = sort(ind_out);
 
+class_label=class2use(ind_out);
 class_label(strcmp('Actiniscus', class_label)) = {'\itActiniscus \rmspp.'};
 class_label(strcmp('Akashiwo', class_label)) = {'\itAkashiwo \itsanguinea'};
 class_label(strcmp('Alexandrium', class_label)) = {'\itAlexandrium \rmspp.'};

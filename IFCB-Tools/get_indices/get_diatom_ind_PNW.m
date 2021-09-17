@@ -4,8 +4,6 @@ function [ ind_out, class_label ] = get_diatom_ind_PNW( class2use )
 % parts modified from 'get_diatom_ind'
 %  Alexis D. Fischer, NOAA, August 2021
 
-class_label=class2use;
-
 class2get = {'Actinoptychus';'Asterioplanus';'Asteromphalus';'Attheya';...
     'Aulacodiscus';'Asterionellopsis';'Bacillaria';'Bacteriastrum';...
     'Centric_diatom';'Cerataulina';'Chaetoceros';'Chaetoceros setae';...
@@ -19,8 +17,9 @@ class2get = {'Actinoptychus';'Asterioplanus';'Asteromphalus';'Attheya';...
     'Thalassiosira';'Tropidoneis'};
 
 [~,ind_out] = intersect(class2use, class2get);
-ind_out = sort(ind_out);
+%ind_out = sort(ind_out);
 
+class_label=class2use(ind_out);
 class_label(strcmp('Actinoptychus', class_label)) = {'\itActinoptychus \rmspp.'};
 class_label(strcmp('Asterioplanus', class_label)) = {'\itAsterioplanus \rmspp.'};
 class_label(strcmp('Asteromphalus', class_label)) = {'\itAsteromphalus \rmspp.'};
