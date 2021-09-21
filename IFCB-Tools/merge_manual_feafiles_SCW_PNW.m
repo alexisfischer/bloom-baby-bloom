@@ -3,6 +3,7 @@ function [] = merge_manual_feafiles_SCW_PNW(mergedpath,SCWpath,PNWpath)
 %preparation for building a training set
 %   copies all SCW and Shimada manual and feature files to merged folders
 %   converts SCW manual classes to PNW classes
+%   Alexis D. Fischer, NOAA NWFSC, September 2021
 
 % % Input path names
 % mergedpath = 'D:\Shimada\classifier\';

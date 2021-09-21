@@ -4,17 +4,17 @@ function [  ] = compile_train_features_PNW( manualpath , feapath_base, outpath, 
 % For example:
 %compile_train_features_user_training('C:\work\IFCB\user_training_test_data\manual\', 'C:\work\IFCB\user_training_test_data\features\', 100, 30, {'other'}, {'misc_nano' 'Karenia'})
 %IFCB classifier production: get training features from pre-computed bin feature files
-%Heidi M. Sosik, Woods Hole Oceanographic Institution, converted to function Jan 2016
+%   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
-%Example inputs:
-% manualpath = 'D:\Shimada\testShimadamanual\'; % manual annotation file location
-% feapath_base = 'D:\Shimada\features\'; %feature file location, assumes \yyyy\ organization
-% outpath = 'D:\Shimada\manual\summary\'; % manual annotation file location
+%Example inputs: 
+% manualpath = 'D:\Shimada\classifier\test_manual\'; % manual annotation file location
+% feapath_base = 'D:\Shimada\classifier\test_features\'; %feature file location, assumes \yyyy\ organization
+% outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
 % maxn = 5000; %maximum number of images per class to include
-% minn = 10; %minimum number for inclusion
-% varargin{1}={'Actiniscus','Actinoptychus','Akashiwo','Amphidinium'}; %class2skip
+% minn = 5; %minimum number for inclusion
+% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Aphanocapsa','Asterionellopsis','Asterioplanus','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Bead','Boreadinium','Bubble','Chaetoceros setae','Chlorophyte_mix','Ciliate','Clusterflagellate','Coccolithophore','Cochlodinium','Corethron','Coscinodiscus','Cryptophyte','Cyanobacteria','Cylindrotheca','Cyst','Detritus','Dinobryon','Dinoflagellate_mix','Diplopsalis','Ebria','Entomoneis','Euglenoid','Fibrocapsa','Flagellate_mix','Flagilaria','Gyrodinium','Gyrosigma','Helicotheca','Hemiaulus','Heterosigma','Katodinium','Kofoidinium','Lauderia','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Melosira','Meringosphaera','Minuscula','Nematodinium','Nitzschia','Noctiluca','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Plagiolemma','Pleurosigma','Pollen','Polykrikos','Proboscia','Proterythropsis','Protoperidinium','Pyramimonas','Pyrophacus','Rhizosolenia','Scrippsiella','Sea_Urchin_larvae','Striatella','Strombidium','Thecadinium','Tiarina','Tintinnid','Tontonia','Veliger','Zooplankton','unclassified'}; %class2skip
 % varargin{2}=[]; %class2group with nothing to group
-% varargin{2}={{'NanoP_less10' 'Cryptophyte' 'small_misc'} {'Gymnodinium' 'Peridinium'}};  %class2group
+% %varargin{2}={{'NanoP_less10' 'Cryptophyte' 'small_misc'} {'Gymnodinium' 'Peridinium'}};  %class2group
 
 class2skip = []; %initialize
 class2group = {[]};
@@ -91,7 +91,7 @@ for filecount = 1:length(manual_files) %looping over the manual files
 
 end
 
-%%
+
 
 featitles = fea_temp.textdata;
 [~,i] = setdiff(featitles, {'FilledArea' 'summedFilledArea' 'Area' 'ConvexArea' 'MajorAxisLength' 'MinorAxisLength' 'Perimeter', 'roi_number'}');
@@ -101,6 +101,7 @@ fea_all = fea_all(:,i);
 
 clear *temp
 
+%%
 [n, class_all, varargout] = handle_train_maxn( class2use, maxn, class_all, fea_all, files_all, roinum );
 fea_all = varargout{1};
 files_all = varargout{2};
