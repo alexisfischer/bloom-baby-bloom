@@ -17,10 +17,10 @@ clearvars  mergedpath SCWpath PNWpath;
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class');
-id=find(strcmp(class,'Dinoflagellate_mix')); class{id}='Akashiwo'; %replace Dinomix with Akashiwo
-id=find(strcmp(class,'Heterocapsa')); class{id}='Mesodinium'; 
-class{:,end+1}='Mesodinium';
+id=strcmp(class,'Dinoflagellate_mix'); class{id}='Akashiwo'; %replace Dinomix with Akashiwo
 class{:,end+1}='Lauderia';
+class{:,end+1}='Mesodinium';
+class{:,end+1}='Detritus';
 class{:,end+1}='Centric_diatom';
 class{:,end+1}='Pennate_diatom';
 

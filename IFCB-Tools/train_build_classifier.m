@@ -18,8 +18,9 @@ clearvars  mergedpath SCWpath PNWpath;
 % Shimada classifier
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class');
 id=strcmp(class,'Dinoflagellate_mix'); class{id}='Akashiwo'; %replace Dinomix with Akashiwo
-id=strcmp(class,'Heterocapsa'); class{id}='Mesodinium'; 
 class{:,end+1}='Lauderia';
+class{:,end+1}='Mesodinium';
+class{:,end+1}='Detritus';
 class{:,end+1}='Centric_diatom';
 class{:,end+1}='Pennate_diatom';
 
@@ -42,7 +43,7 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_11Oct2021'; %USER what file contains your training features
+train_filename = 'Train_12Oct2021'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
