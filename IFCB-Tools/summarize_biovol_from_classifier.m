@@ -14,7 +14,7 @@ function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feap
 
 filelist = dir([feapath_generic 'D*.csv']);
 
-% for yrcount = 1:length(yrrange), %USER not tested yet for multiple years, but should work
+% for yrcount = 1:length(yrrange) %USER not tested yet for multiple years, but should work
 %     yr = yrrange(yrcount);
 for yr = yrrange 
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));

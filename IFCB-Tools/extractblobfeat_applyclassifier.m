@@ -11,7 +11,7 @@ ifcbdir='D:\BuddInlet\';
 summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 addpath(genpath(summarydir));
 
-classifier = 'D:\Shimada\classifier\summary\Trees_22Sep2021';
+classifier = 'D:\Shimada\classifier\summary\Trees_19Oct2021';
 %addpath(genpath(classifier));
 
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
@@ -35,7 +35,7 @@ start_feature_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\']
 addpath(genpath([ifcbdir 'features\2021\']));
 start_classify_batch_user_training(classifier,[ifcbdir 'features\2021\'],[ifcbdir 'class\class2021_v1\']);
 
-%% Step 5: Summarize manual results
+% Step 5: Summarize manual results
 addpath(genpath(ifcbdir));
 %summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
@@ -46,12 +46,15 @@ addpath(genpath(ifcbdir));
 summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
     [ifcbdir 'data\'],[summarydir 'class\'],2021); %you will need to do this separately for each year of data
 
+%%
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
-yrrange = 2021;
+yrrange = 2019;
 adhocthresh = 0.5;
-summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,2019)
+
+summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,2021)
 
 %% Adjust annotations with added class
 start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_6','D:\Shimada\manual\')

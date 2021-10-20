@@ -43,15 +43,14 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_12Oct2021'; %USER what file contains your training features
+train_filename = 'Train_19Oct2021'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 make_TreeBaggerClassifier(result_path, train_filename, result_str, nTrees)
 
 %% If want to remake figures related to classifier output
-classifier_oob_analysis('F:\IFCB104\manual\summary\UserExample_Trees_27Aug2019',...
-    'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Figs\');
+determine_classifier_performance('D:\Shimada\classifier\summary\Trees_19Oct2021')
 
 %% Find the volume sampled in milliliters for >1 IFCB files
 %examples
