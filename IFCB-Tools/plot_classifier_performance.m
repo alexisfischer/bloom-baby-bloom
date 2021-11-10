@@ -1,7 +1,7 @@
 %plot classifier performance
 clear;
 filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-load([filepath 'performance_classifier_12Oct2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+load([filepath 'performance_classifier_09Nov2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 
 text_offset = 0.1;
 
