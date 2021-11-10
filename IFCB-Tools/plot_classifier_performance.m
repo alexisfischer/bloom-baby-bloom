@@ -1,38 +1,37 @@
 %plot classifier performance
 clear;
-filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-load([filepath 'performance_classifier_12Oct2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
+load([filepath 'performance_classifier_19Oct2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 
 text_offset = 0.1;
+maxn=5000;
 
-%% plot bar Sensitivity and Precision
+%% plot stacked total in set
 figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
-bar([PNW.Se PNW.Pr])
-set(gca, 'xtick', 1:length(PNW.class), 'xticklabel', [])
-text(1:length(PNW.class), -text_offset.*ones(size(PNW.class)), PNW.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
+b = bar([SCW.total PNW.total],'stack','Barwidth',1);
+col=brewermap(2,'PRGn'); %col=[[.3 .3 .3];col];
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+    
+legend('UCSC','NWFSC','Location','NE');
+set(gca, 'xtick', 1:length(all.class), 'xticklabel', []);
+ylabel('total images in set');
+text(1:length(all.class), -text_offset.*ones(size(all.class)), all.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
 set(gca, 'position', [ 0.13 0.35 0.8 0.6])
-legend('Sensitivity', 'Precision','Location','SE')
-title('score threshold = 0')
 set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_sensitivity_precision_PNW.png']);
-hold off
-
-%% plot bar Sensitivity and Precision
-figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
-bar([SCW.Se SCW.Pr])
-set(gca, 'xtick', 1:length(SCW.class), 'xticklabel', [])
-text(1:length(SCW.class), -text_offset.*ones(size(SCW.class)), SCW.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
-set(gca, 'position', [ 0.13 0.35 0.8 0.6])
-legend('Sensitivity', 'Precision','Location','SE')
-title('score threshold = 0')
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_sensitivity_precision_SCW.png']);
+print(gcf,'-dtiff','-r200',[filepath 'Figs\total_UCSC_NWFSC.png']);
 hold off
 
 %% plot total in set
 figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
-bar([all.total SCW.total PNW.total])
-legend('overall', 'SCW', 'N CCS','Location','NE');
+b = bar([all.total SCW.total PNW.total],'Barwidth',1,'linestyle','none');
+col=brewermap(2,'PRGn'); col=[[.3 .3 .3];col];
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+   
+legend('overall','UCSC', 'NWFSC','Location','NE');
 set(gca, 'xtick', 1:length(all.class), 'xticklabel', []);
 ylabel('total images in set');
 text(1:length(all.class), -text_offset.*ones(size(all.class)), all.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
@@ -41,16 +40,70 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs\total_SCW_PNW.png']);
 hold off
     
-%% plot bar Sensitivity and Precision
-figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
-bar([all.Se all.Pr])
-set(gca, 'xtick', 1:length(all.class), 'xticklabel', [])
+%% plot ALL bar Sensitivity and Precision
+figure('Units','inches','Position',[1 1 6 4.5],'PaperPositionMode','auto');
+yyaxis left;
+b=bar([all.Se all.Pr],'Barwidth',1,'linestyle','none'); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(all.class), 'xticklabel', []); hold on
+ylabel('Performance');
+col=flipud(brewermap(2,'RdBu')); 
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+yyaxis right;
+plot(1:length(all.class),all.total,'k*'); hold on
+ylabel('total images in set');
+set(gca,'ycolor','k', 'xtick', 1:length(all.class), 'xticklabel', []); hold on
 text(1:length(all.class), -text_offset.*ones(size(all.class)), all.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
-set(gca, 'position', [ 0.13 0.35 0.8 0.6])
-legend('Sensitivity', 'Precision','Location','SE')
-title('score threshold = 0')
+set(gca, 'position', [ 0.13 0.35 0.75 0.6])
+legend('Sensitivity', 'Precision','Location','W')
+title('NWFSC + UCSC')
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_sensitivity_precision.png']);
+hold off
+
+%% plot N CCS bar Sensitivity and Precision
+figure('Units','inches','Position',[1 1 6 4.5],'PaperPositionMode','auto');
+yyaxis left;
+b=bar([PNW.Se PNW.Pr],'Barwidth',1,'linestyle','none'); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(PNW.class), 'xticklabel', []); hold on
+ylabel('Performance');
+col=flipud(brewermap(2,'RdBu')); 
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+yyaxis right;
+plot(1:length(PNW.class),PNW.total,'k*'); hold on
+ylabel('total images in set');
+set(gca,'ycolor','k', 'xtick', 1:length(PNW.class), 'xticklabel', []); hold on
+text(1:length(PNW.class), -text_offset.*ones(size(PNW.class)), PNW.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
+set(gca, 'position', [ 0.13 0.35 0.75 0.6])
+legend('Sensitivity', 'Precision','Location','NW')
+title('NWFSC')
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',[filepath 'Figs/Fx_sensitivity_precision_NWFSC.png']);
+hold off
+
+%% plot SCW bar Sensitivity and Precision
+figure('Units','inches','Position',[1 1 6 4.5],'PaperPositionMode','auto');
+yyaxis left;
+b=bar([SCW.Se SCW.Pr],'Barwidth',1,'linestyle','none'); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(SCW.class), 'xticklabel', []); hold on
+ylabel('Performance');
+col=flipud(brewermap(2,'RdBu')); 
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+yyaxis right;
+plot(1:length(SCW.class),SCW.total,'k*'); hold on
+ylabel('total images in set');
+set(gca,'ycolor','k', 'xtick', 1:length(SCW.class), 'xticklabel', []); hold on
+text(1:length(SCW.class), -text_offset.*ones(size(SCW.class)), SCW.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
+set(gca, 'position', [ 0.13 0.35 0.75 0.6])
+legend('Sensitivity', 'Precision','Location','W')
+title('UCSC')
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_sensitivity_precision_UCSC.png']);
 hold off
 
 %% plot manual vs classifier checkerboard
@@ -68,33 +121,4 @@ title('manual vs. classifier; score threshold = 0')
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs\checkerboard_manual_vs_classifier.png']);
 hold off
-
-%% plot bar Sensitivity and Precision (optimal)
-figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
-bar([opt.Se opt.Pr opt.Pm])
-title('optimal score threshold')
-set(gca, 'xtick', 1:length(opt.class), 'xticklabel', [])
-text(1:length(opt.class), -text_offset.*ones(size(opt.class)), opt.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45)
-set(gca, 'position', [ 0.13 0.35 0.8 0.6])
-legend('Se', 'Pr', 'Pmissed')
-set(gca, 'position', [ 0.13 0.35 0.8 0.6])
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_sensitivity_precision_optimal.png']);
-hold off
     
-%% plot manual vs classifier checkerboard (optimal)
-figure('Units','inches','Position',[1 1 7 5],'PaperPositionMode','auto');
-cplot = zeros(size(c_opt)+1);
-cplot(1:length(opt.class),1:length(opt.class)) = c_opt;
-%pcolor(log10(cplot))
-pcolor(cplot)
-set(gca, 'ytick', 1:length(opt.class), 'yticklabel', [])
-text( -text_offset+ones(size(opt.class)),(1:length(opt.class))+.5, opt.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 0)
-set(gca, 'xtick', 1:length(classes), 'xticklabel', [])
-text((1:length(opt.class))+.5, -text_offset+ones(size(opt.class)), opt.class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
-axis square, colorbar, caxis([0 maxn])
-title('manual vs. classifier; optimal score threshold')
-%
-set(gcf,'color','w');
-print(gcf,'-dtiff','-r200',[filepath 'Figs\checkerboard_manual_vs_classifier_optimal.png']);
-hold off

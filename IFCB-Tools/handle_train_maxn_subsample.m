@@ -1,8 +1,12 @@
 function [ n, class_all, varargin ] = handle_train_maxn_subsample( class2use, maxn, class_all, varargin )
 % function [ n, class_all, varargin ] = handle_train_maxn_subsample( class2use, maxn, class_all, varargin )
 % ifcb-analysis; function called by compile_train_features*; 
-% randomly subsample a training set to limit maximum number of cases in any one class
-% removes images from SCW training set first (if available), before PNW training set
+%
+% This is a function that replaces ‘handle_train_maxn’ within 
+% compile_train_features. If number of images exceed the USER defined maxn, 
+% this randomly removes excess images from SCW training set first. If the 
+% number of images still exceeds maxn, then it randomly removes excess 
+% images from the PNW set.
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 
 % %Example inputs for testing
