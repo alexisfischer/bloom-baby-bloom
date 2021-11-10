@@ -1,0 +1,40 @@
+%plot classifier comparison
+
+clear;
+addpath(genpath('~/MATLAB/bloom-baby-bloom/'));
+filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
+N=load([filepath 'performance_classifier_09Nov2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+O=load([filepath 'performance_classifier_19Oct2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+
+text_offset = 0.1;
+maxn=5000;
+
+%%
+figure('Units','inches','Position',[1 1 6 6],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.16 0.04], [0.14 0.03]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+
+subplot(3,1,1)
+plot(1:length(N.PNW.class),N.PNW.total,'ro',1:length(O.PNW.class),O.PNW.total,'bo'); hold on
+yline(2000); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(N.all.class), 'xticklabel',{},'tickdir','out'); hold on
+ylabel({'total images';'in NWFSC set'});
+legend('new', 'old','Location','NE'); hold on;
+
+subplot(3,1,2)
+plot(1:length(N.all.class),N.all.Se,'ro',1:length(O.all.class),O.all.Se,'bo'); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(N.all.class), 'xticklabel',{},'tickdir','out'); hold on
+ylabel('Sensitivity (all)');
+
+subplot(3,1,3)
+plot(1:length(N.all.class),N.all.Pr,'ro',1:length(O.all.class),O.all.Pr,'bo'); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(N.all.class), 'xticklabel',N.all.class,'tickdir','out'); hold on
+ylabel('Precision (all)');
+
+
+
+%%
+set(gcf,'color','w');
+print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_sensitivity_precision.png']);
+hold off

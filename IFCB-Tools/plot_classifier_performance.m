@@ -1,7 +1,8 @@
 %plot classifier performance
 clear;
+addpath(genpath('~/MATLAB/bloom-baby-bloom/'));
 filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
-load([filepath 'performance_classifier_19Oct2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+load([filepath 'performance_classifier_09Nov2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 
 text_offset = 0.1;
 maxn=5000;

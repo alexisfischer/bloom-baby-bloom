@@ -1,4 +1,4 @@
-function [ ind_out, class_label ] = get_phyto_ind_PNW( class2use )
+function [ ind_out, class_label ] = get_all_ind_PNW( class2use )
 %function [ ind_out, class_label ] = get_phyto_ind_CA( class2use, class_label )
 % California class list specific to return of indices that correspond to 
 % living taxa
@@ -24,7 +24,8 @@ class2get = {'Actinoptychus';'Asterioplanus';'Asteromphalus';'Attheya';...
     'Nematodinium';'Noctiluca';'Oxyphysis';'Phaeocystis';'Polykrikos';...
     'Prorocentrum';'Proterythropsis';'Protoceratium';'Protoperidinium';...
     'Pyrophacus';'Scrippsiella';'Thecadinium';'Torodinium';...
-    'Cryptophyte';'Nanoplankton_<10';'Dictyocha'};
+    'Cryptophyte';'Nanoplankton_<10';'Dictyocha';...
+    'Mesodinium';'Detritus'};
 
 [~,ind_out] = intersect(class2use, class2get);
 %ind_out = sort(ind_out);
@@ -119,5 +120,8 @@ class_label(strcmp('Torodinium', class_label)) = {'\itTorodinium \rmspp.'};
 class_label(strcmp('Cryptophyte', class_label)) = {'Cryptophytes'};
 class_label(strcmp('Nanoplankton_<10', class_label)) = {'misc nanoplankton'};
 class_label(strcmp('Dictyocha', class_label)) = {'\itDictyocha \rmspp.'};
+class_label(strcmp('Detritus', class_label)) = {'Detritus'};
+class_label(strcmp('Mesodinium', class_label)) = {'\itMesodinium \rmspp.'};
+
 
 end
