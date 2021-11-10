@@ -28,7 +28,7 @@ manualpath = 'D:\Shimada\manual\'; %classlist to subtract "class" from
 [class2skip] = find_class2skip(class,manualpath);
 clearvars manualpath id
 
-% Step 2: Compile features for the training set
+%% Step 2: Compile features for the training set
 addpath(genpath('D:\Shimada\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
