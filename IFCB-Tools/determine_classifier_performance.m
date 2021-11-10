@@ -7,7 +7,7 @@ function [ ] = determine_classifier_performance( classifiername )
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
 % Example Inputs
-%classifiername='D:\Shimada\classifier\summary\Trees_12Oct2021';
+%classifiername='D:\Shimada\classifier\summary\Trees_09Nov2021';
 
 outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 load(classifiername,'b','classes','featitles','maxthre','targets');
@@ -29,6 +29,7 @@ all=table(class,total,Se,Pr);
 disp('overall error rate:')
 disp(1-sum(TP)./sum(total))
 
+%%
 %%%% apply the optimal threshold
 t = repmat(maxthre,length(Yfit),1);
 win = (Sfit > t);
