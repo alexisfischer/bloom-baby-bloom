@@ -3,15 +3,15 @@
 clear;
 
 %%%% modify according to dataset
-ifcbdir='D:\Shimada\'; 
-%ifcbdir='D:\BuddInlet\'; 
+%ifcbdir='D:\Shimada\'; 
+ifcbdir='D:\BuddInlet\'; 
 %ifcbdir='D:\SCW\'; 
 
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 addpath(genpath(summarydir));
 
-classifier = 'D:\Shimada\classifier\summary\Trees_19Oct2021';
+classifier = 'D:\Shimada\classifier\summary\Trees_11Nov2021';
 %addpath(genpath(classifier));
 
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
@@ -35,13 +35,13 @@ start_feature_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\']
 addpath(genpath([ifcbdir 'features\2021\']));
 start_classify_batch_user_training(classifier,[ifcbdir 'features\2021\'],[ifcbdir 'class\class2021_v1\']);
 
-%% Step 5: Summarize results
+% Step 5: Summarize results
 
 %summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
- summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
-     [ifcbdir 'data\'],[ifcbdir 'features\2019\'],2019,1/3.4)
-%%
+% summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
+%     [ifcbdir 'data\'],[ifcbdir 'features\2019\'],2019,1/3.4)
+
 % Step 6: Summarize classifier results for biovolume
 summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
     [ifcbdir 'data\'],[summarydir 'class\'],2021); %you will need to do this separately for each year of data

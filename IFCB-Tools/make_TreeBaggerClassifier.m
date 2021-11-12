@@ -7,21 +7,16 @@ function [ ] = make_TreeBaggerClassifier( result_path, train_filename, result_st
 %
 %run compile_train_features_user_training.m first to store input results in train_filename
 % Example inputs:
-% %SCW
-% result_path = 'D:\SCW\manual\summary\'; %USER location of training file and classifier output
-% train_filename = 'UserExample_Train_27Aug2019'; %USER what file contains your training features
-
-% %PNW
-% result_path = 'D:\Shimada\manual\summary\'; %USER location of training file and classifier output
-% train_filename = 'Train_25Aug2021'; %USER what file contains your training features
-% result_str = 'Trees_';
-% nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
+%result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
+%train_filename = 'Train_10Nov2021'; %USER what file contains your training features
+%result_str = 'Trees_';
+%nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 load([result_path train_filename],'class2use','class_vector','featitles','nclass','targets','train'); 
 
 % ungroup class2group {'NanoP_less10' 'Cryptophyte' 'small_misc'}  {'Gymnodinium' 'Peridinium'}};
-idx=strmatch('NanoP_less10',class2use); class_vector((class_vector==96))=idx;
-idx=strmatch('Gymnodinium',class2use); class_vector((class_vector==97))=idx;
+%idx=strmatch('NanoP_less10',class2use); class_vector((class_vector==96))=idx;
+%idx=strmatch('Gymnodinium',class2use); class_vector((class_vector==97))=idx;
 
 %load fea2use
 fea2use = 1:length(featitles);

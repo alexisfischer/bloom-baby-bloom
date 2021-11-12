@@ -1,9 +1,11 @@
+%function [ ] = plot_classifier_performance( classifiername )
 %plot classifier performance
 clear;
-addpath(genpath('~/MATLAB/bloom-baby-bloom/'));
-filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
-load([filepath 'performance_classifier_09Nov2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+%addpath(genpath('~/MATLAB/bloom-baby-bloom/'));
+%filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
+filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 
+load([filepath 'performance_classifier_11Nov2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 text_offset = 0.1;
 maxn=5000;
 
@@ -59,6 +61,7 @@ text(1:length(all.class), -text_offset.*ones(size(all.class)), all.class, 'inter
 set(gca, 'position', [ 0.13 0.35 0.75 0.6])
 legend('Sensitivity', 'Precision','Location','W')
 title('NWFSC + UCSC')
+%%
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_sensitivity_precision.png']);
 hold off

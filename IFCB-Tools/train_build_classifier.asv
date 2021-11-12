@@ -14,27 +14,25 @@ PNWpath = 'D:\Shimada\';
 merge_manual_feafiles_SCW_PNW(mergedpath,SCWpath,PNWpath)
 clearvars  mergedpath SCWpath PNWpath;
 
-% Step 2: select classes of interest and find class2skip
+%% Step 2: select classes of interest and find class2skip
 % Shimada classifier
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'TopClasses');
-TopClasses(strcmp(TopClasses,'Sea_Urchin_larvae'))=[];
-TopClasses(strcmp(TopClasses,'Dinoflagellate_mix'))=[];
-TopClasses(strcmp(TopClasses,'Bacteriastrum'))=[];
-TopClasses(strcmp(TopClasses,'Dactyliosolen'))=[];
-TopClasses(strcmp(TopClasses,'Flagellate_mix'))=[];
-TopClasses(strcmp(TopClasses,'unclassified'))=[];
-TopClasses{end+1}='Akashiwo'; TopClasses{end+1}='Lauderia';
-TopClasses{end+1}='Pn_parasite'; TopClasses{end+1}='Pn_small';
-TopClasses{end+1}='Pseudo-nitzschia'; TopClasses{end+1}='Detritus';
-TopClasses{end+1}='Heterocapsa';
-TopClasses=sort(TopClasses);
+TopClasses=TopClasses';
+%id=strcmp(TopClasses,'Dinoflagellate_mix'); class{id}='Akashiwo'; %replace Dinomix with Akashiwo
+id=strcmp(TopClasses,'Sea_Urchin_larvae'); class{id}='Lauderia'; 
+id=strcmp(TopClasses,'Bacteriastrum');  class{id}='Detritus'; 
+id=strcmp(TopClasses,'Bacteriastrum');  class{id}='Detritus'; 
 
-%
+TopClasses{:,end+1}='Pseudo-nitzschia';
+TopClasses{:,end+1}='Pn_parasite';
+TopClasses{:,end+1}='Pn_small';
+
+%%
 manualpath = 'D:\Shimada\manual\'; %classlist to subtract "class" from
-[class2skip] = find_class2skip(TopClasses',manualpath);
+[class2skip] = find_class2skip(TopClasses,manualpath);
 clearvars manualpath id
 
-% Step 2: Compile features for the training set
+%% Step 2: Compile features for the training set
 addpath(genpath('D:\Shimada\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
@@ -44,16 +42,14 @@ outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
 class2group={{'Cerataulina' 'Detonula' 'Lauderia'}...
-    {'Cryptophyte' 'Nanoplankton_<10'}...
-    {'Scrippsiella' 'Heterocapsa'}...    
     {'Pseudo-nitzschia' 'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pn_small'}};
 
 compile_train_features_PNW(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
-% Step 3: Train (make) the classifier
+%% Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_11Nov2021'; %USER what file contains your training features
+train_filename = 'Train_10Nov2021'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
