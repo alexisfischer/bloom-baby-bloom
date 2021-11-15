@@ -39,8 +39,8 @@ start_classify_batch_user_training(classifier,[ifcbdir 'features\2021\'],[ifcbdi
 
 %summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
-% summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
-%     [ifcbdir 'data\'],[ifcbdir 'features\2019\'],2019,1/3.4)
+%  summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
+%      [ifcbdir 'data\'],[ifcbdir 'features\2019\'],2019,1/3.4)
 
 % Step 6: Summarize classifier results for biovolume
 summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
