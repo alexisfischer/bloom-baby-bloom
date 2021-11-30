@@ -17,7 +17,7 @@ classifier = 'D:\Shimada\classifier\summary\Trees_11Nov2021';
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
 %remove_empty_blob_folders([ifcbdir 'blobs\2021\'])
 
-%% Step 1: Sort data into folders
+% Step 1: Sort data into folders
 addpath(genpath([ifcbdir 'raw\']));
 sort_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\2021\']);
 
@@ -35,7 +35,7 @@ start_feature_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\']
 addpath(genpath([ifcbdir 'features\2021\']));
 start_classify_batch_user_training(classifier,[ifcbdir 'features\2021\'],[ifcbdir 'class\class2021_v1\']);
 
-% Step 5: Summarize results
+%% Step 5: Summarize results
 
 %summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
@@ -55,4 +55,4 @@ adhocthresh = 0.5;
 summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
 %% Adjust annotations with added class
-start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_7','D:\Shimada\manual\')
+start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_8','D:\Shimada\manual\')
