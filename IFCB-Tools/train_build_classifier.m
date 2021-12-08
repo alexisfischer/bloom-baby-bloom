@@ -53,7 +53,7 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_11Nov2021'; %USER what file contains your training features
+train_filename = 'Train_07Dec2021'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 

@@ -5,7 +5,7 @@ clear;
 %filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
 filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 
-load([filepath 'performance_classifier_11Nov2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+load([filepath 'performance_classifier_07Dec2021'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 text_offset = 0.1;
 maxn=5000;
 
