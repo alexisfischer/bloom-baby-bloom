@@ -23,25 +23,32 @@ TopClasses(strcmp(TopClasses,'Bacteriastrum'))=[];
 TopClasses(strcmp(TopClasses,'Dactyliosolen'))=[];
 TopClasses(strcmp(TopClasses,'Flagellate_mix'))=[];
 TopClasses(strcmp(TopClasses,'unclassified'))=[];
-TopClasses{end+1}='Akashiwo'; 
-TopClasses{end+1}='Lauderia';
-TopClasses{end+1}='Pn_parasite'; 
-TopClasses{end+1}='Pn_small';
-TopClasses{end+1}='Pseudo-nitzschia'; 
-TopClasses{end+1}='Detritus';
+TopClasses{end+1}='Akashiwo'; TopClasses{end+1}='Lauderia';
+TopClasses{end+1}='Pn_parasite'; TopClasses{end+1}='Pn_small';
+TopClasses{end+1}='Pseudo-nitzschia'; TopClasses{end+1}='Detritus';
+TopClasses{end+1}='Unid_rounded_Dino';
+TopClasses{end+1}='Unid_pointed_Dino';
 TopClasses{end+1}='Heterocapsa';
-%TopClasses{end+1}='Unid_rounded_Dino';
-%TopClasses{end+1}='Unid_pointed_Dino';
+TopClasses{end+1}='Heterocapsa';
+TopClasses{end+1}='Heterocapsa';
+TopClasses{end+1}='Heterocapsa';
+TopClasses{end+1}='Heterocapsa';
+TopClasses{end+1}='Heterocapsa';
+TopClasses{end+1}='Heterocapsa';
+TopClasses{end+1}='Heterocapsa';
+TopClasses{end+1}='Heterocapsa';
+TopClasses{end+1}='Heterocapsa';
 
-TopClasses{end+1}='D_acuminata';
-TopClasses{end+1}='D_fortii';
-TopClasses{end+1}='D_norvegica';
-TopClasses{end+1}='D_acuta';
-TopClasses{end+1}='D_rotundata';
-TopClasses{end+1}='D_parva';
-TopClasses{end+1}='D_caudata';
-TopClasses{end+1}='D_odiosa';
-TopClasses{end+1}='D_tripos';
+
+D_acuminata
+D_fortii
+D_norvegica
+D_acuta
+D_rotundata
+D_parva
+D_caudata
+D_odiosa
+D_tripos
 
 TopClasses=sort(TopClasses);
 
@@ -62,21 +69,19 @@ minn = 500; %minimum number for inclusion
 class2group={{'Cerataulina' 'Detonula' 'Lauderia'}...
     {'Cryptophyte' 'Nanoplankton_<10'}...
     {'Scrippsiella' 'Heterocapsa'}...    
-    {'Pseudo-nitzschia' 'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pn_small'}...
-    {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
-    'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
+    {'Pseudo-nitzschia' 'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pn_small'}};
 
 compile_train_features_PNW(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_30Dec2021'; %USER what file contains your training features
+train_filename = 'Train_07Dec2021'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 make_TreeBaggerClassifier(result_path, train_filename, result_str, nTrees)
-%plot_classifier_performance
+plot_classifier_performance
 %% If want to remake figures related to classifier output
 determine_classifier_performance('D:\Shimada\classifier\summary\Trees_09Nov2021')
 
