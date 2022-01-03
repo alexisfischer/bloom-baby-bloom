@@ -6,7 +6,7 @@ filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
 addpath(genpath(filepath));
 addpath(genpath('~/MATLAB/bloom-baby-bloom/Misc-Functions/'));
 
-load([filepath 'performance_classifier_30Dec2021_noUnidDino'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+load([filepath 'performance_classifier_03Jan2022_v1'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_29Dec2021_2UnidDino'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 text_offset = 0.1;
 maxn=5000;
@@ -51,7 +51,7 @@ set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[filepath 'Figs\total_SCW_PNW.png']);
 hold off
     
-% plot ALL bar Sensitivity and Precision
+%% plot ALL bar Sensitivity and Precision
 figure('Units','inches','Position',[1 1 6 4.5],'PaperPositionMode','auto');
 yyaxis left;
 b=bar([all.Se all.Pr],'Barwidth',1,'linestyle','none'); hold on

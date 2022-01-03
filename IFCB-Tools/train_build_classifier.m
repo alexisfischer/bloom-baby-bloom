@@ -18,21 +18,17 @@ clearvars  mergedpath SCWpath PNWpath;
 % Shimada classifier
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'TopClasses');
 TopClasses(strcmp(TopClasses,'Sea_Urchin_larvae'))=[];
-TopClasses(strcmp(TopClasses,'Dinoflagellate_mix'))=[];
-TopClasses(strcmp(TopClasses,'Bacteriastrum'))=[];
-TopClasses(strcmp(TopClasses,'Dactyliosolen'))=[];
-TopClasses(strcmp(TopClasses,'Flagellate_mix'))=[];
+TopClasses(strcmp(TopClasses,'Unid_rounded_Dino'))=[];
+TopClasses(strcmp(TopClasses,'Unid_pointed_Dino'))=[];
 TopClasses(strcmp(TopClasses,'unclassified'))=[];
-TopClasses{end+1}='Akashiwo'; 
-TopClasses{end+1}='Lauderia';
-TopClasses{end+1}='Pn_parasite'; 
-TopClasses{end+1}='Pn_small';
-TopClasses{end+1}='Pseudo-nitzschia'; 
-TopClasses{end+1}='Detritus';
-TopClasses{end+1}='Heterocapsa';
-%TopClasses{end+1}='Unid_rounded_Dino';
-%TopClasses{end+1}='Unid_pointed_Dino';
+TopClasses(strcmp(TopClasses,'Flagellate_mix'))=[];
 
+TopClasses{end+1}='Pn_parasite'; 
+TopClasses{end+1}='Pseudo-nitzschia'; 
+TopClasses{end+1}='Pn_small';
+TopClasses{end+1}='Heterocapsa';
+
+TopClasses{end+1}='Dinophysis';
 TopClasses{end+1}='D_acuminata';
 TopClasses{end+1}='D_fortii';
 TopClasses{end+1}='D_norvegica';
@@ -50,7 +46,7 @@ manualpath = 'D:\Shimada\manual\'; %classlist to subtract "class" from
 [class2skip] = find_class2skip(TopClasses',manualpath);
 clearvars manualpath id
 
-% Step 2: Compile features for the training set
+%% Step 2: Compile features for the training set
 addpath(genpath('D:\Shimada\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
@@ -71,7 +67,7 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_30Dec2021'; %USER what file contains your training features
+train_filename = 'Train_03Jan2022'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
