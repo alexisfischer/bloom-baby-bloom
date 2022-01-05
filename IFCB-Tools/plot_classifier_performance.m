@@ -1,10 +1,10 @@
 %function [ ] = plot_classifier_performance( classifiername )
 %plot classifier performance
 clear;
-filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
-%filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+%filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
+filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 addpath(genpath(filepath));
-addpath(genpath('~/MATLAB/bloom-baby-bloom/Misc-Functions/'));
+%addpath(genpath('~/MATLAB/bloom-baby-bloom/Misc-Functions/'));
 
 load([filepath 'performance_classifier_04Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_29Dec2021_2UnidDino'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
@@ -15,8 +15,8 @@ maxn=5000;
 class=all.class;
 id=strcmp(class,'D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis');
 class{id}='Dinophysis';
-id=find(strcmp(class,'Pn_large_narrow,Pn_large_wide,Pn_parasite,Pn_small,Pseudo-nitzschia'));
-class{id}='Pseudo-nitzschia';
+% id=find(strcmp(class,'Pn_large_narrow,Pn_large_wide,Pn_parasite,Pn_small,Pseudo-nitzschia'));
+% class{id}='Pseudo-nitzschia';
 
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
@@ -31,6 +31,7 @@ set(gca, 'xtick', 1:length(class), 'xticklabel', []);
 ylabel('total images in set');
 text(1:length(class), -text_offset.*ones(size(class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
 set(gca, 'position', [ 0.13 0.35 0.8 0.6])
+%%
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[filepath 'Figs\total_UCSC_NWFSC.png']);
 hold off

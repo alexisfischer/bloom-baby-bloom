@@ -23,13 +23,12 @@ TopClasses(strcmp(TopClasses,'Unid_pointed_Dino'))=[];
 TopClasses(strcmp(TopClasses,'unclassified'))=[];
 TopClasses(strcmp(TopClasses,'Flagellate_mix'))=[];
 
-TopClasses{end+1}='Pn_parasite'; 
-TopClasses{end+1}='Pseudo-nitzschia'; 
+%TopClasses{end+1}='Pn_parasite'; 
+%TopClasses{end+1}='Pseudo-nitzschia'; 
 TopClasses{end+1}='Pn_small';
-TopClasses{end+1}='Heterocapsa';
+%TopClasses{end+1}='Heterocapsa';
 
 TopClasses{end+1}='Dinophysis';
-TopClasses{end+1}='D_acuminata';
 TopClasses{end+1}='D_fortii';
 TopClasses{end+1}='D_norvegica';
 TopClasses{end+1}='D_acuta';
@@ -41,7 +40,6 @@ TopClasses{end+1}='D_tripos';
 
 TopClasses=sort(TopClasses);
 
-%%
 manualpath = 'D:\Shimada\manual\'; %classlist to subtract "class" from
 [class2skip] = find_class2skip(TopClasses',manualpath);
 clearvars manualpath id
@@ -55,10 +53,7 @@ feapath_base = 'D:\Shimada\classifier\features_merged\'; %feature file location,
 outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
-class2group={{'Cerataulina' 'Detonula' 'Lauderia'}...
-    {'Cryptophyte' 'Nanoplankton_<10'}...
-    {'Scrippsiella' 'Heterocapsa'}...    
-    {'Pseudo-nitzschia' 'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pn_small'}...
+class2group={{'Pn_large_narrow' 'Pn_large_wide'}...
     {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
 
@@ -67,7 +62,7 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_03Jan2022'; %USER what file contains your training features
+train_filename = 'Train_04Jan2022'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
