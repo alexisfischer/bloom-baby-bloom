@@ -6,11 +6,12 @@ filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
 addpath(genpath(filepath));
 addpath(genpath('~/MATLAB/bloom-baby-bloom/Misc-Functions/'));
 
-load([filepath 'performance_classifier_03Jan2022_v1'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+load([filepath 'performance_classifier_04Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_29Dec2021_2UnidDino'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 text_offset = 0.1;
 maxn=5000;
 
+%%
 class=all.class;
 id=strcmp(class,'D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis');
 class{id}='Dinophysis';
@@ -72,7 +73,7 @@ legend('Sensitivity', 'Precision','Location','W')
 title('NWFSC + UCSC')
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[filepath 'Figs\Fx_sensitivity_precision_noUnidDino.png']);
+print(gcf,'-dpng','-r200',[filepath 'Figs\Fx_sensitivity_precision.png']);
 hold off
 
 %% plot N CCS bar Sensitivity and Precision
@@ -147,7 +148,6 @@ set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[filepath 'Figs\checkerboard_manual_vs_classifier_opt.png']);
 hold off
 
-%%
 %% plot manual vs classifier checkerboard
 class=all.class;
 id=strcmp(class,'D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis');
