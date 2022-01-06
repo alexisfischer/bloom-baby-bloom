@@ -57,9 +57,10 @@ yrrange = 2021;
 adhocthresh = 0.5;
 
 summarize_biovol_from_classifier(sumdir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+summarize_biovol_from_classifier(sumdir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,2019)
 
-summarize_cells_from_classifier([ifcbdir 'class\classXXXX_v1\'],...
-    [ifcbdir 'data\'],[summarydir 'class\'],2021); %you will need to do this separately for each year of data
+summarize_cells_from_classifier(classpath_generic,[ifcbdir 'data\'],sumdir,2019); %you will need to do this separately for each year of data
+summarize_cells_from_classifier(classpath_generic,[ifcbdir 'data\'],sumdir,2021); %you will need to do this separately for each year of data
 
 %% Adjust annotations with added class
 start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_8','D:\Shimada\manual\')
