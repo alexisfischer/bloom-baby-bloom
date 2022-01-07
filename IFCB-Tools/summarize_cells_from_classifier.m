@@ -4,14 +4,14 @@ function [ ] = summarize_cells_from_classifier(classpath_generic, in_dir, path_o
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
 %Example inputs:
-% classpath_generic = 'D:\Shimada\class\classXXXX_v1\'; %leave xxxx in place of 4 digit year
-% in_dir = 'D:\Shimada\data\'; %where to access data (hdr files)
-% path_out = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-% yrrange = 2019:2021;  %one value or range (e.g., 2017:2018)
+classpath_generic = 'D:\BuddInlet\class\classXXXX_v1\'; %leave xxxx in place of 4 digit year
+in_dir = 'D:\BuddInlet\data\'; %where to access data (hdr files)
+path_out = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
+yrrange = 2021;  %one value or range (e.g., 2017:2018)
 
 addpath(genpath(in_dir));
 addpath(genpath(path_out));
-addpath(genpath('D:\Shimada\class\'));
+addpath(genpath('D:\BuddInlet\class\'));
 
 %check whether in directory
 urlflag = 0;
