@@ -3,12 +3,12 @@
 clear;
 
 %%%% modify according to dataset
-%ifcbdir='D:\Shimada\'; 
-ifcbdir='D:\BuddInlet\'; 
+ifcbdir='D:\Shimada\'; 
+%ifcbdir='D:\BuddInlet\'; 
 %ifcbdir='D:\SCW\'; 
 
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 addpath(genpath(summarydir));
 
 classifier = 'D:\Shimada\classifier\summary\Trees_04Jan2022';
@@ -42,11 +42,7 @@ start_classify_batch_user_training(classifier,[ifcbdir 'features\2021\'],[ifcbdi
 %   summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
 %       [ifcbdir 'data\'],[ifcbdir 'features\2021\'],2021,1/3.4)
   
-% Step 6: Summarize classifier results for biovolume and cells
-addpath(genpath([ifcbdir 'data\2021\']));
-addpath(genpath([ifcbdir 'features\2021\']));
-addpath(genpath([ifcbdir 'class\class2021_v1\']));
-
+%% Step 6: Summarize classifier results for biovolume and cells
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
@@ -56,7 +52,7 @@ adhocthresh = 0.5;
 
 summarize_biovol_from_classifier(sumdir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
-summarize_cells_from_classifier(classpath_generic,[ifcbdir 'data\'],sumdir,yrrange); %you will need to do this separately for each year of data
+%summarize_cells_from_classifier(classpath_generic,[ifcbdir 'data\'],sumdir,yrrange); %you will need to do this separately for each year of data
 
 %% Adjust annotations with added class
 start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_8','D:\Shimada\manual\')

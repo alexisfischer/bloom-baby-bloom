@@ -12,11 +12,11 @@ function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feap
 % yrrange = 2018;
 % adhocthresh = 0.5;
 
-%filelist = dir([feapath_generic 'D*.csv']);
+filelist = dir([feapath_generic 'D*.csv']);
 
-for yrcount = 1:length(yrrange) %USER not tested yet for multiple years, but should work
+%for yr = 1:length(yrrange) %USER not tested yet for multiple years, but should work
 %     yr = yrrange(yrcount);
-%for yr = yrrange 
+for yr = yrrange 
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
     feapath = regexprep(feapath_generic, 'xxxx', num2str(yr));
     roibasepath = regexprep(roibasepath_generic, 'xxxx', num2str(yr));
