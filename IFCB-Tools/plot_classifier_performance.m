@@ -3,6 +3,8 @@
 clear;
 filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
 %filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+
+figpath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/Figs/';
 addpath(genpath(filepath));
 addpath(genpath('~/MATLAB/bloom-baby-bloom/Misc-Functions/'));
 
@@ -32,7 +34,7 @@ text(1:length(class), -text_offset.*ones(size(class)), class, 'interpreter', 'no
 set(gca, 'position', [ 0.13 0.35 0.8 0.6],'tickdir','out')
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[filepath 'Figs\total_UCSC_NWFSC.png']);
+print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC.png']);
 hold off
 
 %% plot total in set
@@ -49,7 +51,7 @@ ylabel('total images in set');
 text(1:length(class), -text_offset.*ones(size(class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
 set(gca, 'position', [ 0.13 0.35 0.8 0.6])
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[filepath 'Figs\total_SCW_PNW.png']);
+print(gcf,'-dpng','-r200',[figpath 'total_SCW_PNW.png']);
 hold off
     
 %% plot ALL bar Sensitivity and Precision
@@ -73,7 +75,7 @@ legend('Sensitivity', 'Precision','Location','W')
 title('NWFSC + UCSC')
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[filepath 'Figs\Fx_sensitivity_precision.png']);
+print(gcf,'-dpng','-r200',[figpath 'Fx_sensitivity_precision.png']);
 hold off
 
 %% plot N CCS bar Sensitivity and Precision
@@ -142,10 +144,10 @@ text((1:length(opt.class))+.5, -text_offset+ones(size(opt.class)), class, 'inter
 axis square;  colorbar, caxis([0 1])
 %title('manual(y) vs. classifier(x)')
 p=get(gca,'position');  % retrieve the current values
-set(gca,'position',[2.2*p(1) p(2) .9*p(3) 1.2*p(4)]);  % write the new values
+set(gca,'position',[1.7*p(1) p(2) .93*p(3) 1.2*p(4)]);  % write the new values
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[filepath 'Figs\checkerboard_manual_vs_classifier_opt.png']);
+print(gcf,'-dpng','-r200',[figpath 'checkerboard_manual_vs_classifier_opt.png']);
 hold off
 
 %% plot manual vs classifier checkerboard
@@ -169,10 +171,10 @@ set(gca, 'xtick', 1:length(all.class), 'xticklabel', [])
 text((1:length(all.class))+.5, -text_offset+ones(size(all.class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
 axis square;  colorbar, caxis([0 1])
 p=get(gca,'position');  % retrieve the current values
-set(gca,'position',[2.2*p(1) p(2) .9*p(3) 1.2*p(4)]);  % write the new values
+set(gca,'position',[1.7*p(1) p(2) .93*p(3) 1.2*p(4)]);  % write the new values
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[filepath 'Figs\checkerboard_manual_vs_classifier_all.png']);
+print(gcf,'-dpng','-r200',[figpath 'checkerboard_manual_vs_classifier_all.png']);
 hold off
 
     
