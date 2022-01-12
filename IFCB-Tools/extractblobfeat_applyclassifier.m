@@ -3,12 +3,12 @@
 clear;
 
 %%%% modify according to dataset
-ifcbdir='D:\Shimada\'; 
-%ifcbdir='D:\BuddInlet\'; 
+%ifcbdir='D:\Shimada\'; 
+ifcbdir='D:\BuddInlet\'; 
 %ifcbdir='D:\SCW\'; 
 
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 addpath(genpath(summarydir));
 
 classifier = 'D:\Shimada\classifier\summary\Trees_04Jan2022';
