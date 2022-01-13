@@ -5,7 +5,7 @@ function [ ind_out, class_label ] = get_zoop_ind_PNW( class2use )
 %  Alexis D. Fischer, NOAA, August 2021
 
 class2get = {'Ciliate';'Mesodinium';'Strombidium';'Tiarina';'Tintinnid';...
-    'Tontonia';'Zooplankton'};
+    'Tontonia';'Zooplankton';'Veliger';'Sea_Urchin_larvae'};
 
 [~,ind_out] = intersect(class2use, class2get);
 %ind_out = sort(ind_out);
@@ -18,6 +18,8 @@ class_label(strcmp('Tiarina', class_label)) = {'\itTiarina \rmspp.'};
 class_label(strcmp('Tintinnid', class_label)) = {'Tintinnids'};
 class_label(strcmp('Tontonia', class_label)) = {'\itTontonia \rmspp.'};
 class_label(strcmp('Zooplankton', class_label)) = {'misc zooplankton'};
+class_label(strcmp('Veliger', class_label)) = {'Veliger'};
+class_label(strcmp('Sea_Urchin_larvae', class_label)) = {'Sea Urchin larvae'};
 
 end
 

@@ -3,9 +3,9 @@ addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
 clear;
 
-filepath = '/Users/afischer/MATLAB/';
+filepath = '/Users/afischer/MATLAB/bloom-baby-bloom/IFCB-Data/';
 
-load([filepath 'bloom-baby-bloom/IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_2019'])
+load([filepath 'Shimada/manual/class_eqdiam_biovol_manual_2019'])
 
 % concatenate biovolume for each class in each sample
 volB=NaN*ones(length(BiEq),length(class2use_manual)); %preset biovolume matrix
@@ -24,33 +24,16 @@ for i=1:length(volB)
     volC(i,:)=biovol2carbon(volB(i,:),ind_diatom)./1000; %convert from pg/cell to ug/L 
 end
 
-% Exclude nonliving and zooplankton
-idx=get_nonliving_ind_PNW(class2use_manual); volC(:,idx)=NaN;
-idx=get_zoop_ind_PNW(class2use_manual); volC(:,idx)=NaN;
+% remove non-TopClasses
+load([filepath 'Shimada/manual/TopClasses'],'class2use');
+volC(:,~ismember(class2use_manual,class2use))=[]; 
+[~,label] = get_all_ind_PNW(class2use);   
+
+% find fraction Carbon
+sampletotal=repmat(nansum(volC,2),1,size(volC,2));
+fxC=volC./sampletotal;
 
 clearvars i j idx b note1 note2 ind_diatom volB
-
-% find highest biomass cells
-sampletotal=repmat(nansum(volC,2),1,size(volC,2));
-fxC_all=volC./sampletotal;
-classtotal=nansum(volC,1);
-[~,idx]=maxk(classtotal,45); %find top carbon highest classes
-fxC=fxC_all(:,idx);
-class=class2use_manual(idx);
-label=class;
-%[~,label] = get_all_ind_PNW(class);   
-
-% % find files with >70% of biomass classified
-% un=1-volC(:,1)./sampletotal(:,1); 
-% filename={BiEq.filename}';
-% idx=(un>.7)
-% filename_unclassified=filename(idx);
-
-clearvars fxC_all sampletotal classtotal un filename BiEq idx;
-
-TopClasses=(sort(class))';
-
-save([filepath 'bloom-baby-bloom/IFCB-Data/Shimada/manual/TopClasses'],'TopClasses');
 
 %%
 figure('Units','inches','Position',[1 1 8 6],'PaperPositionMode','auto');
@@ -76,7 +59,7 @@ h = bar(mdate,fxC,'stack','Barwidth',4);
     legend boxoff; lh.FontSize = 10; hp=get(lh,'pos');
 %    lh.Position=[hp(1)+.25 hp(2)+.04 hp(3) hp(4)]; hold on    
     lh.Position=[hp(1)+.25 hp(2)+.04 hp(3) hp(4)]; hold on    
- 
+ %%
 subplot(2,1,2);
     % exlude unclassified
     idx=get_unclassified_ind_PNW(class2use_manual); volC(:,idx)=NaN;    

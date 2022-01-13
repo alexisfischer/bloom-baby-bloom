@@ -4,7 +4,7 @@ addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
 addpath(genpath('~/MATLAB/UCSC/')); % add new data to search path
 
 filepath1 = '~/MATLAB/bloom-baby-bloom/IFCB-Data/SCW/class/';
-filepath2 = '~/MATLAB/UCSC/SCW/Data/';
+filepath2 = '~/MATLAB/bloom-baby-bloom/UCSC/SCW/Data/';
 class2do_string = 'Pseudo-nitzschia'; chain=4; yr='2018'; error=0.7;
 [class2do_string,mdate,~,~,iraifx,fish,mcrpy,RAI]=matchClassifierwMicroscopy(filepath1,filepath2,class2do_string,chain,error,'2018');
 
