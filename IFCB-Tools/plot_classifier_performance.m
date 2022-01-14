@@ -1,12 +1,18 @@
 %function [ ] = plot_classifier_performance( classifiername )
 %plot classifier performance
 clear;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
-%filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+Mac=0;
 
-figpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/Figs/';
-addpath(genpath(filepath));
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
+if Mac
+    basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
+    filepath = [basepath 'IFCB-Data/Shimada/class/'];
+    figpath = [filepath 'Figs/'];
+else
+    basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+    filepath = [basepath 'IFCB-Data\Shimada\class\'];
+    figpath = [filepath 'Figs\'];    
+end
+addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_13Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_04Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
