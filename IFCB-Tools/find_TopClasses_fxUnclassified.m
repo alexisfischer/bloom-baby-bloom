@@ -3,14 +3,14 @@ addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
 clear;
 
-CCS=0;
+CCS=1;
 
 filepath = '/Users/afischer/MATLAB/bloom-baby-bloom/IFCB-Data/';
 
 if CCS==1
     load([filepath 'Shimada/manual/class_eqdiam_biovol_manual_2019'])
     outdir=[filepath 'Shimada/manual/'];
-    num=35;
+    num=32;
 else
     load([filepath 'BuddInlet/manual/class_eqdiam_biovol_manual_2021'])
     outdir=[filepath 'BuddInlet/manual/'];    
