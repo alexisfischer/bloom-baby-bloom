@@ -1,12 +1,12 @@
 %function [ ] = plot_classifier_performance( classifiername )
 %plot classifier performance
 clear;
-filepath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
 %filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 
-figpath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/Figs/';
+figpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/Figs/';
 addpath(genpath(filepath));
-addpath(genpath('~/MATLAB/bloom-baby-bloom/Misc-Functions/'));
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
 
 load([filepath 'performance_classifier_13Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_04Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
@@ -25,11 +25,9 @@ for i=1:length(b)
 end  
     
 legend('UCSC','NWFSC','Location','NE');
-set(gca, 'xtick', 1:length(class), 'xticklabel', []);
+set(gca, 'xtick', 1:length(class), 'xticklabel', class,'tickdir','out');
 ylabel('total images in set');
-text(1:length(class), -text_offset.*ones(size(class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
-set(gca, 'position', [ 0.13 0.35 0.8 0.6],'tickdir','out')
-
+%%
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC.png']);
 hold off
@@ -43,10 +41,9 @@ for i=1:length(b)
 end  
    
 legend('overall','UCSC', 'NWFSC','Location','NE');
-set(gca, 'xtick', 1:length(class), 'xticklabel', []);
+set(gca, 'xtick', 1:length(class),'xticklabel', class);
 ylabel('total images in set');
-text(1:length(class), -text_offset.*ones(size(class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
-set(gca, 'position', [ 0.13 0.35 0.8 0.6])
+%%
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'total_SCW_PNW.png']);
 hold off
@@ -56,7 +53,7 @@ figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
 b=bar([all.Se all.Pr],'Barwidth',1,'linestyle','none'); hold on
 hline(.9,'k--');
-set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', []); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 ylabel('Performance');
 col=flipud(brewermap(2,'RdBu')); 
 for i=1:length(b)
@@ -65,12 +62,10 @@ end
 yyaxis right;
 plot(1:length(class),all.total,'k*'); hold on
 ylabel('total images in set');
-set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', []); hold on
-text(1:length(class), -text_offset.*ones(size(class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
-set(gca, 'position', [ 0.13 0.35 0.75 0.6])
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 legend('Sensitivity', 'Precision','Location','W')
 title('NWFSC + UCSC')
-
+%%
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'Fx_sensitivity_precision.png']);
 hold off
@@ -162,14 +157,15 @@ fx_unclass=sum(c_all(:,end))./sum(total) % what fraction of images went to uncla
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca, 'ytick', 1:length(all.class), 'yticklabel', [])
-text( -text_offset+ones(size(all.class)),(1:length(all.class))+.5, class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 0)
-set(gca, 'xtick', 1:length(all.class), 'xticklabel', [])
-text((1:length(all.class))+.5, -text_offset+ones(size(all.class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
+set(gca, 'ytick', 1:length(all.class), 'yticklabel', class)
+%text( -text_offset+ones(size(all.class)),(1:length(all.class))+.5, class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 0)
+set(gca, 'xtick', 1:length(all.class), 'xticklabel', class)
+%text((1:length(all.class))+.5, -text_offset+ones(size(all.class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
 axis square;  colorbar, caxis([0 1])
 p=get(gca,'position');  % retrieve the current values
 set(gca,'position',[1.7*p(1) p(2) .93*p(3) 1.2*p(4)]);  % write the new values
 
+%%
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'checkerboard_manual_vs_classifier_all.png']);
 hold off
