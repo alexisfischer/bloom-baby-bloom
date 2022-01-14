@@ -8,16 +8,13 @@ figpath = '~/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/Figs/';
 addpath(genpath(filepath));
 addpath(genpath('~/MATLAB/bloom-baby-bloom/Misc-Functions/'));
 
-load([filepath 'performance_classifier_04Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+load([filepath 'performance_classifier_13Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+%load([filepath 'performance_classifier_04Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_29Dec2021_2UnidDino'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 text_offset = 0.1;
 maxn=5000;
 
-class=all.class;
-id=strcmp(class,'D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis');
-class{id}='Dinophysis';
-id=find(strcmp(class,'Pn_large_narrow,Pn_large_wide'));
-class{id}='Pn-large';
+[~,class]=get_phyto_ind_PNW(all.class);
 
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');

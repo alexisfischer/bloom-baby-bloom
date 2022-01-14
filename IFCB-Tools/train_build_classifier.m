@@ -5,7 +5,6 @@ filepath='C:\Users\ifcbuser\Documents\';
 addpath(genpath(filepath));
 addpath(genpath('D:\SCW\manual\'));
 addpath(genpath('D:\SCW\features\'));
-addpath(genpath('D:\Shimada\'));
 
 %% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 mergedpath = 'D:\Shimada\classifier\';
@@ -16,32 +15,10 @@ clearvars  mergedpath SCWpath PNWpath;
 
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
-load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'TopClasses');
-TopClasses(strcmp(TopClasses,'Sea_Urchin_larvae'))=[];
-TopClasses(strcmp(TopClasses,'Unid_rounded_Dino'))=[];
-TopClasses(strcmp(TopClasses,'Unid_pointed_Dino'))=[];
-TopClasses(strcmp(TopClasses,'unclassified'))=[];
-TopClasses(strcmp(TopClasses,'Flagellate_mix'))=[];
-
-%TopClasses{end+1}='Pn_parasite'; 
-%TopClasses{end+1}='Pseudo-nitzschia'; 
-TopClasses{end+1}='Pn_small';
-%TopClasses{end+1}='Heterocapsa';
-
-TopClasses{end+1}='Dinophysis';
-TopClasses{end+1}='D_fortii';
-TopClasses{end+1}='D_norvegica';
-TopClasses{end+1}='D_acuta';
-TopClasses{end+1}='D_rotundata';
-TopClasses{end+1}='D_parva';
-TopClasses{end+1}='D_caudata';
-TopClasses{end+1}='D_odiosa';
-TopClasses{end+1}='D_tripos';
-
-TopClasses=sort(TopClasses);
+load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class2use');
 
 manualpath = 'D:\Shimada\manual\'; %classlist to subtract "class" from
-[class2skip] = find_class2skip(TopClasses',manualpath);
+[class2skip] = find_class2skip(class2use,manualpath);
 clearvars manualpath id
 
 %% Step 2: Compile features for the training set
@@ -56,13 +33,16 @@ minn = 500; %minimum number for inclusion
 class2group={{'Pn_large_narrow' 'Pn_large_wide'}...
     {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
+% class2group={{'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pseudo-nitzschia' 'Pn_small'}...
+%     {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
+%     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
 
 compile_train_features_PNW(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_04Jan2022'; %USER what file contains your training features
+train_filename = 'Train_13Jan2022'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
