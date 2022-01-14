@@ -5,7 +5,7 @@ clear;
 
 CCS=1;
 
-filepath = '/Users/afischer/MATLAB/bloom-baby-bloom/IFCB-Data/';
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/';
 
 if CCS==1
     load([filepath 'Shimada/manual/class_eqdiam_biovol_manual_2019'])
@@ -17,7 +17,7 @@ else
     num=20;
 end
 
-%% concatenate biovolume for each class in each sample
+% concatenate biovolume for each class in each sample
 volB=NaN*ones(length(BiEq),length(class2use_manual)); %preset biovolume matrix
 ind_diatom = get_diatom_ind_PNW(class2use_manual);
 for i=1:length(class2use_manual)
@@ -53,7 +53,7 @@ class=class2use_manual(idx);
 
 %remove select classes
 idx=find(ismember(class,{'unclassified' 'Unid_pointed_Dino'...
-    'Flagellate_mix' 'Heterocapsa'}));
+    'Unid_rounded_Dino' 'Flagellate_mix' 'Heterocapsa'}));
 class(idx)=[];
 
 % add select classes
@@ -66,6 +66,8 @@ if CCS==1
     idx=find(ismember(class,{'Pseudo-nitzschia' 'Pn_parasite'}));
     class(idx)=[];
     class(get_zoop_ind_PNW(class))=[]; %remove zooplankton
+    class{end+1}='Gymnodinium';   
+    class{end+1}='Cerataulina';   
 else
     class{end+1}='Mesodinium';
     class{end+1}='Cryptophyte';

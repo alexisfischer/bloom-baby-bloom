@@ -1,7 +1,7 @@
 %function [ ] = plot_classifier_performance( classifiername )
 %plot classifier performance
 clear;
-Mac=0;
+Mac=1;
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -80,7 +80,7 @@ hold off
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
 b=bar([PNW.Se PNW.Pr],'Barwidth',1,'linestyle','none'); hold on
-set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', []); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 ylabel('Performance');
 col=flipud(brewermap(2,'RdBu')); 
 for i=1:length(b)
@@ -89,9 +89,7 @@ end
 yyaxis right;
 plot(1:length(class),PNW.total,'k*'); hold on
 ylabel('total images in set');
-set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', []); hold on
-text(1:length(class), -text_offset.*ones(size(class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
-set(gca, 'position', [ 0.13 0.35 0.75 0.6])
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 legend('Sensitivity', 'Precision','Location','NW')
 title('NWFSC')
 set(gcf,'color','w');
@@ -102,7 +100,7 @@ hold off
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
 b=bar([SCW.Se SCW.Pr],'Barwidth',1,'linestyle','none'); hold on
-set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', []); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 ylabel('Performance');
 col=flipud(brewermap(2,'RdBu')); 
 for i=1:length(b)
@@ -111,65 +109,50 @@ end
 yyaxis right;
 plot(1:length(class),SCW.total,'k*'); hold on
 ylabel('total images in set');
-set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', []); hold on
-text(1:length(class), -text_offset.*ones(size(class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
-set(gca, 'position', [ 0.13 0.35 0.75 0.6])
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 legend('Sensitivity', 'Precision','Location','W')
 title('UCSC')
 set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_sensitivity_precision_UCSC.png']);
 hold off
 
-%% plot opt manual vs classifier checkerboard
-class=opt.class;
-id=strcmp(class,'D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis');
-class{id}='Dinophysis';
-id=find(strcmp(class,'Pn_large_narrow,Pn_large_wide'));
-class{id}='Pn_large';
+%% plot opt manual vs classifier checkerboard with unclassified
+classU=class;
+classU{end+1}='unclassified';
 
 figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
 cplot = zeros(size(c_opt)+1);
-cplot(1:length(opt.class),1:length(opt.class)) = c_opt;
+cplot(1:length(classU),1:length(classU)) = c_opt;
 total=[sum(c_opt,2);0];
 fx_unclass=sum(c_opt(:,end))./sum(total) % what fraction of images went to unclassified?
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca, 'ytick', 1:length(opt.class), 'yticklabel', [])
-text( -text_offset+ones(size(opt.class)),(1:length(opt.class))+.5, class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 0)
-set(gca, 'xtick', 1:length(opt.class), 'xticklabel', [])
-text((1:length(opt.class))+.5, -text_offset+ones(size(opt.class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
+set(gca, 'ytick', 1:length(classU), 'yticklabel', classU,...
+    'xtick', 1:length(classU), 'xticklabel',classU)
 axis square;  colorbar, caxis([0 1])
-%title('manual(y) vs. classifier(x)')
-p=get(gca,'position');  % retrieve the current values
-set(gca,'position',[1.7*p(1) p(2) .93*p(3) 1.2*p(4)]);  % write the new values
+ylabel('Manual','fontweight','bold');
+xlabel('Classifier','fontweight','bold')
 
+%%
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'checkerboard_manual_vs_classifier_opt.png']);
 hold off
 
 %% plot manual vs classifier checkerboard
-class=all.class;
-id=strcmp(class,'D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis');
-class{id}='Dinophysis';
-id=find(strcmp(class,'Pn_large_narrow,Pn_large_wide'));
-class{id}='Pn_large';
-
 figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
 cplot = zeros(size(c_all)+1);
-cplot(1:length(all.class),1:length(all.class)) = c_all;
+cplot(1:length(class),1:length(class)) = c_all;
 total=[sum(c_all,2);0];
 fx_unclass=sum(c_all(:,end))./sum(total) % what fraction of images went to unclassified?
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca, 'ytick', 1:length(all.class), 'yticklabel', class)
-%text( -text_offset+ones(size(all.class)),(1:length(all.class))+.5, class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 0)
-set(gca, 'xtick', 1:length(all.class), 'xticklabel', class)
-%text((1:length(all.class))+.5, -text_offset+ones(size(all.class)), class, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
+set(gca, 'ytick', 1:length(class), 'yticklabel', class,...
+    'xtick', 1:length(class), 'xticklabel',class)
 axis square;  colorbar, caxis([0 1])
-p=get(gca,'position');  % retrieve the current values
-set(gca,'position',[1.7*p(1) p(2) .93*p(3) 1.2*p(4)]);  % write the new values
+ylabel('Manual','fontweight','bold');
+xlabel('Classifier','fontweight','bold')
 
 %%
 set(gcf,'color','w');
