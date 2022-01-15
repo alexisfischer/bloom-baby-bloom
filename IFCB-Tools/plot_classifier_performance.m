@@ -1,5 +1,3 @@
-%function [ ] = plot_classifier_performance( classifiername )
-%plot classifier performance
 clear;
 Mac=1;
 
