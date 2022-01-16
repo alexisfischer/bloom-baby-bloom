@@ -1,5 +1,5 @@
 clear;
-Mac=1;
+Mac=0;
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -12,7 +12,7 @@ else
 end
 addpath(genpath(basepath));
 
-load([filepath 'performance_classifier_13Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+load([filepath 'performance_classifier_14Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_04Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_29Dec2021_2UnidDino'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 text_offset = 0.1;
