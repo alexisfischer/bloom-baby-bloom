@@ -3,14 +3,14 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 clear;
 
-CCS=1;
+CCS=0;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/';
 
 if CCS==1
     load([filepath 'Shimada/manual/class_eqdiam_biovol_manual_2019'])
     outdir=[filepath 'Shimada/manual/'];
-    num=36;
+    num=34;
 else
     load([filepath 'BuddInlet/manual/class_eqdiam_biovol_manual_2021'])
     outdir=[filepath 'BuddInlet/manual/'];    
@@ -59,7 +59,9 @@ class(idx)=[];
 % add select classes
 new={'Dinophysis' 'D_acuminata' 'D_acuta' 'D_caudata' 'D_fortii' ...
     'D_norvegica' 'D_odiosa' 'D_parva' 'D_rotundata' 'D_tripos'...
-    'Pn_large_narrow' 'Pn_large_wide' 'Pn_small' 'Pn_parasite' 'Pseudo-nitzschia'};
+    'Pn_large_narrow' 'Pn_large_wide' 'Pn_small' 'Pn_parasite' 'Pseudo-nitzschia'...
+    'Thalassiosira_chain' 'Thalassiosira_single'...
+    'Chaetoceros_chain' 'Chaetoceros_pennate' 'Chaetoceros_single'};
 class=[class new];
 
 if CCS==1
