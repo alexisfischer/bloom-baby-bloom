@@ -1,6 +1,6 @@
 %% Training and Making a classifier
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
-clear
+clear;
 filepath='C:\Users\ifcbuser\Documents\';
 addpath(genpath(filepath));
 addpath(genpath('D:\SCW\manual\'));
@@ -15,7 +15,7 @@ clearvars  mergedpath SCWpath PNWpath;
 
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
-load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class2use');
+load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'class2use');
 
 manualpath = 'D:\Shimada\manual\'; %classlist to subtract "class" from
 [class2skip] = find_class2skip(class2use,manualpath);
@@ -30,22 +30,24 @@ feapath_base = 'D:\Shimada\classifier\features_merged\'; %feature file location,
 outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
-class2group={{'Detonula' 'Cerataulina' 'Lauderia'}...
-    {'Pn_large_narrow' 'Pn_large_wide'}...
+% class2group={{'Detonula' 'Cerataulina' 'Lauderia'}...
+%     {'Pn_large_narrow' 'Pn_large_wide'}...
+%     {'Thalassiosira_chain' 'Thalassiosira_single'}...
+%     {'Chaetoceros_chain' 'Chaetoceros_pennate' 'Chaetoceros_single'}...
+%     {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
+%     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
+class2group={{'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pseudo-nitzschia' 'Pn_small'}...
     {'Thalassiosira_chain' 'Thalassiosira_single'}...
     {'Chaetoceros_chain' 'Chaetoceros_pennate' 'Chaetoceros_single'}...
     {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
-% class2group={{'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pseudo-nitzschia' 'Pn_small'}...
-%     {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
-%     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
 
 compile_train_features_PNW(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_14Jan2022'; %USER what file contains your training features
+train_filename = 'Train_17Jan2022'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 

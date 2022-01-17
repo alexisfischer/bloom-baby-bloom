@@ -21,8 +21,9 @@ maxn=5000;
 id=find(strcmp(all.class,'Thalassiosira_chain,Thalassiosira_single'));
 all.class{id}='Thalassiosira';
 id=find(strcmp(all.class,'Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single'));
-all.class{id}='Chaetoceros';
-[~,class]=get_phyto_ind_PNW(all.class);
+class{id}='Chaetoceros';
+%%
+[~,class]=get_phyto_ind_PNW(class2use);
 
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
