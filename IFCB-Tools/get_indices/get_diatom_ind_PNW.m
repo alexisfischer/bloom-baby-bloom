@@ -7,17 +7,19 @@ function [ ind_out, class_label ] = get_diatom_ind_PNW( class2use )
 class2get = {'Actinoptychus';'Asterioplanus';'Asteromphalus';'Attheya';...
     'Aulacodiscus';'Asterionellopsis';'Bacillaria';'Bacteriastrum';...
     'Centric_diatom';'Cerataulina';'Cerataulina,Detonula,Lauderia';...
-    'Chaetoceros';'Chaetoceros setae';...
-    'Corethron';'Coscinodiscus';'Cylindrotheca';'Dactyliosolen';'Detonula';
+    'Chaetoceros';'Chaetoceros setae';'Cerataulina,Detonula,Lauderia';...
+    'Corethron';'Coscinodiscus';'Cylindrotheca';'Dactyliosolen';'Detonula';...  
     'Ditylum';'Entomoneis';'Eucampia';'Flagilaria';'Guinardia';'Gyrosigma';...
     'Helicotheca';'Hemiaulus';'Lauderia';'Leptocylindrus';'Licmophora';...
     'Lioloma';'Lithodesmium';'Melosira';'Nitzschia';'Odontella';...
     'Paralia';'Pennate_diatom';'Plagiogrammopsis';'Plagiolemma';...
-    'Pleurosigma';'Proboscia';'Pseudo-nitzschia';'Pn_large';'Pn_small';'Rhizosolenia';...
+    'Pleurosigma';'Proboscia';'Pseudo-nitzschia';'Pn_large';'Pn_small';...
+    'Pn_large_narrow';'Pn_large_wide';'Pn_large_narrow,Pn_large_wide';'Rhizosolenia';...
     'Skeletonema';'Stephanopyxis';'Striatella';'Thalassionema';...
-    'Thalassiosira';'Tropidoneis'};
+    'Thalassiosira';'Tropidoneis';'Thalassiosira_chain,Thalassiosira_single';...
+    'Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single'};
 
-[~,ind_out] = intersect(class2use, class2get);
+[~,ind_out] = intersect(class2use, class2get,'stable');
 %ind_out = sort(ind_out);
 
 class_label=class2use(ind_out);
@@ -30,8 +32,10 @@ class_label(strcmp('Asterionellopsis', class_label)) = {'\itAsterionellopsis \rm
 class_label(strcmp('Bacillaria', class_label)) = {'\itBacillaria \rmspp.'};
 class_label(strcmp('Bacteriastrum', class_label)) = {'\itBacteriastrum \rmspp.'};
 class_label(strcmp('Centric_diatom', class_label)) = {'misc centric diatoms'};
-class_label(strcmp('Cerataulina,Detonula,Lauderia', class_label)) = {'Cer Det Lau'};
 class_label(strcmp('Cerataulina', class_label)) = {'\itCerataulina \rmspp.'};
+class_label(strcmp('Cerataulina,Detonula,Lauderia', class_label)) = {'Det Cer Lau'};
+
+class_label(strcmp('Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single', class_label)) = {'\itChaetoceros \rmspp.'};
 class_label(strcmp('Chaetoceros', class_label)) = {'\itChaetoceros \rmspp.'};
 class_label(strcmp('Chaetoceros setae', class_label)) = {'\itChaetoceros setae'};
 class_label(strcmp('Corethron', class_label)) = {'\itCorethron \rmspp.'};
@@ -61,9 +65,14 @@ class_label(strcmp('Plagiogrammopsis', class_label)) = {'\itPlagiogrammopsis \rm
 class_label(strcmp('Plagiolemma', class_label)) = {'\itPlagiolemma \rmspp.'};
 class_label(strcmp('Pleurosigma', class_label)) = {'\itPleurosigma \rmspp.'};
 class_label(strcmp('Proboscia', class_label)) = {'\itProboscia \rmspp.'};
+
 class_label(strcmp('Pseudo-nitzschia', class_label)) = {'\itPseudo-nitzschia \rmspp.'};
+class_label(strcmp('Pn_large_narrow,Pn_large_wide', class_label)) = {'Large \itPseudo-nitzschia'};
+class_label(strcmp('Pn_large_narrow', class_label)) = {'Large Narrow \itPseudo-nitzschia'};
+class_label(strcmp('Pn_large_wide', class_label)) = {'Large Wide \itPseudo-nitzschia'};
 class_label(strcmp('Pn_large', class_label)) = {'Large \itPseudo-nitzschia'};
 class_label(strcmp('Pn_small', class_label)) = {'Small \itPseudo-nitzschia'};
+
 class_label(strcmp('Rhizosolenia', class_label)) = {'\itRhizosolenia \rmspp.'};
 class_label(strcmp('Skeletonema', class_label)) = {'\itSkeletonema \rmspp.'};
 class_label(strcmp('Stephanopyxis', class_label)) = {'\itStephanopyxis \rmspp.'};
@@ -71,6 +80,7 @@ class_label(strcmp('Striatella', class_label)) = {'\itStriatella \rmspp.'};
 class_label(strcmp('Thalassionema', class_label)) = {'\itThalassionema \rmspp.'};
 class_label(strcmp('Thalassiosira', class_label)) = {'\itThalassiosira \rmspp.'};
 class_label(strcmp('Tropidoneis', class_label)) = {'\itTropidoneis \rmspp.'};
+class_label(strcmp('Thalassiosira_chain,Thalassiosira_single', class_label)) = {'\itThalassiosira \rmspp.'};
 
 end
 
