@@ -4,9 +4,12 @@ addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
 clear;
 fprint=0;
 
-filepath = '/Users/afischer/MATLAB/bloom-baby-bloom/';
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB2021'],...
     'class2useTB','classbiovolTB','ml_analyzedTB','mdateTB','classcountTB');
+addpath(genpath(filepath)); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+
 id=strcmp(class2useTB,'D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis');
 class2useTB{id}='Dinophysis';
 
