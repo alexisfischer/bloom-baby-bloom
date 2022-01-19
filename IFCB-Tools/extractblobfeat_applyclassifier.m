@@ -11,15 +11,6 @@ ifcbdir='D:\BuddInlet\';
 summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 addpath(genpath(summarydir));
 
-classifier = 'D:\Shimada\classifier\summary\Trees_17Jan2022_BI';
-%addpath(genpath(classifier));
-
-addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
-%remove_empty_blob_folders([ifcbdir 'blobs\2021\'])
-
-%% Step 1: Sort data into folders
-addpath(genpath([ifcbdir 'raw\']));
-sort_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\2021\']);
 
 % Step 2: Extract blobs
 addpath(genpath([ifcbdir 'data\2021\']));
