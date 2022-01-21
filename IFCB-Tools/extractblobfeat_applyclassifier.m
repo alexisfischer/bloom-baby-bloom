@@ -4,29 +4,35 @@ clear;
 
 %%%% modify according to dataset
 %ifcbdir='D:\Shimada\'; 
-ifcbdir='D:\BuddInlet\'; 
+%ifcbdir='D:\BuddInlet\'; 
 %ifcbdir='D:\SCW\'; 
+ifcbdir='D:\Shimada\LabData\'; 
 
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\LabData\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+
 addpath(genpath(summarydir));
+addpath(genpath(ifcbdir));
+
+classifier='D:\Shimada\classifier\summary\Trees_16Jan2022_CCS';
+
+sort_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\2022\']);
 
 
-% Step 2: Extract blobs
-addpath(genpath([ifcbdir 'data\2021\']));
-addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\'));
-start_blob_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\'],true);
+%% Step 2: Extract blobs
+addpath(genpath([ifcbdir 'data\2022\']));
+start_blob_batch_user_training([ifcbdir 'data\2022\'],[ifcbdir 'blobs\2022\'],true);
 
 % Step 3: Extract features
-addpath(genpath([ifcbdir 'blobs\2021\']));
-addpath(genpath([ifcbdir 'data\2021\']));
-start_feature_batch_user_training([ifcbdir 'data\2021\'],[ifcbdir 'blobs\2021\'],[ifcbdir 'features\2021\'],true)
+addpath(genpath([ifcbdir 'blobs\2022\']));
+addpath(genpath([ifcbdir 'data\2022\']));
+start_feature_batch_user_training([ifcbdir 'data\2022\'],[ifcbdir 'blobs\2022\'],[ifcbdir 'features\2022\'],true)
 
-%% Step 4: Apply classifier
-addpath(genpath([ifcbdir 'features\2021\']));
-start_classify_batch_user_training(classifier,[ifcbdir 'features\2021\'],[ifcbdir 'class\class2021_v1\']);
+% Step 4: Apply classifier
+addpath(genpath([ifcbdir 'features\2022\']));
+start_classify_batch_user_training(classifier,[ifcbdir 'features\2021\'],[ifcbdir 'class\class2022_v1\']);
 
-% Step 5: Summarize results
+%% Step 5: Summarize results
 
 %summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
