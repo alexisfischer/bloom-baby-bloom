@@ -13,7 +13,7 @@ PNWpath = 'D:\Shimada\';
 merge_manual_feafiles_SCW_PNW(mergedpath,SCWpath,PNWpath)
 clearvars  mergedpath SCWpath PNWpath;
 
-%% Step 2: select classes of interest and find class2skip
+% Step 2: select classes of interest and find class2skip
 % Shimada classifier
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'class2use');
 
@@ -21,7 +21,7 @@ manualpath = 'D:\Shimada\manual\'; %classlist to subtract "class" from
 [class2skip] = find_class2skip(class2use,manualpath);
 clearvars manualpath id
 
-%% Step 2: Compile features for the training set
+% Step 2: Compile features for the training set
 addpath(genpath('D:\Shimada\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
@@ -47,7 +47,7 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_17Jan2022'; %USER what file contains your training features
+train_filename = 'Train_26Jan2022'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 

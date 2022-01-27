@@ -1,11 +1,15 @@
 % Use MC files to find who is representing the biomass to determine which classes should be used in classifier
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 clear;
 
 CCS=0;
 
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/';
+%filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/';
+% addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+% addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+
+filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\';
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
 
 if CCS==1
     load([filepath 'Shimada/manual/class_eqdiam_biovol_manual_2019'])
@@ -14,7 +18,7 @@ if CCS==1
 else
     load([filepath 'BuddInlet/manual/class_eqdiam_biovol_manual_2021'])
     outdir=[filepath 'BuddInlet/manual/'];    
-    num=20;
+    num=25;
 end
 
 % concatenate biovolume for each class in each sample
@@ -33,7 +37,7 @@ volB(:,get_nonliving_ind_PNW(class2use_manual))=NaN;
 
 clearvars i j idx b note1 note2 ind_diatom
 
-%% find files with <60% of biomass annotated
+% find files with <60% of biomass annotated
 % and remove those files from top classses estimate
 sampletotal=repmat(nansum(volB,2),1,size(volB,2));
 idx=(strcmp('unclassified',class2use_manual));
@@ -44,7 +48,7 @@ filename_unclassified=filename(idx);
 
 volB(idx,:)=[]; sampletotal(idx,:)=[];
 
-%% find highest biomass cells
+% find highest biomass cells
 fxC_all=volB./sampletotal;
 classtotal=sum(volB,1);
 [~,idx]=maxk(classtotal,num); %find top biomass classes
@@ -53,7 +57,7 @@ class=class2use_manual(idx);
 
 %remove select classes
 idx=find(ismember(class,{'unclassified' 'Unid_pointed_Dino'...
-    'Unid_rounded_Dino' 'Flagellate_mix' 'Heterocapsa'}));
+    'Unid_rounded_Dino' 'Flagellate_mix' 'Heterocapsa' 'Ciliate'}));
 class(idx)=[];
 
 % add select classes
@@ -73,6 +77,8 @@ if CCS==1
 else
     class{end+1}='Mesodinium';
     class{end+1}='Cryptophyte';
+    class{end+1}='Guinardia';
+    class{end+1}='Detritus';
 end
 class2use=unique(class);
 class2use=(sort(class2use))';

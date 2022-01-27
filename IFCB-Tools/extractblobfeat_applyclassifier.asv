@@ -47,9 +47,7 @@ adhocthresh = 0.5;
 
 summarize_biovol_from_classifier(sumdir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 
-in_dir=[ifcbdir 'data\'];
-path_out=sumdir;
-summarize_cells_from_classifier(classpath_generic,in_dir,sumdir,yrrange); %you will need to do this separately for each year of data
+summarize_cells_from_classifier(classpath_generic,[ifcbdir 'data\'],sumdir,yrrange); %you will need to do this separately for each year of data
 
 %% Adjust annotations with added class
 start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_10','D:\BuddInlet\manual\')
