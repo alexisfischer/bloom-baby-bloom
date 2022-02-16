@@ -7,14 +7,14 @@ function [  ] = compile_train_features_PNW( manualpath , feapath_base, outpath, 
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
 %Example inputs: 
-% manualpath = 'D:\Shimada\classifier\test_manual\'; % manual annotation file location
-% feapath_base = 'D:\Shimada\classifier\test_features\'; %feature file location, assumes \yyyy\ organization
+% manualpath = 'D:\Shimada\classifier\manual_merged\'; % manual annotation file location
+% feapath_base = 'D:\Shimada\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
 % outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
-% maxn = 300; %maximum number of images per class to include
-% minn = 10; %minimum number for inclusion
-% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Aphanocapsa','Asterionellopsis','Asterioplanus','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Bead','Boreadinium','Bubble','Chaetoceros setae','Chlorophyte_mix','Ciliate','Clusterflagellate','Coccolithophore','Cochlodinium','Corethron','Coscinodiscus','Cryptophyte','Cyanobacteria','Cylindrotheca','Cyst','Detritus','Dinobryon','Dinoflagellate_mix','Diplopsalis','Ebria','Entomoneis','Euglenoid','Fibrocapsa','Flagellate_mix','Flagilaria','Gyrodinium','Gyrosigma','Helicotheca','Hemiaulus','Heterosigma','Katodinium','Kofoidinium','Lauderia','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Melosira','Meringosphaera','Minuscula','Nematodinium','Nitzschia','Noctiluca','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Plagiolemma','Pleurosigma','Pollen','Polykrikos','Proboscia','Proterythropsis','Protoperidinium','Pyramimonas','Pyrophacus','Rhizosolenia','Scrippsiella','Sea_Urchin_larvae','Striatella','Strombidium','Thecadinium','Tiarina','Tintinnid','Tontonia','Veliger','Zooplankton','unclassified'}; %class2skip
-% varargin{2}=[]; %class2group with nothing to group
-% %varargin{2}={{'NanoP_less10' 'Cryptophyte' 'small_misc'} {'Gymnodinium' 'Peridinium'}};  %class2group
+% maxn = 5000; %maximum number of images per class to include
+% minn = 500; %minimum number for inclusion
+% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Bead','Boreadinium','Bubble','Cerataulina,Detonula,Lauderia','Chaet_socialis','Chaetoceros setae','Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single','Ciliate','Clusterflagellate','Coccolithophore','Corethron','Coscinodiscus','Cyanobacteria','Cylindrotheca','Cyst','D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis','Detritus','Dictyocha','Dinobryon','Dissodinium','Ebria','Entomoneis','Ephemera','Euglenoid','Fibrocapsa','Flagellate_mix','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa','Karenia','Katodinium','Laboea_strobila','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Margalefidinium','Melosira','Meringosphaera','Mesodinium','Nauplii','Nematodinium','Nitzschia','Noctiluca','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Pleuronema','Pleurosigma','Pn_large_narrow,Pn_large_wide','Pn_large_narrow,Pn_large_wide,Pn_parasite,Pn_small,Pseudo-nitzschia''','Pn_parasite','Pollen','Polykrikos','Proterythropsis','Protoperidinium','Pseudo-nitzschia','Pyrophacus','Scrippsiella','Sea_Urchin_larvae','Striatella','Strombidium','Thalassionema','Thalassiosira_chain,Thalassiosira_single','Tiarina','Tintinnid','Tontonia','Torodinium','Tropidoneis','Unid_pointed_Dino','Unid_rounded_Dino','Veliger','Zooplankton','unclassified'};
+% varargin{2}={{'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pseudo-nitzschia' 'Pn_small'} {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta' 'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
+% %varargin{2}=[]; %class2group with nothing to group
 
 class2skip = []; %initialize
 class2group = {[]};
@@ -29,10 +29,12 @@ if length(class2group{1}) > 1 && ischar(class2group{1}{1}) %input of one group w
     class2group = {class2group};
 end
 
+
 manual_files = dir([manualpath 'D*.mat']);
 manual_files = {manual_files.name}';
 fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
 manual_files = regexprep(manual_files, '.mat', '');
+%this presumes all the files have the same class to use
 class2use = load([manualpath manual_files{1}], 'class2use_manual');
 class2use = class2use.class2use_manual;
 
@@ -91,8 +93,6 @@ for filecount = 1:length(manual_files) %looping over the manual files
 
 end
 
-
-
 featitles = fea_temp.textdata;
 [~,i] = setdiff(featitles, {'FilledArea' 'summedFilledArea' 'Area' 'ConvexArea' 'MajorAxisLength' 'MinorAxisLength' 'Perimeter', 'roi_number'}');
 featitles = featitles(i);
@@ -101,7 +101,6 @@ fea_all = fea_all(:,i);
 
 clear *temp
 
-%%
 [n, class_all, varargout] = handle_train_maxn_subsample( class2use, maxn, class_all, fea_all, files_all, roinum );
 fea_all = varargout{1};
 files_all = varargout{2};
@@ -127,6 +126,7 @@ class_vector = class_all;
 targets = cellstr([char(files_all) repmat('_', length(class_vector),1) num2str(roinum, '%05.0f')]);
 nclass = n;
 
+%%
 datestring = datestr(now, 'ddmmmyyyy');
 
 save([outpath 'Train_' datestring], 'train', 'class_vector', 'targets', 'class2use', 'nclass', 'featitles');

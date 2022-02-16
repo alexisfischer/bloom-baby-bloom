@@ -1,7 +1,7 @@
 % Use MC files to find who is representing the biomass to determine which classes should be used in classifier
 clear;
 
-CCS=0;
+CCS=1;
 
 %filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/';
 % addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
@@ -56,7 +56,7 @@ fxC=fxC_all(:,idx);
 class=class2use_manual(idx);
 
 %remove select classes
-idx=find(ismember(class,{'unclassified' 'Unid_pointed_Dino'...
+idx=find(ismember(class,{'unclassified' 'Unid_pointed_Dino' 'Chaetoceros_pennate'...
     'Unid_rounded_Dino' 'Flagellate_mix' 'Heterocapsa' 'Ciliate'}));
 class(idx)=[];
 
@@ -65,7 +65,7 @@ new={'Dinophysis' 'D_acuminata' 'D_acuta' 'D_caudata' 'D_fortii' ...
     'D_norvegica' 'D_odiosa' 'D_parva' 'D_rotundata' 'D_tripos'...
     'Pn_large_narrow' 'Pn_large_wide' 'Pn_small' 'Pn_parasite' 'Pseudo-nitzschia'...
     'Thalassiosira_chain' 'Thalassiosira_single'...
-    'Chaetoceros_chain' 'Chaetoceros_pennate' 'Chaetoceros_single'};
+    'Chaetoceros_chain' 'Chaetoceros_single'};
 class=[class new];
 
 if CCS==1

@@ -7,10 +7,10 @@ function [ ] = make_TreeBaggerClassifier( result_path, train_filename, result_st
 %
 %run compile_train_features_user_training.m first to store input results in train_filename
 % Example inputs:
-%result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-%train_filename = 'Train_10Nov2021'; %USER what file contains your training features
-%result_str = 'Trees_';
-%nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
+% result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
+% train_filename = 'Train_14Jan2022'; %USER what file contains your training features
+% result_str = 'Trees_';
+% nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 load([result_path train_filename],'class2use','class_vector','featitles','nclass','targets','train'); 
 
@@ -27,7 +27,7 @@ classes = class2use;
 [class_vec_str,sort_ind] = sort(classes(class_vector));
 train = train(sort_ind,:);
 targets = targets(sort_ind);
-
+%%
 disp('Growing trees...please be patient')
 paroptions = statset('UseParallel','always');
 b = TreeBagger(nTrees,train(:,fea2use),class_vec_str,'Method','c','OOBVarImp','on','MinLeaf',1,'Options',paroptions);

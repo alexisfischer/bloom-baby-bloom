@@ -31,7 +31,7 @@ manualpath = 'D:\Shimada\classifier\manual_merged\'; % manual annotation file lo
 feapath_base = 'D:\Shimada\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 1000; %minimum number for inclusion
+minn = 500; %minimum number for inclusion
 % class2group={{'Detonula' 'Cerataulina' 'Lauderia'}...
 %     {'Pn_large_narrow' 'Pn_large_wide'}...
 %     {'Thalassiosira_chain' 'Thalassiosira_single'}...
@@ -53,7 +53,7 @@ train_filename = 'Train_15Feb2022'; %USER what file contains your training featu
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
-make_TreeBaggerClassifier(result_path, train_filename, result_str, nTrees)
+make_TreeBaggerClassifier_user_training(result_path, train_filename, result_str, nTrees)
 %plot_classifier_performance
 %% If want to remake figures related to classifier output
 determine_classifier_performance('D:\Shimada\classifier\summary\Trees_09Nov2021')

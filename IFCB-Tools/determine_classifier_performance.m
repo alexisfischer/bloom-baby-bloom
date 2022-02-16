@@ -7,9 +7,8 @@ function [ ] = determine_classifier_performance( classifiername )
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
 % Example Inputs
-%classifiername='D:\Shimada\classifier\summary\Trees_09Nov2021';
-
-outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+%classifiername='D:\Shimada\classifier\summary\Trees_15Feb2022';
+%outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 load(classifiername,'b','classes','featitles','maxthre','targets');
 
 %%%% confusion matrix for winner takes all interpretation of scores

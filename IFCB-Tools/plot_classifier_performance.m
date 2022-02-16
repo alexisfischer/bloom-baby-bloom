@@ -12,16 +12,16 @@ else
 end
 addpath(genpath(basepath));
 
-load([filepath 'performance_classifier_17Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+load([filepath 'performance_classifier_15Feb2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_04Jan2022'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 %load([filepath 'performance_classifier_29Dec2021_2UnidDino'],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
 text_offset = 0.1;
 maxn=5000;
 
-id=find(strcmp(all.class,'Thalassiosira_chain,Thalassiosira_single'));
-all.class{id}='Thalassiosira';
-id=find(strcmp(all.class,'Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single'));
-all.class{id}='Chaetoceros';
+% id=find(strcmp(all.class,'Thalassiosira_chain,Thalassiosira_single'));
+% all.class{id}='Thalassiosira';
+% id=find(strcmp(all.class,'Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single'));
+% all.class{id}='Chaetoceros';
 [~,class]=get_phyto_ind_PNW(all.class);
 
 %% plot stacked total in set
@@ -73,7 +73,7 @@ ylabel('total images in set');
 set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 legend('Sensitivity', 'Precision','Location','W')
 title('NWFSC + UCSC')
-%%
+
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'Fx_sensitivity_precision.png']);
 hold off
