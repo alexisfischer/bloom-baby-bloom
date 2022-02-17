@@ -14,7 +14,7 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add 
 if CCS==1
     load([filepath 'Shimada/manual/class_eqdiam_biovol_manual_2019'])
     outdir=[filepath 'Shimada/manual/'];
-    num=34;
+    num=35;
 else
     load([filepath 'BuddInlet/manual/class_eqdiam_biovol_manual_2021'])
     outdir=[filepath 'BuddInlet/manual/'];    
@@ -56,24 +56,23 @@ fxC=fxC_all(:,idx);
 class=class2use_manual(idx);
 
 %remove select classes
-idx=find(ismember(class,{'unclassified' 'Unid_pointed_Dino' 'Chaetoceros_pennate'...
-    'Unid_rounded_Dino' 'Flagellate_mix' 'Heterocapsa' 'Ciliate'}));
+idx=find(ismember(class,{'unclassified' 'Unid_pointed_Dino' 'Pn_parasite' 'Chaetoceros_pennate'...
+    'Unid_rounded_Dino' 'Flagellate_mix' 'Heterocapsa' 'Ciliate' 'Centric_diatom'}));
 class(idx)=[];
 
 % add select classes
 new={'Dinophysis' 'D_acuminata' 'D_acuta' 'D_caudata' 'D_fortii' ...
     'D_norvegica' 'D_odiosa' 'D_parva' 'D_rotundata' 'D_tripos'...
-    'Pn_large_narrow' 'Pn_large_wide' 'Pn_small' 'Pn_parasite' 'Pseudo-nitzschia'...
+    'Pn_large_narrow' 'Pn_large_wide' 'Pn_small' 'Pseudo-nitzschia'...
     'Thalassiosira_chain' 'Thalassiosira_single'...
     'Chaetoceros_chain' 'Chaetoceros_single'};
 class=[class new];
 
 if CCS==1
-    idx=find(ismember(class,{'Pseudo-nitzschia' 'Pn_parasite'}));
+    idx=find(ismember(class,{'Pseudo-nitzschia'}));
     class(idx)=[];
     class(get_zoop_ind_PNW(class))=[]; %remove zooplankton
     class{end+1}='Gymnodinium';   
-    class{end+1}='Cerataulina';   
 else
     class{end+1}='Mesodinium';
     class{end+1}='Cryptophyte';

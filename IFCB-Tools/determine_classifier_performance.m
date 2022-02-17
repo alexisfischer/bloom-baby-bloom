@@ -7,8 +7,8 @@ function [ ] = determine_classifier_performance( classifiername )
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
 % Example Inputs
-%classifiername='D:\Shimada\classifier\summary\Trees_15Feb2022';
-%outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+%classifiername='D:\Shimada\classifier\summary\Trees_15Feb2022_ungrouped';
+outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 load(classifiername,'b','classes','featitles','maxthre','targets');
 
 %%%% confusion matrix for winner takes all interpretation of scores
@@ -21,9 +21,10 @@ if isempty(find(mSfit(:)-t(:), 1)), clear t, else disp('check for error...'); en
 total = sum(c_all')'; maxn = max(total);
 [TP TN FP FN] = conf_mat_props(c_all); % true positive (TP), true negative (TN), false positive (FP), false negative (FN)
 
-Se = TP./(TP+FN); %sensitivity (or probability of detection)
-Pr = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c_all)./sum(c_all)'
-all=table(class,total,Se,Pr);
+R = TP./(TP+FN); %recall (or probability of detection)
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c_all)./sum(c_all)'
+F1= 2*((P.*R)./(P+R));
+all=table(class,total,R,P,F1);
 
 disp('overall error rate:')
 disp(1-sum(TP)./sum(total))
@@ -47,12 +48,13 @@ classes2 = [classes(:); 'unclassified'];
 total = sum(c_opt')';
 [TP TN FP FN] = conf_mat_props(c_opt);
 
-Se = TP./(TP+FN); %sensitivity
-Pr = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+R = TP./(TP+FN); %recall
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+F1= 2*((P.*R)./(P+R));
 disp('error rate for all classifications (optimal score threshold):')
 disp(1-sum(TP)./sum(total))
-Pm = c_opt(:,end)./total;
-opt=table(class,total,Se,Pr,Pm);
+fxUnclass = c_opt(:,end)./total;
+opt=table(class,total,R,P,fxUnclass,F1);
 %opt(end,:)=[]; %delete unclassified row
 
 disp('fraction unclassified:')
@@ -63,7 +65,7 @@ total = sum(c_optb')';
 disp('error rate for accepted classifications (optimal score threshold):')
 disp(1-sum(TP)./sum(total))
 
-clearvars TP TN FP FN total ind count i ii t j classes2 class Pm Pr Se
+clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R
 
 %% how did regional classifier do on Shimada dataset
 idx = contains(targets,{'IFCB777' 'IFCB117'});
@@ -72,9 +74,10 @@ MC=b.Y;
 [~,idx]=sort(class);class=class(idx);C=C(idx,idx);
 total = sum(C')'; 
 [TP TN FP FN] = conf_mat_props(C);
-Se= TP./(TP+FN); %sensitivity (or probability of detection)
-Pr = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
-Pr(Pr==0)=NaN;
+R= TP./(TP+FN); %recall (or probability of detection)
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+P(P==0)=NaN;
+F1= 2*((P.*R)./(P+R));
 
 %find gaps, if they exist
 PNW=all;
@@ -82,16 +85,18 @@ PNW=all;
 for i=1:length(ib)
     if ib(i)>0
         PNW.total(i)= total(ib(i));
-        PNW.Se(i)= Se(ib(i));
-        PNW.Pr(i)= Pr(ib(i));        
+        PNW.R(i)= R(ib(i));
+        PNW.P(i)= P(ib(i));        
+        PNW.F1(i)= F1(ib(i));                
     else
         PNW.total(i)=0;
-        PNW.Se(i)=NaN;
-        PNW.Pr(i)=NaN;        
+        PNW.R(i)=NaN;
+        PNW.P(i)=NaN;        
+        PNW.F1(i)=NaN;                
     end
 end
 
-PNW=table(class,total,Se,Pr);
+PNW=table(class,total,R,P,F1);
 
 %% how did regional classifier do on SCW dataset
 idx = contains(targets,'IFCB104');
@@ -101,9 +106,10 @@ MC=b.Y;
 total = sum(C')';
 [TP TN FP FN] = conf_mat_props(C);
 
-Se= TP./(TP+FN); %sensitivity (or probability of detection)
-Pr= TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
-Pr(Pr==0)=NaN;
+R= TP./(TP+FN); %recall (or probability of detection)
+P= TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+P(P==0)=NaN;
+F1= 2*((P.*R)./(P+R));
 
 %find gaps, if they exist
 SCW=all;
@@ -111,16 +117,18 @@ SCW=all;
 for i=1:length(ib)
     if ib(i)>0
         SCW.total(i)= total(ib(i));
-        SCW.Se(i)= Se(ib(i));
-        SCW.Pr(i)= Pr(ib(i));        
+        SCW.R(i)= R(ib(i));
+        SCW.P(i)= P(ib(i));        
+        SCW.F1(i)= F1(ib(i));                
     else
         SCW.total(i)=0;
-        SCW.Se(i)=NaN;
-        SCW.Pr(i)=NaN;        
+        SCW.R(i)=NaN;
+        SCW.P(i)=NaN;        
+        SCW.F1(i)=NaN;                
     end
 end
 
-clearvars TP TN FP FN Se Pr MC idx total classi
+clearvars TP TN FP FN R P MC idx total classi
 
 %% sorting features according to the best ones
 figure('Units','inches','Position',[1 1 3.5 3],'PaperPositionMode','auto');

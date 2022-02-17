@@ -19,7 +19,7 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath;
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
 TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
-class2useName ='D:\Shimada\config\class2use_10'; %classlist to subtract "class" from
+class2useName ='D:\Shimada\config\class2use_10'; %classlist to subtract "top classes" from
 [class2skip] = find_class2skip(class2useName,TopClassName);
 clearvars manualpath id
 
@@ -38,18 +38,15 @@ minn = 1000; %minimum number for inclusion
 %     {'Chaetoceros_chain' 'Chaetoceros_pennate' 'Chaetoceros_single'}...
 %     {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
 %     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
-class2group={{'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pseudo-nitzschia' 'Pn_small'}...
-    {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
+class2group={{'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
-   
- %   {'Thalassiosira_chain' 'Thalassiosira_single'}...
-%    {'Chaetoceros_chain' 'Chaetoceros_pennate' 'Chaetoceros_single'}...
+
 compile_train_features_PNW(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_15Feb2022'; %USER what file contains your training features
+train_filename = 'Train_16Feb2022'; %USER what file contains your training features
 result_str = 'Trees_';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 

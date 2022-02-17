@@ -15,12 +15,16 @@ class2get = {'Actinoptychus';'Asterioplanus';'Asteromphalus';'Attheya';...
     'Paralia';'Pennate_diatom';'Plagiogrammopsis';'Plagiolemma';...
     'Pleurosigma';'Proboscia';'Pseudo-nitzschia';'Pn_large';'Pn_small';...
     'Pn_large_narrow';'Pn_large_wide';'Pn_large_narrow,Pn_large_wide';...
-    'Pn_large_narrow,Pn_large_wide,Pn_parasite,Pn_small,Pseudo-nitzschia';...    
+    'Pn_large_narrow,Pn_large_wide,Pn_parasite,Pn_small,Pseudo-nitzschia';... 
+    'Pn_large_narrow,Pn_large_wide,Pn_small,Pseudo-nitzschia';...
     'Rhizosolenia';'Skeletonema';'Stephanopyxis';'Striatella';'Thalassionema';...
     'Thalassiosira';'Tropidoneis';'Thalassiosira_chain,Thalassiosira_single';...
     'Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single';...
     'Chaetoceros_chain';'Chaetoceros_pennate';'Chaetoceros_single';...
-    'Thalassiosira_chain';'Thalassiosira_single';...   
+    'Chaetoceros_chain,Chaetoceros_single';...
+    'Thalassiosira_chain';'Thalassiosira_single';...
+    'Thalassiosira_chain,Thalassiosira_single';...
+    'Centric_diatom,Thalassiosira_single';...
 
     'Actiniscus';'Akashiwo';'Alexandrium';'Amphidinium';'Amylax';...
     'Azadinium';'Boreadinium';'Ceratium';'Cochlodinium';'Cyst';...
@@ -50,12 +54,14 @@ class_label(strcmp('Asterionellopsis', class_label)) = {'\itAsterionellopsis \rm
 class_label(strcmp('Bacillaria', class_label)) = {'\itBacillaria \rmspp.'};
 class_label(strcmp('Bacteriastrum', class_label)) = {'\itBacteriastrum \rmspp.'};
 class_label(strcmp('Centric_diatom', class_label)) = {'misc centric diatoms'};
+class_label(strcmp('Centric_diatom,Thalassiosira_single', class_label)) = {'misc centric diatoms'};
 class_label(strcmp('Cerataulina', class_label)) = {'\itCerataulina \rmspp.'};
 class_label(strcmp('Cerataulina,Detonula,Lauderia', class_label)) = {'Det Cer Lau'};
 
 class_label(strcmp('Chaetoceros_chain', class_label)) = {'\itChaetoceros \rmchain spp.'};
 class_label(strcmp('Chaetoceros_pennate', class_label)) = {'\itChaetoceros \rmpennate spp.'};
 class_label(strcmp('Chaetoceros_single', class_label)) = {'\itChaetoceros \rmsingle spp.'};
+class_label(strcmp('Chaetoceros_chain,Chaetoceros_single', class_label)) = {'\itChaetoceros \rmspp.'};
 class_label(strcmp('Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single', class_label)) = {'\itChaetoceros \rmspp.'};
 class_label(strcmp('Chaetoceros', class_label)) = {'\itChaetoceros \rmspp.'};
 class_label(strcmp('Chaetoceros setae', class_label)) = {'\itChaetoceros setae'};
@@ -87,13 +93,14 @@ class_label(strcmp('Plagiolemma', class_label)) = {'\itPlagiolemma \rmspp.'};
 class_label(strcmp('Pleurosigma', class_label)) = {'\itPleurosigma \rmspp.'};
 class_label(strcmp('Proboscia', class_label)) = {'\itProboscia \rmspp.'};
 
+class_label(strcmp('Pn_large_narrow,Pn_large_wide,Pn_small,Pseudo-nitzschia', class_label)) = {'\itPseudo-nitzschia \rmspp.'};
 class_label(strcmp('Pn_large_narrow,Pn_large_wide,Pn_parasite,Pn_small,Pseudo-nitzschia', class_label)) = {'\itPseudo-nitzschia \rmspp.'};
 class_label(strcmp('Pseudo-nitzschia', class_label)) = {'\itPseudo-nitzschia \rmspp.'};
-class_label(strcmp('Pn_large_narrow,Pn_large_wide', class_label)) = {'Large \itPseudo-nitzschia'};
-class_label(strcmp('Pn_large_narrow', class_label)) = {'Large Narrow \itPseudo-nitzschia'};
-class_label(strcmp('Pn_large_wide', class_label)) = {'Large Wide \itPseudo-nitzschia'};
-class_label(strcmp('Pn_large', class_label)) = {'Large \itPseudo-nitzschia'};
-class_label(strcmp('Pn_small', class_label)) = {'Small \itPseudo-nitzschia'};
+class_label(strcmp('Pn_large_narrow,Pn_large_wide', class_label)) = {'large \itPseudo-nitzschia'};
+class_label(strcmp('Pn_large_narrow', class_label)) = {'large narrow \itPseudo-nitzschia'};
+class_label(strcmp('Pn_large_wide', class_label)) = {'large wide \itPseudo-nitzschia'};
+class_label(strcmp('Pn_large', class_label)) = {'large \itPseudo-nitzschia'};
+class_label(strcmp('Pn_small', class_label)) = {'small \itPseudo-nitzschia'};
 
 class_label(strcmp('Rhizosolenia', class_label)) = {'\itRhizosolenia \rmspp.'};
 class_label(strcmp('Skeletonema', class_label)) = {'\itSkeletonema \rmspp.'};
@@ -104,6 +111,7 @@ class_label(strcmp('Thalassiosira', class_label)) = {'\itThalassiosira \rmspp.'}
 class_label(strcmp('Tropidoneis', class_label)) = {'\itTropidoneis \rmspp.'};
 class_label(strcmp('Thalassiosira_chain', class_label)) = {'\itThalassiosira \rmchain spp.'};
 class_label(strcmp('Thalassiosira_single', class_label)) = {'\itThalassiosira \rmsingle spp.'};
+class_label(strcmp('Thalassiosira_chain,Thalassiosira_single', class_label)) = {'\itThalassiosira \rmspp.'};
 
 class_label(strcmp('Actiniscus', class_label)) = {'\itActiniscus \rmspp.'};
 class_label(strcmp('Akashiwo', class_label)) = {'\itAkashiwo \itsanguinea'};

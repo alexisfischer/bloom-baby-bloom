@@ -8,8 +8,8 @@ function [ ] = summarize_biovol_eqdiam_from_manual(manualpath,out_dir,roibasepat
 %  manualpath = 'D:\Shimada\manual\'; %USER
 %  out_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\';
 %  roibasepath = 'D:\Shimada\data\'; %USER
-%  feapath_base = 'D:\Shimada\features\2019\'; %USER
-%  yr='2019';
+%  feapath_base = 'D:\Shimada\features\2021\'; %USER
+%  yr='2021';
 %  micron_factor = 1/3.4; %microns per pixel conversion
 
 % determine where MC and feature files intersect
