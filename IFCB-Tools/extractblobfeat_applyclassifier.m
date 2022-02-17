@@ -8,8 +8,7 @@ ifcbdir='D:\Shimada\';
 %ifcbdir='D:\SCW\'; 
 %ifcbdir='D:\Shimada\LabData\'; 
 
-summarydir=[ifcbdir 'summary\'];
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 
 yr='2019';
 
@@ -30,24 +29,23 @@ start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'
 % Step 3: Extract features
 start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],false)
 
-%% Step 4: Apply classifier
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
-yr='2021';
+% Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
-% Step 5: Summarize results
-% summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
-% 
-% summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
-%     [ifcbdir 'data\'],[ifcbdir 'features\2019\'],'2019',1/3.4)
+
+%% Step 5: Summarize manual results
+summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
+
+summarize_biovol_eqdiam_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
+    [ifcbdir 'data\'],[ifcbdir 'features\2019\'],'2019',1/3.4)
   
-% Step 6: Summarize classifier results for biovolume and cells
+%% Step 6: Summarize classifier results for biovolume and cells
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 sumdir=[summarydir 'class\'];
 yrrange = 2021;
-adhocthresh = 0.5;
+adhocthresh = 0.9;
 
 summarize_biovol_from_classifier(sumdir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 summarize_biovol_from_classifier(sumdir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,2019)
