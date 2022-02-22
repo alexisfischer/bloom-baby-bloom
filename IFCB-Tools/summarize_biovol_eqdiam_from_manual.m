@@ -45,7 +45,7 @@ for i = 1:length(filelist)
     load([manualpath filename(1:24) '.mat'],'classlist')
     
     list=nan*[roi,roi,roi];
-    for ii=1:length(classlist)
+    for ii=1:size(classlist,1)
         for j=1:length(roi)
             if roi(j) == classlist(ii,1)
                 list(j,1)=classlist(ii,1);      
@@ -58,7 +58,7 @@ for i = 1:length(filelist)
     
     % preferentially take manual files over class files
     class=nan*(list(:,1));
-    for ii=1:length(list)
+    for ii=1:size(list,1)
         if ~isnan(list(ii,2))
             class(ii) = list(ii,2);  
         else

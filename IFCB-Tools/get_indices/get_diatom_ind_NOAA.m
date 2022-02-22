@@ -1,8 +1,8 @@
-function [ ind_out, class_label ] = get_phyto_ind_PNW( class2use )
-%function [ ind_out, class_label ] = get_phyto_ind_CA( class2use, class_label )
-% California class list specific to return of indices that correspond to 
-% living taxa
-%  Alexis D. Fischer, NOAA, August 2021
+function [ ind_out, class_label ] = get_diatom_ind_NOAA( class2use )
+%function [ ind_out, class_label ] = get_diatom_ind( class2use, class_label )
+% California class list specific to return of indices that correspond to diatom taxa
+% parts modified from 'get_diatom_ind'
+%  Alexis D. Fischer, NOAA, February 2022
 
 class2get = {'Actinoptychus';'Asterioplanus';'Asteromphalus';'Attheya';...
     'Aulacodiscus';'Asterionellopsis';'Bacillaria';'Bacteriastrum';...
@@ -24,22 +24,7 @@ class2get = {'Actinoptychus';'Asterioplanus';'Asteromphalus';'Attheya';...
     'Chaetoceros_chain,Chaetoceros_single';...
     'Thalassiosira_chain';'Thalassiosira_single';...
     'Thalassiosira_chain,Thalassiosira_single';...
-    'Centric_diatom,Thalassiosira_single';...
-
-    'Actiniscus';'Akashiwo';'Alexandrium';'Amphidinium';'Amylax';...
-    'Azadinium';'Boreadinium';'Ceratium';'Cochlodinium';'Cyst';...
-    'Dinoflagellate_mix';'Diplopsalis';'Dinophysis';
-    'D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis';...  
-    'D_acuminata';'D_acuta';'D_caudata';'D_fortii';'D_norvegica';...
-    'D_odiosa';'D_parva';'D_rotundata';'D_tripos';...      
-    'Dissodinium';'Gonyaulux';'Gymnodinium';'Gyrodinium';'Heterocapsa';...
-    'Heterosigma';'Kofoidinium';'Katodinium';'Lingulodinium';'Minuscula';...
-    'Nematodinium';'Noctiluca';'Oxyphysis';'Phaeocystis';'Polykrikos';...
-    'Prorocentrum';'Proterythropsis';'Protoceratium';'Protoperidinium';...
-    'Pyrophacus';'Scrippsiella';'Thecadinium';'Torodinium';...
-    'Cryptophyte';'Nanoplankton_<10';'Dictyocha';...
-    'Cryptophyte,Nanoplankton_<10';'Heterocapsa,Scrippsiella';'Unid_rounded_Dino';...
-    'unclassified'};
+    'Centric_diatom,Thalassiosira_single'};
 
 [~,ind_out] = intersect(class2use, class2get,'stable');
 %ind_out = sort(ind_out);
@@ -113,57 +98,6 @@ class_label(strcmp('Thalassiosira_chain', class_label)) = {'\itThalassiosira \rm
 class_label(strcmp('Thalassiosira_single', class_label)) = {'\itThalassiosira \rmsingle spp.'};
 class_label(strcmp('Thalassiosira_chain,Thalassiosira_single', class_label)) = {'\itThalassiosira \rmspp.'};
 
-class_label(strcmp('Actiniscus', class_label)) = {'\itActiniscus \rmspp.'};
-class_label(strcmp('Akashiwo', class_label)) = {'\itAkashiwo \itsanguinea'};
-class_label(strcmp('Alexandrium', class_label)) = {'\itAlexandrium \rmspp.'};
-class_label(strcmp('Azadinium', class_label)) = {'\itAzadinium \rmspp.'};
-class_label(strcmp('Boreadinium', class_label)) = {'\itBoreadinium \rmspp.'};
-class_label(strcmp('Ceratium', class_label)) = {'\itCeratium \rmspp.'};
-class_label(strcmp('Cyst', class_label)) = {'Dinocyst'};
-class_label(strcmp('Cochlodinium', class_label)) = {'\itMargalefidinium \rmspp.'};
-class_label(strcmp('Dinoflagellate_mix', class_label)) = {'misc dinoflagellates'};
-class_label(strcmp('Diplopsalis', class_label)) = {'\itDiplopsalis \rmspp.'};
-
-class_label(strcmp('Dinophysis', class_label)) = {'\itDinophysis \rmspp.'};
-class_label(strcmp('D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis', class_label)) = {'\itDinophysis \rmspp.'};
-class_label(strcmp('D_acuminata', class_label)) = {'\itD. acuminata.'};
-class_label(strcmp('D_acuta', class_label)) = {'\itD. acuta'};
-class_label(strcmp('D_caudata', class_label)) = {'\itD. caudata'};
-class_label(strcmp('D_fortii', class_label)) = {'\itD. fortii'};
-class_label(strcmp('D_norvegica', class_label)) = {'\itD. norvegica'};
-class_label(strcmp('D_odiosa', class_label)) = {'\itD. odiosa'};
-class_label(strcmp('D_parva', class_label)) = {'\itD. parva'};
-class_label(strcmp('D_rotundata', class_label)) = {'\itD. rotundata'};
-class_label(strcmp('D_tripos', class_label)) = {'\itD. tripos'};
-
-class_label(strcmp('Dissodinium', class_label)) = {'\itDissodinium \rmspp.'};
-class_label(strcmp('Gonyaulux', class_label)) = {'\itGonyaulux \rmspp.'};
-class_label(strcmp('Gymnodinium', class_label)) = {'\itGymnodinium \rmspp.'};
-class_label(strcmp('Gyrodinium', class_label)) = {'\itGyrodinium \rmspp.'};
-class_label(strcmp('Heterocapsa', class_label)) = {'\itHeterocapsa \rmspp.'};
-class_label(strcmp('Heterosigma', class_label)) = {'\itHeterosigma \rmspp.'};
-class_label(strcmp('Kofoidinium', class_label)) = {'\itKofoidinium \rmspp.'};
-class_label(strcmp('Katodinium', class_label)) = {'\itKatodinium \rmspp.'};
-class_label(strcmp('Lingulodinium', class_label)) = {'\itLingulodinium \rmspp.'};
-class_label(strcmp('Minuscula', class_label)) = {'\itMinuscula \rmspp.'};
-class_label(strcmp('Nematodinium', class_label)) = {'\itNematodinium \rmspp.'};
-class_label(strcmp('Noctiluca', class_label)) = {'\itNoctiluca \rmspp.'};
-class_label(strcmp('Oxyphysis', class_label)) = {'\itOxyphysis \rmspp.'};
-class_label(strcmp('Phaeocystis', class_label)) = {'\itPhaeocystis \rmspp.'};
-class_label(strcmp('Polykrikos', class_label)) = {'\itPolykrikos \rmspp.'};
-class_label(strcmp('Prorocentrum', class_label)) = {'\itProrocentrum \rmspp.'};
-class_label(strcmp('Proterythropsis', class_label)) = {'\itProterythropsis \rmspp.'};
-class_label(strcmp('Protoceratium', class_label)) = {'\itProtoceratium \rmspp.'};
-class_label(strcmp('Protoperidinium', class_label)) = {'\itProtoperidinium \rmspp.'};
-class_label(strcmp('Pyrophacus', class_label)) = {'\itPyrophacus \rmspp.'};
-class_label(strcmp('Scrippsiella', class_label)) = {'\itScrippsiella \rmspp.'};
-class_label(strcmp('Thecadinium', class_label)) = {'\itThecadinium \rmspp.'};
-class_label(strcmp('Torodinium', class_label)) = {'\itTorodinium \rmspp.'};
-class_label(strcmp('Unid_rounded_Dino', class_label)) = {'misc round dinos'};
-
-class_label(strcmp('Cryptophyte', class_label)) = {'misc cryptophytes'};
-class_label(strcmp('Nanoplankton_<10', class_label)) = {'misc nanoplankton'};
-class_label(strcmp('Dictyocha', class_label)) = {'\itDictyocha \rmspp.'};
-class_label(strcmp('unclassified', class_label)) = {'unclassified'};
 
 end
+

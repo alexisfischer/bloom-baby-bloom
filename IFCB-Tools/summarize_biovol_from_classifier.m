@@ -4,19 +4,20 @@ function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feap
 % Inputs automatic classified results and outputs a summary file of counts and biovolume
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
-%Example inputs
-% summarydir='C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\'; %SCW
-% classpath_generic = 'F:\IFCB104\class\classxxxx_v1\';
-% feapath_generic = 'F:\IFCB104\features\xxxx\'; %Put in your featurepath byyear
-% roibasepath_generic = 'F:\IFCB104\data\xxxx\'; %location of raw data
-% yrrange = 2018;
-% adhocthresh = 0.5;
+% %Example inputs
+% summarydir='D:\Shimada\LabData\summary\';
+% %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+% classpath_generic = 'D:\Shimada\LabData\class\classxxxx_v1\';
+% feapath_generic = 'D:\Shimada\LabData\features\xxxx\'; %Put in your featurepath byyear
+% roibasepath_generic = 'D:\Shimada\LabData\data\xxxx\'; %location of raw data
+% yrrange = 2022;
+% adhocthresh = 0.9;
 
-filelist = dir([feapath_generic 'D*.csv']);
-
+%%
 %for yr = 1:length(yrrange) %USER not tested yet for multiple years, but should work
-%     yr = yrrange(yrcount);
-for yr = yrrange 
+
+yr=yrrange;
+
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
     feapath = regexprep(feapath_generic, 'xxxx', num2str(yr));
     roibasepath = regexprep(roibasepath_generic, 'xxxx', num2str(yr));
@@ -48,11 +49,15 @@ for yr = yrrange
     classbiovol = classcount;
     %classcount_above_optthresh = classcount;
     num2dostr = num2str(length(classfiles));
-    %
+   
     for filecount = 1:length(classfiles)
         if ~rem(filecount,10), disp(['reading ' num2str(filecount) ' of ' num2dostr]), end;
       %  [classcount(filecount,:), classbiovol(filecount,:), class2useTB] = summarize_biovol_TBclassMVCO(classfiles{filecount}, feafiles{filecount});
-        [classcount(filecount,:), classbiovol(filecount,:), classC(filecount,:), classcount_above_optthresh(filecount,:), classbiovol_above_optthresh(filecount,:), classC_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:), classbiovol_above_adhocthresh(filecount,:), classC_above_adhocthresh(filecount,:), class2useTB] = summarize_biovol_TBclassMVCO(classfiles{filecount}, feafiles{filecount}, adhocthresh);
+        [classcount(filecount,:), classbiovol(filecount,:), classC(filecount,:),...
+            classcount_above_optthresh(filecount,:), classbiovol_above_optthresh(filecount,:),...
+            classC_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:),...
+            classbiovol_above_adhocthresh(filecount,:), classC_above_adhocthresh(filecount,:), class2useTB]...
+            = summarize_biovol_TBclassNOAA(classfiles{filecount}, feafiles{filecount}, adhocthresh);
     end;
     
     classcountTB = classcount;
@@ -75,4 +80,4 @@ for yr = yrrange
         'class2useTB', 'classC_TB*', 'classcountTB*', 'classbiovolTB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB')
 %    save([resultpath 'summary_biovol_allTB'] , 'class2useTB', 'classcountTB*', 'classbiovolTB*', 'classC_TB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'feapath_generic')
     clear *files* classcount* classbiovol* classC* 
-end
+%end

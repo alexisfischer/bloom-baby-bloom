@@ -1,17 +1,16 @@
-function [ ] = summarize_cells_from_classifier(classpath_generic, in_dir, path_out, yrrange)
-%function [ ] = summarize_cells_from_classifier(classpath_generic, in_dir, path_out, yrrange)
+function [ ] = summarize_cells_from_classifier(ifcbdir, summarydir, yrrange)
+%function [ ] = summarize_cells_from_classifier(ifcbdir, summarydir, yrrange)
 % Inputs automatic classified results and summarizes class results for a series of classifier output files (TreeBagger)
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
 %Example inputs:
-% classpath_generic = 'D:\BuddInlet\class\classXXXX_v1\'; %leave xxxx in place of 4 digit year
-% in_dir = 'D:\BuddInlet\data\'; %where to access data (hdr files)
-% path_out = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
-% yrrange = 2021;  %one value or range (e.g., 2017:2018)
+% clear
+% ifcbdir='D:\Shimada\LabData\';
+% summarydir = 'D:\Shimada\LabData\summary\';
+% yrrange = 2022;  %one value or range (e.g., 2017:2018)
 
-addpath(genpath(in_dir));
-addpath(genpath(path_out));
-addpath(genpath('D:\BuddInlet\class\'));
+addpath(genpath(ifcbdir));
+addpath(genpath(summarydir));
 
 %check whether in directory
 urlflag = 0;
@@ -19,9 +18,12 @@ if strcmp('http', in_dir(1:4))
     urlflag = 1;
 end
 %make sure input paths end with filesep
+classpath_generic = [ifcbdir 'class\classXXXX_v1\']; %leave xxxx in place of 4 digit year
 if ~isequal(classpath_generic(end), filesep)
     classpath_generic = [classpath_generic filesep];
 end
+
+in_dir = [ifcbdir 'data\']; %where to access data (hdr files)
 if (~isequal(in_dir(end), filesep) && ~urlflag)
     in_dir = [in_dir filesep];
 end
@@ -83,8 +85,8 @@ for filecount = 1:length(classfiles)
     end;
 end;
 
-if ~exist(path_out, 'dir'),
-    mkdir(path_out)
+if ~exist(summarydir, 'dir'),
+    mkdir(summarydir)
 end;
 
 ml_analyzedTB = ml_analyzed;
@@ -103,13 +105,13 @@ clear mdate filelist class2use classcount classcount_above_optthresh filecount y
 
 if exist('adhocthresh', 'var'),
     classcountTB_above_adhocthresh = classcount_above_adhocthresh;
-    save([path_out 'summary_allTB_' yrrangestr] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic')
+    save([summarydir 'summary_allTB_' yrrangestr] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic')
 else
-    save([path_out 'summary_allTB_' yrrangestr] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic')
+    save([summarydir 'summary_allTB_' yrrangestr] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic')
 end
 
 disp('Summary cell count file stored here:')
-disp([path_out 'summary_allTB_' yrrangestr])
+disp([summarydir 'summary_allTB_' yrrangestr])
 
 return
 % %example plotting code for all of the data (load summary file first)

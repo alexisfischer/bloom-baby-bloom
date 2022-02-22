@@ -23,7 +23,6 @@ end
 
 % concatenate biovolume for each class in each sample
 volB=NaN*ones(length(BiEq),length(class2use_manual)); %preset biovolume matrix
-ind_diatom = get_diatom_ind_PNW(class2use_manual);
 for i=1:length(class2use_manual)
     for j=1:length(BiEq)     
         idx=find([BiEq(j).class]==i); %find indices of a particular class
@@ -33,9 +32,9 @@ for i=1:length(class2use_manual)
 end
 
 % Exclude nonliving
-volB(:,get_nonliving_ind_PNW(class2use_manual))=NaN;
+volB(:,get_nonliving_ind_NOAA(class2use_manual))=NaN;
 
-clearvars i j idx b note1 note2 ind_diatom
+clearvars i j idx b note1 note2 
 
 % find files with <60% of biomass annotated
 % and remove those files from top classses estimate
@@ -71,7 +70,7 @@ class=[class new];
 if CCS==1
     idx=find(ismember(class,{'Pseudo-nitzschia'}));
     class(idx)=[];
-    class(get_zoop_ind_PNW(class))=[]; %remove zooplankton
+    class(get_zoop_ind_NOAA(class))=[]; %remove zooplankton
     class{end+1}='Gymnodinium';   
 else
     class{end+1}='Mesodinium';
