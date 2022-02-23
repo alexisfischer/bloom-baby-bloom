@@ -1,4 +1,4 @@
-function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
+function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir,yr)
 %function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
 %
 % summarizes class results for a series of manual annotation files (as saved by startMC)
@@ -52,11 +52,10 @@ end
 
 class2use = class2use_manual_first;
 
-datestr = date; datestr = regexprep(datestr,'-','');
-save([summary_dir 'count_class_manual_' datestr], 'matdate', 'ml_analyzed', 'classcount', 'filelist', 'class2use')
+save([summary_dir 'count_class_manual_' yr], 'matdate', 'ml_analyzed', 'classcount', 'filelist', 'class2use')
 
 disp('Summary cell count file stored here:')
-disp([summary_dir 'count_class_manual_' datestr])
+disp([summary_dir 'count_class_manual_' yr])
 
 return
 

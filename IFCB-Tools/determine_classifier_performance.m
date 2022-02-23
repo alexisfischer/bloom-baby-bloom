@@ -7,30 +7,37 @@ function [ ] = determine_classifier_performance( classifiername )
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
 % Example Inputs
-%classifiername='D:\Shimada\classifier\summary\Trees_15Feb2022_ungrouped';
+% classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 load(classifiername,'b','classes','featitles','maxthre','targets');
+adhocthresh=0.7;
 
-%%%% confusion matrix for winner takes all interpretation of scores
 [Yfit,Sfit,Sstdfit] = oobPredict(b);
 [mSfit, ii] = max(Sfit');
-for count = 1:length(mSfit), mSstdfit(count) = Sstdfit(count,ii(count)); t(count)= Sfit(count,ii(count)); end
-if isempty(find(mSfit(:)-t(:), 1)), clear t, else disp('check for error...'); end
+for count = 1:length(mSfit) 
+    mSstdfit(count) = Sstdfit(count,ii(count)); 
+    t(count)= Sfit(count,ii(count)); 
+end
+if isempty(find(mSfit(:)-t(:), 1))
+    clear t 
+else disp('check for error...'); 
+end
 
+%% winner takes all interpretation of scores
 [c_all, class] = confusionmat(b.Y,Yfit); 
-total = sum(c_all')'; maxn = max(total);
+total = sum(c_all')'; 
 [TP TN FP FN] = conf_mat_props(c_all); % true positive (TP), true negative (TN), false positive (FP), false negative (FN)
 
 R = TP./(TP+FN); %recall (or probability of detection)
 P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c_all)./sum(c_all)'
 F1= 2*((P.*R)./(P+R));
+
 all=table(class,total,R,P,F1);
+disp(['winner-takes-all error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 
-disp('overall error rate:')
-disp(1-sum(TP)./sum(total))
+clearvars TP TN FP FN total Pm P R ii F1 count class
 
-%%
-%%%% apply the optimal threshold
+%% optimal threshold interpretation of scores
 t = repmat(maxthre,length(Yfit),1);
 win = (Sfit > t);
 [i,j] = find(win);
@@ -47,25 +54,55 @@ classes2 = [classes(:); 'unclassified'];
 [c_opt, class] = confusionmat(b.Y,classes2(Yfit_max));
 total = sum(c_opt')';
 [TP TN FP FN] = conf_mat_props(c_opt);
-
 R = TP./(TP+FN); %recall
 P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
 F1= 2*((P.*R)./(P+R));
-disp('error rate for all classifications (optimal score threshold):')
-disp(1-sum(TP)./sum(total))
-fxUnclass = c_opt(:,end)./total;
-opt=table(class,total,R,P,fxUnclass,F1);
-%opt(end,:)=[]; %delete unclassified row
+disp(['optimal error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 
-disp('fraction unclassified:')
-disp(length(find(Yfit_max==length(classes2)))./length(Yfit_max))
+totalfxun=length(find(Yfit_max==length(classes2)))./length(Yfit_max);
+fxUnclass = c_opt(:,end)./total;
+fxUnclass(end)=totalfxun;
+opt=table(class,total,R,P,F1,fxUnclass);
+
+% ignore unclassified
 c_optb = c_opt(1:end-1,1:end-1); %ignore the instances in 'unknown'
 total = sum(c_optb')';
 [TP TN FP FN] = conf_mat_props(c_optb);
-disp('error rate for accepted classifications (optimal score threshold):')
-disp(1-sum(TP)./sum(total))
+R = TP./(TP+FN); %recall
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+F1= 2*((P.*R)./(P+R));
+disp(['optimal error rate (ignore unclassified) = ' num2str(1-sum(TP)./sum(total)) '']);
 
-clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R
+optb=table(class(1:end-1),total,R,P,F1);
+
+clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
+
+%% apply adhoc threshold
+win = (Sfit > adhocthresh);
+[i,j] = find(win);
+Yfit_max = NaN(size(Yfit));
+Yfit_max(i) = j;
+ind = find(sum(win')>1);
+for count = 1:length(ind)
+    [~,Yfit_max(ind(count))] = max(Sfit(ind(count),:));
+end
+ind = find(isnan(Yfit_max));
+Yfit_max(isnan(Yfit_max)) = length(classes)+1; %unclassified set to last class
+classes2 = [classes(:); 'unclassified'];
+[c_adc, class] = confusionmat(b.Y,classes2(Yfit_max));
+total = sum(c_adc')';
+[TP TN FP FN] = conf_mat_props(c_adc);
+R = TP./(TP+FN); %recall
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+F1= 2*((P.*R)./(P+R));
+disp(['adhoc error rate = ' num2str(1-sum(TP)./sum(total)) '']);
+
+totalfxun=length(find(Yfit_max==length(classes2)))./length(Yfit_max);
+fxUnclass = c_opt(:,end)./total;
+fxUnclass(end)=totalfxun;
+adhc=table(class,total,R,P,F1,fxUnclass);
+
+clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 fxun
 
 %% how did regional classifier do on Shimada dataset
 idx = contains(targets,{'IFCB777' 'IFCB117'});
@@ -80,25 +117,56 @@ P(P==0)=NaN;
 F1= 2*((P.*R)./(P+R));
 
 %find gaps, if they exist
-PNW=all;
+NOAA=all;
 [~,ib]=ismember(classes,class);
 for i=1:length(ib)
     if ib(i)>0
-        PNW.total(i)= total(ib(i));
-        PNW.R(i)= R(ib(i));
-        PNW.P(i)= P(ib(i));        
-        PNW.F1(i)= F1(ib(i));                
+        NOAA.total(i)= total(ib(i));
+        NOAA.R(i)= R(ib(i));
+        NOAA.P(i)= P(ib(i));        
+        NOAA.F1(i)= F1(ib(i));                
     else
-        PNW.total(i)=0;
-        PNW.R(i)=NaN;
-        PNW.P(i)=NaN;        
-        PNW.F1(i)=NaN;                
+        NOAA.total(i)=0;
+        NOAA.R(i)=NaN;
+        NOAA.P(i)=NaN;        
+        NOAA.F1(i)=NaN;                
     end
 end
 
-PNW=table(class,total,R,P,F1);
+NOAA=table(class,total,R,P,F1);
 
-%% how did regional classifier do on SCW dataset
+%% how did regional classifier do on Shimada dataset
+idx = contains(targets,'IFCB150');
+MC=b.Y;
+[C, class] = confusionmat(MC(idx),Yfit(idx)); 
+[~,idx]=sort(class);class=class(idx);C=C(idx,idx);
+total = sum(C')'; 
+[TP TN FP FN] = conf_mat_props(C);
+R= TP./(TP+FN); %recall (or probability of detection)
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+P(P==0)=NaN;
+F1= 2*((P.*R)./(P+R));
+
+%find gaps, if they exist
+BI=all;
+[~,ib]=ismember(classes,class);
+for i=1:length(ib)
+    if ib(i)>0
+        BI.total(i)= total(ib(i));
+        BI.R(i)= R(ib(i));
+        BI.P(i)= P(ib(i));        
+        BI.F1(i)= F1(ib(i));                
+    else
+        BI.total(i)=0;
+        BI.R(i)=NaN;
+        BI.P(i)=NaN;        
+        BI.F1(i)=NaN;                
+    end
+end
+
+BI=table(class,total,R,P,F1);
+
+%% how did regional classifier do on UCSC dataset
 idx = contains(targets,'IFCB104');
 MC=b.Y;
 [C, class] = confusionmat(MC(idx),Yfit(idx)); 
@@ -112,19 +180,19 @@ P(P==0)=NaN;
 F1= 2*((P.*R)./(P+R));
 
 %find gaps, if they exist
-SCW=all;
+UCSC=all;
 [~,ib]=ismember(classes,class);
 for i=1:length(ib)
     if ib(i)>0
-        SCW.total(i)= total(ib(i));
-        SCW.R(i)= R(ib(i));
-        SCW.P(i)= P(ib(i));        
-        SCW.F1(i)= F1(ib(i));                
+        UCSC.total(i)= total(ib(i));
+        UCSC.R(i)= R(ib(i));
+        UCSC.P(i)= P(ib(i));        
+        UCSC.F1(i)= F1(ib(i));                
     else
-        SCW.total(i)=0;
-        SCW.R(i)=NaN;
-        SCW.P(i)=NaN;        
-        SCW.F1(i)=NaN;                
+        UCSC.total(i)=0;
+        UCSC.R(i)=NaN;
+        UCSC.P(i)=NaN;        
+        UCSC.F1(i)=NaN;                
     end
 end
 
@@ -141,7 +209,7 @@ print(gcf,'-dtiff','-r200',[outpath 'Figs\Feature_importance.png']);
 hold off
 
 disp(['Most important features: ' ])
-topfeat=featitles(ind(1:20))';
+topfeat=featitles(ind(1:20))'
 
 %% plot threshold scores
 figure('Units','inches','Position',[1 1 6 4.5],'PaperPositionMode','auto');
@@ -158,6 +226,6 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[outpath 'Figs\class_vs_thresholdscores.png']);
 hold off
 
-save([outpath 'performance_classifier_' classifiername(37:end) ''],'topfeat','PNW','SCW','all','opt','c_all','c_opt');
+save([outpath 'performance_classifier_' classifiername(37:end) ''],'topfeat','NOAA','UCSC','BI','all','opt','optb','adhc','adhocthresh','c_all','c_opt','c_optb');
 
 end

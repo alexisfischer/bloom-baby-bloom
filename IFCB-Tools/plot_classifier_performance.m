@@ -13,16 +13,15 @@ else
 end
 addpath(genpath(basepath));
 
-load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt');
-text_offset = 0.1;
-maxn=5000;
+load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','BI');
 
-[~,class]=get_phyto_ind_PNW(all.class);
+[~,class]=get_phyto_ind_NOAA(all.class);
     
-%% plot ALL bar Recall and Precision
+%% Winner takes All
+% plot bar Recall and Precision
 % sort by F1
 all=sortrows(all,'F1','descend');
-[~,C]=get_phyto_ind_PNW(all.class);
+[~,C]=get_phyto_ind_NOAA(all.class);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
@@ -39,12 +38,37 @@ plot(1:length(C),all.total,'k*'); hold on
 ylabel('total images in set');
 set(gca,'ycolor','k', 'xtick', 1:length(C), 'xticklabel', C); hold on
 legend('Recall', 'Precision','Location','W')
-title(['' num2str(length(C)) ' classes ranked by F1 score'])
+title(['Winner-takes-all: ' num2str(length(C)) ' classes ranked by F1 score'])
+xtickangle(45);
 
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'Fx_recall_precision_' name '.png']);
 hold off
 
+%% Winner takes All
+%plot manual vs classifier checkerboard
+figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
+cplot = zeros(size(c_all)+1);
+cplot(1:length(class),1:length(class)) = c_all;
+total=[sum(c_all,2);0];
+fx_unclass=sum(c_all(:,end))./sum(total) % what fraction of images went to unclassified?
+
+C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
+pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
+set(gca, 'ytick', 1:length(class), 'yticklabel', class,...
+    'xtick', 1:length(class), 'xticklabel',class)
+axis square;  col=colorbar; caxis([0 1])
+colorTitleHandle = get(col,'Title');
+titleString = {'Fx of test'; 'images/class'};
+set(colorTitleHandle ,'String',titleString);
+
+ylabel('Actual Classifications','fontweight','bold');
+xlabel('Predicted Classifications','fontweight','bold')
+title('Winner-takes-all');
+
+set(gcf,'color','w');
+print(gcf,'-dpng','-r200',[figpath 'confusion_matrix_all_' name '.png']);
+hold off
 
 %% plot opt manual vs classifier checkerboard with unclassified
 classU=class;
@@ -67,52 +91,30 @@ set(colorTitleHandle ,'String',titleString);
 
 ylabel('Actual Classifications','fontweight','bold');
 xlabel('Predicted Classifications','fontweight','bold')
+title('Optimal score threshold');
 
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'confusion_matrix_opt_' name '.png']);
 hold off
 
-%% plot manual vs classifier checkerboard
-figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
-cplot = zeros(size(c_all)+1);
-cplot(1:length(class),1:length(class)) = c_all;
-total=[sum(c_all,2);0];
-fx_unclass=sum(c_all(:,end))./sum(total) % what fraction of images went to unclassified?
-
-C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
-pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca, 'ytick', 1:length(class), 'yticklabel', class,...
-    'xtick', 1:length(class), 'xticklabel',class)
-axis square;  col=colorbar; caxis([0 1])
-colorTitleHandle = get(col,'Title');
-titleString = {'Fx of test'; 'images/class'};
-set(colorTitleHandle ,'String',titleString);
-
-ylabel('Actual Classifications','fontweight','bold');
-xlabel('Predicted Classifications','fontweight','bold')
+%% plot stacked total in set
+figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
+b = bar([NOAA.total BI.total UCSC.total],'stack','Barwidth',.7);
+col=brewermap(3,'Dark2'); %col=[[.3 .3 .3];col];
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+    
+legend('Shimada','Budd/Lab','UCSC','Location','NW');
+set(gca, 'xtick', 1:length(class), 'xticklabel', class,'tickdir','out');
+ylabel('total images in set');
+xtickangle(45);
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'confusion_matrix_all_' name '.png']);
+print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC.png']);
 hold off
 
-%% not currently using
-%
-% %% plot stacked total in set
-% figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-% b = bar([SCW.total PNW.total],'stack','Barwidth',1);
-% col=brewermap(2,'PRGn'); %col=[[.3 .3 .3];col];
-% for i=1:length(b)
-%     set(b(i),'FaceColor',col(i,:));
-% end  
-%     
-% legend('UCSC','NWFSC','Location','NE');
-% set(gca, 'xtick', 1:length(class), 'xticklabel', class,'tickdir','out');
-% ylabel('total images in set');
-% 
-% set(gcf,'color','w');
-% print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC.png']);
-% hold off
-% 
+%%
 % %% plot total in set
 % figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 % b = bar([all.total SCW.total PNW.total],'Barwidth',1,'linestyle','none');
