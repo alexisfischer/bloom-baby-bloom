@@ -14,9 +14,8 @@ function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feap
 % adhocthresh = 0.9;
 
 %%
-%for yr = 1:length(yrrange) %USER not tested yet for multiple years, but should work
-
-yr=yrrange;
+for i = 1:length(yrrange) 
+    yr=yrrange(i);
 
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
     feapath = regexprep(feapath_generic, 'xxxx', num2str(yr));
@@ -80,4 +79,4 @@ yr=yrrange;
         'class2useTB', 'classC_TB*', 'classcountTB*', 'classbiovolTB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB')
 %    save([resultpath 'summary_biovol_allTB'] , 'class2useTB', 'classcountTB*', 'classbiovolTB*', 'classC_TB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'feapath_generic')
     clear *files* classcount* classbiovol* classC* 
-%end
+end

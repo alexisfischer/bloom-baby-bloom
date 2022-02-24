@@ -1,6 +1,7 @@
 clear;
 Mac=0;
 name='16Feb2022_nocentric_ungrouped_PN';
+%name='23Feb2022_nonano';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
