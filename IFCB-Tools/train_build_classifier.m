@@ -47,10 +47,10 @@ addpath(genpath(outpath)); % add new data to search path
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
 train_filename = 'Train_23Feb2022'; %USER what file contains your training features
-result_str = 'Trees_';
+result_filename = 'Trees_23Feb2022';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
-make_TreeBaggerClassifier(result_path, train_filename, result_str, nTrees)
+make_TreeBaggerClassifier(result_path, train_filename, result_filename, nTrees)
 %plot_classifier_performance
 %% If want to remake figures related to classifier output
 determine_classifier_performance('D:\Shimada\classifier\summary\Trees_09Nov2021')

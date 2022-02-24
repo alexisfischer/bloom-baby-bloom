@@ -1,4 +1,4 @@
-function [ ] = make_TreeBaggerClassifier( result_path, train_filename, result_str, nTrees)
+function [ ] = make_TreeBaggerClassifier( result_path, train_filename, result_filename, nTrees)
 %function [ ] = make_TreeBaggerClassifier( result_path, train_filename, result_str, nTrees )
 %For example:
 %   make_TreeBaggerClassifier_user_training( 'C:\work\IFCB\user_training_test_data\manual\summary\', 'UserExample_Train_06Aug2015', 'UserExample_Trees_', 100)
@@ -9,7 +9,7 @@ function [ ] = make_TreeBaggerClassifier( result_path, train_filename, result_st
 % Example inputs:
 % result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
 % train_filename = 'Train_14Jan2022'; %USER what file contains your training features
-% result_str = 'Trees_';
+% result_filename = 'Trees_14Jan2022';
 % nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 load([result_path train_filename],'class2use','class_vector','featitles','nclass','targets','train'); 
@@ -21,7 +21,6 @@ load([result_path train_filename],'class2use','class_vector','featitles','nclass
 %load fea2use
 fea2use = 1:length(featitles);
 featitles = featitles(fea2use);
-datestring = datestr(now, 'ddmmmyyyy');
 classes = class2use;
 %sort training set
 [class_vec_str,sort_ind] = sort(classes(class_vector));
@@ -48,24 +47,29 @@ if isempty(find(mSfit-t)), clear t, else disp('check for error...'); end;
 [c1, gord1] = confusionmat(b.Y,Yfit); %transposed from mine
 clear t
 
+% find optimal threshold
 classes = b.ClassNames;
 maxaccu = NaN(1,length(classes));
-maxthre = maxaccu;
+maxthre1 = NaN(1,length(classes));
+maxthre2 = NaN(1,length(classes));
 
-for count = 1:length(classes),
+for count = 1:length(classes)
     old_ind = strmatch(b.ClassNames(count), class2use, 'exact');
+    %winner take all
     [fpr,accu,thr] = perfcurve(b.Y,Sfit(:,count), class2use{old_ind},'ycrit','accu');
     [maxaccu(count),iaccu] = max(accu);
-    maxthre(count) = thr(iaccu);
-end;
+    maxthre1(count) = thr(iaccu);
+    %optimal
+    [X,Y,T,~,OPTROCPT] = perfcurve(b.Y,Sfit(:,count), class2use{old_ind});
+    maxthre2(count)=T((X==OPTROCPT(1))&(Y==OPTROCPT(2)));
+end
 clear count fpr tpr thr iaccu accu
-datestring = datestr(now, 'ddmmmyyyy');
 
-save([result_path result_str datestring],'b', 'targets', 'featitles', 'classes', 'maxthre', '-v7.3')
+save([result_path result_filename],'b', 'targets', 'featitles', 'classes', 'maxthre1','maxthre2','-v7.3')
 
 disp('Classifier file stored here:')
-disp([result_path result_str datestring])
+disp([result_path result_filename])
 
-determine_classifier_performance( [result_path result_str datestring] )
+determine_classifier_performance( [result_path result_filename] )
 
 end

@@ -9,7 +9,7 @@ function [ ] = determine_classifier_performance( classifiername )
 % Example Inputs
 % classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-load(classifiername,'b','classes','featitles','maxthre','targets');
+load(classifiername,'b','classes','featitles','maxthre1','maxthre2','targets');
 adhocthresh=0.7;
 
 [Yfit,Sfit,Sstdfit] = oobPredict(b);
@@ -37,8 +37,8 @@ disp(['winner-takes-all error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 
 clearvars TP TN FP FN total Pm P R ii F1 count class
 
-%% optimal threshold interpretation of scores
-t = repmat(maxthre,length(Yfit),1);
+%% optimal 1 threshold interpretation of scores
+t = repmat(maxthre1,length(Yfit),1);
 win = (Sfit > t);
 [i,j] = find(win);
 Yfit_max = NaN(size(Yfit));
@@ -77,8 +77,9 @@ optb=table(class(1:end-1),total,R,P,F1);
 
 clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
 
-%% apply adhoc threshold
-win = (Sfit > adhocthresh);
+%% optimal 2
+t = repmat(maxthre2,length(Yfit),1);
+win = (Sfit > t);
 [i,j] = find(win);
 Yfit_max = NaN(size(Yfit));
 Yfit_max(i) = j;
@@ -87,22 +88,34 @@ for count = 1:length(ind)
     [~,Yfit_max(ind(count))] = max(Sfit(ind(count),:));
 end
 ind = find(isnan(Yfit_max));
-Yfit_max(isnan(Yfit_max)) = length(classes)+1; %unclassified set to last class
+Yfit_max(ind) = length(classes)+1; %unclassified set to last class
+ind = find(Yfit_max);
 classes2 = [classes(:); 'unclassified'];
-[c_adc, class] = confusionmat(b.Y,classes2(Yfit_max));
-total = sum(c_adc')';
-[TP TN FP FN] = conf_mat_props(c_adc);
+[c_opt, class] = confusionmat(b.Y,classes2(Yfit_max));
+total = sum(c_opt')';
+[TP TN FP FN] = conf_mat_props(c_opt);
 R = TP./(TP+FN); %recall
 P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
 F1= 2*((P.*R)./(P+R));
-disp(['adhoc error rate = ' num2str(1-sum(TP)./sum(total)) '']);
+disp(['optimal error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 
 totalfxun=length(find(Yfit_max==length(classes2)))./length(Yfit_max);
 fxUnclass = c_opt(:,end)./total;
 fxUnclass(end)=totalfxun;
-adhc=table(class,total,R,P,F1,fxUnclass);
+opt2=table(class,total,R,P,F1,fxUnclass);
 
-clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 fxun
+% ignore unclassified
+c_optb = c_opt(1:end-1,1:end-1); %ignore the instances in 'unknown'
+total = sum(c_optb')';
+[TP TN FP FN] = conf_mat_props(c_optb);
+R = TP./(TP+FN); %recall
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+F1= 2*((P.*R)./(P+R));
+disp(['optimal error rate (ignore unclassified) = ' num2str(1-sum(TP)./sum(total)) '']);
+
+optb=table(class(1:end-1),total,R,P,F1);
+
+clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
 
 %% how did regional classifier do on Shimada dataset
 idx = contains(targets,{'IFCB777' 'IFCB117'});
