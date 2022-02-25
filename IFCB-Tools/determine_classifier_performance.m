@@ -10,7 +10,6 @@ function [ ] = determine_classifier_performance( classifiername )
 % classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 load(classifiername,'b','classes','featitles','maxthre1','maxthre2','targets');
-adhocthresh=0.7;
 
 [Yfit,Sfit,Sstdfit] = oobPredict(b);
 [mSfit, ii] = max(Sfit');
@@ -51,21 +50,21 @@ ind = find(isnan(Yfit_max));
 Yfit_max(ind) = length(classes)+1; %unclassified set to last class
 ind = find(Yfit_max);
 classes2 = [classes(:); 'unclassified'];
-[c_opt, class] = confusionmat(b.Y,classes2(Yfit_max));
-total = sum(c_opt')';
-[TP TN FP FN] = conf_mat_props(c_opt);
+[c_opt1, class] = confusionmat(b.Y,classes2(Yfit_max));
+total = sum(c_opt1')';
+[TP TN FP FN] = conf_mat_props(c_opt1);
 R = TP./(TP+FN); %recall
 P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
 F1= 2*((P.*R)./(P+R));
 disp(['optimal error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 
 totalfxun=length(find(Yfit_max==length(classes2)))./length(Yfit_max);
-fxUnclass = c_opt(:,end)./total;
+fxUnclass = c_opt1(:,end)./total;
 fxUnclass(end)=totalfxun;
 opt=table(class,total,R,P,F1,fxUnclass);
 
 % ignore unclassified
-c_optb = c_opt(1:end-1,1:end-1); %ignore the instances in 'unknown'
+c_optb = c_opt1(1:end-1,1:end-1); %ignore the instances in 'unknown'
 total = sum(c_optb')';
 [TP TN FP FN] = conf_mat_props(c_optb);
 R = TP./(TP+FN); %recall
@@ -105,15 +104,15 @@ fxUnclass(end)=totalfxun;
 opt2=table(class,total,R,P,F1,fxUnclass);
 
 % ignore unclassified
-c_optb = c_opt(1:end-1,1:end-1); %ignore the instances in 'unknown'
-total = sum(c_optb')';
-[TP TN FP FN] = conf_mat_props(c_optb);
+c_opt2b = c_opt2(1:end-1,1:end-1); %ignore the instances in 'unknown'
+total = sum(c_opt2b')';
+[TP TN FP FN] = conf_mat_props(c_opt2b);
 R = TP./(TP+FN); %recall
 P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
 F1= 2*((P.*R)./(P+R));
 disp(['optimal error rate (ignore unclassified) = ' num2str(1-sum(TP)./sum(total)) '']);
 
-optb=table(class(1:end-1),total,R,P,F1);
+opt2b=table(class(1:end-1),total,R,P,F1);
 
 clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
 
@@ -239,6 +238,6 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[outpath 'Figs\class_vs_thresholdscores.png']);
 hold off
 
-save([outpath 'performance_classifier_' classifiername(37:end) ''],'topfeat','NOAA','UCSC','BI','all','opt','optb','adhc','adhocthresh','c_all','c_opt','c_optb');
+save([outpath 'performance_classifier_' classifiername(37:end) ''],'topfeat','NOAA','UCSC','BI','all','opt','optb','opt2','opt2b''c_all','c_opt','c_optb','c_opt2','c_opt2b');
 
 end

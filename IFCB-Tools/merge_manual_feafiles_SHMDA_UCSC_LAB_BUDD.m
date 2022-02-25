@@ -12,10 +12,10 @@ function [] = merge_manual_feafiles_SHMDA_UCSC_LAB_BUDD(class2useName,mergedpath
 % SHMDApath = 'D:\Shimada\';
 % LABpath = 'D:\Shimada\LabData\';
 % BUDDpath = 'D:\BuddInlet\';
-% manualpath = [mergedpath '\manual_merged\'];
-% feapathbase = [mergedpath 'features_merged\'];
 
 %%
+manualpath = [mergedpath '\manual_merged\'];
+feapathbase = [mergedpath 'features_merged\'];
 load([class2useName '.mat'], 'class2use');
 
 % Shimada

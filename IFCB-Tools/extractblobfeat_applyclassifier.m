@@ -55,3 +55,5 @@ summarize_biovol_eqdiam_from_manual(manualpath,[summarydir 'manual\'],...
 
 %% Adjust annotations with added class
 start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_11','D:\Shimada\LabData\manual\')
+start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_11','D:\Shimada\manual\')
+start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_11','D:\BuddInlet\manual\')

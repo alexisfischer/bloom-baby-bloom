@@ -31,7 +31,7 @@ manualpath = 'D:\Shimada\classifier\manual_merged\'; % manual annotation file lo
 feapath_base = 'D:\Shimada\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 1000; %minimum number for inclusion
+minn = 900; %minimum number for inclusion
 % class2group={{'Detonula' 'Cerataulina' 'Lauderia'}...
 %     {'Pn_large_narrow' 'Pn_large_wide'}...
 %     {'Thalassiosira_chain' 'Thalassiosira_single'}...
@@ -46,8 +46,8 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_23Feb2022'; %USER what file contains your training features
-result_filename = 'Trees_23Feb2022';
+train_filename = 'Train_24Feb2022'; %USER what file contains your training features
+result_filename = 'Trees_24Feb2022';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 make_TreeBaggerClassifier(result_path, train_filename, result_filename, nTrees)

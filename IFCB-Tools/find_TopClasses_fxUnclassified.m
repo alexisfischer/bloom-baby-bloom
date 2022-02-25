@@ -57,7 +57,7 @@ class=class2use_manual(idx);
 %remove select classes
 idx=find(ismember(class,{'unclassified' 'Unid_pointed_Dino' 'Pn_parasite'...
     'Chaetoceros_pennate' 'Unid_rounded_Dino' 'Flagellate_mix'...
-    'Heterocapsa' 'Ciliate' 'Centric_diatom' 'Nanoplankton_<10'}));
+    'Heterocapsa' 'Ciliate' 'Centric_diatom' 'Nanoplankton_10'}));
 class(idx)=[];
 
 % add select classes
