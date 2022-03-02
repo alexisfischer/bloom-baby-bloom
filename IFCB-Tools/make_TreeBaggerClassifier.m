@@ -49,23 +49,16 @@ clear t
 
 % find optimal threshold
 classes = b.ClassNames;
-maxaccu = NaN(1,length(classes));
-maxthre1 = NaN(1,length(classes));
-maxthre2 = NaN(1,length(classes));
+maxthre = NaN(1,length(classes));
 
 for count = 1:length(classes)
     old_ind = strmatch(b.ClassNames(count), class2use, 'exact');
-    %winner take all
-    [fpr,accu,thr] = perfcurve(b.Y,Sfit(:,count), class2use{old_ind},'ycrit','accu');
-    [maxaccu(count),iaccu] = max(accu);
-    maxthre1(count) = thr(iaccu);
-    %optimal
     [X,Y,T,~,OPTROCPT] = perfcurve(b.Y,Sfit(:,count), class2use{old_ind});
-    maxthre2(count)=T((X==OPTROCPT(1))&(Y==OPTROCPT(2)));
+    maxthre(count)=T((X==OPTROCPT(1))&(Y==OPTROCPT(2)));
 end
 clear count fpr tpr thr iaccu accu
 
-save([result_path result_filename],'b', 'targets', 'featitles', 'classes', 'maxthre1','maxthre2','-v7.3')
+save([result_path result_filename],'b', 'targets', 'featitles', 'classes', 'maxthre','-v7.3')
 
 disp('Classifier file stored here:')
 disp([result_path result_filename])

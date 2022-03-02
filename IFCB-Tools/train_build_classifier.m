@@ -44,7 +44,7 @@ class2group={{'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
 compile_train_features_PNW(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
-% Step 3: Train (make) the classifier
+%% Step 3: Train (make) the classifier
 result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
 train_filename = 'Train_24Feb2022'; %USER what file contains your training features
 result_filename = 'Trees_24Feb2022';

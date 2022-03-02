@@ -8,8 +8,9 @@ function [ ] = determine_classifier_performance( classifiername )
 %
 % Example Inputs
 % classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
+%classifiername='D:\Shimada\classifier\summary\Trees_24Feb2022';
 outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-load(classifiername,'b','classes','featitles','maxthre1','maxthre2','targets');
+load(classifiername,'b','classes','featitles','maxthre','targets');
 
 [Yfit,Sfit,Sstdfit] = oobPredict(b);
 [mSfit, ii] = max(Sfit');
@@ -36,48 +37,8 @@ disp(['winner-takes-all error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 
 clearvars TP TN FP FN total Pm P R ii F1 count class
 
-%% optimal 1 threshold interpretation of scores
-t = repmat(maxthre1,length(Yfit),1);
-win = (Sfit > t);
-[i,j] = find(win);
-Yfit_max = NaN(size(Yfit));
-Yfit_max(i) = j;
-ind = find(sum(win')>1);
-for count = 1:length(ind)
-    [~,Yfit_max(ind(count))] = max(Sfit(ind(count),:));
-end
-ind = find(isnan(Yfit_max));
-Yfit_max(ind) = length(classes)+1; %unclassified set to last class
-ind = find(Yfit_max);
-classes2 = [classes(:); 'unclassified'];
-[c_opt1, class] = confusionmat(b.Y,classes2(Yfit_max));
-total = sum(c_opt1')';
-[TP TN FP FN] = conf_mat_props(c_opt1);
-R = TP./(TP+FN); %recall
-P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
-F1= 2*((P.*R)./(P+R));
-disp(['optimal error rate = ' num2str(1-sum(TP)./sum(total)) '']);
-
-totalfxun=length(find(Yfit_max==length(classes2)))./length(Yfit_max);
-fxUnclass = c_opt1(:,end)./total;
-fxUnclass(end)=totalfxun;
-opt=table(class,total,R,P,F1,fxUnclass);
-
-% ignore unclassified
-c_optb = c_opt1(1:end-1,1:end-1); %ignore the instances in 'unknown'
-total = sum(c_optb')';
-[TP TN FP FN] = conf_mat_props(c_optb);
-R = TP./(TP+FN); %recall
-P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
-F1= 2*((P.*R)./(P+R));
-disp(['optimal error rate (ignore unclassified) = ' num2str(1-sum(TP)./sum(total)) '']);
-
-optb=table(class(1:end-1),total,R,P,F1);
-
-clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
-
-%% optimal 2
-t = repmat(maxthre2,length(Yfit),1);
+%% optimal threshold interpretation of scores
+t = repmat(maxthre,length(Yfit),1);
 win = (Sfit > t);
 [i,j] = find(win);
 Yfit_max = NaN(size(Yfit));
@@ -101,18 +62,18 @@ disp(['optimal error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 totalfxun=length(find(Yfit_max==length(classes2)))./length(Yfit_max);
 fxUnclass = c_opt(:,end)./total;
 fxUnclass(end)=totalfxun;
-opt2=table(class,total,R,P,F1,fxUnclass);
+opt=table(class,total,R,P,F1,fxUnclass);
 
 % ignore unclassified
-c_opt2b = c_opt2(1:end-1,1:end-1); %ignore the instances in 'unknown'
-total = sum(c_opt2b')';
-[TP TN FP FN] = conf_mat_props(c_opt2b);
+c_optb = c_opt(1:end-1,1:end-1); %ignore the instances in 'unknown'
+total = sum(c_optb')';
+[TP TN FP FN] = conf_mat_props(c_optb);
 R = TP./(TP+FN); %recall
 P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
 F1= 2*((P.*R)./(P+R));
 disp(['optimal error rate (ignore unclassified) = ' num2str(1-sum(TP)./sum(total)) '']);
 
-opt2b=table(class(1:end-1),total,R,P,F1);
+optb=table(class(1:end-1),total,R,P,F1);
 
 clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
 
@@ -231,6 +192,7 @@ set(gca, 'xtick', 1:length(classes), 'xticklabel', [], 'ylim', [0 1])
 text(1:length(classes), -.1*ones(size(classes)), classes, 'interpreter', 'none', 'horizontalalignment', 'right', 'rotation', 45) 
 set(gca, 'position', [ 0.13 0.35 0.8 0.6])
 hold on, plot(1:length(classes), maxthre, '*g')
+
 title('score threshold = 0')
 lh = legend('optimal threshold score','Location','NE'); set(lh, 'fontsize', 10)
 
@@ -238,6 +200,7 @@ set(gcf,'color','w');
 print(gcf,'-dtiff','-r200',[outpath 'Figs\class_vs_thresholdscores.png']);
 hold off
 
-save([outpath 'performance_classifier_' classifiername(37:end) ''],'topfeat','NOAA','UCSC','BI','all','opt','optb','opt2','opt2b''c_all','c_opt','c_optb','c_opt2','c_opt2b');
+save([outpath 'performance_classifier_' classifiername(37:end) ''],...
+    'topfeat','NOAA','UCSC','BI','all','opt','optb','c_all','c_opt','c_optb');
 
 end

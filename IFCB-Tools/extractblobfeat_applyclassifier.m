@@ -22,8 +22,8 @@ addpath(genpath([ifcbdir 'features\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
 %classifier='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
-classifier='D:\Shimada\classifier\summary\Trees_23Feb2022_nonano';
-
+%classifier='D:\Shimada\classifier\summary\Trees_23Feb2022_nonano';
+classifier='D:\Shimada\classifier\summary\Trees_24Feb2022_noUCSCdinophysis';
 %%
 sort_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\' yr '\']);
 
@@ -41,7 +41,7 @@ classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 manualpath=[ifcbdir 'manual\'];
-adhocthresh = 0.7;
+adhocthresh = 0.5;
 
 % class
 summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,...
