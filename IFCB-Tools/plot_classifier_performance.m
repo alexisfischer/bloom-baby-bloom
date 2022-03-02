@@ -1,8 +1,9 @@
 clear;
-Mac=0;
+Mac=1;
 %name='16Feb2022_nocentric_ungrouped_PN';
 %name='23Feb2022_nonano';
-name='24Feb2022';
+%name='24Feb2022';
+name='24Feb2022_noUCSCdinophysis';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    

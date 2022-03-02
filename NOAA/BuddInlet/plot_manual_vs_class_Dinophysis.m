@@ -13,7 +13,6 @@ load([filepath 'NOAA/BuddInlet/Data/DinophysisMicroscopy'],'T');
 addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); 
 
-dtTB=datetime(mdateTB,'ConvertFrom','datenum');
 dt=datetime(matdate,'ConvertFrom','datenum');
 
 % plot Dinophysis manual vs classifier
@@ -22,7 +21,11 @@ figure('Units','inches','Position',[1 1 3.5 2],'PaperPositionMode','auto');
 xax1=datetime('2021-08-01'); xax2=datetime('2021-11-20');     
 
 idc=(strcmp('D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis',class2useTB));
-classifier=(classcountTB(:,idc)./ml_analyzedTB);
+%classifier=(classcountTB(:,idc)./ml_analyzedTB);
+
+[ mdate_mat, classifier, ~, ~ ] = timeseries2ydmat( mdateTB, (classcountTB(:,idc)./ml_analyzedTB) );
+dtTB=datetime(mdate_mat,'ConvertFrom','datenum');
+
 idm=find(ismember(class2use,{'D_acuminata' 'D_acuta' 'D_caudata' 'D_fortii'...
     'D_norvegica' 'D_odiosa' 'D_parva' 'D_rotundata' 'D_tripos' 'Dinophysis'}));
 manual=sum(classcount(:,idm),2)./ml_analyzed;
@@ -32,4 +35,8 @@ plot(dtTB,classifier,'k-',dt,manual,'r*'); hold on;
 set(gca,'xlim',[xax1 xax2])
 datetick('x', 'mmm', 'keeplimits');    
 ylabel('Dinophysis (cells/mL)','fontsize',12);
-legend('Classifier','Manual');
+legend('Classifier','Manual'); legend boxoff;
+
+set(gcf,'color','w');
+print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/ManualvsClassifer.png']);
+hold off
