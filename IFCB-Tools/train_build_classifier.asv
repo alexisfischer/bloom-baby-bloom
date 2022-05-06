@@ -4,7 +4,12 @@ clear;
 filepath='C:\Users\ifcbuser\Documents\';
 addpath(genpath(filepath));
 
-%% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
+%% Adjust annotations with added class
+start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\LabData\manual\')
+start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\Shimada\manual\')
+start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\BuddInlet\manual\')
+
+% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 class2useName ='D:\general\config\class2use_11';
 mergedpath = 'D:\general\classifier\';
 UCSCpath = 'D:\SCW\';

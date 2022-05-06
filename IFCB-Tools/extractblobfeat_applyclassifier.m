@@ -59,7 +59,4 @@ summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\'],
 summarize_biovol_eqdiam_from_manual(manualpath,[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\' yr '\'],yr,1/3.4)
 
-%% Adjust annotations with added class
-start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\LabData\manual\')
-start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\Shimada\manual\')
-start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\BuddInlet\manual\')
+
