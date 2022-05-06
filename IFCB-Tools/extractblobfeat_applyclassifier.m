@@ -3,13 +3,13 @@
 clear;
 
 %%%% modify according to dataset
-%ifcbdir='D:\Shimada\'; 
-ifcbdir='D:\BuddInlet\'; 
+ifcbdir='D:\Shimada\'; 
+%ifcbdir='D:\BuddInlet\'; 
 %ifcbdir='D:\SCW\'; 
 %ifcbdir='D:\Shimada\LabData\'; 
 
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 %summarydir=[ifcbdir 'summary\'];
 
 yr='2021';
@@ -24,36 +24,42 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 %classifier='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 %classifier='D:\Shimada\classifier\summary\Trees_23Feb2022_nonano';
 classifier='D:\Shimada\classifier\summary\Trees_24Feb2022_noUCSCdinophysis';
+
 %%
-sort_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\' yr '\']);
+copy_data_into_folders('D:\FTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
-% Step 2: Extract blobs
-start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],false);
+%% Step 2: Extract blobs
+start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
-% Step 3: Extract features
-start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],false)
+%% Step 3: Extract features
+start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
 
-%% Step 4: Apply classifier
+% Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
-% Step 5: Summaries
+%% Step 5: Summaries
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 manualpath=[ifcbdir 'manual\'];
 adhocthresh = 0.5;
 
-% class
-summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,...
-    feapath_generic,roibasepath_generic,adhocthresh,str2double(yr)); %works for yrranges
+% % class
+% summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,...
+%     feapath_generic,roibasepath_generic,adhocthresh,str2double(yr)); %works for yrranges
 
-%% manual results
+% manual results
 summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\'],yr); 
 
 summarize_biovol_eqdiam_from_manual(manualpath,[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\' yr '\'],yr,1/3.4)
 
+yr='2019';
+summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\'],yr); 
+summarize_biovol_eqdiam_from_manual(manualpath,[summarydir 'manual\'],...
+    [ifcbdir 'data\'],[ifcbdir 'features\' yr '\'],yr,1/3.4)
+
 %% Adjust annotations with added class
-start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_11','D:\Shimada\LabData\manual\')
-start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_11','D:\Shimada\manual\')
-start_mc_adjust_classes_user_training('D:\Shimada\config\class2use_11','D:\BuddInlet\manual\')
+start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\LabData\manual\')
+start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\Shimada\manual\')
+start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\BuddInlet\manual\')

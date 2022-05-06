@@ -21,7 +21,7 @@ else
     num=25;
 end
 
-% concatenate biovolume for each class in each sample
+%% concatenate biovolume for each class in each sample
 volB=NaN*ones(length(BiEq),length(class2use_manual)); %preset biovolume matrix
 for i=1:length(class2use_manual)
     for j=1:length(BiEq)     

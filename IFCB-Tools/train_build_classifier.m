@@ -3,23 +3,22 @@
 clear;
 filepath='C:\Users\ifcbuser\Documents\';
 addpath(genpath(filepath));
-addpath(genpath('D:\SCW\manual\'));
-addpath(genpath('D:\SCW\features\'));
 
 %% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
-class2useName ='D:\Shimada\config\class2use_10';
-mergedpath = 'D:\Shimada\classifier\';
+class2useName ='D:\general\config\class2use_11';
+mergedpath = 'D:\general\classifier\';
 UCSCpath = 'D:\SCW\';
+OSUpath = 'D:\OSU\';
 SHMDApath = 'D:\Shimada\';
-LABpath = 'D:\Shimada\LabData\';
+LABpath = 'D:\LabData\';
 BUDDpath = 'D:\BuddInlet\';
-merge_manual_feafiles_SHMDA_UCSC_LAB_BUDD(class2useName,mergedpath,UCSCpath,SHMDApath,LABpath,BUDDpath)
-clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath;
+merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
+clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
 TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
-class2useName ='D:\Shimada\config\class2use_10'; %classlist to subtract "top classes" from
+class2useName ='D:\Shimada\config\class2use_11'; %classlist to subtract "top classes" from
 [class2skip] = find_class2skip(class2useName,TopClassName);
 clearvars manualpath id
 

@@ -28,7 +28,7 @@ load([manualpath filelist(1).name(1:24) '.mat'],'class2use_manual') %read first 
 for i = 1:length(filelist)
     filename = filelist(i).name;
     disp(filename)
-    hdrname = [roibasepath filename(2:5) filesep filename(1:9) filesep regexprep(filename,'_fea_v2.csv','.hdr')]
+    hdrname = [roibasepath filename(2:5) filesep filename(1:9) filesep regexprep(filename,'_fea_v2.csv','.hdr')];
     ml_analyzed(i) = IFCB_volume_analyzed(hdrname);
      
     [~,file] = fileparts(filename);
