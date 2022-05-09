@@ -7,17 +7,17 @@ CCS=1;
 % addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 % addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
-filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\';
+filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
 
 if CCS==1
-    load([filepath 'Shimada/manual/class_eqdiam_biovol_manual_2019'])
-    outdir=[filepath 'Shimada/manual/'];
+    load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_2019'])
+    outdir=[filepath 'IFCB-Data/Shimada/manual/'];
     num=35;
 else
-    load([filepath 'BuddInlet/manual/class_eqdiam_biovol_manual_2021'])
-    outdir=[filepath 'BuddInlet/manual/'];    
+    load([filepath 'IFCB-Data/BuddInlet/manual/class_eqdiam_biovol_manual_2021'])
+    outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
     num=25;
 end
 
@@ -32,7 +32,7 @@ for i=1:length(class2use_manual)
 end
 
 % Exclude nonliving
-volB(:,get_nonliving_ind_NOAA(class2use_manual))=NaN;
+volB(:,get_class_ind(class2use_manual,'nonliving',filepath))=NaN;
 
 clearvars i j idx b note1 note2 
 
@@ -55,15 +55,18 @@ fxC=fxC_all(:,idx);
 class=class2use_manual(idx);
 
 %remove select classes
-idx=find(ismember(class,{'unclassified' 'Unid_pointed_Dino' 'Pn_parasite'...
-    'Chaetoceros_pennate' 'Unid_rounded_Dino' 'Flagellate_mix'...
-    'Heterocapsa' 'Ciliate' 'Centric_diatom' 'Nanoplankton_10'}));
+idx=find(ismember(class,{'unclassified' 'Dinophyceae_pointed'...
+    'Pseudo-nitzschia_external_parasite'...
+    'Chaetoceros_external_pennate' 'Dinophyceae_round' 'flagellate'...
+    'Heterocapsa_triquetra' 'ciliate' 'centric' 'nanoplankton'}));
 class(idx)=[];
 
 % add select classes
-new={'Dinophysis' 'D_acuminata' 'D_acuta' 'D_caudata' 'D_fortii' ...
-    'D_norvegica' 'D_odiosa' 'D_parva' 'D_rotundata' 'D_tripos'...
-    'Pn_large_narrow' 'Pn_large_wide' 'Pn_small' 'Pseudo-nitzschia'...
+new={'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
+    'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
+    'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'...
+    'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' ...
+    'Pseudo-nitzschia_small' 'Pseudo-nitzschia'...
     'Thalassiosira_chain' 'Thalassiosira_single'...
     'Chaetoceros_chain' 'Chaetoceros_single'};
 class=[class new];
@@ -71,13 +74,9 @@ class=[class new];
 if CCS==1
     idx=find(ismember(class,{'Pseudo-nitzschia'}));
     class(idx)=[];
-    class(get_zoop_ind_NOAA(class))=[]; %remove zooplankton
-    class{end+1}='Gymnodinium';   
+    class(get_class_ind(class,'zooplankton',filepath))=[]; %remove zooplankton
 else
     class{end+1}='Mesodinium';
-    class{end+1}='Cryptophyte';
-    class{end+1}='Guinardia';
-    class{end+1}='Detritus';
 end
 class2use=unique(class);
 class2use=(sort(class2use))';

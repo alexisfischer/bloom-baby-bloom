@@ -23,35 +23,38 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
 TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
-class2useName ='D:\Shimada\config\class2use_11'; %classlist to subtract "top classes" from
+class2useName ='D:\general\config\class2use_11'; %classlist to subtract "top classes" from
 [class2skip] = find_class2skip(class2useName,TopClassName);
 clearvars manualpath id
 
 %% Step 2: Compile features for the training set
-addpath(genpath('D:\Shimada\classifier\'));
+addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
-manualpath = 'D:\Shimada\classifier\manual_merged\'; % manual annotation file location
-feapath_base = 'D:\Shimada\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
-outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
+manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
+feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
+outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 900; %minimum number for inclusion
+minn = 1000; %minimum number for inclusion
 % class2group={{'Detonula' 'Cerataulina' 'Lauderia'}...
 %     {'Pn_large_narrow' 'Pn_large_wide'}...
 %     {'Thalassiosira_chain' 'Thalassiosira_single'}...
 %     {'Chaetoceros_chain' 'Chaetoceros_pennate' 'Chaetoceros_single'}...
 %     {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
 %     'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
-class2group={{'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta'...
-    'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
+class2group={{'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_fortii'...
+    'Dinophysis_norvegica' 'Dinophysis_acuta' 'Dinophysis_rotundata' ...
+    'Dinophysis_parva' 'Dinophysis_caudata' 'Dinophysis_odiosa' 'Dinophysis_tripos'}...
+    {'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' ...
+    'Pseudo-nitzschia_small' 'Pseudo-nitzschia'}};
 
-compile_train_features_PNW(manualpath,feapath_base,outpath,maxn,minn,class2skip,class2group);
+compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,class2useName,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
 %% Step 3: Train (make) the classifier
-result_path = 'D:\Shimada\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_24Feb2022'; %USER what file contains your training features
-result_filename = 'Trees_24Feb2022';
+result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
+train_filename = 'Train_09May2022'; %USER what file contains your training features
+result_filename = 'Trees_09May2022';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 make_TreeBaggerClassifier(result_path, train_filename, result_filename, nTrees)

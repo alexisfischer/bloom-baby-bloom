@@ -1,19 +1,24 @@
-function [  ] = compile_train_features_PNW( manualpath , feapath_base, outpath, maxn, minn, varargin)
-% function [  ] = compile_train_features_user_training( manualpath , feapath_base, maxn, minn, class2skip, class2group)
+function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath, maxn, minn, class2useName, varargin)
+%% function [  ] = compile_train_features_user_training( manualpath , feapath_base, maxn, minn, class2skip, class2group)
 % class2skip and class2merge are optional inputs
 % For example:
 %compile_train_features_user_training('C:\work\IFCB\user_training_test_data\manual\', 'C:\work\IFCB\user_training_test_data\features\', 100, 30, {'other'}, {'misc_nano' 'Karenia'})
 %IFCB classifier production: get training features from pre-computed bin feature files
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
-%Example inputs: 
-% manualpath = 'D:\Shimada\classifier\manual_merged\'; % manual annotation file location
-% feapath_base = 'D:\Shimada\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
-% outpath = 'D:\Shimada\classifier\summary\'; % location to save training set
+% %Example inputs: 
+% manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
+% feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
+% outpath = 'D:\general\classifier\summary\'; % location to save training set
 % maxn = 5000; %maximum number of images per class to include
-% minn = 500; %minimum number for inclusion
-% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Bead','Boreadinium','Bubble','Cerataulina,Detonula,Lauderia','Chaet_socialis','Chaetoceros setae','Chaetoceros_chain,Chaetoceros_pennate,Chaetoceros_single','Ciliate','Clusterflagellate','Coccolithophore','Corethron','Coscinodiscus','Cyanobacteria','Cylindrotheca','Cyst','D_acuminata,D_acuta,D_caudata,D_fortii,D_norvegica,D_odiosa,D_parva,D_rotundata,D_tripos,Dinophysis','Detritus','Dictyocha','Dinobryon','Dissodinium','Ebria','Entomoneis','Ephemera','Euglenoid','Fibrocapsa','Flagellate_mix','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa','Karenia','Katodinium','Laboea_strobila','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Margalefidinium','Melosira','Meringosphaera','Mesodinium','Nauplii','Nematodinium','Nitzschia','Noctiluca','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Pleuronema','Pleurosigma','Pn_large_narrow,Pn_large_wide','Pn_large_narrow,Pn_large_wide,Pn_parasite,Pn_small,Pseudo-nitzschia''','Pn_parasite','Pollen','Polykrikos','Proterythropsis','Protoperidinium','Pseudo-nitzschia','Pyrophacus','Scrippsiella','Sea_Urchin_larvae','Striatella','Strombidium','Thalassionema','Thalassiosira_chain,Thalassiosira_single','Tiarina','Tintinnid','Tontonia','Torodinium','Tropidoneis','Unid_pointed_Dino','Unid_rounded_Dino','Veliger','Zooplankton','unclassified'};
-% varargin{2}={{'Pn_large_narrow' 'Pn_large_wide' 'Pn_parasite' 'Pseudo-nitzschia' 'Pn_small'} {'Dinophysis' 'D_acuminata' 'D_fortii' 'D_norvegica' 'D_acuta' 'D_rotundata' 'D_parva' 'D_caudata' 'D_odiosa' 'D_tripos'}};
+% minn = 1000; %minimum number for inclusion
+% class2useName = 'D:\general\config\class2use_11'; %classlist
+% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Coscinodiscus','Cylindrotheca','Dictyocha','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dissodinium','Ebria','Entomoneis','Ephemera','Euglenoids','Fibrocapsa','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa_triquetra','Karenia','Katodinium','Laboea_strobila','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Margalefidinium','Melosira','Meringosphaera','Mesodinium','Nematodinium','Nitzschia','Noctiluca','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Pleuronema','Pleurosigma','Polykrikos','Proterythropsis','Protoperidinium','Pseudo-nitzschia','Pseudo-nitzschia_external_parasite','Pyrophacus','Scrippsiella','Sea_Urchin_larvae','Striatella','Strombidium','Thalassionema','Tiarina_fusus','Tintinnida','Tontonia','Torodinium','Tropidoneis','bead','bubble','centric','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nanoplankton','nauplii','pollen','unclassified','veliger','zooplankton'};
+% varargin{2}={{'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_fortii'...
+%     'Dinophysis_norvegica' 'Dinophysis_acuta' 'Dinophysis_rotundata' ...
+%     'Dinophysis_parva' 'Dinophysis_caudata' 'Dinophysis_odiosa' 'Dinophysis_tripos'}...
+%     {'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' ...
+%     'Pseudo-nitzschia_small' 'Pseudo-nitzschia'}};
 % %varargin{2}=[]; %class2group with nothing to group
 
 class2skip = []; %initialize
@@ -29,14 +34,12 @@ if length(class2group{1}) > 1 && ischar(class2group{1}{1}) %input of one group w
     class2group = {class2group};
 end
 
-
 manual_files = dir([manualpath 'D*.mat']);
 manual_files = {manual_files.name}';
 fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
 manual_files = regexprep(manual_files, '.mat', '');
-%this presumes all the files have the same class to use
-class2use = load([manualpath manual_files{1}], 'class2use_manual');
-class2use = class2use.class2use_manual;
+
+load([class2useName '.mat'],'class2use');
 
 if ~(manualpath(end) == filesep), manualpath = [manualpath filesep]; end
 
@@ -126,7 +129,7 @@ class_vector = class_all;
 targets = cellstr([char(files_all) repmat('_', length(class_vector),1) num2str(roinum, '%05.0f')]);
 nclass = n;
 
-%%
+
 datestring = datestr(now, 'ddmmmyyyy');
 
 save([outpath 'Train_' datestring], 'train', 'class_vector', 'targets', 'class2use', 'nclass', 'featitles');

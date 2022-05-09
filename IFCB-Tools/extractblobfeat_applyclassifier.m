@@ -3,13 +3,13 @@
 clear;
 
 %%%% modify according to dataset
-ifcbdir='D:\Shimada\'; 
-%ifcbdir='D:\BuddInlet\'; 
+%ifcbdir='D:\Shimada\'; 
+ifcbdir='D:\BuddInlet\'; 
 %ifcbdir='D:\SCW\'; 
 %ifcbdir='D:\Shimada\LabData\'; 
 
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 %summarydir=[ifcbdir 'summary\'];
 
 yr='2021';
@@ -53,10 +53,4 @@ summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\'],
 
 summarize_biovol_eqdiam_from_manual(manualpath,[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\' yr '\'],yr,1/3.4)
-
-yr='2019';
-summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\'],yr); 
-summarize_biovol_eqdiam_from_manual(manualpath,[summarydir 'manual\'],...
-    [ifcbdir 'data\'],[ifcbdir 'features\' yr '\'],yr,1/3.4)
-
 

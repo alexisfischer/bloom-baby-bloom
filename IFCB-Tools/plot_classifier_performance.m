@@ -1,9 +1,10 @@
 clear;
-Mac=1;
+Mac=0;
 %name='16Feb2022_nocentric_ungrouped_PN';
 %name='23Feb2022_nonano';
 %name='24Feb2022';
-name='24Feb2022_noUCSCdinophysis';
+%name='24Feb2022_noUCSCdinophysis';
+name='06May2022';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -24,7 +25,8 @@ load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_
 % plot bar Recall and Precision
 % sort by F1
 all=sortrows(all,'F1','descend');
-[~,C]=get_phyto_ind_NOAA(all.class);
+
+[~,C]=get_class_ind( all.class, "all", basepath);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
