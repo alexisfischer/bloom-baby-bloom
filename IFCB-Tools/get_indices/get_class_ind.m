@@ -8,16 +8,14 @@ function [ ia, class_label ] = get_class_ind( class2use, target, filepath)
 %     'Helicotheca';'Hemiaulus';'Lauderia';'Leptocylindrus';'Licmophora';...
 %     'Lioloma';'Lithodesmium';'Melosira';'Nitzschia';'Odontella'};
 %filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-filepath= 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-target= 'all';%'diatom'; %'all' 'dinoflagellate' 'unclassified' 'otherphyto' 'nonliving' 'nanoplankton' 'zooplankton' 'larvae'
-class2use=all.class;
+%filepath= 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+%target= 'all';%'diatom'; %'all' 'dinoflagellate' 'unclassified' 'otherphyto' 'nonliving' 'nanoplankton' 'zooplankton' 'larvae'
 
 load([filepath 'IFCB-Tools/get_indices/class_indices.mat'],'class','class_proper','category');
-%%
+
 if strcmp('all',target)
     [~,ia,ib]=intersect(class2use, class,'stable');
     class_label=class_proper(ib);
-
 else
     ind_cat=strcmp(target, category);
     class2get=class(ind_cat); %indices of that category

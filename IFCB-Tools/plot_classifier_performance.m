@@ -1,5 +1,5 @@
 clear;
-Mac=0;
+Mac=1;
 %name='16Feb2022_nocentric_ungrouped_PN';
 %name='23Feb2022_nonano';
 %name='24Feb2022';
@@ -18,32 +18,48 @@ end
 addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','BI');
-
-[~,class]=get_phyto_ind_NOAA(all.class);
     
+%% plot stacked total in set
+figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
+b = bar([NOAA.total BI.total UCSC.total],'stack','Barwidth',.7);
+col=brewermap(3,'Dark2'); %col=[[.3 .3 .3];col];
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+    
+legend('Shimada','Budd/Lab','UCSC','Location','NW');
+
+[~,classp]=get_class_ind( all.class, 'all', basepath);
+set(gca, 'xtick', 1:length(classp), 'xticklabel', classp,'tickdir','out');
+ylabel('total images in set');
+xtickangle(45);
+
+set(gcf,'color','w');
+print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC.png']);
+hold off
+
 %% Winner takes All
 % plot bar Recall and Precision
 % sort by F1
 all=sortrows(all,'F1','descend');
-
-[~,C]=get_class_ind( all.class, 'all', basepath);
+[~,class]=get_class_ind( all.class, 'all', basepath);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
 b=bar([all.R all.P],'Barwidth',1,'linestyle','none'); hold on
 hline(.9,'k--');
-set(gca,'ycolor','k', 'xtick', 1:length(C), 'xticklabel', C); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 ylabel('Performance');
 col=flipud(brewermap(2,'RdBu')); 
 for i=1:length(b)
     set(b(i),'FaceColor',col(i,:));
 end  
 yyaxis right;
-plot(1:length(C),all.total,'k*'); hold on
+plot(1:length(class),all.total,'k*'); hold on
 ylabel('total images in set');
-set(gca,'ycolor','k', 'xtick', 1:length(C), 'xticklabel', C); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
 legend('Recall', 'Precision','Location','W')
-title(['Winner-takes-all: ' num2str(length(C)) ' classes ranked by F1 score'])
+title(['Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
 xtickangle(45);
 
 set(gcf,'color','w');
@@ -102,22 +118,6 @@ set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'confusion_matrix_opt_' name '.png']);
 hold off
 
-%% plot stacked total in set
-figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-b = bar([NOAA.total BI.total UCSC.total],'stack','Barwidth',.7);
-col=brewermap(3,'Dark2'); %col=[[.3 .3 .3];col];
-for i=1:length(b)
-    set(b(i),'FaceColor',col(i,:));
-end  
-    
-legend('Shimada','Budd/Lab','UCSC','Location','NW');
-set(gca, 'xtick', 1:length(class), 'xticklabel', class,'tickdir','out');
-ylabel('total images in set');
-xtickangle(45);
-
-set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC.png']);
-hold off
 
 %%
 % %% plot total in set
