@@ -24,4 +24,3 @@ else
     [~,ia,ib] = intersect(class2use, class2get,'stable'); %indices of where target intersects w input class list
     class_label=classp(ib);
 end
-

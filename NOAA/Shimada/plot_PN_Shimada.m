@@ -1,7 +1,7 @@
 %% plot PN 
 clear;
-addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 filepath = '/Users/afischer/MATLAB/';
 
 load([filepath 'NOAA/Shimada/Data/Shimada_HAB_2019'],'HA19');
