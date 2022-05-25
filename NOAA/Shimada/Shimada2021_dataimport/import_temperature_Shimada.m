@@ -1,9 +1,9 @@
-%% import temperature lat lon and timestamps from 2021 Shimada cruise GPS data
+%% import temperature and timestamps from 2021 Shimada cruise data
 % process these data like a .csv file
 % Alexis D. Fischer, NWFSC, May 2022
 clear;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/'; %USER
-indir= '~/Documents/Seawater System - TSG/'; %USER
+indir= '~/Documents/Shimada2021/Seawater System - TSG/'; %USER
 outpath=[filepath 'NOAA/Shimada/Data/']; %USER
 
 addpath(genpath(outpath)); 

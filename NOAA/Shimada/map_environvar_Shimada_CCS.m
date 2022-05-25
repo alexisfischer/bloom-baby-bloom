@@ -5,20 +5,20 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-yr=2021; % 2019; 2021
-option=2; % 1=Plot the individual data points; 2=Grid the data
+yr=2019; % 2019; 2021
+option=1; % 1=Plot the individual data points; 2=Grid the data
 
 %%%% load in underway data
-type='underway';
-load([filepath 'NOAA/Shimada/Data/environ_Shimada' num2str(yr) ''],'DT','LON','LAT','TEMP','SAL','FL');
+%type='underway';
+%load([filepath 'NOAA/Shimada/Data/environ_Shimada' num2str(yr) ''],'DT','LON','LAT','TEMP','SAL','FL');
 %data=TEMP; cax=[10 20]; label='SST (^oC)'; name='SST';
 %data=SAL; cax=[30 35]; label='Sal (psu)'; name='SAL';
-data=FL; cax=[0 5]; label={'Chl';'Fluorescence'}; name='FL';
+%data=FL; cax=[0 5]; label={'Chl';'Fluorescence'}; name='FL';
 
 %%%% load in discrete data
-%type='discrete';
-%load([filepath 'NOAA/Shimada/Data/Shimada_HAB_2019'],'HA19'); LAT = HA19.Lat_dd; LON = HA19.Lon_dd; 
-%data=HA19.Chl_agL; cax=[0 10]; label='Chl a (ug/L)'; name='CHL';
+type='discrete';
+load([filepath 'NOAA/Shimada/Data/Shimada_HAB_2019'],'HA19'); LAT = HA19.Lat_dd; LON = HA19.Lon_dd; 
+data=HA19.Chl_agL; cax=[0 10]; label='Chl a (ug/L)'; name='CHL';
 %data=HA19.WaterTempC; cax=[10 20]; label='SST (^oC)'; name='SST';
 %data=HA19.S; cax=[30 35]; label='Sal (ppt)'; name='SAL';
 %data=HA19.PseudonitzschiaSpprelativeAbundance; cax=[0 3]; label={'Pseudo-nitzschia';'RA'}; name='PNra';

@@ -5,7 +5,7 @@
 
 clear;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/'; %USER
-indir= '~/Documents/GPS - Science GP170/'; %USER
+indir= '~/Documents/Shimada2021/GPS - Science GP170/'; %USER
 outpath=[filepath 'NOAA/Shimada/Data/']; %USER
 
 addpath(genpath(outpath)); 

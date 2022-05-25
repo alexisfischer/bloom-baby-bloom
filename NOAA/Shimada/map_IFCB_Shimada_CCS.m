@@ -5,20 +5,20 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-yr=2021; % 2019; 2021
+yr=2019; % 2019; 2021
 option=1; % 1=Plot the individual data points; 2=Grid the data
 manual=0; %optional plot location of manual files
-target='diatom'; dataformat='carbonml'; label={'Diatoms';'(pg C/mL)'}; cax=[0 60];
+target='diatom'; dataformat='carbon'; label={'Diatoms';'(ug C L^{-1})'}; cax=[0 60];
 
 %%%% load in data
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB' num2str(yr) ''],...
     'filelistTB','class2useTB','classbiovolTB','classcountTB','ml_analyzedTB','mdateTB');
 
-[lat,lon,class2useTB,classbiovolTB,classcountTB,ml_analyzedTB,~]=...
-    match_IFCBdata_w_Shimada_lat_lon(filepath,yr,filelistTB,class2useTB,classbiovolTB,classcountTB,ml_analyzedTB,mdateTB);
+[lat,lon,ia,filelistTB,mdateTB] = match_IFCBdata_w_Shimada_lat_lon(filepath,yr,filelistTB,mdateTB);
+classcountTB=classcountTB(ia,:); classbiovolTB=classbiovolTB(ia,:); ml_analyzedTB=ml_analyzedTB(ia);
 
 [data] = extract_specific_IFCB_data(filepath,class2useTB,classbiovolTB,classcountTB,ml_analyzedTB,target,dataformat);
-clearvars filelistTB class2useTB classbiovolTB classcountTB ml_analyzedTB mdateTB;
+clearvars filelistTB class2useTB classbiovolTB classcountTB ml_analyzedTB mdateTB ia;
 
 %%%% plot
 figure; set(gcf,'color','w','Units','inches','Position',[1 1 3 5]); 
@@ -27,7 +27,7 @@ if option==1
     view(2); hold on
 else
     % Set grid resolution (degrees)
-    res = 0.2; % Coarser=0.2; Finer=0.1
+    res = 0.1; % Coarser=0.2; Finer=0.1
     
     % Create grid
     lon_grid = min(lon):res:max(lon);
@@ -74,7 +74,7 @@ load([filepath 'NOAA/Shimada/Data/coast_CCS'],'coast');
 fillseg(coast); dasp(42); hold on;
 plot(states(:,1),states(:,2),'k'); hold on;
 set(gca,'ylim',[34 49],'xlim',[-127 -120],'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
-
+title(yr,'fontsize',12);
     
 % set figure parameters
 print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/' target '_IFCB_Shimada' num2str(yr) '.png']);
