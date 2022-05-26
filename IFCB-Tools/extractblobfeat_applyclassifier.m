@@ -12,7 +12,7 @@ ifcbdir='D:\BuddInlet\';
 summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 %summarydir=[ifcbdir 'summary\'];
 
-yr='2021';
+yr='2022';
 
 addpath(genpath(summarydir));
 addpath(genpath(ifcbdir));
@@ -23,18 +23,19 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
 %classifier='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 %classifier='D:\Shimada\classifier\summary\Trees_23Feb2022_nonano';
-classifier='D:\Shimada\classifier\summary\Trees_24Feb2022_noUCSCdinophysis';
+classifier='D:\general\classifier\summary\Trees_09May2022';
 
 %%
+
 copy_data_into_folders('D:\FTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
-%% Step 2: Extract blobs
+% Step 2: Extract blobs
 start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
 %% Step 3: Extract features
 start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
 
-% Step 4: Apply classifier
+%% Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
 %% Step 5: Summaries
@@ -44,11 +45,14 @@ roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 manualpath=[ifcbdir 'manual\'];
 adhocthresh = 0.5;
 
-% % class
-% summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,...
-%     feapath_generic,roibasepath_generic,adhocthresh,str2double(yr)); %works for yrranges
+% class
+summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,...
+    feapath_generic,roibasepath_generic,adhocthresh,str2double('2019')); %works for yrranges
 
-% manual results
+summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,...
+    feapath_generic,roibasepath_generic,adhocthresh,str2double(yr)); %works for yrranges
+
+%% manual results
 summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\'],yr); 
 
 summarize_biovol_eqdiam_from_manual(manualpath,[summarydir 'manual\'],...
