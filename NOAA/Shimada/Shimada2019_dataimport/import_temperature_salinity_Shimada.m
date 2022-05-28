@@ -8,7 +8,7 @@ outpath=[filepath 'NOAA/Shimada/Data/']; %USER
 
 addpath(genpath(outpath)); 
 addpath(genpath([filepath 'Misc-Functions/'])); 
-Tdir=dir([indir '*-000001.RAW']);
+Tdir=dir([indir 'TSG45-*']);
 
 dt=[];
 temp=[];
@@ -40,7 +40,7 @@ for i=1:length(Tdir)
         h = duration(string(tbl.VarName2));
         dti=d+h; 
     
-        ti = tbl.VarName4;
+        ti = tbl.VarName15; %sbe38 (t2) which is mounted before the pump to the sea water system. external temperature
         sali = tbl.VarName10;
     
         dt=[dt;dti];
@@ -58,7 +58,7 @@ dt=dateshift(dt,'start','second');
 
 %% remove temp outliers
 idx=isoutlier(temp,'percentiles',[1 99]);
-%figure; plot(dt(~idx),temp(~idx));
+figure; plot(dt(~idx),temp(~idx));
 dt(idx)=[]; temp(idx)=[]; sal(idx)=[];
 figure; plot(dt,temp);
 

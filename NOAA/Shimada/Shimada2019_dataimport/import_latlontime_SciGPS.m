@@ -52,6 +52,9 @@ end
 
 DT = dateshift(DT, 'start', 'second');
 
+LAT=dm2degrees([floor(LAT/100),rem(LAT,100)]); %needs mapping toolbox
+LON=-dm2degrees([floor(LON/100),rem(LON,100)]);
+
 %% find and remove outliers
 idx=isoutlier(LON,'percentiles',[1 99]);
 %figure; plot(DT(~idx),LON(~idx));

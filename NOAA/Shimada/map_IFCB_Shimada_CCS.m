@@ -5,11 +5,11 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-yr=2019; % 2019; 2021
+yr=2021; % 2019; 2021
 option=1; % 1=Plot the individual data points; 2=Grid the data
-manual=0; %optional plot location of manual files
-target='diatom'; dataformat='carbon'; label={'Diatoms';'(ug C L^{-1})'}; cax=[0 60];
-
+%target='diatom'; dataformat='carbon'; label={'Diatoms';'(ug C L^{-1})'}; cax=[0 60];
+target='Pseudo-nitzschia'; dataformat='cells'; label={'Pseudo-nitzschia';'(chains ml^{-1})'}; cax=[0 50];
+target='Pseudo-nitzschia,Pseudo-nitzschia_large_narrow,Pseudo-nitzschia_large_wide,Pseudo-nitzschia_small';
 %%%% load in data
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB' num2str(yr) ''],...
     'filelistTB','class2useTB','classbiovolTB','classcountTB','ml_analyzedTB','mdateTB');
@@ -27,7 +27,7 @@ if option==1
     view(2); hold on
 else
     % Set grid resolution (degrees)
-    res = 0.1; % Coarser=0.2; Finer=0.1
+    res = 0.2; % Coarser=0.2; Finer=0.1
     
     % Create grid
     lon_grid = min(lon):res:max(lon);
@@ -49,17 +49,6 @@ else
     clearvars lat_plot lon_plot ii jj nx ny lon_grid lat_grid data_grid res
 
 end
-
-if manual == 1
-    load([filepath 'IFCB-Data/Shimada/manual/count_class_manual_' num2str(yr) ''],'filelist');
-    filelist={filelist.name}'; filelist=cellfun(@(X) X(1:end-4),filelist,'Uniform',0);
-    I=load([filepath 'NOAA/Shimada/Data/IFCB_underway_Shimada' num2str(yr) '']);
-    [~,ia,ib]=intersect(filelist,I.filelistTB);
-    M.lat=I.latI(ib); M.lon=I.lonI(ib); 
-    plot(M.lon,M.lat,'r.','Markersize',10); hold on
-else
-end
-
     colormap(parula); caxis(cax);
     axis([min(lon) max(lon) min(lat) max(lat)]);
     h=colorbar('south'); h.Label.String = label; h.Label.FontSize = 12;               
