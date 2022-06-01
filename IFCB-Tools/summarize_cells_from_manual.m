@@ -1,4 +1,4 @@
-function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir,yr)
+function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
 %function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
 %
 % summarizes class results for a series of manual annotation files (as saved by startMC)
@@ -32,6 +32,7 @@ for filecount = 1:length(filelist)
     disp(filename)
     hdrname = [datapath filesep filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
     ml_analyzed(filecount) = IFCB_volume_analyzed(hdrname);
+    runtype=IFCB_runtype(hdrname);    
      
     load([manualpath filename])
     if ~isequal(class2use_manual, class2use_manual_first)
@@ -52,10 +53,10 @@ end
 
 class2use = class2use_manual_first;
 
-save([summary_dir 'count_class_manual_' yr], 'matdate', 'ml_analyzed', 'classcount', 'filelist', 'class2use')
+save([summary_dir 'count_class_manual'], 'matdate', 'ml_analyzed', 'classcount', 'filelist', 'class2use','runtype')
 
 disp('Summary cell count file stored here:')
-disp([summary_dir 'count_class_manual_' yr])
+disp([summary_dir 'count_class_manual'])
 
 return
 

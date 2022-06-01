@@ -56,7 +56,7 @@ clearvars id1 id2 val idx th fx_un total
 
 %% Find top classes for each latitude region
 % split into 4 equal sized regions
-n=5;
+n=4;
 d=(max(lat)-min(lat))./n;
 for i=1:n
     latmin=max(lat)-i*d;
@@ -67,7 +67,6 @@ for i=1:n
     region(i).label=['' num2str(round(region(i).latmin,1)) '-' num2str(round(region(i).latmax,1)) '^oN'];
 end
 
-% find top 30 classes
 th=30;
 for i=1:length(region)
     B=cellsml(region(i).idx,:);
@@ -77,9 +76,11 @@ for i=1:length(region)
     region(i).cellsml=(classtotal(idx))';
 end
 
-% find total and intersection
+clearvars n d B i idx latmin latmax
+%% find total and intersection
 total=[region.topclass];
 total=total(:);
+
 class=unique(total);
 for i=1:length(region)
     [~,idx,~]=intersect(class,region(i).topclass);
@@ -88,19 +89,17 @@ for i=1:length(region)
     region(i).class=classzero;
 end
 
-% reorder in highest to lowest classes
+%reorder in highest to lowest classes
 [classtotal,idx]=sort(sum([region.class],2),'descend');
 class=class(idx);
 for i=1:length(region)
     region(i).class=region(i).class(idx);
 end
 
-% find classes present in at least 2 regions
+%% classes present in at least 2 regions
 idx=find(classtotal>=2);
 TopClasses=class(idx);
 save([filepath 'NOAA/Shimada/Data/TopClasses_CCS'],'TopClasses');
-
-clearvars n d B i idx latmin latmax
 
 %% plot
 [~,class_label ] = get_class_ind(class,'all', filepath);
@@ -110,7 +109,7 @@ b=bar([region.class],'stacked','Barwidth',1,'linestyle','none'); hold on
 set(gca,'ycolor','k','ytick',[],'xtick', 1:length(class_label),...
     'xticklabel', class_label,'tickdir','out'); hold on
 ylabel(['Present in top ' num2str(th) ' classes of region'])
-legend(b,region(1).label,region(2).label,region(3).label,region(4).label,region(5).label,'Location','eastoutside');
+legend(b,region(1).label,region(2).label,region(3).label,region(4).label,'Location','eastoutside');
 
 % set figure parameters
 print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/TopClasses_CCS.png']);
@@ -118,37 +117,37 @@ hold off
 
 
 %% biovolume
-% yr=[2019,2021];
-% for i=1:length(yr)
-%     % extract biovolume from manual files
-%     load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_' num2str(yr(i)) ''],'BiEq','class2use_manual')
-%     mdate=[BiEq.matdate]'; filelist=({BiEq.filename})'; filelist=cellfun(@(X) X(1:end-4),filelist,'Uniform',0);
-%     
-%     volB=NaN*ones(length(BiEq),length(class2use_manual)); %preset biovolume matrix
-%     for k=1:length(class2use_manual)
-%         for j=1:length(BiEq)
-%             idx=find([BiEq(j).class]==k); %find indices of a particular class
-%             b=sum(BiEq(j).biovol(idx)); %match and sum biovolume
-%             volB(j,k)=b./BiEq(j).ml_analyzed; %convert to um^3/mL
-%         end
-%     end
-% 
-%     % match data with lat lon coordinates
-%     I=load([filepath 'NOAA/Shimada/Data/IFCB_underway_Shimada' num2str(yr(i)) '']);
-%     [~,ia,ib]=intersect(filelist,I.filelistTB);
-%     M(i).yr=yr(i);    
-%     M(i).dt=I.dtI(ib);  
-%     M(i).filelist=I.filelistTB(ib);     
-%     M(i).lat=I.latI(ib); 
-%     M(i).lon=I.lonI(ib); 
-%     M(i).volB=volB(ia,:);
-% 
-% end
-% 
-% lat=[M(1).lat;M(2).lat];
-% lon=[M(1).lon;M(2).lon];
-% filelist=[M(1).filelist;M(2).filelist];
-% dt=[M(1).dt;M(2).dt];
-% volB=[M(1).volB;M(2).volB];
-% clearvars M i yr  I ia ib idx j k mdate BiEq b
+yr=[2019,2021];
+for i=1:length(yr)
+    % extract biovolume from manual files
+    load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_' num2str(yr(i)) ''],'BiEq','class2use_manual')
+    mdate=[BiEq.matdate]'; filelist=({BiEq.filename})'; filelist=cellfun(@(X) X(1:end-4),filelist,'Uniform',0);
+    
+    volB=NaN*ones(length(BiEq),length(class2use_manual)); %preset biovolume matrix
+    for k=1:length(class2use_manual)
+        for j=1:length(BiEq)
+            idx=find([BiEq(j).class]==k); %find indices of a particular class
+            b=sum(BiEq(j).biovol(idx)); %match and sum biovolume
+            volB(j,k)=b./BiEq(j).ml_analyzed; %convert to um^3/mL
+        end
+    end
+
+    % match data with lat lon coordinates
+    I=load([filepath 'NOAA/Shimada/Data/IFCB_underway_Shimada' num2str(yr(i)) '']);
+    [~,ia,ib]=intersect(filelist,I.filelistTB);
+    M(i).yr=yr(i);    
+    M(i).dt=I.dtI(ib);  
+    M(i).filelist=I.filelistTB(ib);     
+    M(i).lat=I.latI(ib); 
+    M(i).lon=I.lonI(ib); 
+    M(i).volB=volB(ia,:);
+
+end
+
+lat=[M(1).lat;M(2).lat];
+lon=[M(1).lon;M(2).lon];
+filelist=[M(1).filelist;M(2).filelist];
+dt=[M(1).dt;M(2).dt];
+volB=[M(1).volB;M(2).volB];
+clearvars M i yr  I ia ib idx j k mdate BiEq b
 
