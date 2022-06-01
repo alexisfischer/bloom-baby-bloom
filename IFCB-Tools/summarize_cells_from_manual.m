@@ -27,13 +27,17 @@ numclass = length(class2use_manual);
 class2use_manual_first = class2use_manual;
 classcount = NaN(length(filelist),numclass);  %initialize output
 ml_analyzed = NaN(length(filelist),1);
+runtype={filelist.name}';
+filecomment={filelist.name}';
 for filecount = 1:length(filelist)
     filename = filelist(filecount).name;
     disp(filename)
     hdrname = [datapath filesep filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
-    ml_analyzed(filecount) = IFCB_volume_analyzed(hdrname);
-    runtype=IFCB_runtype(hdrname);    
-     
+    ml_analyzed(filecount) = IFCB_volume_analyzed(hdrname);    
+    hdr=IFCBxxx_readhdr2(hdrname);
+    runtype{filecount}=hdr.runtype;
+    filecomment{filecount}=hdr.filecomment;    
+             
     load([manualpath filename])
     if ~isequal(class2use_manual, class2use_manual_first)
         [t,ii] = min([length(class2use_manual_first), length(class2use_manual)]);
@@ -53,7 +57,7 @@ end
 
 class2use = class2use_manual_first;
 
-save([summary_dir 'count_class_manual'], 'matdate', 'ml_analyzed', 'classcount', 'filelist', 'class2use','runtype')
+save([summary_dir 'count_class_manual'], 'matdate', 'ml_analyzed', 'classcount', 'filelist', 'class2use','runtype','filecomment')
 
 disp('Summary cell count file stored here:')
 disp([summary_dir 'count_class_manual'])

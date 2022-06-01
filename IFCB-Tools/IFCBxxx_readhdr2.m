@@ -4,17 +4,6 @@ function [ hdr ] = IFCBxxx_readhdr2( fullfilename )
 % 
 % Jun2022 - Alexis Fischer modified to spit out FileComments and the runType was fixed
 %
-if isequal(fullfilename(1:4), 'http'), 
-    [filestr,status] = urlwrite(fullfilename, 'temp.hdr');
-    if status,
-        fullfilename = filestr;
-    else
-        disp(['Error reading ' fullfilename]);
-        hdr = '';
-        return
-    end;
-end;
-
 t = importdata(fullfilename,'', 150);
 %remove temporary file if read from URL
 if exist('status', 'var'), delete(filestr); end;

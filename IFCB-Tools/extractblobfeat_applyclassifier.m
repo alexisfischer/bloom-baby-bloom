@@ -47,10 +47,10 @@ manualpath=[ifcbdir 'manual\'];
 adhocthresh = 0.5;
 
 summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,...
-    feapath_generic,roibasepath_generic,adhocthresh,str2double(yr)); %works for yrranges
+    feapath_generic,roibasepath_generic,adhocthresh,str2double('2021')); %works for yrranges
 
 %% manual results
-summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\'],yr); 
+summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\']); 
 
 summarize_biovol_eqdiam_from_manual(manualpath,[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\' yr '\'],yr,1/3.4)
