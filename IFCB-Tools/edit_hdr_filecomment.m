@@ -5,7 +5,7 @@
 % as both the input and output file, the file is overwritten.
 % Alexis Fischer
 clear
-roibasepath='~/Downloads/D20220518/';
+roibasepath='C:\SFTP-BuddInlet\';
 filelist = dir([roibasepath 'D*.hdr']);
 
 matdate = IFCB_file2date({filelist.name});
