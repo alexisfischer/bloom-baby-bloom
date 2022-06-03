@@ -95,7 +95,7 @@ for i=1:length(region)
     region(i).class=region(i).class(idx);
 end
 
-% % find classes present in at least 2 regions
+% find classes present in at least 2 regions
 % idx=find(classtotal>=2);
 % TopClasses=class(idx);
 save([filepath 'NOAA/Shimada/Data/TopClasses_CCS'],'class');

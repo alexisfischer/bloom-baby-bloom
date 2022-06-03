@@ -29,6 +29,7 @@ classcount = NaN(length(filelist),numclass);  %initialize output
 ml_analyzed = NaN(length(filelist),1);
 runtype={filelist.name}';
 filecomment={filelist.name}';
+
 for filecount = 1:length(filelist)
     filename = filelist(filecount).name;
     disp(filename)
