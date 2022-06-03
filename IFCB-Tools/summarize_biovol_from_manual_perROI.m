@@ -1,4 +1,4 @@
-function [ ] = summarize_biovol_eqdiam_from_manual(manualpath,out_dir,roibasepath,feapath_base,yr,micron_factor)
+function [ ] = summarize_biovol_from_manual_perROI(manualpath,out_dir,roibasepath,feapath_base,yr,micron_factor)
 %function [ ] = summarize_biovol_eqdiam_from_manual(manualpath,out_dir,roibasepath,feapath_base,yr,micron_factor)
 %
 % Inputs manually classified results and outputs a summary file of counts, biovolume, and equivalent spherical diameter
