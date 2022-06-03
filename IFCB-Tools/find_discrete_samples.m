@@ -34,10 +34,10 @@ for i = 1:length(filelist)
     filecomment{i}=hdr.filecomment;   
 end
 
-% remove incorrect BS_trigger labels from filecomment
-% dates when I accidentally forgot to turn off file comment!
-idx=dt>=datetime(2022,05,18,19,03,28) & dt<=datetime(2022,05,20,16,35,14);
-filecomment(idx)={' '};
+% % remove incorrect BS_trigger labels from filecomment
+% % dates when I accidentally forgot to turn off file comment!
+% idx=dt>=datetime(2022,05,18,19,03,28) & dt<=datetime(2022,05,20,16,35,14);
+% filecomment(idx)={' '};
 
 % get filelist of discrete samples
 idx=contains(filecomment,'trigger');
