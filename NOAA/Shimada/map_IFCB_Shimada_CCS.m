@@ -51,7 +51,7 @@ else
 end
     colormap(parula); caxis(cax);
     axis([min(lon) max(lon) min(lat) max(lat)]);
-    h=colorbar('south'); h.Label.String = label; h.Label.FontSize = 12;               
+    h=colorbar('south'); %h.Label.String = label; h.Label.FontSize = 12;               
     hp=get(h,'pos'); 
     hp=[1.9*hp(1) .9*hp(2) .4*hp(3) .6*hp(4)]; % [left, bottom, width, height].
     set(h,'pos',hp,'xaxisloc','top','fontsize',9); 

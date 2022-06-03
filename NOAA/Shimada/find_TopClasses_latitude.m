@@ -4,7 +4,6 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath(filepath)); % add new data to search path
 
-
 %% Shimada 2019 and 2021
 % load in lat lon coordinates
 I19=load([filepath 'NOAA/Shimada/Data/IFCB_underway_Shimada2019']);
@@ -56,7 +55,7 @@ clearvars id1 id2 val idx th fx_un total
 
 %% Find top classes for each latitude region
 % split into 4 equal sized regions
-n=5;
+n=4;
 d=(max(lat)-min(lat))./n;
 for i=1:n
     latmin=max(lat)-i*d;
@@ -65,6 +64,7 @@ for i=1:n
     region(i).latmax=latmax;
     region(i).idx=find(lat>=latmin & lat<latmax);
     region(i).label=['' num2str(round(region(i).latmin,1)) '-' num2str(round(region(i).latmax,1)) '^oN'];
+    region(i).MCnum=length(region(i).idx);  
 end
 
 % find top 30 classes
@@ -95,12 +95,25 @@ for i=1:length(region)
     region(i).class=region(i).class(idx);
 end
 
-% find classes present in at least 2 regions
-idx=find(classtotal>=2);
-TopClasses=class(idx);
-save([filepath 'NOAA/Shimada/Data/TopClasses_CCS'],'TopClasses');
+% % find classes present in at least 2 regions
+% idx=find(classtotal>=2);
+% TopClasses=class(idx);
+save([filepath 'NOAA/Shimada/Data/TopClasses_CCS'],'class');
 
 clearvars n d B i idx latmin latmax
+
+%%
+
+figure('Units','inches','Position',[1 1 3 3],'PaperPositionMode','auto');   
+bar([region.MCnum],'Barwidth',.5,'linestyle','none'); hold on
+set(gca,'xtick',1:length([region.MCnum]),...
+    'xticklabel', {region.label},'tickdir','out'); hold on
+ylabel('Number of annotated files')
+
+% set figure parameters
+print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/ShimadaAnnotatedFiles.png']);
+hold off 
+
 
 %% plot
 [~,class_label ] = get_class_ind(class,'all', filepath);
@@ -110,7 +123,7 @@ b=bar([region.class],'stacked','Barwidth',1,'linestyle','none'); hold on
 set(gca,'ycolor','k','ytick',[],'xtick', 1:length(class_label),...
     'xticklabel', class_label,'tickdir','out'); hold on
 ylabel(['Present in top ' num2str(th) ' classes of region'])
-legend(b,region(1).label,region(2).label,region(3).label,region(4).label,region(5).label,'Location','eastoutside');
+legend(b,{region.label},'Location','eastoutside');
 
 % set figure parameters
 print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/TopClasses_CCS.png']);
