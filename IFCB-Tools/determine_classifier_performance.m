@@ -10,6 +10,7 @@ function [ ] = determine_classifier_performance( classifiername )
 % classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 %classifiername='D:\Shimada\classifier\summary\Trees_24Feb2022';
 outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+
 load(classifiername,'b','classes','featitles','maxthre','targets');
 
 [Yfit,Sfit,Sstdfit] = oobPredict(b);
@@ -108,7 +109,7 @@ end
 
 NOAA=table(class,total,R,P,F1);
 
-%% how did regional classifier do on Shimada dataset
+%% how did regional classifier do on Budd Inlet dataset
 idx = contains(targets,'IFCB150');
 MC=b.Y;
 [C, class] = confusionmat(MC(idx),Yfit(idx)); 

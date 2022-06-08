@@ -13,20 +13,22 @@ function [ n, class_all, varargin ] = handle_train_maxn_subsample( class2use, ma
 % varargin{1}=fea_all;
 % varargin{2}=files_all;
 % varargin{3}=roinum;
+    %idN=find(endsWith(varargin{2},'IFCB777') | endsWith(varargin{2},'IFCB117')); %find Shimada files
+    idU=find(endsWith(varargin{2},'IFCB104')); %find UCSC files from      
+    idO=find(endsWith(varargin{2},'IFCB122')); %find OSU files         
 
 for i = 1:length(class2use)
-    fileID=find(endsWith(varargin{2},'IFCB104')); %find UCSC files from  
-    ii = find(class_all == i);
-    n(i) = length(ii); %total number of images
+    j = find(class_all == i);
+    n(i) = length(j); %total number of images
     n2del = n(i)-maxn; %number of images that need to be deleted
    
     if n2del > 0 %if your images exceeds the maxn...
-        UCSC_ind=(intersect(fileID,ii)); %find file subset that are UCSC and that class
+        UCSC_ind=(intersect(idU,j)); %find file subset that are UCSC and that class
         s(i) = length(UCSC_ind); %total number of images       
         r2del=n2del-s(i); %remaining to delete from PNW
         
         if r2del > 0  %number of UCSC images is less than n2del, so you also need to delete PNW images
-            pnw_ind=setdiff(ii,UCSC_ind); %find all the files that are not UCSC
+            pnw_ind=setdiff(j,UCSC_ind); %find all the files that are not UCSC
             shuffle_ind = randperm(length(pnw_ind));
             shuffle_ind = shuffle_ind(1:r2del);
             idx2del=[UCSC_ind;pnw_ind(shuffle_ind)];       
