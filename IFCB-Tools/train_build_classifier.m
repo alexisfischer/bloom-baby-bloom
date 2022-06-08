@@ -22,9 +22,15 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
-TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
+load([filepath 'GitHub\bloom-baby-bloom\NOAA\Shimada\Data\top30classes_4regionCCS'],'classBC');
+TopClass=classBC;
+TopClass=[TopClass;{'Dinophysis_acuminata';'Dinophysis_acuta';'Dinophysis_caudata';...
+        'Dinophysis_fortii'; 'Dinophysis_norvegica'; 'Dinophysis_odiosa'; ...
+        'Dinophysis_parva'; 'Dinophysis_rotundata'; 'Dinophysis_tripos';...
+        'Pseudo-nitzschia_large_narrow';'Pseudo-nitzschia_large_wide';'Pseudo-nitzschia_small'}];
+%TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
 class2useName ='D:\general\config\class2use_11'; %classlist to subtract "top classes" from
-[class2skip] = find_class2skip(class2useName,TopClassName);
+[class2skip] = find_class2skip(class2useName,TopClass);
 clearvars manualpath id
 
 %% Step 2: Compile features for the training set
@@ -45,16 +51,16 @@ minn = 1000; %minimum number for inclusion
 class2group={{'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
-    {'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
-    'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}};
+        {'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
+        'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}};
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,class2useName,class2skip,class2group);
 addpath(genpath(outpath)); % add new data to search path
 
-%% Step 3: Train (make) the classifier
+% Step 3: Train (make) the classifier
 result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_09May2022'; %USER what file contains your training features
-result_filename = 'Trees_09May2022';
+train_filename = 'Train_08Jun2022'; %USER what file contains your training features
+result_filename = 'Trees_08Jun2022';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 make_TreeBaggerClassifier(result_path, train_filename, result_filename, nTrees)

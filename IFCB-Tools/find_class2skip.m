@@ -1,4 +1,4 @@
-function [class2skip] = find_class2skip(class2useName,TopClassName);
+function [class2skip] = find_class2skip(class2useName,TopClass)
 %find_class2skip Finds class2skip from an input of the classes that you
 %want in your training set
 %   can use before compile_train_features_PNW
@@ -9,8 +9,6 @@ function [class2skip] = find_class2skip(class2useName,TopClassName);
 % class2useName = 'D:\general\config\class2use_11'; %classlist to subtract "class" from
 
 load([class2useName '.mat'],'class2use');
-TopClass=load([TopClassName '.mat']);
-TopClass=TopClass.class2use;
 
 TopClass=sort(TopClass)';
 [~,~,ib] = intersect(TopClass,class2use,'stable'); %find difference

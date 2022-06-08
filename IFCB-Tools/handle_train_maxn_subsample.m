@@ -10,20 +10,30 @@ function [ n, class_all, varargin ] = handle_train_maxn_subsample( class2use, ma
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 
 % %Example inputs for testing
-% varargin{1}=fea_all;
-% varargin{2}=files_all;
-% varargin{3}=roinum;
-    %idN=find(endsWith(varargin{2},'IFCB777') | endsWith(varargin{2},'IFCB117')); %find Shimada files
+varargin{1}=fea_all;
+varargin{2}=files_all;
+varargin{3}=roinum;
+    idN=find(endsWith(varargin{2},'IFCB777') | endsWith(varargin{2},'IFCB117') | endsWith(varargin{2},'IFCB150')); %find Shimada files
     idU=find(endsWith(varargin{2},'IFCB104')); %find UCSC files from      
     idO=find(endsWith(varargin{2},'IFCB122')); %find OSU files         
 
+n=NaN*ones(length(class2use),1);
 for i = 1:length(class2use)
+    i=13
     j = find(class_all == i);
-    n(i) = length(j); %total number of images
-    n2del = n(i)-maxn; %number of images that need to be deleted
+    n(i) = length(j) %total number of images
+    n2del = n(i)-maxn %number of images that need to be deleted
    
     if n2del > 0 %if your images exceeds the maxn...
+        NWC_ind=(intersect(idN,j)); %find file subset that are NWFSC and that class
         UCSC_ind=(intersect(idU,j)); %find file subset that are UCSC and that class
+        OSU_ind=(intersect(idO,j)); %find file subset that are OSU and that class
+        
+        %find fx of NOAA files
+        fxN=length(NWC_ind)./n(i)
+        fxU=length(UCSC_ind)./n(i)
+        fxO=length(OSU_ind)./n(i)
+        
         s(i) = length(UCSC_ind); %total number of images       
         r2del=n2del-s(i); %remaining to delete from PNW
         
