@@ -92,8 +92,6 @@ val=sum(bvml(:,id1),2); bvml(:,id2)=sum([bvml(:,id2),val],2); bvml(:,id1)=NaN;
 clearvars id1 id2 id3 id4 IDX val idx fx_un total
 
 %% Find top classes for each latitude region
-irem=find(ismember(class2use,{'unclassified' 'centric' 'flagellate' 'Dinophyceae_pointed' 'Dinophyceae_round'}));
-
 d=(max(lat)-min(lat))./n;
 for i=1:n
     latmin=min(lat)+(i-1)*d;
@@ -103,30 +101,31 @@ for i=1:n
     region(i).idx=find(lat>=latmin & lat<latmax);
     region(i).label=['' num2str(round(region(i).latmin,1)) '-' num2str(round(region(i).latmax,1)) '^oN'];
     region(i).MCnum=length(region(i).idx);  
-    region(i).uncell=nansum(cellsml(region(i).idx,irem));
-    region(i).unbiovol=nansum(bvml(region(i).idx,irem));
+    region(i).uncells=nansum(cellsml(region(i).idx,1));
+    region(i).unbiovol=nansum(bvml(region(i).idx,1));
 end
 
-%set unclassified to NaNs
-cellsml(:,irem)=NaN; bvml(:,irem)=NaN;
+%remove unclassified
+cellsml(:,1)=NaN; bvml(:,1)=NaN;
 
 % find top classes
 for i=1:length(region)
+    i=1
     C=cellsml(region(i).idx,:); %by cells
     classtotalC=sum(C,1);    
     [~,idx]=maxk(classtotalC,top); %find top biomass classes
     region(i).topregionclassC=(class2use(idx))';
     region(i).cellsml=(classtotalC(idx))';
-    region(i).fxtotalcells=nansum(region(i).cellsml)./nansum([classtotalC,region(i).uncell]);    
+    region(i).fxtotalcells=nansum(region(i).cellsml)./nansum(classtotalC);    
    
     B=bvml(region(i).idx,:); %by biovolume
     classtotalB=sum(B,1);      
-    [~,idx]=maxk(classtotalB,top); %find top biomass classes
+    [~,idx]=maxk(classtotalB(2:end),top); %find top biomass classes
     region(i).topregionclassB=(class2use(idx))';
     region(i).bvml=(classtotalB(idx))';  
-    region(i).fxtotalbiovol=nansum(region(i).bvml)./nansum([classtotalB,region(i).unbiovol]);      
+    region(i).fxtotalbiovol=nansum(region(i).bvml)./nansum(classtotalB);    
 end
-
+%%
 %%%% find total and intersection
 totalC=[region.topregionclassC]; totalC=totalC(:); classC=unique(totalC);
 totalB=[region.topregionclassB]; totalB=totalB(:); classB=unique(totalB);
@@ -181,7 +180,7 @@ figure('Units','inches','Position',[1 1 8 3],'PaperPositionMode','auto');
 plot(1:length(class_label),[1*region(1).idxC 2*region(2).idxC 3*region(3).idxC 4*region(4).idxC],'*'); hold on
 set(gca,'ycolor','k','ylim',[.8 4.2],'ytick',1:length(region),'yticklabel', {region.label},...
     'xlim',[0 (length(class_label)+1)],'xtick', 1:length(class_label),'xticklabel', class_label,'tickdir','out'); hold on
-title(['Top CCS classes that comprise a mean of ' num2str(round(mean(100*[region.fxtotalcells]),0)) '% cells/sample'])
+title(['Top CCS classes that comprise ' num2str(round(mean(100*[region.fxtotalcells]),0)) '% cells/sample'])
 
 % set figure parameters
 print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/topclass_CCS_cellcount.png']);
@@ -194,7 +193,7 @@ figure('Units','inches','Position',[1 1 8 3],'PaperPositionMode','auto');
 plot(1:length(class_label),[1*region(1).idxB 2*region(2).idxB 3*region(3).idxB 4*region(4).idxB],'*'); hold on
 set(gca,'ycolor','k','ylim',[.8 4.2],'ytick',1:length(region),'yticklabel', {region.label},...
     'xlim',[0 (length(class_label)+1)],'xtick', 1:length(class_label),'xticklabel', class_label,'tickdir','out'); hold on
-title(['Top CCS classes that comprise a mean of ' num2str(round(mean(100*[region.fxtotalbiovol]),0)) '% biovolume/sample'])
+title(['Top CCS classes that comprise ' num2str(round(mean(100*[region.fxtotalbiovol]),0)) '% biovolume/sample'])
 
 % set figure parameters
 print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/topclass_CCS_biovolume.png']);

@@ -11,7 +11,7 @@ function [ ia, class_label ] = get_class_ind( class2use, target, filepath)
 %filepath= 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 %target= 'all';%'diatom'; %'all' 'dinoflagellate' 'unclassified' 'otherphyto' 'nonliving' 'nanoplankton' 'zooplankton' 'larvae'
 
-load([filepath 'IFCB-Tools/get_indices/class_indices.mat'],'class','class_proper','category');
+load([filepath 'IFCB-Tools/convert_index_class/class_indices.mat'],'class','class_proper','category');
 
 if strcmp('all',target)
     [~,ia,ib]=intersect(class2use, class,'stable');
