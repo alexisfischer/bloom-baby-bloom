@@ -33,7 +33,7 @@ cellsmlS=cellsmli(ia,:); bvmlS=bvmli(ia,:);
 clearvars filelisti classcount classbiovol filelist cellsmli bvmli dt latI lonI filelistTB ia ib I19 I21 dtI ml_analyzed matdate
 
 %%%% UCSC 
-load([filepath 'IFCB-Data/SCW/manual/count_class_biovol_manual'],'classcount','classbiovol','filelist','ml_analyzed')
+load([filepath 'IFCB-Data/SCW/manual/count_class_biovol_manual'],'classcount','classbiovol','filelist','ml_analyzed','matdate')
 cellsmli=classcount./ml_analyzed; %convert to cells/mL
 bvmli=classbiovol./ml_analyzed; %convert to biovol/mL
 filelistU=cellfun(@(X) X(1:end-4),({filelist.name})','Uniform',0);

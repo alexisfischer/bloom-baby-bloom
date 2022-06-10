@@ -6,15 +6,17 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 %IFCB classifier production: get training features from pre-computed bin feature files
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
+clear
 % %Example inputs: 
 %manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
 %feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
-manualpath = 'D:\general\classifier\test_manual\'; % manual annotation file location
-feapath_base = 'D:\general\classifier\test_features\'; %feature file location, assumes \yyyy\ organization
-outpath = 'D:\general\classifier\summary\'; % location to save training set
-maxn = 500; %maximum number of images per class to include
-minn = 100; %minimum number for inclusion
-class2useName = 'D:\general\config\class2use_11'; %classlist
+manualpath = '~/Downloads/classifier/test_manual/'; % manual annotation file location
+feapath_base = '~/Downloads/classifier/test_features/'; %feature file location, assumes \yyyy\ organization
+outpath = '~/Documents/MATLAB/bloom-baby-bloom/'; % location to save training set
+maxn = 1000; %maximum number of images per class to include
+minn = 500; %minimum number for inclusion
+class2useName = '~/Downloads/classifier/class2use_11'; %classlist
+%class2useName = 'D:\general\config\class2use_11'; %classlist
 varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Coscinodiscus','Cylindrotheca','Dictyocha','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dissodinium','Ebria','Entomoneis','Ephemera','Euglenoids','Fibrocapsa','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa_triquetra','Karenia','Katodinium','Laboea_strobila','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Margalefidinium','Melosira','Meringosphaera','Mesodinium','Nematodinium','Nitzschia','Noctiluca','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Pleuronema','Pleurosigma','Polykrikos','Proterythropsis','Protoperidinium','Pseudo-nitzschia','Pseudo-nitzschia_external_parasite','Pyrophacus','Scrippsiella','Sea_Urchin_larvae','Striatella','Strombidium','Thalassionema','Tiarina_fusus','Tintinnida','Tontonia','Torodinium','Tropidoneis','bead','bubble','centric','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nanoplankton','nauplii','pollen','unclassified','veliger','zooplankton'};
 varargin{2}={{'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_fortii'...
     'Dinophysis_norvegica' 'Dinophysis_acuta' 'Dinophysis_rotundata' ...
@@ -105,7 +107,7 @@ roinum = fea_all(:,1);
 fea_all = fea_all(:,i);
 
 clear *temp
-%%
+
 [n, class_all, varargout] = handle_train_maxn_subsample( class2use, maxn, class_all, fea_all, files_all, roinum );
 fea_all = varargout{1};
 files_all = varargout{2};

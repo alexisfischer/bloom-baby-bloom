@@ -4,56 +4,146 @@ function [ n, class_all, varargin ] = handle_train_maxn_subsample( class2use, ma
 %
 % This is a function that replaces ‘handle_train_maxn’ within 
 % compile_train_features. If number of images exceed the USER defined maxn, 
-% this randomly removes excess images from UCSC training set first. If the 
-% number of images still exceeds maxn, then it randomly removes excess 
-% images from the NWFSC set.
-%   Alexis D. Fischer, NOAA NWFSC, September 2021
+% this randomly removes excess images from the training set so that images 
+% are balanced across NWFSC, UCSC, and OSU. 
+%   Alexis D. Fischer, NOAA NWFSC, June 2022
 
-% %Example inputs for testing
-varargin{1}=fea_all;
-varargin{2}=files_all;
-varargin{3}=roinum;
-    idN=find(endsWith(varargin{2},'IFCB777') | endsWith(varargin{2},'IFCB117') | endsWith(varargin{2},'IFCB150')); %find Shimada files
-    idU=find(endsWith(varargin{2},'IFCB104')); %find UCSC files from      
-    idO=find(endsWith(varargin{2},'IFCB122')); %find OSU files         
+% %% Example inputs for testing
+% varargin{1}=fea_all;
+% varargin{2}=files_all;
+% varargin{3}=roinum;
 
+idW=find(endsWith(varargin{2},'IFCB777') | endsWith(varargin{2},'IFCB117') | endsWith(varargin{2},'IFCB150')); %find Shimada files
+idU=find(endsWith(varargin{2},'IFCB104')); %find UCSC files from      
+idO=find(endsWith(varargin{2},'IFCB122')); %find OSU files         
 n=NaN*ones(length(class2use),1);
 for i = 1:length(class2use)
-    i=13
     j = find(class_all == i);
-    n(i) = length(j) %total number of images
-    n2del = n(i)-maxn %number of images that need to be deleted
-   
+    n(i) = length(j); %total number of images
+    n2del = n(i)-maxn; %number of images that need to be deleted
+
     if n2del > 0 %if your images exceeds the maxn...
-        NWC_ind=(intersect(idN,j)); %find file subset that are NWFSC and that class
-        UCSC_ind=(intersect(idU,j)); %find file subset that are UCSC and that class
-        OSU_ind=(intersect(idO,j)); %find file subset that are OSU and that class
+        ind_NWC=(intersect(idW,j)); %find file subset that are NWFSC and that class
+        ind_UCSC=(intersect(idU,j)); %find file subset that are UCSC and that class
+        ind_OSU=(intersect(idO,j)); %find file subset that are OSU and that class
+        d1=length(ind_NWC)-round(maxn*.34,0);
+        d2=length(ind_UCSC)-round(maxn*.33,0);
+        d3=length(ind_OSU)-round(maxn*.33,0);
         
-        %find fx of NOAA files
-        fxN=length(NWC_ind)./n(i)
-        fxU=length(UCSC_ind)./n(i)
-        fxO=length(OSU_ind)./n(i)
-        
-        s(i) = length(UCSC_ind); %total number of images       
-        r2del=n2del-s(i); %remaining to delete from PNW
-        
-        if r2del > 0  %number of UCSC images is less than n2del, so you also need to delete PNW images
-            pnw_ind=setdiff(j,UCSC_ind); %find all the files that are not UCSC
-            shuffle_ind = randperm(length(pnw_ind));
-            shuffle_ind = shuffle_ind(1:r2del);
-            idx2del=[UCSC_ind;pnw_ind(shuffle_ind)];       
-        else %number of UCSC images exceeds or is equal to n2del, so you can just delete UCSC images
-            shuffle_ind = randperm(s(i));
+        if d1<0 && d2<0 %don't delete any from NWC or UCSC
+            shuffle_ind = randperm(length(ind_OSU));
             shuffle_ind = shuffle_ind(1:n2del);
-            idx2del=UCSC_ind(shuffle_ind);
-        end          
+            idx2del=[ind_OSU(shuffle_ind)]; 
+            disp(['' class2use{i} ' (n2del=' num2str(n2del) ' d1=' num2str(d1) ' d2=' num2str(d2) ' d3=' num2str(d3) ') only delete OSU'])
+        elseif d1<0 && d3<0 %don't delete any from NWC or OSU
+            shuffle_ind = randperm(length(ind_UCSC));
+            shuffle_ind = shuffle_ind(1:n2del);
+            idx2del=[ind_UCSC(shuffle_ind)];   
+            disp(['' class2use{i} ' (n2del=' num2str(n2del) ' d1=' num2str(d1) ' d2=' num2str(d2) ' d3=' num2str(d3) ') only delete UCSC'])                
+        elseif d2<0 && d3<0 %don't delete any from UCSC or OSU
+            shuffle_ind = randperm(length(ind_NWC));
+            shuffle_ind = shuffle_ind(1:n2del);
+            idx2del=[ind_NWC(shuffle_ind)];    
+            disp(['' class2use{i} ' (n2del=' num2str(n2del) ' d1=' num2str(d1) ' d2=' num2str(d2) ' d3=' num2str(d3) ') only delete NWFSC'])    
+
+        elseif d1<0 %don't delete any from NWFSC
+            val=abs(round(d1./2,0));           
+            if d2<val %only delete any from UCSC
+                shuffle_ind = randperm(length(ind_UCSC));
+                shuffle_indU = shuffle_ind(1:d2);
+                shuffle_ind = randperm(length(ind_OSU));
+                shuffle_indO = shuffle_ind(1:(n2del-d2)); 
+                idx2del=[ind_UCSC(shuffle_indU);ind_OSU(shuffle_indO)];  
+            elseif d3<val %only delete any from OSU              
+                shuffle_ind = randperm(length(ind_OSU));
+                shuffle_indO = shuffle_ind(1:d3);
+                shuffle_ind = randperm(length(ind_UCSC));
+                shuffle_indU = shuffle_ind(1:(n2del-d3)); 
+                idx2del=[ind_UCSC(shuffle_indU);ind_OSU(shuffle_indO)];  
+            else
+                shuffle_ind = randperm(length(ind_UCSC));
+                shuffle_indU = shuffle_ind(1:(d2-val));
+                shuffle_ind = randperm(length(ind_OSU));
+                shuffle_indO = shuffle_ind(1:(d3-val)); 
+                idx2del=[ind_UCSC(shuffle_indU);ind_OSU(shuffle_indO)];  
+            end
+                disp(['' class2use{i} ' (n2del=' num2str(n2del) ' d1=' num2str(d1) ' d2=' num2str(d2) ' d3=' num2str(d3) ') delete from UCSC and OSU'])                
+            
+        elseif d2<0 %don't delete any from UCSC
+            val=abs(round(d2./2,0));
+            if d1<val %only delete d1 from NWFSC
+                shuffle_ind = randperm(length(ind_NWC));
+                shuffle_indN = shuffle_ind(1:d1);
+                shuffle_ind = randperm(length(ind_OSU));
+                shuffle_indO = shuffle_ind(1:(n2del-d1));
+                idx2del=[ind_NWC(shuffle_indN);ind_OSU(shuffle_indO)];            
+            elseif d3<val %only delete d3 from OSU        
+                shuffle_ind = randperm(length(ind_OSU));
+                shuffle_indO = shuffle_ind(1:d3);
+                shuffle_ind = randperm(length(ind_NWC));
+                shuffle_indN = shuffle_ind(1:(n2del-d3));
+                idx2del=[ind_NWC(shuffle_indN);ind_OSU(shuffle_indO)];                
+            else
+                shuffle_ind = randperm(length(ind_NWC));
+                shuffle_indN = shuffle_ind(1:(d1-val));
+                shuffle_ind = randperm(length(ind_OSU));
+                shuffle_indO = shuffle_ind(1:(d3-val));
+                idx2del=[ind_NWC(shuffle_indN);ind_OSU(shuffle_indO)];   
+            end
+                disp(['' class2use{i} ' (n2del=' num2str(n2del) ' d1=' num2str(d1) ' d2=' num2str(d2) ' d3=' num2str(d3) ') delete from NWFSC and OSU'])                 
+
+        elseif d3<0 %don't delete any from OSU
+            val=abs(round(d3./2,0));            
+            if d1<val %only delete d1 from NWFSC
+                shuffle_ind = randperm(length(ind_NWC));
+                shuffle_indN = shuffle_ind(1:d1);                
+                shuffle_ind = randperm(length(ind_UCSC));
+                shuffle_indU = shuffle_ind(1:(n2del-d1));
+                idx2del=[ind_NWC(shuffle_indN);ind_OSU(shuffle_indU)];               
+            elseif d2<val %only delete d2 from UCSC            
+                shuffle_ind = randperm(length(ind_UCSC));
+                shuffle_indU = shuffle_ind(1:d2);                
+                shuffle_ind = randperm(length(ind_NWC));
+                shuffle_indN = shuffle_ind(1:(n2del-d2));
+                idx2del=[ind_NWC(shuffle_indN);ind_OSU(shuffle_indU)];              
+            else            
+                shuffle_ind = randperm(length(ind_NWC));
+                shuffle_indN = shuffle_ind(1:(d1-val));                
+                shuffle_ind = randperm(length(ind_UCSC));
+                shuffle_indU = shuffle_ind(1:(d2-val));
+                idx2del=[ind_NWC(shuffle_indN);ind_OSU(shuffle_indU)];   
+            end
+                disp(['' class2use{i} ' (n2del=' num2str(n2del) ' d1=' num2str(d1) ' d2=' num2str(d2) ' d3=' num2str(d3) ') delete from NWFSC and UCSC'])   
+        else
+            shuffle_ind = randperm(length(ind_NWC));
+            shuffle_indN = shuffle_ind(1:d1);            
+            shuffle_ind = randperm(length(ind_UCSC));
+            shuffle_indU = shuffle_ind(1:d2);
+            shuffle_ind = randperm(length(ind_OSU));
+            shuffle_indO = shuffle_ind(1:d3);
+            idx2del=[ind_NWC(shuffle_indN);ind_UCSC(shuffle_indU);ind_OSU(shuffle_indO)];   
+            disp(['' class2use{i} ' (n2del=' num2str(n2del) ' d1=' num2str(d1) ' d2=' num2str(d2) ' d3=' num2str(d3) ') delete from NWFSC, UCSC, and OSU'])            
+        end
+
+        if diff([length(idx2del),n2del])<4
+        else
+            disp(['ERROR! ' class2use{i} ' idx2del=' num2str(length(idx2del)) ' n2del=' num2str(n2del) '' ])            
+        end
+    %    disp(num2str(length(idx2del)));
+     %   disp(num2str(n2del))        ;
+
         class_all(idx2del) = []; %set those classes as []                  
         for vc = 1:length(varargin)
             varargin{vc}(idx2del,:) = [];
         end
-        n(i) = maxn;
+        j = find(class_all == i);
+        n(i) = length(j); %total number of images        
+      %  n(i) = maxn;
+    else
+        %disp(['' class2use{i} ': no extra images!'])
+        
     end
+    clearvars j d1 d2 d3 val idx2del ind_NWC ind_UCSC ind_OSU n2del shuffle_ind shuffle_indN shuffle_indU shuffle_indO
 end
 
-end
 
