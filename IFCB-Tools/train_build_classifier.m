@@ -59,8 +59,8 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_08Jun2022'; %USER what file contains your training features
-result_filename = 'Trees_08Jun2022';
+train_filename = 'Train_10Jun2022'; %USER what file contains your training features
+result_filename = 'Trees_10Jun2022';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 make_TreeBaggerClassifier(result_path, train_filename, result_filename, nTrees)

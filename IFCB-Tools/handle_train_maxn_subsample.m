@@ -138,7 +138,7 @@ for i = 1:length(class2use)
         end
         j = find(class_all == i);
         n(i) = length(j); %total number of images        
-      %  n(i) = maxn;
+        %n(i) = maxn;
     else
         %disp(['' class2use{i} ': no extra images!'])
         

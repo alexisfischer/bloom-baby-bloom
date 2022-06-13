@@ -25,18 +25,18 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
 %classifier='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 %classifier='D:\Shimada\classifier\summary\Trees_23Feb2022_nonano';
-classifier='D:\general\classifier\summary\Trees_09May2022';
+classifier='D:\general\classifier\summary\Trees_10Jun2022';
 
 %%
 copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
-%% Step 2: Extract blobs
+% Step 2: Extract blobs
 start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
-%% Step 3: Extract features
+% Step 3: Extract features
 start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],false)
 
-%% Step 4: Apply classifier
+% Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
 %% Step 5: Summaries
