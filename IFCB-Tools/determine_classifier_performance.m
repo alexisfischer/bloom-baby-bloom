@@ -8,7 +8,7 @@ function [ ] = determine_classifier_performance( classifiername )
 %
 % Example Inputs
 % classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
-%classifiername='D:\Shimada\classifier\summary\Trees_24Feb2022';
+classifiername='D:\general\classifier\summary\Trees_10Jun2022';
 outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 
 load(classifiername,'b','classes','featitles','maxthre','targets');
