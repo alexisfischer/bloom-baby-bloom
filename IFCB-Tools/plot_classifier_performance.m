@@ -4,7 +4,8 @@ Mac=1;
 %name='23Feb2022_nonano';
 %name='24Feb2022';
 %name='24Feb2022_noUCSCdinophysis';
-name='09May2022';
+%name='09May2022';
+name='10Jun2022';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -17,17 +18,17 @@ else
 end
 addpath(genpath(basepath));
 
-load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','BI');
+load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','OSU');
     
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-b = bar([NOAA.total BI.total UCSC.total],'stack','Barwidth',.7);
+b = bar([NOAA.total OSU.total UCSC.total],'stack','Barwidth',.7);
 col=brewermap(3,'Dark2'); %col=[[.3 .3 .3];col];
 for i=1:length(b)
     set(b(i),'FaceColor',col(i,:));
 end  
     
-legend('Shimada','Budd/Lab','UCSC','Location','NW');
+legend('NWFSC','OSU','UCSC','Location','NW');
 
 [~,classp]=get_class_ind( all.class, 'all', basepath);
 set(gca, 'xtick', 1:length(classp), 'xticklabel', classp,'tickdir','out');
@@ -35,7 +36,7 @@ ylabel('total images in set');
 xtickangle(45);
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC.png']);
+print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC_OSU.png']);
 hold off
 
 %% Winner takes All

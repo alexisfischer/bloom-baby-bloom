@@ -20,25 +20,32 @@ dtI=[I19.dtI;I21.dtI]; latI=[I19.latI;I21.latI]; lonI=[I19.lonI;I21.lonI];
 filelistTB=[I19.filelistTB;I21.filelistTB];
 
 % load in IFCB manual files 
-load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use','classcount','classbiovol','filelist','matdate','ml_analyzed')
+load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use','classcount','classbiovol','filelist','ml_analyzed')
 cellsmli=classcount./ml_analyzed; %convert to cells/mL
 bvmli=classbiovol./ml_analyzed; %convert to biovol/mL
 filelisti=cellfun(@(X) X(1:end-4),({filelist.name})','Uniform',0);
+
+% exclude files with >un fx left unannotated
+total=sum(cellsmli,2); fx_un=cellsmli(:,1)./total; idx=find(fx_un>un);
+filelisti(idx)=[]; cellsmli(idx,:)=[]; bvmli(idx,:)=[]; 
 
 % match data with lat lon coordinates
 [filelistS,ia,ib]=intersect(filelisti,filelistTB);
 dt=dtI(ib); latS=latI(ib); lonS=lonI(ib); 
 cellsmlS=cellsmli(ia,:); bvmlS=bvmli(ia,:);
-
-clearvars filelisti classcount classbiovol filelist cellsmli bvmli dt latI lonI filelistTB ia ib I19 I21 dtI ml_analyzed matdate
+clearvars idx fx_un filelisti total classcount classbiovol filelist cellsmli bvmli dt latI lonI filelistTB ia ib I19 I21 dtI ml_analyzed 
 
 %%%% UCSC 
-load([filepath 'IFCB-Data/SCW/manual/count_class_biovol_manual'],'classcount','classbiovol','filelist','ml_analyzed','matdate')
+load([filepath 'IFCB-Data/SCW/manual/count_class_biovol_manual'],'classcount','classbiovol','filelist','ml_analyzed')
 cellsmli=classcount./ml_analyzed; %convert to cells/mL
 bvmli=classbiovol./ml_analyzed; %convert to biovol/mL
 filelistU=cellfun(@(X) X(1:end-4),({filelist.name})','Uniform',0);
 
-[idxSC] = convert_classnum_UCSC2NWFSC(1:width(classcount)); %convert classes
+% exclude files with >un fx left unannotated
+total=sum(bvmli,2); fx_un=bvmli(:,1)./total; idx=find(fx_un>un);
+filelistU(idx)=[]; cellsmli(idx,:)=[]; bvmli(idx,:)=[]; 
+
+[idxSC] = convert_classnum_UCSC2NWFSC(1:width(cellsmli)); %convert classes
 cellsmlU=NaN*ones(length(cellsmli),width(class2use));
 bvmlU=cellsmlU;
 for i=1:length(class2use)
@@ -46,10 +53,10 @@ for i=1:length(class2use)
     cellsmlU(:,i)=sum(cellsmli(:,idx),2);
     bvmlU(:,i)=sum(bvmli(:,idx),2);
 end
-latU=36.96149*ones(size(ml_analyzed));
-lonU=-122.02187*ones(size(ml_analyzed));
 
-clearvars classcount classbiovol cellsmli bvmli idx i idxSC ml_analyzed filelist
+latU=36.96149*ones(size(filelistU));
+lonU=-122.02187*ones(size(filelistU));
+clearvars classcount classbiovol cellsmli bvmli idx i idxSC ml_analyzed filelist fx_un total
 
 %%%% merge
 bvml=[bvmlU;bvmlS];
@@ -63,12 +70,6 @@ filelist(ia)=[]; cellsml(ia,:)=[]; bvml(ia,:)=[]; lat(ia)=[]; lon(ia)=[];
 clearvars bvmlU bvmlS cellsmlU cellsmlS latU latS lonU lonS filelistU filelistS ia
 
 %% class manipulation
-% exclude files with >un fx left unannotated
-total=sum(cellsml,2);
-fx_un=cellsml(:,1)./total;
-idx=find(fx_un>un);
-filelist(idx)=[]; lat(idx)=[]; lon(idx)=[]; cellsml(idx,:)=[]; bvml(idx,:)=[]; 
-
 % exlude nonliving data and select classes
 id1=get_class_ind(class2use,'nonliving',filepath);
 id2=get_class_ind(class2use,'zooplankton',filepath);
@@ -107,6 +108,7 @@ for i=1:n
     region(i).unbiovol=nansum(bvml(region(i).idx,irem));
 end
 
+%%
 %set unclassified to NaNs
 cellsml(:,irem)=NaN; bvml(:,irem)=NaN;
 
@@ -181,7 +183,7 @@ figure('Units','inches','Position',[1 1 8 3],'PaperPositionMode','auto');
 plot(1:length(class_label),[1*region(1).idxC 2*region(2).idxC 3*region(3).idxC 4*region(4).idxC],'*'); hold on
 set(gca,'ycolor','k','ylim',[.8 4.2],'ytick',1:length(region),'yticklabel', {region.label},...
     'xlim',[0 (length(class_label)+1)],'xtick', 1:length(class_label),'xticklabel', class_label,'tickdir','out'); hold on
-title(['Top CCS classes that comprise a mean of ' num2str(round(mean(100*[region.fxtotalcells]),0)) '% cells/sample'])
+title(['Top CCS classes that comprise a mean of ' num2str(round(mean(100*[region.fxtotalcells]),0)) '% fluorescing cells/sample'])
 
 % set figure parameters
 print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/topclass_CCS_cellcount.png']);
@@ -194,7 +196,7 @@ figure('Units','inches','Position',[1 1 8 3],'PaperPositionMode','auto');
 plot(1:length(class_label),[1*region(1).idxB 2*region(2).idxB 3*region(3).idxB 4*region(4).idxB],'*'); hold on
 set(gca,'ycolor','k','ylim',[.8 4.2],'ytick',1:length(region),'yticklabel', {region.label},...
     'xlim',[0 (length(class_label)+1)],'xtick', 1:length(class_label),'xticklabel', class_label,'tickdir','out'); hold on
-title(['Top CCS classes that comprise a mean of ' num2str(round(mean(100*[region.fxtotalbiovol]),0)) '% biovolume/sample'])
+title(['Top CCS classes that comprise a mean of ' num2str(round(mean(100*[region.fxtotalbiovol]),0)) '% fluorescing biovolume/sample'])
 
 % set figure parameters
 print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/topclass_CCS_biovolume.png']);

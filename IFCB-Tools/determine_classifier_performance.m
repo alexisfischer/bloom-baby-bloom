@@ -78,8 +78,8 @@ optb=table(class(1:end-1),total,R,P,F1);
 
 clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
 
-%% how did regional classifier do on Shimada dataset
-idx = contains(targets,{'IFCB777' 'IFCB117'});
+%% how did regional classifier do on NWFSC dataset
+idx = contains(targets,{'IFCB777' 'IFCB117' 'IFCB150'});
 MC=b.Y;
 [C, class] = confusionmat(MC(idx),Yfit(idx)); 
 [~,idx]=sort(class);class=class(idx);C=C(idx,idx);
@@ -109,8 +109,8 @@ end
 
 NOAA=table(class,total,R,P,F1);
 
-%% how did regional classifier do on Budd Inlet dataset
-idx = contains(targets,'IFCB150');
+%% how did regional classifier do on the OSU dataset
+idx = contains(targets,'IFCB122');
 MC=b.Y;
 [C, class] = confusionmat(MC(idx),Yfit(idx)); 
 [~,idx]=sort(class);class=class(idx);C=C(idx,idx);
@@ -122,23 +122,23 @@ P(P==0)=NaN;
 F1= 2*((P.*R)./(P+R));
 
 %find gaps, if they exist
-BI=all;
+OSU=all;
 [~,ib]=ismember(classes,class);
 for i=1:length(ib)
     if ib(i)>0
-        BI.total(i)= total(ib(i));
-        BI.R(i)= R(ib(i));
-        BI.P(i)= P(ib(i));        
-        BI.F1(i)= F1(ib(i));                
+        OSU.total(i)= total(ib(i));
+        OSU.R(i)= R(ib(i));
+        OSU.P(i)= P(ib(i));        
+        OSU.F1(i)= F1(ib(i));                
     else
-        BI.total(i)=0;
-        BI.R(i)=NaN;
-        BI.P(i)=NaN;        
-        BI.F1(i)=NaN;                
+        OSU.total(i)=0;
+        OSU.R(i)=NaN;
+        OSU.P(i)=NaN;        
+        OSU.F1(i)=NaN;                
     end
 end
 
-BI=table(class,total,R,P,F1);
+OSU=table(class,total,R,P,F1);
 
 %% how did regional classifier do on UCSC dataset
 idx = contains(targets,'IFCB104');
@@ -202,6 +202,6 @@ print(gcf,'-dtiff','-r200',[outpath 'Figs\class_vs_thresholdscores.png']);
 hold off
 
 save([outpath 'performance_classifier_' classifiername(37:end) ''],...
-    'topfeat','NOAA','UCSC','BI','all','opt','optb','c_all','c_opt','c_optb');
+    'topfeat','NOAA','UCSC','OSU','all','opt','optb','c_all','c_opt','c_optb');
 
 end
