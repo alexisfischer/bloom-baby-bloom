@@ -161,7 +161,7 @@ classBC=intersect(classC,classB);
 [c,ic]=setdiff(classC,classBC);
 [b,ib]=setdiff(classB,classBC);
 
-save([filepath 'NOAA/Shimada/Data/top' num2str(top) 'classes_' num2str(n) 'regionCCS'],'classC','classB','classBC');
+save([filepath 'NOAA/Shimada/Data/topclasses_bylatitude_CCS'],'classC','classB','classBC');
 
 clearvars dt classtotalC classtotalB filelist ic ib bvml cellsml d B i idx latmin latmax classzero lat lon totalB totalC C idxB idxC
 

@@ -19,19 +19,20 @@ end
 addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','OSU');
-    
+maxn=round(max([all.total]),-2);
+
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-b = bar([NOAA.total OSU.total UCSC.total],'stack','Barwidth',.7);
+b = bar([NOAA.total UCSC.total OSU.total],'stack','Barwidth',.7);
 col=brewermap(3,'Dark2'); %col=[[.3 .3 .3];col];
 for i=1:length(b)
     set(b(i),'FaceColor',col(i,:));
 end  
     
-legend('NWFSC','OSU','UCSC','Location','NW');
+legend('NWFSC','UCSC','OSU','Location','NorthOutside');
 
 [~,classp]=get_class_ind( all.class, 'all', basepath);
-set(gca, 'xtick', 1:length(classp), 'xticklabel', classp,'tickdir','out');
+set(gca, 'xtick', 1:length(classp), 'ylim',[0 maxn], 'xticklabel', classp,'tickdir','out');
 ylabel('total images in set');
 xtickangle(45);
 
@@ -58,7 +59,7 @@ end
 yyaxis right;
 plot(1:length(class),all.total,'k*'); hold on
 ylabel('total images in set');
-set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(class),'ylim',[0 maxn], 'xticklabel', class); hold on
 legend('Recall', 'Precision','Location','W')
 title(['Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
 xtickangle(45);
@@ -69,7 +70,7 @@ hold off
 
 %% Winner takes All
 %plot manual vs classifier checkerboard
-figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 7 6],'PaperPositionMode','auto');
 cplot = zeros(size(c_all)+1);
 cplot(1:length(class),1:length(class)) = c_all;
 total=[sum(c_all,2);0];
@@ -96,7 +97,7 @@ hold off
 classU=class;
 classU{end+1}='unclassified';
 
-figure('Units','inches','Position',[1 1 6 5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 7 6],'PaperPositionMode','auto');
 cplot = zeros(size(c_opt)+1);
 cplot(1:length(classU),1:length(classU)) = c_opt;
 total=[sum(c_opt,2);0];
