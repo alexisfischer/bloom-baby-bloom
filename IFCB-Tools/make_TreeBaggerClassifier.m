@@ -63,6 +63,4 @@ save([result_path result_filename],'b', 'targets', 'featitles', 'classes', 'maxt
 disp('Classifier file stored here:')
 disp([result_path result_filename])
 
-determine_classifier_performance( [result_path result_filename] )
-
 end

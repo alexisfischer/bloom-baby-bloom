@@ -27,7 +27,7 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 %classifier='D:\Shimada\classifier\summary\Trees_23Feb2022_nonano';
 classifier='D:\general\classifier\summary\Trees_10Jun2022';
 
-%%
+
 copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
 % Step 2: Extract blobs

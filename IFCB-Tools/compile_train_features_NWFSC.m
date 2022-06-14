@@ -24,7 +24,6 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 %     'Pseudo-nitzschia_small' 'Pseudo-nitzschia'}};
 %varargin{2}=[]; %class2group with nothing to group
 
-%%
 %varargin{1}=class2skip;
 %varargin{2}=class2group;
 

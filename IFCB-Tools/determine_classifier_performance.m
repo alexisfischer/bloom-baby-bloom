@@ -1,4 +1,4 @@
-function [ ] = determine_classifier_performance( classifiername )
+function [ ] = determine_classifier_performance( classifiername,outpath )
 %[ ] = classifier_oob_analysis( classifername )
 %For example:
 % determine_classifier_performance('D:\Shimada\classifier\summary\Trees_12Oct2021')
@@ -8,8 +8,8 @@ function [ ] = determine_classifier_performance( classifiername )
 %
 % Example Inputs
 % classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
-classifiername='D:\general\classifier\summary\Trees_10Jun2022';
-outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+%classifiername='D:\general\classifier\summary\Trees_13Jun2022';
+%outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 
 load(classifiername,'b','classes','featitles','maxthre','targets');
 
