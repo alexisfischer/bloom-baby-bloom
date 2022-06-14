@@ -108,6 +108,8 @@ for i=1:length(ib)
     end
 end
 
+NOAA=table(class,total,R,P,F1);
+
 %% how did regional classifier do on the OSU dataset
 idx = find(contains(targets,'IFCB122'));
 MC=b.Y;
@@ -136,6 +138,8 @@ for i=1:length(ib)
         OSU.F1(i)=NaN;                
     end
 end
+
+OSU=table(classes,total,R,P,F1);
 
 %% how did regional classifier do on UCSC dataset
 idx = contains(targets,'IFCB104');
