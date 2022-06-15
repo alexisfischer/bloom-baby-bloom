@@ -30,7 +30,7 @@ classifier='D:\general\classifier\summary\Trees_10Jun2022';
 %%
 copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
-% Step 2: Extract blobs
+%% Step 2: Extract blobs
 start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
 % Step 3: Extract features
