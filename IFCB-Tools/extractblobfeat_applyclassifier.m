@@ -36,8 +36,15 @@ start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'
 % Step 3: Extract features
 start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],false)
 
-% Step 4: Apply classifier
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
+%% Step 4: Apply classifier
+classifier='D:\general\classifier\summary\Trees_15Jun2022_regional1000';
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class_regional\class' yr '_v1\']);
+
+classifier='D:\general\classifier\summary\Trees_15Jun2022_UCSC1000';
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class_UCSC2.0\class' yr '_v1\']);
+
+classifier='D:\general\classifier\summary\Trees_15Jun2022_regional1000';
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class_UCSC\class' yr '_v1\']);
 
 %% Step 5: Summaries
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
