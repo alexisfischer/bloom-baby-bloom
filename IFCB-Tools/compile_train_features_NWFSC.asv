@@ -23,10 +23,10 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 %     {'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' ...
 %     'Pseudo-nitzschia_small' 'Pseudo-nitzschia'}};
 %varargin{2}=[]; %class2group with nothing to group
-
-% varargin{1}=class2skip;
-% varargin{2}=class2group;
-% varargin{3}=IFCB;
+%%
+varargin{1}=class2skip;
+varargin{2}=class2group;
+varargin{3}=IFCB;
 
 class2skip = []; %initialize
 class2group = {[]};
@@ -53,7 +53,7 @@ manual_files = regexprep(manual_files, '.mat', '');
 load([class2useName '.mat'],'class2use');
 
 if ~(manualpath(end) == filesep), manualpath = [manualpath filesep]; end
-
+%%
 fea_all = [];
 class_all = [];
 files_all = [];

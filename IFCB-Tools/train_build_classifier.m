@@ -50,8 +50,9 @@ class2group={{'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis
         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
         {'Thalassiosira_chain' 'Thalassiosira_single'}...
         {'Chaetoceros_chain' 'Chaetoceros_single'}};
+IFCB='UCSC';
 
-compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,class2useName,class2skip,class2group);
+compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
