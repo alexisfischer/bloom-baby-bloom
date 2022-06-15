@@ -5,7 +5,8 @@ Mac=1;
 %name='24Feb2022';
 %name='24Feb2022_noUCSCdinophysis';
 %name='09May2022';
-name='10Jun2022';
+%name='10Jun2022';
+name='14Jun2022_all';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -21,30 +22,50 @@ addpath(genpath(basepath));
 load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','OSU');
 maxn=round(max([all.total]),-2);
 
-%% plot stacked total in set
-figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-b = bar([NOAA.total UCSC.total OSU.total],'stack','Barwidth',.7);
-col=brewermap(3,'Dark2'); %col=[[.3 .3 .3];col];
-for i=1:length(b)
+[all,ia]=sortrows(all,'F1','descend');
+UCSC=UCSC(ia,:);
+OSU=OSU(ia,:);
+NOAA=NOAA(ia,:);
+[~,class]=get_class_ind( all.class, 'all', basepath);
+
+%% plot stacked total in set and F1 score comparison
+
+figure('Units','inches','Position',[1 1 8 6],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.26 0.15], [0.08 0.04]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
+
+subplot(2,1,1)
+b=bar([NOAA.F1 UCSC.F1 OSU.F1 all.F1],'Barwidth',1,'linestyle','none'); hold on
+col=[brewermap(3,'Set2');[.1 .1 .1]]; 
+for i=1:4
     set(b(i),'FaceColor',col(i,:));
 end  
-    
-legend('NWFSC','UCSC','OSU','Location','NorthOutside');
+set(gca,'xlim',[0.5 (length(class)+.5)],'ycolor','k', 'xtick', 1:length(class), 'xticklabel', [],'tickdir','out'); hold on
+ylabel('F1 score');
+lh=legend('NWFSC','UCSC','OSU','all','Location','North');
+    legend boxoff; lh.FontSize = 10; hp=get(lh,'pos');
+    lh.Position=[hp(1) hp(2)+.16 hp(3) hp(4)]; hold on    
+ 
+subplot(2,1,2)
+col=[(brewermap(3,'Set2'));[.1 .1 .1]]; 
 
-[~,classp]=get_class_ind( all.class, 'all', basepath);
-set(gca, 'xtick', 1:length(classp), 'ylim',[0 maxn], 'xticklabel', classp,'tickdir','out');
-ylabel('total images in set');
+b = bar([NOAA.total UCSC.total OSU.total],'stack','linestyle','none','Barwidth',.7);
+for i=1:3
+    set(b(i),'FaceColor',col(i,:));
+end  
+set(gca,'xlim',[0.5 (length(class)+.5)], 'xtick', 1:length(class), 'ylim',[0 maxn],...
+    'xticklabel', class,'tickdir','out');
+ylabel('total images in set'); hold on
 xtickangle(45);
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'total_UCSC_NWFSC_OSU.png']);
+print(gcf,'-dpng','-r100',[figpath 'F1score_UCSC_OSU_CCS' name '.png']);
 hold off
 
-%% Winner takes All
+%% CCS: Winner takes All
 % plot bar Recall and Precision
 % sort by F1
-all=sortrows(all,'F1','descend');
-[~,class]=get_class_ind( all.class, 'all', basepath);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
@@ -61,11 +82,37 @@ plot(1:length(class),all.total,'k*'); hold on
 ylabel('total images in set');
 set(gca,'ycolor','k', 'xtick', 1:length(class),'ylim',[0 maxn], 'xticklabel', class); hold on
 legend('Recall', 'Precision','Location','W')
-title(['Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
+title(['All CCS - Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
 xtickangle(45);
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'Fx_recall_precision_' name '.png']);
+print(gcf,'-dpng','-r200',[figpath 'Fx_recall_precision_onCCS' name '.png']);
+hold off
+
+%% UCSC: Winner takes All
+% plot bar Recall and Precision
+% sort by F1
+
+figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
+yyaxis left;
+b=bar([UCSC.R UCSC.P],'Barwidth',1,'linestyle','none'); hold on
+hline(.9,'k--');
+set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
+ylabel('Performance');
+col=flipud(brewermap(2,'RdBu')); 
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+yyaxis right;
+plot(1:length(class),UCSC.total,'k*'); hold on
+ylabel('total images in set');
+set(gca,'ycolor','k', 'xtick', 1:length(class),'ylim',[0 maxn], 'xticklabel', class); hold on
+legend('Recall', 'Precision','Location','W')
+title(['UCSC - Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
+xtickangle(45);
+
+set(gcf,'color','w');
+print(gcf,'-dpng','-r200',[figpath 'Fx_recall_precision_onUCSC' name '.png']);
 hold off
 
 %% Winner takes All
@@ -74,7 +121,7 @@ figure('Units','inches','Position',[1 1 7 6],'PaperPositionMode','auto');
 cplot = zeros(size(c_all)+1);
 cplot(1:length(class),1:length(class)) = c_all;
 total=[sum(c_all,2);0];
-fx_unclass=sum(c_all(:,end))./sum(total) % what fraction of images went to unclassified?
+fx_unclass=sum(c_all(:,end))./sum(total)   % what fraction of images went to unclassified?
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
@@ -120,61 +167,3 @@ set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[figpath 'confusion_matrix_opt_' name '.png']);
 hold off
 
-
-%%
-% %% plot total in set
-% figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-% b = bar([all.total SCW.total PNW.total],'Barwidth',1,'linestyle','none');
-% col=brewermap(2,'PRGn'); col=[[.3 .3 .3];col];
-% for i=1:length(b)
-%     set(b(i),'FaceColor',col(i,:));
-% end  
-%    
-% legend('overall','UCSC', 'NWFSC','Location','NE');
-% set(gca, 'xtick', 1:length(class),'xticklabel', class);
-% ylabel('total images in set');
-% 
-% set(gcf,'color','w');
-% print(gcf,'-dpng','-r200',[figpath 'total_SCW_PNW.png']);
-% hold off
-% 
-% %% plot N CCS bar Recall and Precision
-% figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-% yyaxis left;
-% b=bar([PNW.Se PNW.Pr],'Barwidth',1,'linestyle','none'); hold on
-% set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
-% ylabel('Performance');
-% col=flipud(brewermap(2,'RdBu')); 
-% for i=1:length(b)
-%     set(b(i),'FaceColor',col(i,:));
-% end  
-% yyaxis right;
-% plot(1:length(class),PNW.total,'k*'); hold on
-% ylabel('total images in set');
-% set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
-% legend('Recall', 'Precision','Location','NW')
-% title('NWFSC')
-% set(gcf,'color','w');
-% print(gcf,'-dtiff','-r200',[filepath 'Figs/Fx_recall_precision_NWFSC.png']);
-% hold off
-% 
-% %% plot SCW bar Recall and Precision
-% figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-% yyaxis left;
-% b=bar([SCW.Se SCW.Pr],'Barwidth',1,'linestyle','none'); hold on
-% set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
-% ylabel('Performance');
-% col=flipud(brewermap(2,'RdBu')); 
-% for i=1:length(b)
-%     set(b(i),'FaceColor',col(i,:));
-% end  
-% yyaxis right;
-% plot(1:length(class),SCW.total,'k*'); hold on
-% ylabel('total images in set');
-% set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
-% legend('Recall', 'Precision','Location','W')
-% title('UCSC')
-% set(gcf,'color','w');
-% print(gcf,'-dtiff','-r200',[filepath 'Figs\Fx_recall_precision_UCSC.png']);
-% hold off
-    
