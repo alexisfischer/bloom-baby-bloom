@@ -93,7 +93,8 @@ val=sum(bvml(:,id1),2); bvml(:,id2)=sum([bvml(:,id2),val],2); bvml(:,id1)=NaN;
 clearvars id1 id2 id3 id4 IDX val idx fx_un total
 
 %% Find top classes for each latitude region
-irem=find(ismember(class2use,{'unclassified' 'centric' 'flagellate' 'Dinophyceae_pointed' 'Dinophyceae_round'}));
+irem=find(ismember(class2use,{'unclassified' 'centric' 'flagellate' ...
+    'Dinophyceae_pointed' 'Dinophyceae_round' 'Chaetoceros_external_pennate' 'Pseudo-nitzschia_external_pennate'}));
 
 d=(max(lat)-min(lat))./n;
 for i=1:n

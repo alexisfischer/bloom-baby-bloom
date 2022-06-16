@@ -1,9 +1,10 @@
 clear;
 Mac=1;
-nameL1='15Jun2022_UCSC1000';
+nameL1='15Jun2022';
+%nameL1='15Jun2022_UCSC1000';
 %nameL2='14Jun2022_UCSC2000';
 nameR1='15Jun2022_regional1000';
-%nameR2='14Jun2022_regional2000';
+nameR2='14Jun2022_regional2000';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -19,11 +20,11 @@ addpath(genpath(basepath));
 load([filepath 'performance_classifier_' nameL1],'all'); L=flipud(all); 
 %load([filepath 'performance_classifier_' nameL2],'all'); L2=flipud(all);
 load([filepath 'performance_classifier_' nameR1],'all'); R=flipud(all);
-%load([filepath 'performance_classifier_' nameR2],'all'); R2=flipud(all);
+load([filepath 'performance_classifier_' nameR2],'all'); R2=flipud(all);
 maxn=round(max([R.total]),-2);
 [~,class]=get_class_ind( R.class, 'all', basepath);
 
-%find and fill gaps, if they exist
+%% find and fill gaps, if they exist
 classR=R.class;
 classL=L.class;
 UCSC2=R;
@@ -64,7 +65,7 @@ set(gca,'ylim',[1 (length(class)+1)],'ytick',1.5:1:length(class)+.5,...
     set(h,'pos',hp,'xaxisloc','top','fontsize',9); 
     h.Label.String = 'F1 score';    
     h.Label.FontSize = 11;  
-
+%%
 set(gcf,'color','w');
 print(gcf,'-dpng','-r100',[figpath 'pcolor_Regional_vs_Local_classifier_' nameL '.png']);
 hold off
