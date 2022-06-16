@@ -22,7 +22,7 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
-load([filepath 'GitHub\bloom-baby-bloom\NOAA\Shimada\Data\topclasses_bylatitudeCCS'],'classBC');
+load([filepath 'GitHub\bloom-baby-bloom\NOAA\Shimada\Data\topclasses_bylatitude_CCS'],'classBC');
 TopClass=classBC;
 TopClass=[TopClass;{'Dinophysis_acuminata';'Dinophysis_acuta';'Dinophysis_caudata';...
         'Dinophysis_fortii'; 'Dinophysis_norvegica'; 'Dinophysis_odiosa'; ...
@@ -59,8 +59,8 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_15Jun2022'; %USER what file contains your training features
-result_filename = 'Trees_15Jun2022';
+train_filename = 'Train_16Jun2022'; %USER what file contains your training features
+result_filename = 'Trees_16Jun2022';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 make_TreeBaggerClassifier(result_path, train_filename, result_filename, nTrees)
 
