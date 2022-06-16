@@ -43,7 +43,7 @@ start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcb
 classifier='D:\general\classifier\summary\Trees_15Jun2022_UCSC1000';
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class_UCSC2.0\class' yr '_v1\']);
 
-classifier='D:\general\classifier\summary\Trees_15Jun2022_regional1000';
+classifier='D:\SCW\UCSC_Trees_27Aug2019';
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class_UCSC\class' yr '_v1\']);
 
 %% Step 5: Summaries

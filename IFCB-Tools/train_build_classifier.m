@@ -28,6 +28,7 @@ TopClass=[TopClass;{'Dinophysis_acuminata';'Dinophysis_acuta';'Dinophysis_caudat
         'Dinophysis_fortii'; 'Dinophysis_norvegica'; 'Dinophysis_odiosa'; ...
         'Dinophysis_parva'; 'Dinophysis_rotundata'; 'Dinophysis_tripos';...
         'Pseudo-nitzschia_large_narrow';'Pseudo-nitzschia_large_wide';'Pseudo-nitzschia_small'}];
+
 %TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
 class2useName ='D:\general\config\class2use_11'; %classlist to subtract "top classes" from
 [class2skip] = find_class2skip(class2useName,TopClass);
@@ -49,7 +50,7 @@ class2group={{'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis
         {'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
         {'Thalassiosira_chain' 'Thalassiosira_single'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single' 'Chaetoceros_external_pennate'}};
+        {'Chaetoceros_chain' 'Chaetoceros_single'}};
 %IFCB='UCSC';
 IFCB=[];
 
