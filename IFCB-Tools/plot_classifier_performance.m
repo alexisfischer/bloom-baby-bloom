@@ -1,11 +1,6 @@
 clear;
 Mac=1;
-%name='16Feb2022_nocentric_ungrouped_PN';
-%name='23Feb2022_nonano';
-%name='24Feb2022';
-%name='24Feb2022_noUCSCdinophysis';
-%name='09May2022';
-name='14Jun2022_regional2000';
+name='16Jun2022_regional1000';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -20,6 +15,7 @@ addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','OSU');
 maxn=round(max([all.total]),-2);
+[~,class]=get_class_ind( all.class, 'all', basepath);
 
 %% plot stacked total in set and F1 score comparison
 % figure('Units','inches','Position',[1 1 8 6],'PaperPositionMode','auto');
@@ -40,8 +36,7 @@ maxn=round(max([all.total]),-2);
 %     lh.Position=[hp(1) hp(2)+.16 hp(3) hp(4)]; hold on    
 %  
 
-[~,class]=get_class_ind( all.class, 'all', basepath);
-figure('Units','inches','Position',[1 1 7 3],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 col=[(brewermap(3,'Set2'));[.1 .1 .1]]; 
 b = bar([NOAA.total UCSC.total OSU.total],'stack','linestyle','none','Barwidth',.7);
 for i=1:3
@@ -51,6 +46,7 @@ set(gca,'xlim',[0.5 (length(class)+.5)], 'xtick', 1:length(class), 'ylim',[0 max
     'xticklabel', class,'tickdir','out');
 ylabel('total images in set'); hold on
 xtickangle(45);
+lh=legend('NWFSC','UCSC','OSU','Location','NorthOutside');
 
 set(gcf,'color','w');
 print(gcf,'-dpng','-r100',[figpath 'F1score_UCSC_OSU_CCS' name '.png']);
@@ -97,8 +93,8 @@ fx_unclass=sum(c_all(:,end))./sum(total)   % what fraction of images went to unc
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca, 'ytick', 1:length(class), 'yticklabel', class,...
-    'xtick', 1:length(class), 'xticklabel',class)
+set(gca, 'ytick', .5:1:length(class)+.5, 'yticklabel', class,...
+    'xtick', .5:1:length(class)+.5, 'xticklabel',class)
 axis square;  col=colorbar; caxis([0 1])
 colorTitleHandle = get(col,'Title');
 titleString = {'Fx of test'; 'images/class'};
@@ -124,8 +120,8 @@ fx_unclass=sum(c_opt(:,end))./sum(total) % what fraction of images went to uncla
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca, 'ytick', 1:length(classU), 'yticklabel', classU,...
-    'xtick', 1:length(classU), 'xticklabel',classU)
+set(gca, 'ytick', .5:1:length(classU)+.5, 'yticklabel', classU,...
+    'xtick', .5:1:length(classU)+.5, 'xticklabel',classU)
 axis square;  col=colorbar; caxis([0 1])
 colorTitleHandle = get(col,'Title');
 titleString = {'Fx of test'; 'images/class'};

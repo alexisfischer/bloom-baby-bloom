@@ -2,7 +2,7 @@ clear;
 Mac=1;
 nameL1='15Jun2022_UCSC1000';
 nameL2='14Jun2022_UCSC2000';
-nameR1='15Jun2022_regional1000';
+nameR1='16Jun2022_regional1000';
 nameR2='14Jun2022_regional2000';
 
 if Mac
