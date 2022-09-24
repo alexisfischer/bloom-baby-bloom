@@ -7,8 +7,8 @@ function [ ] = find_discrete_samples( datapath, summary_dir)
 % Alexis D. Fischer, NOAA, June 2022
 %%
 %Example inputs:
-%datapath = 'C:\SFTP-BuddInlet\'; %where to access data (hdr files)
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+datapath = 'C:\SFTP-BuddInlet\'; %where to access data (hdr files)
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 
 addpath(genpath(datapath)); % add new data to search path
 addpath(genpath(summarydir)); % add new data to search path
