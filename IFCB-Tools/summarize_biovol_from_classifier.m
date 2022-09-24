@@ -1,20 +1,27 @@
-function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
-%function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yr)
+%function [] = summarize_biovol_from_classifier(summarydir,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yr)
 %
 % Inputs automatic classified results and outputs a summary file of counts and biovolume
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
-% Example inputs
-% summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
-% classpath_generic = 'D:\BuddInlet\class\classxxxx_v1\';
-% feapath_generic = 'D:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
-% roibasepath_generic = 'D:\Buddinlet\data\xxxx\'; %location of raw data
+%% Example inputs
+% clear
+% summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+% summaryfolder='IFCB-Data\BuddInlet\class\';
+% classpath_generic = 'D:\test\class\classxxxx_v1\';
+% feapath_generic = 'D:\test\features\xxxx\'; %Put in your featurepath byyear
+% roibasepath_generic = 'D:\test\data\xxxx\'; %location of raw data
 % yr = 2022;
 % adhocthresh = 0.5;
 
 classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
 feapath = regexprep(feapath_generic, 'xxxx', num2str(yr));
 roibasepath = regexprep(roibasepath_generic, 'xxxx', num2str(yr));
+
+addpath(genpath([summarydir_base summaryfolder]));
+addpath(genpath(classpath));
+addpath(genpath(feapath));
+addpath(genpath(roibasepath));
 
 temp = dir([classpath 'D*.mat']);
 pathall = repmat(classpath, length(temp),1);
@@ -30,8 +37,7 @@ ind = length(classpath_generic)+1;
 filelist = cellstr(temp(:,ind:ind+23));
 mdate = IFCB_file2date(filelist);
 
-pathall = repmat(roibasepath, length(temp),1);
-% pathall = repmat(hdrpath, size(temp,1),1);   
+pathall = repmat(roibasepath, size(temp,1),1);
 xall = repmat('.hdr', size(temp,1),1);
 fall = repmat('\', size(temp,1),1);    
 hdrname = cellstr([pathall temp(:,ind:ind+8) fall temp(:,ind:ind+23) xall]);  
@@ -50,18 +56,18 @@ filecommentTB=filelist;
 num2dostr = num2str(length(classfiles));
 
 for filecount = 1:length(classfiles)
-    if ~rem(filecount,10), disp(['reading ' num2str(filecount) ' of ' num2dostr]), end;
+    if ~rem(filecount,10), disp(['reading ' num2str(filecount) ' of ' num2dostr]), end
   %  [classcount(filecount,:), classbiovol(filecount,:), class2useTB] = summarize_biovol_TBclassMVCO(classfiles{filecount}, feafiles{filecount});
-    [classcount(filecount,:), classbiovol(filecount,:), classC(filecount,:),...
-        classcount_above_optthresh(filecount,:), classbiovol_above_optthresh(filecount,:),...
-        classC_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:),...
-        classbiovol_above_adhocthresh(filecount,:), classC_above_adhocthresh(filecount,:), class2useTB]...
-        = summarize_biovol_TBclassNOAA(classfiles{filecount}, feafiles{filecount}, adhocthresh);
-
+    [classcount(filecount,:),classbiovol(filecount,:),classC(filecount,:),...
+        classcount_above_optthresh(filecount,:),classbiovol_above_optthresh(filecount,:),...
+        classC_above_optthresh(filecount,:),classcount_above_adhocthresh(filecount,:),...
+        classbiovol_above_adhocthresh(filecount,:),classC_above_adhocthresh(filecount,:),class2useTB]...
+        = summarize_biovol_TBclassNOAA(classfiles{filecount},feafiles{filecount},adhocthresh,summarydir_base);
+    
         hdr=IFCBxxx_readhdr2(hdrname{filecount});
         runtypeTB{filecount}=hdr.runtype;
         filecommentTB{filecount}=hdr.filecomment;    
-end;
+end
 
 classcountTB = classcount;
 classcountTB_above_optthresh = classcount_above_optthresh;
@@ -79,7 +85,7 @@ filelistTB = filelist;
 %     if ~exist(resultpath, 'dir')
 %         mkdir(resultpath)
 %     end
-save([summarydir 'summary_biovol_allTB' num2str(yr)] ,'runtypeTB','filecommentTB',...
+save([summarydir_base summaryfolder 'summary_biovol_allTB' num2str(yr)] ,'runtypeTB','filecommentTB',...
     'class2useTB', 'classC_TB*', 'classcountTB*', 'classbiovolTB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB')
 %    save([resultpath 'summary_biovol_allTB'] , 'class2useTB', 'classcountTB*', 'classbiovolTB*', 'classC_TB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'feapath_generic')
 clear *files* classcount* classbiovol* classC* 

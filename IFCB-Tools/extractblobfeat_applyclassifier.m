@@ -23,38 +23,30 @@ addpath(genpath([ifcbdir 'blobs\']));
 addpath(genpath([ifcbdir 'features\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
-%classifier='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
-%classifier='D:\Shimada\classifier\summary\Trees_23Feb2022_nonano';
-classifier='D:\general\classifier\summary\Trees_10Jun2022';
-
+classifier='D:\general\classifier\summary\Trees_16Jun2022_regional1000';
 %%
-copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
+%copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
 % Step 2: Extract blobs
 start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
 % Step 3: Extract features
-start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],false)
+start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
 
-%% Step 4: Apply classifier
-classifier='D:\general\classifier\summary\Trees_15Jun2022_regional1000';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class_regional\class' yr '_v1\']);
-
-classifier='D:\general\classifier\summary\Trees_15Jun2022_UCSC1000';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class_UCSC2.0\class' yr '_v1\']);
-
-classifier='D:\SCW\UCSC_Trees_27Aug2019';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class_UCSC\class' yr '_v1\']);
+% Step 4: Apply classifier
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
 %% Step 5: Summaries
+summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+summaryfolder='IFCB-Data\BuddInlet\class\';
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 manualpath=[ifcbdir 'manual\'];
 adhocthresh = 0.5;
 
-summarize_biovol_from_classifier([summarydir 'class\'],classpath_generic,...
-    feapath_generic,roibasepath_generic,adhocthresh,str2double('2021')); %works for yrranges
+summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
+    feapath_generic,roibasepath_generic,adhocthresh,str2double(yr)); %works for yrranges
 
 %% manual results
 summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\']); 
