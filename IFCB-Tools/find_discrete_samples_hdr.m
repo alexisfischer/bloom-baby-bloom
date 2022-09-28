@@ -1,14 +1,14 @@
-function [ ] = find_discrete_samples( datapath, summary_dir)
-%function [ ] = find_discrete_samples( datapath, summary_dir)
+function [ ] = find_discrete_samples_hdr( datapath, summarydir)
+%function [ ] = find_discrete_samples( datapath, summarydir)
 %
 % finds discrete samples that have labels BS_trigger, Fl_trigger or FL_trigger
 % excludes data D20220518T190328_IFCB150 through  D20220520T163514_IFCB150
 % 
 % Alexis D. Fischer, NOAA, June 2022
-%%
+%
 %Example inputs:
-datapath = 'C:\SFTP-BuddInlet\'; %where to access data (hdr files)
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+% datapath = 'C:\SFTP-BuddInlet\'; %where to access data (hdr files)
+% summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 
 addpath(genpath(datapath)); % add new data to search path
 addpath(genpath(summarydir)); % add new data to search path
