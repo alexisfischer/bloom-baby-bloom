@@ -3,15 +3,15 @@ function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,cla
 %
 % Inputs automatic classified results and outputs a summary file of counts and biovolume
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
-%
-%% Example inputs
+
+% %Example inputs
 % clear
 % summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 % summaryfolder='IFCB-Data\BuddInlet\class\';
 % classpath_generic = 'D:\test\class\classxxxx_v1\';
 % feapath_generic = 'D:\test\features\xxxx\'; %Put in your featurepath byyear
 % roibasepath_generic = 'D:\test\data\xxxx\'; %location of raw data
-% yr = 2022;
+% yr = 2021;
 % adhocthresh = 0.5;
 
 classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
