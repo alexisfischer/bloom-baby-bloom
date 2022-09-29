@@ -9,14 +9,13 @@ addpath(genpath(filepath));
 
 idx=string([S.Location])=='Port';
 
-
 %% plot BI with Port Plaza
 figure('Units','inches','Position',[1 1 6 4],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.08], [0.09 0.21]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-xax1=datetime('2021-05-01'); xax2=datetime('2021-11-20');     
+xax1=datetime('2021-05-01'); xax2=datetime('2022-10-01');     
 
 subplot(2,1,1);
 plot(T.SampleDate,.001*T.DinophysisConcentrationcellsL,'k*-',...
