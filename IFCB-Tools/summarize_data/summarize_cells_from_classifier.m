@@ -4,17 +4,17 @@ function [ ] = summarize_cells_from_classifier(ifcbdir, summarydir, yrrange)
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
 %Example inputs:
-% clear
-% ifcbdir='D:\Shimada\LabData\';
-% summarydir = 'D:\Shimada\LabData\summary\';
-% yrrange = 2022;  %one value or range (e.g., 2017:2018)
+clear
+ifcbdir='D:\test\';
+summarydir = 'D:\Shimada\LabData\summary\';
+yrrange = 2021:2022;  %one value or range (e.g., 2017:2018)
 
 addpath(genpath(ifcbdir));
 addpath(genpath(summarydir));
 
 %check whether in directory
 urlflag = 0;
-if strcmp('http', in_dir(1:4))
+if strcmp('http', ifcbdir(1:4))
     urlflag = 1;
 end
 %make sure input paths end with filesep
@@ -27,10 +27,10 @@ in_dir = [ifcbdir 'data\']; %where to access data (hdr files)
 if (~isequal(in_dir(end), filesep) && ~urlflag)
     in_dir = [in_dir filesep];
 end
-%%
+
 classfiles = [];
 filelist = [];
-for yrcount = 1:length(yrrange) %USER not tested yet for multiple years, but should work
+for yrcount = 1:length(yrrange)
     yr = yrrange(yrcount);
     classpath = regexprep(classpath_generic, 'XXXX', num2str(yr));
     %temp = [dir([classpath 'I*.mat']); dir([classpath 'D*.mat'])];
@@ -43,6 +43,8 @@ for yrcount = 1:length(yrrange) %USER not tested yet for multiple years, but sho
     end
     clear temp pathall classpath
 end
+
+%%
 if urlflag
     hdrfiles = cellstr(strcat( in_dir, filelist, '.hdr'));
     %hdrfiles = cellstr([repmat(in_dir,length(filelist),1) filelist repmat('.hdr', length(filelist), 1)]);

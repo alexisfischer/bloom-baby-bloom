@@ -1,7 +1,7 @@
 % Use MC files to find who is representing the biomass to determine which classes should be used in classifier
 clear;
 
-CCS=1;
+CCS=0;
 
 %filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/';
 % addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
@@ -12,49 +12,38 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
 
 if CCS==1
-    load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_2019'])
+%    load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_2019'])
+    load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'])
     outdir=[filepath 'IFCB-Data/Shimada/manual/'];
-    num=35;
+    num=39;
 else
-    load([filepath 'IFCB-Data/BuddInlet/manual/class_eqdiam_biovol_manual_2021'])
+    load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'])
     outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
     num=25;
 end
 
-%% concatenate biovolume for each class in each sample
-volB=NaN*ones(length(BiEq),length(class2use_manual)); %preset biovolume matrix
-for i=1:length(class2use_manual)
-    for j=1:length(BiEq)     
-        idx=find([BiEq(j).class]==i); %find indices of a particular class
-        b=sum(BiEq(j).biovol(idx)); %match and sum biovolume
-        volB(j,i)=b./BiEq(j).ml_analyzed; %convert to um^3/mL
-    end
-end
-
 % Exclude nonliving
-volB(:,get_class_ind(class2use_manual,'nonliving',filepath))=NaN;
-
-clearvars i j idx b note1 note2 
+classbiovol(:,get_class_ind(class2use,'nonliving',filepath))=NaN;
 
 % find files with <60% of biomass annotated
 % and remove those files from top classses estimate
-sampletotal=repmat(nansum(volB,2),1,size(volB,2));
-idx=(strcmp('unclassified',class2use_manual));
-un=1-volB(:,idx)./sampletotal(:,idx); 
-filename={BiEq.filename}';
+sampletotal=repmat(nansum(classbiovol,2),1,size(classbiovol,2));
+idx=(strcmp('unclassified',class2use));
+un=1-classbiovol(:,idx)./sampletotal(:,idx); 
+filename={filelist.name}';
 idx=(un<.6);
 filename_unclassified=filename(idx);
 
-volB(idx,:)=[]; sampletotal(idx,:)=[];
+classbiovol(idx,:)=[]; sampletotal(idx,:)=[];
 
 % find highest biomass cells
-fxC_all=volB./sampletotal;
-classtotal=sum(volB,1);
+fxC_all=classbiovol./sampletotal;
+classtotal=sum(classbiovol,1);
 [~,idx]=maxk(classtotal,num); %find top biomass classes
 fxC=fxC_all(:,idx);
-class=class2use_manual(idx);
+class=class2use(idx);
 
-%remove select classes
+% remove select classes
 idx=find(ismember(class,{'unclassified' 'Dinophyceae_pointed'...
     'Pseudo-nitzschia_external_parasite'...
     'Chaetoceros_external_pennate' 'Dinophyceae_round' 'flagellate'...

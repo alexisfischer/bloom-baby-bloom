@@ -4,19 +4,20 @@ clear;
 filepath='C:\Users\ifcbuser\Documents\';
 addpath(genpath(filepath));
 
-%% Adjust annotations with added class
-start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\LabData\manual\')
-start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\Shimada\manual\')
-start_mc_adjust_classes_user_training('D:\general\config\class2use_11','D:\BuddInlet\manual\')
-
-% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
-class2useName ='D:\general\config\class2use_11';
+%% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
+class2useName ='D:\general\config\class2use_12';
 mergedpath = 'D:\general\classifier\';
 UCSCpath = 'D:\SCW\';
 OSUpath = 'D:\OSU\';
 SHMDApath = 'D:\Shimada\';
 LABpath = 'D:\LabData\';
 BUDDpath = 'D:\BuddInlet\';
+
+%update classlist to latest
+%start_mc_adjust_classes_user_training(class2useName,[LABpath 'manual\']);
+start_mc_adjust_classes_user_training(class2useName,[SHMDApath 'manual\'])
+start_mc_adjust_classes_user_training(class2useName,[BUDDpath 'manual\']);
+
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 

@@ -25,6 +25,7 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
 classifier='D:\general\classifier\summary\Trees_16Jun2022_regional1000';
 
+%%
 %copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
 % Step 2: Extract blobs
@@ -36,7 +37,7 @@ start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr 
 % Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
-% Step 5: Summaries
+%% Step 5: Summaries
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\BuddInlet\class\';
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
@@ -46,7 +47,7 @@ manualpath=[ifcbdir 'manual\'];
 adhocthresh = 0.5;
 
 summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
-    feapath_generic,roibasepath_generic,adhocthresh,str2double(yr));
+    feapath_generic,roibasepath_generic,adhocthresh,2021:2022);
 
 %% manual results
 summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\']); 
@@ -54,6 +55,4 @@ summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\'])
 summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
 
-summarize_biovol_from_manual_perROI(manualpath,[summarydir 'manual\'],...
-    [ifcbdir 'data\'],[ifcbdir 'features\' yr '\'],yr,1/3.4)
 
