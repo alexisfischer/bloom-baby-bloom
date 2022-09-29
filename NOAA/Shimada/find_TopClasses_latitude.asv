@@ -8,7 +8,7 @@ addpath(genpath(filepath)); % add new data to search path
 r=0; %order classes alphabetically
 %r=1; %order classes by presence
 
-un=.1; % fx biomass left unclassified
+un=.2; % fx left unclassified
 n=4; % # of regions
 top=30; % # of top classes per region
 
