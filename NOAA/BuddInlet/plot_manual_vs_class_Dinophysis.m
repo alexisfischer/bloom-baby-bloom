@@ -25,7 +25,7 @@ mdateTB=[Y1.mdateTB;Y2.mdateTB];
 classcountTB=[Y1.classcountTB;Y2.classcountTB];
 filecommentTB=[Y1.filecommentTB;Y2.filecommentTB];
 
-% separate discrete samples (data with file comment)
+%% separate discrete samples (data with file comment)
 idx=contains(filecommentTB,' BS_trigger'); ml_analyzedBS=ml_analyzedTB(idx); mdateBS=mdateTB(idx); classcountBS=classcountTB(idx,:);
 idx=contains(filecommentTB,' FL_trigger'); ml_analyzedFL=ml_analyzedTB(idx); mdateFL=mdateTB(idx); classcountFL=classcountTB(idx,:);
 
@@ -57,7 +57,7 @@ h=plot(dtTB(:),dinoC(:),'k-',dt,dinoM,'r*',T.SampleDate,...
     .001*T.DinophysisConcentrationcellsL,'b^','linewidth',.5); hold on;
 set(h(2),'markersize',6,'linewidth',1.5)
 set(h(3),'markersize',5,'linewidth',1.5)
-set(gca,'xlim',[xax1 xax2],'ylim',[0 50])
+set(gca,'xlim',[xax1 xax2])
     datetick('x', 'mmm', 'keeplimits');    
     ylabel('Dinophysis (cells/mL)','fontsize',12);
     legend('Classifier','Manual','Microscopy','Location','NW'); legend boxoff;
