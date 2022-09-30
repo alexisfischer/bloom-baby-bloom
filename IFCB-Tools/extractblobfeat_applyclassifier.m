@@ -14,7 +14,7 @@ summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddIn
 
 %summarydir=[ifcbdir 'summary\'];
 
-yr='2021';
+yr='2022';
 
 addpath(genpath(summarydir));
 addpath(genpath(ifcbdir));
@@ -25,19 +25,18 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
 classifier='D:\general\classifier\summary\Trees_16Jun2022_regional1000';
 
-%%
 %copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
 % Step 2: Extract blobs
 start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
 % Step 3: Extract features
-start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
+start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],false)
 
 % Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
-%% Step 5: Summaries
+% Step 5: Summaries
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\BuddInlet\class\';
 classpath_generic = [ifcbdir 'class\classxxxx_v1\'];

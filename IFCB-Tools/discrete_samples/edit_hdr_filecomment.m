@@ -11,7 +11,7 @@ filelist = dir([roibasepath 'D*.hdr']);
 matdate = IFCB_file2date({filelist.name});
 dt=datetime(matdate,'ConvertFrom','datenum');
 
-fixID=find(dt>=datetime(2022,05,18,19,03,28) & dt<=datetime(2022,05,20,16,35,14));
+fixID=find(dt>=datetime(2022,06,30,19,58,22) & dt<=datetime(2022,07,05,17,21,34));
 % remove incorrect BS_trigger labels from filecomment
 % dates when I accidentally forgot to turn off file comment!
 

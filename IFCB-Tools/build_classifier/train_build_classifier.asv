@@ -3,9 +3,9 @@
 clear;
 filepath='C:\Users\ifcbuser\Documents\';
 addpath(genpath(filepath));
+class2useName ='D:\general\config\class2use_12';
 
 %% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
-class2useName ='D:\general\config\class2use_12';
 mergedpath = 'D:\general\classifier\';
 UCSCpath = 'D:\SCW\';
 OSUpath = 'D:\OSU\';
@@ -14,9 +14,9 @@ LABpath = 'D:\LabData\';
 BUDDpath = 'D:\BuddInlet\';
 
 %update classlist to latest
-%start_mc_adjust_classes_user_training(class2useName,[LABpath 'manual\']);
-start_mc_adjust_classes_user_training(class2useName,[SHMDApath 'manual\'])
-start_mc_adjust_classes_user_training(class2useName,[BUDDpath 'manual\']);
+start_mc_adjust_classes_user_training(class2useName,[LABpath 'manual\']);
+%start_mc_adjust_classes_user_training(class2useName,[SHMDApath 'manual\'])
+%start_mc_adjust_classes_user_training(class2useName,[BUDDpath 'manual\']);
 
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
@@ -31,7 +31,6 @@ TopClass=[TopClass;{'Dinophysis_acuminata';'Dinophysis_acuta';'Dinophysis_caudat
         'Pseudo-nitzschia_large_narrow';'Pseudo-nitzschia_large_wide';'Pseudo-nitzschia_small'}];
 
 %TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
-class2useName ='D:\general\config\class2use_11'; %classlist to subtract "top classes" from
 [class2skip] = find_class2skip(class2useName,TopClass);
 
 clearvars manualpath id
@@ -60,8 +59,8 @@ addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
-train_filename = 'Train_16Jun2022'; %USER what file contains your training features
-result_filename = 'Trees_16Jun2022';
+train_filename = 'Train_29Sep2022'; %USER what file contains your training features
+result_filename = 'Trees_29Sep2022';
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 make_TreeBaggerClassifier(result_path, train_filename, result_filename, nTrees)
 
