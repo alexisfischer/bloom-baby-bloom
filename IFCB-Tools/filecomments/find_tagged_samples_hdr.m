@@ -1,4 +1,4 @@
-function [ ] = find_discrete_samples_hdr( datapath, summarydir)
+function [ ] = find_tagged_samples_hdr( tag, datapath, summarydir)
 %function [ ] = find_discrete_samples( datapath, summarydir)
 %
 % finds discrete samples that have labels BS_trigger, Fl_trigger or FL_trigger
@@ -9,6 +9,7 @@ function [ ] = find_discrete_samples_hdr( datapath, summarydir)
 %Example inputs:
 % datapath = 'C:\SFTP-BuddInlet\'; %where to access data (hdr files)
 % summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+% tag='trigger';
 
 addpath(genpath(datapath)); % add new data to search path
 addpath(genpath(summarydir)); % add new data to search path
@@ -40,7 +41,7 @@ end
 % filecomment(idx)={' '};
 
 % get filelist of discrete samples
-idx=contains(filecomment,'trigger');
+idx=contains(filecomment,tag);
 filename_discrete={filelist(idx).name}';
 triggertype=filecomment(idx);
 

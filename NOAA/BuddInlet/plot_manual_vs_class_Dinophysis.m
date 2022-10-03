@@ -15,17 +15,13 @@ idx=~strcmp(filecomment,{' '}); % remove discrete samples
 ml_analyzed(idx)=[]; matdate(idx)=[]; classcount(idx,:)=[];
 
 %%%% load in classified data
-Y1=load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB2021'],...
-    'class2useTB','ml_analyzedTB','mdateTB','classcountTB','filecommentTB');
-Y2=load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB2022'],...
-    'class2useTB','ml_analyzedTB','mdateTB','classcountTB','filecommentTB');
-class2useTB=Y1.class2useTB;
-ml_analyzedTB=[Y1.ml_analyzedTB;Y2.ml_analyzedTB];
-mdateTB=[Y1.mdateTB;Y2.mdateTB];
-classcountTB=[Y1.classcountTB;Y2.classcountTB];
-filecommentTB=[Y1.filecommentTB;Y2.filecommentTB];
+load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB_2021-2022'],...
+    'mdateTB','class2useTB','ml_analyzedTB','classcountTB','filecommentTB','runtypeTB');
 
-%% separate discrete samples (data with file comment)
+% remove backscatter triggered samples from data
+idx=contains(runtypeTB,'ALT'); ml_analyzedTB(idx)=[]; mdateTB(idx)=[]; filecommentTB(idx)=[]; classcountTB(idx,:)=[];
+
+% separate discrete samples (data with file comment)
 idx=contains(filecommentTB,' BS_trigger'); ml_analyzedBS=ml_analyzedTB(idx); mdateBS=mdateTB(idx); classcountBS=classcountTB(idx,:);
 idx=contains(filecommentTB,' FL_trigger'); ml_analyzedFL=ml_analyzedTB(idx); mdateFL=mdateTB(idx); classcountFL=classcountTB(idx,:);
 
@@ -51,17 +47,17 @@ dt=datetime(matdate,'ConvertFrom','datenum');
 %% full temporal resolution on 2022
 figure('Units','inches','Position',[1 1 5 2],'PaperPositionMode','auto'); 
 
-xax1=datetime('2022-06-01'); xax2=datetime('2022-08-01');     
+xax1=datetime('2022-06-15'); xax2=datetime('2022-07-24');     
 
 h=plot(dtTB(:),dinoC(:),'k-',dt,dinoM,'r*',T.SampleDate,...
     .001*T.DinophysisConcentrationcellsL,'b^','linewidth',.5); hold on;
 set(h(2),'markersize',6,'linewidth',1.5)
 set(h(3),'markersize',5,'linewidth',1.5)
-set(gca,'xlim',[xax1 xax2])
-    datetick('x', 'mmm', 'keeplimits');    
+set(gca,'xlim',[xax1 xax2],'ylim',[0 20])
+    datetick('x', 'mm/dd', 'keeplimits');    
     ylabel('Dinophysis (cells/mL)','fontsize',12);
-    legend('Classifier','Manual','Microscopy','Location','NW'); legend boxoff;
-    title('In situ (high res, bloom closeup)')
+    legend('IFCB (classifier)','IFCB (manual)','Microscopy','Location','NE'); 
+    title('high temporal resolution, bloom closeup')
 
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/ManualvsClassifer.png']);
@@ -83,8 +79,8 @@ set(h(3),'markersize',5,'linewidth',1.5)
 set(gca,'xlim',[xax1 xax2])
     datetick('x', 'mmm', 'keeplimits');    
     ylabel('Dinophysis (cells/mL)','fontsize',12);
-    legend('Classifier','Manual','Microscopy','Location','N'); legend boxoff;
-    title('In situ (daily average)')
+    legend('IFCB (classifier)','IFCB (manual)','Microscopy','Location','NW');
+    title('daily average')
 
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/ManualvsClassifer_dailyaverage.png']);

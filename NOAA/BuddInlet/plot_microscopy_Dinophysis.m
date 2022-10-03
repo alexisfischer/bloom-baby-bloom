@@ -11,7 +11,7 @@ idx=string([S.Location])=='Port';
 
 %% plot BI 
 figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.08], [0.09 0.21]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.1 0.15], [0.09 0.21]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
@@ -24,6 +24,7 @@ plot(T.SampleDate,.001*T.DinophysisConcentrationcellsL,'k*-','MarkerSize',5);
     ylabel('Dinophysis (cells/mL)','fontsize',11);
 %legend('OYC','Port Plaza','Location','N');
     datetick('x', 'mm/dd', 'keeplimits');    
+    title('Microscopy')
 
 subplot(2,1,2);
 h = bar(T.SampleDate,0.01*[T.DAcuminata T.DFortii T.DNorvegica T.DOdiosa...
