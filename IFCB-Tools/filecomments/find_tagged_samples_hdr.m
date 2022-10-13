@@ -5,11 +5,11 @@ function [ ] = find_tagged_samples_hdr( tag, datapath, summarydir)
 % excludes data D20220518T190328_IFCB150 through  D20220520T163514_IFCB150
 % 
 % Alexis D. Fischer, NOAA, June 2022
-%
+%%
 %Example inputs:
-% datapath = 'C:\SFTP-BuddInlet\'; %where to access data (hdr files)
-% summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
-% tag='trigger';
+datapath = 'C:\SFTP-BuddInlet\'; %where to access data (hdr files)
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+tag='trigger';
 
 addpath(genpath(datapath)); % add new data to search path
 addpath(genpath(summarydir)); % add new data to search path
