@@ -7,6 +7,7 @@ filepath= '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 addpath(genpath(filepath)); 
 
 load([filepath 'Data/lat_lon_time_Shimada2021'],'DT','LON','LAT');
+
 load([filepath 'Data/temperature_Shimada2021'],'dt','temp');
 [~,ia,ib]=intersect(dt,DT);
 TEMP=NaN*ones(size(DT)); TEMP(ib)=temp(ia);

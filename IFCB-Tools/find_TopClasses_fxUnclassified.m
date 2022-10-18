@@ -3,13 +3,13 @@ clear;
 
 CCS=0;
 
-%filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/';
-% addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-% addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
-filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
-addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
+% filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+% addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
+% addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
 
 if CCS==1
 %    load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_2019'])
@@ -19,7 +19,7 @@ if CCS==1
 else
     load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'])
     outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
-    num=25;
+    num=60;
 end
 
 % Exclude nonliving
@@ -43,12 +43,18 @@ classtotal=sum(classbiovol,1);
 fxC=fxC_all(:,idx);
 class=class2use(idx);
 
+fxCC=classtotal./(nansum(classtotal));
+fxCC=fxCC(idx);
+
+%class=class';
+%fxCC=fxCC';
 % remove select classes
 idx=find(ismember(class,{'unclassified' 'Dinophyceae_pointed'...
     'Pseudo-nitzschia_external_parasite'...
     'Chaetoceros_external_pennate' 'Dinophyceae_round' 'flagellate'...
-    'Heterocapsa_triquetra' 'ciliate' 'centric' 'nanoplankton'}));
+    'Heterocapsa_triquetra' 'ciliate' 'centric' 'nanoplankton' 'zooplankton'}));
 class(idx)=[];
+fxCC(idx)=[];
 
 % add select classes
 new={'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
@@ -62,12 +68,14 @@ class=[class new];
 
 if CCS==1
     idx=find(ismember(class,{'Pseudo-nitzschia'}));
-    class(idx)=[];
+    class(idx)=[]; fxCC(idx)=[];
     class(get_class_ind(class,'zooplankton',filepath))=[]; %remove zooplankton
 else
     class{end+1}='Mesodinium';
 end
-class2use=unique(class);
-class2use=(sort(class2use))';
+[class2use,idx]=unique(class,'stable');
+
+%%
+%class2use=(sort(class2use))';
 
 save([outdir 'TopClasses'],'class2use');
