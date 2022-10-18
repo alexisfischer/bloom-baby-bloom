@@ -1,4 +1,4 @@
-function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath, maxn, minn, class2useName, varargin)
+function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath, maxn, minn, classifiername, class2useName, varargin)
 %% function [  ] = compile_train_features_user_training( manualpath , feapath_base, maxn, minn, class2skip, class2group)
 % class2skip and class2merge are optional inputs
 % For example:
@@ -143,6 +143,6 @@ nclass = n;
 
 datestring = datestr(now, 'ddmmmyyyy');
 
-save([outpath 'Train_' datestring], 'train', 'class_vector', 'targets', 'class2use', 'nclass', 'featitles');
+save([outpath 'Train_' classifiername], 'train', 'class_vector', 'targets', 'class2use', 'nclass', 'featitles');
 disp('Training set feature file stored here:')
 disp([outpath 'Train_' datestring])

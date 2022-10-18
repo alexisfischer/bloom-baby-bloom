@@ -1,6 +1,6 @@
 clear;
 Mac=1;
-name='16Jun2022_regional1000';
+name='BI_Dinophysis_GenusLevel';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    

@@ -23,7 +23,8 @@ addpath(genpath([ifcbdir 'blobs\']));
 addpath(genpath([ifcbdir 'features\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
-classifier='D:\general\classifier\summary\Trees_16Jun2022_regional1000';
+classifier='D:\general\classifier\summary\Trees_BI_Dinophysis_GenusLevel';
+%classifier='D:\general\classifier\summary\Trees_16Jun2022_regional1000';
 %%
 %copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
 
@@ -33,7 +34,9 @@ start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'
 % Step 3: Extract features
 start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],false)
 
-% Step 4: Apply classifier
+%% Step 4: Apply classifier
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
+yr='2021';
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
 %% Step 5: Summaries

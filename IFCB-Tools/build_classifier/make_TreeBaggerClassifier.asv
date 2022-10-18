@@ -7,9 +7,10 @@ function [ ] = make_TreeBaggerClassifier( result_path, classifiername, nTrees)
 %
 %run compile_train_features_user_training.m first to store input results in train_filename
 % Example inputs:
-% result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
-% classifiername='BI_Dinophysis_SpeciesLevel';
-% nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
+clear
+result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
+classifiername='BI_Dinophysis_SpeciesLevel';
+nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 load([result_path 'Train_' classifiername],'class2use','class_vector','featitles','nclass','targets','train'); 
 
@@ -21,13 +22,10 @@ load([result_path 'Train_' classifiername],'class2use','class_vector','featitles
 fea2use = 1:length(featitles);
 featitles = featitles(fea2use);
 classes = class2use;
-
 %sort training set
 if max(class_vector)>length(classes)
     idx=find(class_vector==max(class_vector));
-    train(idx,:)=[];
-    targets(idx)=[];
-    class_vector(idx)=[];
+    
 else
 end
 
@@ -66,7 +64,7 @@ for count = 1:length(classes)
 end
 clear count fpr tpr thr iaccu accu
 
-save([result_path 'Trees_' classifiername],'b', 'targets', 'featitles', 'classes', 'maxthre','-v7.3')
+save([result_path result_filename],'b', 'targets', 'featitles', 'classes', 'maxthre','-v7.3')
 
 disp('Classifier file stored here:')
 disp([result_path 'Trees_' classifiername])
