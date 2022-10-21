@@ -1,6 +1,7 @@
 clear;
 Mac=1;
 name='BI_Dinophysis_GenusLevel';
+%name='BI_Dinophysis_SpeciesLevel';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -49,7 +50,7 @@ xtickangle(45);
 lh=legend('NWFSC','UCSC','OSU','Location','NorthOutside');
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r100',[figpath 'F1score_UCSC_OSU_CCS' name '.png']);
+print(gcf,'-dpng','-r100',[figpath 'TrainingSet_UCSC_OSU_CCS' name '.png']);
 hold off
 
 %% CCS: Winner takes All
@@ -59,28 +60,28 @@ hold off
 UCSC=UCSC(ia,:);
 OSU=OSU(ia,:);
 NOAA=NOAA(ia,:);
-[~,class]=get_class_ind( all.class, 'all', basepath);
+[~,class_s]=get_class_ind( all.class, 'all', basepath);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
 b=bar([all.R all.P],'Barwidth',1,'linestyle','none'); hold on
 hline(.9,'k--');
-set(gca,'ycolor','k', 'xtick', 1:length(class), 'xticklabel', class); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(class_s), 'xticklabel', class_s); hold on
 ylabel('Performance');
 col=flipud(brewermap(2,'RdBu')); 
 for i=1:length(b)
     set(b(i),'FaceColor',col(i,:));
 end  
 yyaxis right;
-plot(1:length(class),all.total,'k*'); hold on
+plot(1:length(class_s),all.total,'k*'); hold on
 ylabel('total images in set');
-set(gca,'ycolor','k', 'xtick', 1:length(class),'ylim',[0 maxn], 'xticklabel', class); hold on
+set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 maxn], 'xticklabel', class_s); hold on
 legend('Recall', 'Precision','Location','W')
 title(['All CCS - Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
 xtickangle(45);
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'Fx_recall_precision_onCCS' name '.png']);
+print(gcf,'-dpng','-r200',[figpath 'F1score_UCSC_OSU_CCS_' name '.png']);
 hold off
 
 %% Winner takes All
@@ -93,8 +94,10 @@ fx_unclass=sum(c_all(:,end))./sum(total)   % what fraction of images went to unc
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca, 'ytick', .5:1:length(class)+.5, 'yticklabel', class,...
-    'xtick', .5:1:length(class)+.5, 'xticklabel',class)
+set(gca,'ylim',[1 length(class)],'xlim',[1 length(class)],...
+    'ytick',1:1:length(class), 'yticklabel', class,...
+    'xtick',1:1:length(class), 'xticklabel',class)
+
 axis square;  col=colorbar; caxis([0 1])
 colorTitleHandle = get(col,'Title');
 titleString = {'Fx of test'; 'images/class'};
@@ -120,8 +123,9 @@ fx_unclass=sum(c_opt(:,end))./sum(total) % what fraction of images went to uncla
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca, 'ytick', .5:1:length(classU)+.5, 'yticklabel', classU,...
-    'xtick', .5:1:length(classU)+.5, 'xticklabel',classU)
+set(gca,'ylim',[1 length(classU)],'xlim',[1 length(classU)],...
+    'ytick', 1:1:length(classU), 'yticklabel', classU,...
+    'xtick', 1:1:length(classU), 'xticklabel',classU)
 axis square;  col=colorbar; caxis([0 1])
 colorTitleHandle = get(col,'Title');
 titleString = {'Fx of test'; 'images/class'};
