@@ -6,7 +6,7 @@ function [class2skip] = find_class2skip(class2useName,TopClass)
 %%
 % % Example inputs
 % TopClassName = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses';
-% class2useName = 'D:\general\config\class2use_11'; %classlist to subtract "class" from
+% class2useName = 'D:\general\config\class2use_12'; %classlist to subtract "class" from
 
 load([class2useName '.mat'],'class2use');
 

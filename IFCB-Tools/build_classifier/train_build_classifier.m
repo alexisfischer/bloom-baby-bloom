@@ -34,10 +34,11 @@ class2use(ismember(class2use,'Dinophysis'))=[]; %removing bulk Dinophysis class 
 
 %TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
 [class2skip] = find_class2skip(class2useName,TopClass);
+class2skip(end+1)={'Dinophysis'};
 
 clearvars manualpath id
 
-% Step 2: Compile features for the training set
+%% Step 2: Compile features for the training set
 addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
@@ -58,7 +59,7 @@ class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
 %IFCB='UCSC';
 IFCB=[];
 classifiername='BI_Dinophysis_SpeciesLevel';
-
+%%
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
 

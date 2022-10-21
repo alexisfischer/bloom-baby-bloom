@@ -145,4 +145,4 @@ datestring = datestr(now, 'ddmmmyyyy');
 
 save([outpath 'Train_' classifiername], 'train', 'class_vector', 'targets', 'class2use', 'nclass', 'featitles');
 disp('Training set feature file stored here:')
-disp([outpath 'Train_' datestring])
+disp([outpath 'Train_' classifiername])
