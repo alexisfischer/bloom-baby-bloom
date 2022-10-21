@@ -29,12 +29,11 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 %% Budd Inlet classifier
 load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'class2use');
 TopClass=class2use;
-
-class2use(ismember(class2use,'Dinophysis'))=[]; %removing bulk Dinophysis class for special BI classifier
+%class2use(ismember(class2use,'Dinophysis'))=[]; %removing bulk Dinophysis class for special BI classifier
 
 %TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
 [class2skip] = find_class2skip(class2useName,TopClass);
-class2skip(end+1)={'Dinophysis'};
+%class2skip(end+1)={'Dinophysis'};
 
 clearvars manualpath id
 
@@ -50,20 +49,19 @@ minn = 500; %minimum number for inclusion
 class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
         {'Thalassiosira_chain' 'Thalassiosira_single'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single'}};
-    
-% {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
-%         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
-%         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}  
+        {'Chaetoceros_chain' 'Chaetoceros_single'}...
+        {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
+        'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
+        'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}};  
 
 %IFCB='UCSC';
 IFCB=[];
-classifiername='BI_Dinophysis_SpeciesLevel';
-%%
+classifiername='BI_Dinophysis_GenusLevel';
+
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
 
-%% Step 3: Train (make) the classifier
+% Step 3: Train (make) the classifier
 result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 make_TreeBaggerClassifier(result_path, classifiername, nTrees)
