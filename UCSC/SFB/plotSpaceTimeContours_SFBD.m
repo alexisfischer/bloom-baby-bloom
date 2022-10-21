@@ -1,9 +1,9 @@
 %% plot Space & Time Contours
-addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
 clear;
-filepath = '/Users/afischer/MATLAB/bloom-baby-bloom/SFB/';
+filepath = '/Users/alexis.fischer/Documents/MATLAB/bloom-baby-bloom/UCSC/SFB/';
 load([filepath 'Data/physical_param'],'Si'); % parameters
 
 load([filepath 'Data/NetDeltaFlow'],'DN','X2','OUT');
@@ -56,7 +56,6 @@ for i=1:length(Y) %organize data into a week x location matrix
     C(i,:) = reshape(y_wkmat,[length(C),1]);
 end
 
-%%
 clearvars y_ydmat yearlist y_wkmat D mdate_wkmat i F
 
 figure('Units','inches','Position',[1 1 6. 6.5],'PaperPositionMode','auto');

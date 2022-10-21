@@ -1,7 +1,7 @@
 %% Plot Hourly cells/L for select classes for 2018 at SCW
 %  Alexis D. Fischer, University of California - Santa Cruz, April 2019
 clear;
-filepath = '~/MATLAB/bloom-baby-bloom/SCW/';
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/UCSC/SCW/';
 load([filepath 'Data/IFCB_summary/class/summary_allTB_2018'],...
     'class2useTB','ml_analyzedTB','mdateTB','classcountTB_above_optthresh');
 classcountTB=classcountTB_above_optthresh;
@@ -9,6 +9,7 @@ load([filepath 'Data/SCW_master'],'SC');
 load([filepath 'Data/Wind_MB'],'w');
 load([filepath 'Data/ROMS/SCW_ROMS_TS_MLD_50m'],'ROMS');
 
+%%
 %%%% (1) process and extract Classifier data for class of interest
 % convert to PST (UTC is 7 hrs ahead)
 time=datetime(mdateTB,'ConvertFrom','datenum'); time=time-hours(7); 

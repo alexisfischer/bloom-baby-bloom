@@ -1,4 +1,4 @@
-%% Import 2019 Shimada HAB samples
+%% Import 2021 Shimada HAB samples
 clear;
 filename="/Users/alexis.fischer/Documents/Shimada2021/Shimada 2021 HAB Data.xlsx";
 
