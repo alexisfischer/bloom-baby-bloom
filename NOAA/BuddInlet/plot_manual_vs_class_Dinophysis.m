@@ -46,101 +46,62 @@ dt=datetime(matdate,'ConvertFrom','datenum');
 
 %%%% plot Dinophysis manual vs classifier
 %% full temporal resolution on 2022
-figure('Units','inches','Position',[1 1 5 5],'PaperPositionMode','auto'); 
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.1 0.05], [0.2 0.05]);
+figure('Units','inches','Position',[1 1 5 3.5],'PaperPositionMode','auto'); 
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.12], [0.2 0.05]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-xax1=datetime('2022-06-20'); xax2=datetime('2022-10-01');     
+xax1=datetime('2022-06-20'); xax2=datetime('2022-09-28');     
 
-subplot(3,1,1)
-d1=[datetime('18-Jul-2022') datetime('26-Jul-2022') datetime('26-Jul-2022') datetime('18-Jul-2022')];
-d2=[datetime('08-Sep-2022') datetime('12-Sep-2022') datetime('12-Sep-2022') datetime('08-Sep-2022')];
-d3=[datetime('23-Sep-2022') datetime('28-Sep-2022') datetime('28-Sep-2022') datetime('23-Sep-2022')];
-
-    h1=patch(d1,[0 0 10000 10000],'y'); hold on
-    patch(d2,[0 0 10000 10000],'y'); hold on
-    patch(d3,[0 0 10000 10000],'y'); hold on
-
-    trigger=sum(classcountTB,2);
-    plot(datetime(mdateTB,'convertfrom','datenum'),trigger,'k.','markersize',2);
-    hold on;
-    set(gca,'xaxislocation','top','xlim',[xax1 xax2],'ylim',[0 10000]);
-        datetick('x', 'mm/dd', 'keeplimits');    
-    ylabel('total IFCB images'); box on;
-    legend(h1,'compromised?','location','n'); legend boxoff
-
-subplot(3,1,2)
-h=plot(T.SampleDate,T.IFCBSampleDepthm,'r--',T.SampleDate,T.SampleDepths,'b:',...
-    [T.SampleDate';T.SampleDate'],[T.ChlMaxLower1';T.ChlMaxUpper1'],'g',...
-    [T.SampleDate';T.SampleDate'],[T.ChlMaxLower2';T.ChlMaxUpper2'],'g','linewidth',2);
-    set(h(3),'linewidth',5)
-    set(h(4),'linewidth',5)
-    datetick('x', 'mm/dd', 'keeplimits');        
-    set(gca,'xlim',[xax1 xax2],'ylim',[0 7],'YDir','reverse','xticklabel',{});
+subplot(2,1,1)
+plot(T.SampleDate,T.IFCBSampleDepthm,'r--','linewidth',2);hold on;
+plot(T.SampleDate,T.SampleDepths,'b:','linewidth',2);hold on;
+plot([T.SampleDate';T.SampleDate'],[T.ChlMaxLower1';T.ChlMaxUpper1'],'g','linewidth',5);hold on;
+plot([T.SampleDate';T.SampleDate'],[T.ChlMaxLower2';T.ChlMaxUpper2'],'g','linewidth',5);hold on;
+    set(gca,'xaxislocation','top','xlim',[xax1 xax2],'ylim',[0 7],'YDir','reverse');
+   % datetick('x', 'mm/dd', 'keeplimits');            
     ylabel('Depth (m)','fontsize',12);
     legend('IFCB samples','Discrete samples','Chl Max','Location','SE'); legend boxoff;
     hold on
 
-subplot(3,1,3)
+subplot(2,1,2)
 %dtTB(:),dinoC(:),'k-',
 plot(dt,dinoM,'r*',T.SampleDate,.001*T.DinophysisConcentrationcellsL,'b^','markersize',5,'linewidth',1.5); hold on;
-    set(gca,'xlim',[xax1 xax2],'ylim',[0 17]);
-    datetick('x', 'mm/dd', 'keeplimits');    
-    ylabel('Dinophysis (cells/mL)','fontsize',12);
+    set(gca,'xlim',[xax1 xax2],'ylim',[0 20]);
+    %datetick('x', 'mm/dd', 'keeplimits');    
+    ylabel({'Dinophysis';'(cells/mL)'},'fontsize',12);
     legend('IFCB (manual)','Microscopy','Location','N'); legend boxoff
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/ManualvsClassifer.png']);
+print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/BI_Discrete_vs_IFCB.png']);
 hold off
 
-%% daily average
-% classifier data
-[ mdate_mat, dinoMavg, ~, ~ ] = timeseries2ydmat( mdateTB, dinoC(:) );
-dtTBa=datetime(mdate_mat,'ConvertFrom','datenum');
+%% manual vs classifier
+figure('Units','inches','Position',[1 1 5 3.5],'PaperPositionMode','auto'); 
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.12], [0.2 0.05]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-figure('Units','inches','Position',[1 1 5 4],'PaperPositionMode','auto'); 
-
-xax1=datetime('2021-08-01'); xax2=datetime('2022-10-01');     
+xax1=datetime('2022-06-20'); xax2=datetime('2022-09-28');     
 
 subplot(2,1,1)
-h=plot(T.SampleDate,T.IFCBSampleDepthm,'r--',T.SampleDate,T.SampleDepths,'b:',...
-    [T.SampleDate';T.SampleDate'],[T.ChlMaxLower1';T.ChlMaxUpper1'],'g',...
-    [T.SampleDate';T.SampleDate'],[T.ChlMaxLower2';T.ChlMaxUpper2'],'g','linewidth',2);
-    set(h(3),'linewidth',5)
-    set(h(4),'linewidth',5)
-    set(gca,'xlim',[xax1 xax2],'ylim',[0 7],'YDir','reverse');
-    ylabel('Depth (m)','fontsize',12);
-    legend('IFCB samples','Discrete samples','Chl Max','Location','SW'); legend boxoff;
-hold on
+idx=(strcmp('Dinophysis,Dinophysis_acuminata,Dinophysis_acuta,Dinophysis_caudata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_odiosa,Dinophysis_parva,Dinophysis_rotundata,Dinophysis_tripos', class2useTB));
+plot(datetime(mdateTB,'convertfrom','datenum'),classcountTB(:,idx)./ml_analyzedTB,'k-',...
+    dt,dinoM,'r*');
+set(gca,'xaxislocation','top','ylim',[0 20],'xlim',[xax1 xax2])
+%datetick('x', 'mmm', 'keeplimits');    
+    ylabel({'Dinophysis';'(cells/mL)'},'fontsize',12);
 
 subplot(2,1,2)
-%dtTBa(:),dinoMavg(:),'k-',
-h=plot(dt,dinoM,'r*',T.SampleDate,...
-    .001*T.DinophysisConcentrationcellsL,'b^','markersize',5,'linewidth',1.5); hold on;
-set(gca,'xlim',[xax1 xax2])
-    datetick('x', 'mmm', 'keeplimits');    
-    ylabel('Dinophysis (cells/mL)','fontsize',12);
-    legend('IFCB (manual)','Microscopy','Location','NW'); legend boxoff
-    title('daily average')
+idx=(strcmp('Mesodinium', class2useTB));
+plot(datetime(mdateTB,'convertfrom','datenum'),classcountTB(:,idx)./ml_analyzedTB,'k-',...
+    dt,classcount(:,strcmp('Mesodinium',class2use))./ml_analyzed,'r*');
+set(gca,'ylim',[0 40],'xlim',[xax1 xax2])
+%datetick('x', 'mmm', 'keeplimits');    
+    ylabel({'Mesodinium';'(cells/mL)'},'fontsize',12);
+legend('classifier','manual','Location','N');
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/ManualvsClassifer_dailyaverage.png']);
+print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/BI_IFCB_ManualvsClassifer.png']);
 hold off
 
-%%
-% % discrete classifier data
-% [ mdateBS, BS, ~, ~ ] = timeseries2ydmat( mdateBS, (classcountBS(:,idc)./ml_analyzedBS) );
-% dtBS=datetime(mdateBS,'ConvertFrom','datenum');
-% 
-% [ mdateFL, FL, ~, ~ ] = timeseries2ydmat( mdateFL, (classcountFL(:,idc)./ml_analyzedFL) );
-% dtFL=datetime(mdateFL,'ConvertFrom','datenum');
-
-
-% subplot(2,1,2); %discrete
-% plot(dtBS,BS,'bs',dtFL,FL,'m^'); hold on;
-%     set(gca,'xlim',[xax1 xax2],'ylim',[0 17])
-%     datetick('x', 'mmm', 'keeplimits');    
-%     ylabel('Dinophysis (cells/mL)','fontsize',12);
-%     legend('BS','FL','Location','NW'); legend boxoff;
-%     title('Discrete classified samples')

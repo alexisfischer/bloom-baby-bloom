@@ -4,14 +4,11 @@ fprint=1;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 load([filepath 'NOAA/BuddInlet/Data/DinophysisMicroscopy'],'T');
-load([filepath 'NOAA/BuddInlet/Data/SoundToxins_DSP_BI'],'S');
 addpath(genpath(filepath));
 
-idx=string([S.Location])=='Port';
-
 %% plot BI 
-figure('Units','inches','Position',[1 1 6 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.1 0.15], [0.09 0.21]);
+figure('Units','inches','Position',[1 1 5 3.5],'PaperPositionMode','auto'); 
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.15], [0.12 0.25]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
@@ -19,11 +16,10 @@ xax1=datetime('2021-05-01'); xax2=datetime('2022-10-01');
 
 subplot(2,1,1);
 plot(T.SampleDate,.001*T.DinophysisConcentrationcellsL,'k*-','MarkerSize',5);
+    datetick('x', 'mm/yy', 'keeplimits');    
     set(gca,'xlim',[xax1 xax2],...
         'fontsize', 11,'fontname', 'arial','tickdir','out','xaxislocation','top');   
     ylabel('Dinophysis (cells/mL)','fontsize',11);
-%legend('OYC','Port Plaza','Location','N');
-    datetick('x', 'mm/dd', 'keeplimits');    
     title('Microscopy')
 
 subplot(2,1,2);
@@ -34,7 +30,7 @@ c=brewermap(6,'Spectral');
         set(h(i),'FaceColor',c(i,:));
     end  
 
-    datetick('x', 'mm/dd', 'keeplimits');    
+    datetick('x', 'mm/yy', 'keeplimits');    
     set(gca,'xlim',[xax1 xax2],'ylim',[0 1],'ytick',.2:.2:1,...
         'fontsize', 11,'fontname', 'arial','tickdir','out',...
         'yticklabel',{'.2','.4','.6','.8','1'});   
@@ -42,7 +38,7 @@ c=brewermap(6,'Spectral');
 
     lh=legend('acuminata','fortii','norvegica','odiosa','rotundata','parva');
     legend boxoff; lh.FontSize = 10; hp=get(lh,'pos');
-    lh.Position=[hp(1)+.23 hp(2) hp(3) hp(4)]; hold on    
+    lh.Position=[hp(1)+.27 hp(2) hp(3) hp(4)]; hold on    
     lh.Title.String='Species';
 
 if fprint
