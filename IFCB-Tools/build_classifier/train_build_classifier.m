@@ -33,7 +33,9 @@ TopClass=class2use;
 
 %TopClassName=[filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'];
 [class2skip] = find_class2skip(class2useName,TopClass);
-%class2skip(end+1)={'Dinophysis'};
+class2skip(end+1)={'Cerataulina'};
+class2skip(end+1)={'Nitzschia'};
+class2skip(end+1)={'Strombidium'};
 
 clearvars manualpath id
 
@@ -56,7 +58,7 @@ class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
 
 %IFCB='UCSC';
 IFCB=[];
-classifiername='BI_Dinophysis_GenusLevel';
+classifiername='BI_Dinophysis_GenusLevel_v2';
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
