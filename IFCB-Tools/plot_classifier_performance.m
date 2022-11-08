@@ -1,5 +1,5 @@
 clear;
-Mac=0;
+Mac=1;
 name='BI_Dinophysis_GenusLevel_v5';
 %name='BI_Dinophysis_SpeciesLevel';
 
@@ -93,7 +93,7 @@ total=[sum(c_all,2);0];
 fx_unclass=sum(c_all(:,end))./sum(total)   % what fraction of images went to unclassified?
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
-pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
+pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(1,3); col]); 
 set(gca,'ylim',[1 length(class)],'xlim',[1 length(class)],...
     'ytick',1:1:length(class), 'yticklabel', class,...
     'xtick',1:1:length(class), 'xticklabel',class)

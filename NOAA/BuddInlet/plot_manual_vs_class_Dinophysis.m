@@ -77,29 +77,47 @@ print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/BI_Discrete_vs_IFCB.png
 hold off
 
 %% manual vs classifier
-figure('Units','inches','Position',[1 1 5 3.5],'PaperPositionMode','auto'); 
+figure('Units','inches','Position',[1 1 5 3.5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.12], [0.2 0.05]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-xax1=datetime('2022-06-20'); xax2=datetime('2022-09-28');     
+xax1=datetime('2021-08-01'); xax2=datetime('2022-09-28');     
 
 subplot(2,1,1)
-idx=(strcmp('Dinophysis,Dinophysis_acuminata,Dinophysis_acuta,Dinophysis_caudata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_odiosa,Dinophysis_parva,Dinophysis_rotundata,Dinophysis_tripos', class2useTB));
+idx=(strcmp('Dinophysis_acuminata,Dinophysis_acuta,Dinophysis_caudata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_odiosa,Dinophysis_parva,Dinophysis_rotundata,Dinophysis_tripos', class2useTB));
 plot(datetime(mdateTB,'convertfrom','datenum'),classcountTB(:,idx)./ml_analyzedTB,'k-',...
     dt,dinoM,'r*');
 set(gca,'xaxislocation','top','ylim',[0 20],'xlim',[xax1 xax2])
-%datetick('x', 'mmm', 'keeplimits');    
+%datetick('x', 'm', 'keeplimits');    
     ylabel({'Dinophysis';'(cells/mL)'},'fontsize',12);
 
 subplot(2,1,2)
 idx=(strcmp('Mesodinium', class2useTB));
-plot(datetime(mdateTB,'convertfrom','datenum'),classcountTB(:,idx)./ml_analyzedTB,'k-',...
+h=plot(datetime(mdateTB,'convertfrom','datenum'),classcountTB(:,idx)./ml_analyzedTB,'k-',...
     dt,classcount(:,strcmp('Mesodinium',class2use))./ml_analyzed,'r*');
 set(gca,'ylim',[0 40],'xlim',[xax1 xax2])
-%datetick('x', 'mmm', 'keeplimits');    
+%datetick('x', 'm', 'keeplimits');    
     ylabel({'Mesodinium';'(cells/mL)'},'fontsize',12);
-legend('classifier','manual','Location','N');
+legend([h(2),h(1)],'manual','classifier','Location','NE'); legend boxoff;
+
+% subplot(4,1,3)
+% load([filepath 'NOAA/BuddInlet/Data/temp_sal_1m_3m_BuddInlet'],'H1m','H3m');
+% c=brewermap(4,'Paired');
+% 
+% h=plot(H1m.dt,H1m.temp,'-',H3m.dt,H3m.temp,'-'); hold on
+% set(h(1),'color',c(1,:)); 
+% set(h(2),'color',c(2,:));
+% set(gca,'xlim',[xax1 xax2],'xticklabel',{})
+% ylabel({'temperature';'(^oC)'},'fontsize',12);
+% legend('1m','3m','Location','NE'); legend boxoff;
+% 
+% subplot(4,1,4)
+% h=plot(H1m.dt,H1m.sal,'-',H3m.dt,H3m.sal,'-'); hold on
+% set(h(1),'color',c(3,:)); set(h(2),'color',c(4,:));
+% set(gca,'xlim',[xax1 xax2])
+% ylabel({'salinity';'(psu)'},'fontsize',12)
+% legend('1m','3m','Location','SE'); legend boxoff;
 
 set(gcf,'color','w');
 print(gcf,'-dpng','-r200',[filepath 'NOAA/BuddInlet/Figs/BI_IFCB_ManualvsClassifer.png']);
