@@ -1,6 +1,6 @@
 clear;
-Mac=1;
-name='BI_Dinophysis_GenusLevel';
+Mac=0;
+name='BI_Dinophysis_GenusLevel_v5';
 %name='BI_Dinophysis_SpeciesLevel';
 
 if Mac
@@ -9,7 +9,7 @@ if Mac
     figpath = [filepath 'Figs/'];
 else
     basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-    filepath = [basepath 'IFCB-Data\Shimada\class\'];
+    filepath = [basepath 'IFCB-Data\BuddInlet\class\'];
     figpath = [filepath 'Figs\'];    
 end
 addpath(genpath(basepath));

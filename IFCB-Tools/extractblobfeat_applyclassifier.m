@@ -23,7 +23,7 @@ addpath(genpath([ifcbdir 'blobs\']));
 addpath(genpath([ifcbdir 'features\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
-classifier='D:\general\classifier\summary\Trees_BI_Dinophysis_GenusLevel_v2';
+classifier='D:\general\classifier\summary\Trees_BI_Dinophysis_GenusLevel_v5';
 %classifier='D:\general\classifier\summary\Trees_16Jun2022_regional1000';
 %%
 %copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);

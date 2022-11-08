@@ -36,6 +36,7 @@ TopClass=class2use;
 class2skip(end+1)={'Cerataulina'};
 class2skip(end+1)={'Nitzschia'};
 class2skip(end+1)={'Strombidium'};
+class2skip(end+1)={'Dinophysis'};
 
 clearvars manualpath id
 
@@ -50,15 +51,21 @@ maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
 class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
-        {'Thalassiosira_chain' 'Thalassiosira_single'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single'}...
-        {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
+        {'Chaetoceros_chain' 'Chaetoceros_single'}...        
+        {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}};  
 
+%         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
+%         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}};  
+    
+%    {'Thalassiosira_chain' 'Thalassiosira_single'}
+
 %IFCB='UCSC';
 IFCB=[];
-classifiername='BI_Dinophysis_GenusLevel_v2';
+%classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira,
+%classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira, Chaetoceros, no UCSC Dinophysis
+classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
