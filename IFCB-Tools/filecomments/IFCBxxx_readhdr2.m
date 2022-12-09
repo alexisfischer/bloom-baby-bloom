@@ -25,9 +25,9 @@ else
     hdr.runtime = str2num(linestr(eqpos(1)+1:spos(1)-1));
     hdr.inhibittime = str2num(linestr(eqpos(2)+1:spos(2)-1));
 end
-ii=strmatch('runType:',t);
-if ~isempty(ii(2))
-    linestr = char(t(ii(2)));
+ii=(find(contains(t, 'Type:'))); %allows runType (windows) and sampleType (Linux) to be acommodated
+if ~isempty(ii) %ii(2)
+    linestr = char(t(ii)); %(ii(2)
     hdr.runtype=regexprep(linestr,'runType: ','');
 end
 ii = strmatch('FileComment:', t);

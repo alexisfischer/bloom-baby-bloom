@@ -5,28 +5,30 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 %compile_train_features_user_training('C:\work\IFCB\user_training_test_data\manual\', 'C:\work\IFCB\user_training_test_data\features\', 100, 30, {'other'}, {'misc_nano' 'Karenia'})
 %IFCB classifier production: get training features from pre-computed bin feature files
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
-%
-% %Example inputs: 
-% %manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
-% %feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
-% %manualpath = '~/Downloads/classifier/test_manual/'; % manual annotation file location
-% %feapath_base = '~/Downloads/classifier/test_features/'; %feature file location, assumes \yyyy\ organization
-% %outpath = '~/Documents/MATLAB/bloom-baby-bloom/'; % location to save training set
-% %maxn = 1000; %maximum number of images per class to include
-% %minn = 500; %minimum number for inclusion
-% %class2useName = '~/Downloads/classifier/class2use_11'; %classlist
-% %class2useName = 'D:\general\config\class2use_11'; %classlist
-% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Coscinodiscus','Cylindrotheca','Dictyocha','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dissodinium','Ebria','Entomoneis','Ephemera','Euglenoids','Fibrocapsa','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa_triquetra','Karenia','Katodinium','Laboea_strobila','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Margalefidinium','Melosira','Meringosphaera','Mesodinium','Nematodinium','Nitzschia','Noctiluca','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Pleuronema','Pleurosigma','Polykrikos','Proterythropsis','Protoperidinium','Pseudo-nitzschia','Pseudo-nitzschia_external_parasite','Pyrophacus','Scrippsiella','Sea_Urchin_larvae','Striatella','Strombidium','Thalassionema','Tiarina_fusus','Tintinnida','Tontonia','Torodinium','Tropidoneis','bead','bubble','centric','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nanoplankton','nauplii','pollen','unclassified','veliger','zooplankton'};
-% varargin{2}={{'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_fortii'...
-%     'Dinophysis_norvegica' 'Dinophysis_acuta' 'Dinophysis_rotundata' ...
-%     'Dinophysis_parva' 'Dinophysis_caudata' 'Dinophysis_odiosa' 'Dinophysis_tripos'}...
-%     {'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' ...
-%     'Pseudo-nitzschia_small' 'Pseudo-nitzschia'}};
-%varargin{2}=[]; %class2group with nothing to group
 
-% varargin{1}=class2skip;
-% varargin{2}=class2group;
-% varargin{3}=IFCB;
+% %Example inputs: 
+% manualpath = 'D:\general\classifier\test_manual\'; % manual annotation file location
+% feapath_base = 'D:\general\classifier\test_features\'; %feature file location, assumes \yyyy\ organization
+% outpath = 'D:\general\classifier\summary\'; % location to save training set
+% maxn = 1000; %maximum number of images per class to include
+% minn = 100; %minimum number for inclusion
+% class2useName = 'D:\general\config\class2use_12'; %classlist
+% %classifiername='test'; 
+% varargin{1}={'Actiniscus','Amphidinium','Amylax','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Dactyliosolen','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dissodinium','Ebria','Entomoneis','Fibrocapsa','Fragilaria','Gonyaulux','Helicotheca','Heterocapsa_triquetra','Karenia','Katodinium','Laboea_strobila','Lauderia','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Margalefidinium','Meringosphaera','Nematodinium','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Pleuronema','Proboscia','Proterythropsis','Protoperidinium','Pseudo-nitzschia_external_parasite','Pyrophacus','Rhizosolenia','Sea_Urchin_larvae','Striatella','Tintinnida','Tontonia','Tropidoneis','bead','bubble','centric','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nanoplankton','nauplii','pollen','unclassified','veliger','Cerataulina','Nitzschia','Strombidium','Dinophysis'};
+% varargin{2}={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
+%         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
+%         {'Chaetoceros_chain' 'Chaetoceros_single'}...        
+%         {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
+%         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
+%         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}};  
+%  varargin{3}='NOAA';
+% 
+% % varargin{1}=[]; %class2group with nothing to skip
+% % varargin{2}=[]; %class2group with nothing to group
+% % varargin{3}=[];
+
+addpath(genpath(manualpath));
+addpath(genpath(feapath_base));
 
 class2skip = []; %initialize
 class2group = {[]};
@@ -41,11 +43,14 @@ if length(class2group{1}) > 1 && ischar(class2group{1}{1}) %input of one group w
     class2group = {class2group};
 end
 
-if strcmp(varargin{3},'UCSC')
+if strcmp(varargin{3},'NOAA')
+    manual_files = [dir([manualpath 'D*IFCB777.mat']);dir([manualpath 'D*IFCB117.mat']);dir([manualpath 'D*IFCB150.mat'])];    
+elseif strcmp(varargin{3},'UCSC')
     manual_files = dir([manualpath 'D*IFCB104.mat']);
 else
     manual_files = dir([manualpath 'D*.mat']);
 end
+
 manual_files = {manual_files.name}';
 fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
 manual_files = regexprep(manual_files, '.mat', '');    
@@ -61,7 +66,7 @@ files_all = [];
 feapath_flag = 0;
 feapath=[feapath_base manual_files{1}(2:5) filesep];
 if ~exist([feapath fea_files{1}], 'file')
-    feapath=[feapath_base 'features' manual_files{1}(2:5) '_v2' filesep]
+    feapath=[feapath_base 'features' manual_files{1}(2:5) '_v2' filesep];
     feapath_flag = 1;
     if ~exist([feapath fea_files{1}], 'file')
         disp('Error: First feature file not found; Check input path')
@@ -115,10 +120,20 @@ fea_all = fea_all(:,i);
 
 clear *temp
 
-[n, class_all, varargout] = handle_train_maxn_subsample( class2use, maxn, class_all, fea_all, files_all, roinum );
-fea_all = varargout{1};
-files_all = varargout{2};
-roinum = varargout{3};
+
+if ~isempty(varargin{3})
+    [n, class_all, varargout] = handle_train_maxn( class2use, maxn, class_all, fea_all, files_all, roinum );
+    fea_all = varargout{1};
+    files_all = varargout{2};
+    roinum = varargout{3};
+else
+    disp('evenly distribute NOAA, UCSC, and OSU image annotations')    
+    [n, class_all, varargout] = handle_train_maxn_subsample( class2use, maxn, class_all, fea_all, files_all, roinum );
+    fea_all = varargout{1};
+    files_all = varargout{2};
+    roinum = varargout{3};
+end
+
 
 [ n, class_all, varargout ] = handle_train_class2skip( class2use, class2skip, n, class_all, fea_all, files_all, roinum );
 fea_all = varargout{1};
@@ -139,9 +154,6 @@ train = fea_all;
 class_vector = class_all;
 targets = cellstr([char(files_all) repmat('_', length(class_vector),1) num2str(roinum, '%05.0f')]);
 nclass = n;
-
-
-datestring = datestr(now, 'ddmmmyyyy');
 
 save([outpath 'Train_' classifiername], 'train', 'class_vector', 'targets', 'class2use', 'nclass', 'featitles');
 disp('Training set feature file stored here:')

@@ -61,11 +61,12 @@ class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
     
 %    {'Thalassiosira_chain' 'Thalassiosira_single'}
 
-%IFCB='UCSC';
-IFCB=[];
+IFCB='NOAA';
+%IFCB=[];
 %classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira,
 %classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira, Chaetoceros, no UCSC Dinophysis
-classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
+%classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
+classifiername='BI_Dinophysis_GenusLevel_v6'; %separate Thalassiosira, only NOAA images
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path

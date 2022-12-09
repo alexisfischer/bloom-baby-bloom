@@ -1,6 +1,6 @@
 clear;
-Mac=1;
-name='BI_Dinophysis_GenusLevel_v5';
+Mac=0;
+name='BI_Dinophysis_GenusLevel_v6';
 %name='BI_Dinophysis_SpeciesLevel';
 
 if Mac

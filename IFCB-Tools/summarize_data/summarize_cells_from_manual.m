@@ -9,6 +9,10 @@ function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
 % datapath = 'F:\IFCB104\data\'; %where to access data (hdr files)
 % summary_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\'; %where summary file goes
 
+%manualpath='D:\BuddInlet\manualEmilie\Labexperiments\testPMTsettingsDANY1\';
+%datapath='D:\LabData\data\';
+%summary_dir= 'D:\BuddInlet\manualEmilie\summary\';
+
 %make sure input paths end with filesep
 if ~isequal(manualpath(end), filesep)
     manualpath = [manualpath filesep];
@@ -31,6 +35,7 @@ runtype={filelist.name}';
 filecomment={filelist.name}';
 
 for filecount = 1:length(filelist)
+        
     filename = filelist(filecount).name;
     disp(filename)
     hdrname = [datapath filesep filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
