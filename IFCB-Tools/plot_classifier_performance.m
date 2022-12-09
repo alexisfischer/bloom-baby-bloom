@@ -53,7 +53,7 @@ set(gcf,'color','w');
 print(gcf,'-dpng','-r100',[figpath 'TrainingSet_UCSC_OSU_CCS' name '.png']);
 hold off
 
-%% CCS: Winner takes All
+%% F1 scores
 % plot bar Recall and Precision
 % sort by F1
 [all,ia]=sortrows(all,'F1','descend');

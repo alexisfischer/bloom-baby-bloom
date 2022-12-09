@@ -34,7 +34,7 @@ plot(T.SampleDate,.001*T.DinophysisConcentrationcellsL,'ko-','MarkerSize',4);
         'fontsize', 11,'tickdir','out','ycolor','k');   
     ylabel({'Dinophysis';'(cells/mL)'},'fontsize',12,'color','k'); hold on;
 yyaxis right
-plot(DSP.date,DSP.DSPug100g,'r*','MarkerSize',5);
+plot(DSP.dt,DSP.ug100g,'r*','MarkerSize',5);
     set(gca,'xaxislocation','top','ylim',[0 20],'ytick',0:10:20,'xlim',[xax(1) xax(2)],...
         'fontsize', 11,'tickdir','out','ycolor','r');   
     ylabel({'DSP';'(ug/100g)'},'fontsize',12,'color','r'); hold on;

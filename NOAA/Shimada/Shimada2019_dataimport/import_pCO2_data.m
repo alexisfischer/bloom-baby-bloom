@@ -1,7 +1,7 @@
 %% Import pCO2
 clear
-filepath='~/MATLAB/NOAA/Shimada/Data/2019_pco2data/';
-outpath='~/MATLAB/NOAA/Shimada/Data/';
+filepath='~/Documents/Shimada2019/2019_pco2data/';
+outpath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/';
 
 addpath(outpath);
 %addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
@@ -31,9 +31,9 @@ for i=1:length(filedir)
     p(i).dt = T.DATE_UTC__ddmmyyyy + timeofday(T.TIME_UTC_hhmmss);
     p(i).lat=T.LAT_dec_degree;
     p(i).lon=T.LONG_dec_degree;
-    p(i).sst_c=T.SST_C;
-    p(i).sal_psu=T.SAL_PSU;
-    p(i).pco2_uatm=T.fCO2_SWSST_uatm;
+    p(i).sst=T.SST_C;
+    p(i).sal=T.SAL_PSU;
+    p(i).fco2=T.fCO2_SWSST_uatm;
   
 end
 
@@ -41,14 +41,9 @@ end
 dt=vertcat(p.dt);
 lat=vertcat(p.lat); 
 lon=vertcat(p.lon);
-sst_c=vertcat(p.sst_c); sst_c(sst_c==-999)=NaN;
-sal_psu=vertcat(p.sal_psu); sal_psu(sal_psu==-999)=NaN;
-pco2_uatm=vertcat(p.pco2_uatm); pco2_uatm(pco2_uatm==-999)=NaN;
+sst=vertcat(p.sst); sst(sst==-999)=NaN;
+sal=vertcat(p.sal); sal(sal==-999)=NaN;
+fco2=vertcat(p.fco2); fco2(fco2==-999)=NaN;
 
-P=table(dt,lat,lon,sst_c,sal_psu,pco2_uatm);
-P=P(~any(ismissing(P),2),:); %remove rows w Nans
-
-clearvars opts i T tt dt lat lon sst_c sal_psu pco2_uatm p;
-
-save([outpath 'pCO2_2019'],'P');
+save([outpath 'pCO2_Shimada2019'],'dt','lat','lon','sst','sal','fco2');
 
