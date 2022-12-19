@@ -25,7 +25,7 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 % 
 % % varargin{1}=[]; %class2group with nothing to skip
 % % varargin{2}=[]; %class2group with nothing to group
-% % varargin{3}=[];
+% % varargin{3}=[]; %which dataset you want the classifier to be made from
 
 addpath(genpath(manualpath));
 addpath(genpath(feapath_base));
@@ -47,6 +47,8 @@ if strcmp(varargin{3},'NOAA')
     manual_files = [dir([manualpath 'D*IFCB777.mat']);dir([manualpath 'D*IFCB117.mat']);dir([manualpath 'D*IFCB150.mat'])];    
 elseif strcmp(varargin{3},'UCSC')
     manual_files = dir([manualpath 'D*IFCB104.mat']);
+elseif strcmp(varargin{3},'OSU')
+    manual_files = dir([manualpath 'D*IFCB122.mat']);
 else
     manual_files = dir([manualpath 'D*.mat']);
 end

@@ -1,7 +1,7 @@
 % Use MC files to find who is representing the biomass to determine which classes should be used in classifier
 clear;
 
-CCS=0;
+CCS=1;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
