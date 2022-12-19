@@ -1,4 +1,4 @@
-%% Import pCO2
+%% Import 2019 pCO2
 clear
 filepath='~/Documents/Shimada2019/2019_pco2data/';
 outpath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/';

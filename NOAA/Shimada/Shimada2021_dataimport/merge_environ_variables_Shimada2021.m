@@ -27,7 +27,7 @@ FL=NaN*ones(size(DT)); FL(ib)=fl(ia);
 load([filepath 'Data/pCO2_Shimada2021'],'dt','fco2');
 [~,ia,ib]=intersect(dt,DT);
 FCO2=NaN*ones(size(DT)); FCO2(ib)=fco2(ia);
-%figure; plot(LON(ib),LAT(ib),'o'); % test plot
+figure; plot(LON(ib),LAT(ib),'o'); % test plot
 
 clearvars ia ib dt fl dt sal temp
 

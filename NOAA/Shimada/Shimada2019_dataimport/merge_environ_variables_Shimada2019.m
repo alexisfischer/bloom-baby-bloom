@@ -18,12 +18,12 @@ SAL=NaN*ones(size(DT)); SAL(ib)=sal(ia);
 load([filepath 'Data/fluorescence_Shimada2019'],'dt','fl');
 [~,ia,ib]=intersect(dt,DT);
 FL=NaN*ones(size(DT)); FL(ib)=fl(ia);
-figure; plot(LAT(ib),FL(ib),'o'); % test plot
+%figure; plot(LAT(ib),FL(ib),'o'); % test plot
 
 load([filepath 'Data/pCO2_Shimada2019'],'dt','fco2');
 [~,ia,ib]=intersect(dt,DT);
 FCO2=NaN*ones(size(DT)); FCO2(ib)=fco2(ia);
-figure; plot(LON(ib),LAT(ib),'o'); % test plot
+%figure; plot(LON(ib),LAT(ib),'o'); % test plot
 
 clearvars ia ib dt fl dt sal temp
 

@@ -1,66 +1,49 @@
-%% import processed pCO2 data from 2021 Shimada
+%% Import 2021 pCO2
 clear
-filepath= '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/'; 
-addpath(genpath(filepath)); 
+filepath='~/Documents/Shimada2021/pCO2_2021_processed/';
+outpath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/';
 
-% Leg 1
-opts = delimitedTextImportOptions("NumVariables", 21);
-opts.DataLines = [6, Inf];
-opts.Delimiter = ",";
-opts.VariableNames = ["Var1", "Var2", "Var3", "Var4", "DATE_UTC__ddmmyyyy", "TIME_UTC_hhmmss", "LAT_dec_degree", "LONG_dec_degree", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "SST_C", "SAL_permil", "fCO2_SWSST_uatm", "Var18", "Var19", "Var20", "Var21"];
-opts.SelectedVariableNames = ["DATE_UTC__ddmmyyyy", "TIME_UTC_hhmmss", "LAT_dec_degree", "LONG_dec_degree", "SST_C", "SAL_permil", "fCO2_SWSST_uatm"];
-opts.VariableTypes = ["char", "char", "char", "char", "datetime", "datetime", "double", "double", "char", "char", "char", "char", "char", "char", "double", "double", "double", "char", "char", "char", "char"];
-opts.ExtraColumnsRule = "ignore";
-opts.EmptyLineRule = "read";
-opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var4", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var18", "Var19", "Var20", "Var21"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var4", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var18", "Var19", "Var20", "Var21"], "EmptyFieldRule", "auto");
-opts = setvaropts(opts, "DATE_UTC__ddmmyyyy", "InputFormat", "ddMMyyyy");
-opts = setvaropts(opts, "TIME_UTC_hhmmss", "InputFormat", "HH:mm:ss");
-L1 = readtable("/Users/alexis.fischer/Documents/Shimada2021/pCO2_2021_processed/Hake21_cruise1/Hake2022_cruise1_Final.csv", opts);
-clear opts
+addpath(outpath);
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
-% Leg 2
-opts = delimitedTextImportOptions("NumVariables", 21);
-opts.DataLines = [6, Inf];
-opts.Delimiter = ",";
-opts.VariableNames = ["Var1", "Var2", "Var3", "Var4", "DATE_UTC__ddmmyyyy", "TIME_UTC_hhmmss", "LAT_dec_degree", "LONG_dec_degree", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "SST_C", "SAL_permil", "fCO2_SWSST_uatm", "Var18", "Var19", "Var20", "Var21"];
-opts.SelectedVariableNames = ["DATE_UTC__ddmmyyyy", "TIME_UTC_hhmmss", "LAT_dec_degree", "LONG_dec_degree", "SST_C", "SAL_permil", "fCO2_SWSST_uatm"];
-opts.VariableTypes = ["char", "char", "char", "char", "datetime", "datetime", "double", "double", "char", "char", "char", "char", "char", "char", "double", "double", "double", "char", "char", "char", "char"];
-opts.ExtraColumnsRule = "ignore";
-opts.EmptyLineRule = "read";
-opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var4", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var18", "Var19", "Var20", "Var21"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var4", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var18", "Var19", "Var20", "Var21"], "EmptyFieldRule", "auto");
-opts = setvaropts(opts, "DATE_UTC__ddmmyyyy", "InputFormat", "ddMMyyyy");
-opts = setvaropts(opts, "TIME_UTC_hhmmss", "InputFormat", "HH:mm:ss");
-L2 = readtable("/Users/alexis.fischer/Documents/Shimada2021/pCO2_2021_processed/Hake21_cruise2/Hake2022_cruise2_Final.csv", opts);
-clear opts
+filedir = dir([filepath '*.csv']);
+for i=1:length(filedir)
+    disp(filedir(i).name);   
+    
+    opts = delimitedTextImportOptions("NumVariables", 24);
+    opts.DataLines = [6, Inf];
+    opts.Delimiter = ",";
+    opts.VariableNames = ["Var1", "Var2", "Var3", "YD_UTC", "DATE_UTC__ddmmyyyy", "Var6", "LAT_dec_degree", "LONG_dec_degree", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "SST_C", "SAL_permil", "fCO2_SWSST_uatm", "Var18", "Var19", "Var20", "Var21", "O2Sat", "Var23", "O2Umm"];
+    opts.SelectedVariableNames = ["YD_UTC", "DATE_UTC__ddmmyyyy", "LAT_dec_degree", "LONG_dec_degree", "SST_C", "SAL_permil", "fCO2_SWSST_uatm", "O2Sat", "O2Umm"];
+    opts.VariableTypes = ["char", "char", "char", "double", "double", "char", "double", "double", "char", "char", "char", "char", "char", "char", "double", "double", "double", "char", "char", "char", "char", "double", "char", "double"];
+    opts.ExtraColumnsRule = "ignore";
+    opts.EmptyLineRule = "read";
+    opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var6", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var18", "Var19", "Var20", "Var21", "Var23"], "WhitespaceRule", "preserve");
+    opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var6", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var18", "Var19", "Var20", "Var21", "Var23"], "EmptyFieldRule", "auto");
+    T = readtable([filepath filedir(i).name], opts); 
 
-% Leg 3
-opts = delimitedTextImportOptions("NumVariables", 21);
-opts.DataLines = [6, Inf];
-opts.Delimiter = ",";
-opts.VariableNames = ["Var1", "Var2", "Var3", "Var4", "DATE_UTC__ddmmyyyy", "TIME_UTC_hhmmss", "LAT_dec_degree", "LONG_dec_degree", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "SST_C", "SAL_permil", "fCO2_SWSST_uatm", "Var18", "Var19", "Var20", "Var21"];
-opts.SelectedVariableNames = ["DATE_UTC__ddmmyyyy", "TIME_UTC_hhmmss", "LAT_dec_degree", "LONG_dec_degree", "SST_C", "SAL_permil", "fCO2_SWSST_uatm"];
-opts.VariableTypes = ["char", "char", "char", "char", "datetime", "datetime", "double", "double", "char", "char", "char", "char", "char", "char", "double", "double", "double", "char", "char", "char", "char"];
-opts.ExtraColumnsRule = "ignore";
-opts.EmptyLineRule = "read";
-opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var4", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var18", "Var19", "Var20", "Var21"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var4", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var18", "Var19", "Var20", "Var21"], "EmptyFieldRule", "auto");
-opts = setvaropts(opts, "DATE_UTC__ddmmyyyy", "InputFormat", "ddMMyyyy");
-opts = setvaropts(opts, "TIME_UTC_hhmmss", "InputFormat", "HH:mm:ss");
-L3 = readtable("/Users/alexis.fischer/Documents/Shimada2021/pCO2_2021_processed/Hake21_cruise3/Hake2021_cruise3_Final.csv", opts);
-clear opts
+    y = mod(T.DATE_UTC__ddmmyyyy(1),1E4);
+    [yy,MM,dd,HH,mm,ss] = datevec(datenum(y,1,T.YD_UTC));
+    dt=datetime(yy,MM,dd,HH,mm,ss,'Format','yyyy-MM-dd HH:mm:ss');
+    
+    p(i).dt = dt;
+    p(i).lat=T.LAT_dec_degree;
+    p(i).lon=T.LONG_dec_degree;
+    p(i).sst=T.SST_C;
+    p(i).sal=T.SAL_permil;
+    p(i).fco2=T.fCO2_SWSST_uatm;
+  
+end
 
-% date time format
-dti=[L1.DATE_UTC__ddmmyyyy;L2.DATE_UTC__ddmmyyyy;L3.DATE_UTC__ddmmyyyy];
-hi=[L1.TIME_UTC_hhmmss;L2.TIME_UTC_hhmmss;L3.TIME_UTC_hhmmss];
-dti.Format='yyyy-MM-dd HH:mm:ss'; d=timeofday(hi);
-dt=dti+d;
+% create merged table
+dt=vertcat(p.dt);
+lat=vertcat(p.lat); 
+lon=vertcat(p.lon);
+sst=vertcat(p.sst); sst(sst==-999)=NaN;
+sal=vertcat(p.sal); sal(sal==-999)=NaN;
+fco2=vertcat(p.fco2); fco2(fco2==-999)=NaN;
 
-lat=[L1.LAT_dec_degree;L2.LAT_dec_degree;L3.LAT_dec_degree];
-lon=[L1.LONG_dec_degree;L2.LONG_dec_degree;L3.LONG_dec_degree];
-sst=[L1.SST_C;L2.SST_C;L3.SST_C];
-sal=[L1.SAL_permil;L2.SAL_permil;L3.SAL_permil];
-fco2=[L1.fCO2_SWSST_uatm;L2.fCO2_SWSST_uatm;L3.fCO2_SWSST_uatm];
 
-save([filepath 'pCO2_Shimada2021'],'dt','lon','lat','sst','sal','fco2');
+save([outpath 'pCO2_Shimada2019'],'dt','lat','lon','sst','sal','fco2');
+
