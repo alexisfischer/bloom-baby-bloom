@@ -21,11 +21,12 @@ BUDDpath = 'D:\BuddInlet\';
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
-% Step 2: select classes of interest and find class2skip
+%% Step 2: select classes of interest and find class2skip
 % Shimada classifier
-load([filepath 'GitHub\bloom-baby-bloom\NOAA\Shimada\Data\topclasses_bylatitude_CCS'],'classBC');
-TopClass=classBC;
-[class2skip] = find_class2skip(class2useName,TopClass);
+load([filepath 'GitHub\bloom-baby-bloom\NOAA\SeascapesProject\Data\topclasses_bylatitude_CCS'],'classBC');
+[class2skip] = find_class2skip(class2useName,classBC);
+class2skip(end+1)={'Cerataulina'};
+class2skip(end+1)={'Bacteriastrum'};
 
 % %% Budd Inlet classifier
 % load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'class2use');
@@ -48,8 +49,8 @@ addpath(genpath('C:\Users\ifcbuser\Documents\'));
 manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
 feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
-maxn = 5000; %maximum number of images per class to include
-minn = 1000; %minimum number for inclusion
+maxn = 500; %maximum number of images per class to include
+minn = 10; %minimum number for inclusion
 class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
         {'Chaetoceros_chain' 'Chaetoceros_single'}};        
@@ -65,8 +66,8 @@ IFCB=[];
 %classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira, Chaetoceros, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v6'; %separate Thalassiosira, only NOAA images
-classifiername='CCS_group-PN-Ch'; %even NOAA, OSU, UCSC images
-%classifiername='test'; %even NOAA, OSU, UCSC images
+classifiername='CCS_group-PN-Ch'; 
+%classifiername='test'; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
