@@ -1,16 +1,17 @@
 clear;
-Mac=0;
+Mac=1;
 %name='BI_Dinophysis_GenusLevel_v6';
 %name='BI_Dinophysis_SpeciesLevel';
 name='CCS_group-PN-Ch';
+%name='16Jun2022_regional1000';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
-    filepath = [basepath 'IFCB-Data/BuddInlet/class/'];
+    filepath = [basepath 'IFCB-Data/Shimada/class/'];
     figpath = [filepath 'Figs/'];
 else
     basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-    filepath = [basepath 'IFCB-Data\BuddInlet\class\'];
+    filepath = [basepath 'IFCB-Data\Shimada\class\'];
     figpath = [filepath 'Figs\'];    
 end
 addpath(genpath(basepath));
