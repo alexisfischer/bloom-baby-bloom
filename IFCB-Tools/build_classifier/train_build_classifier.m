@@ -1,5 +1,5 @@
 %% Training and Making a classifier
-%   Alexis D. Fischer, NOAA NWFSC, September 2021
+%   Alexis D. Fischer, NOAA NWFSC, December 2022
 clear;
 filepath='C:\Users\ifcbuser\Documents\';
 addpath(genpath(filepath));
@@ -22,12 +22,12 @@ merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 % Step 2: select classes of interest and find class2skip
-% Shimada classifier
+% CCS
 load([filepath 'GitHub\bloom-baby-bloom\NOAA\Shimada\Data\topclasses_bylatitude_CCS'],'classBC');
 TopClass=classBC;
 [class2skip] = find_class2skip(class2useName,TopClass);
 
-% %% Budd Inlet classifier
+% %% Budd Inlet
 % load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'class2use');
 % TopClass=class2use;
 % %class2use(ismember(class2use,'Dinophysis'))=[]; %removing bulk Dinophysis class for special BI classifier

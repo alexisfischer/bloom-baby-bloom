@@ -14,17 +14,18 @@ dt2=datetime(M.META(:,1),M.META(:,2),M.META(:,3),M.META(:,4),M.META(:,5),M.META(
 dt=[NOAA.dt;UCSC.dt;dt1;dt2];
 
 filename1=cellfun(@(x) ['D' x(1:4) x(6:7) x(9:10) 'T' x(12:13) x(15:16) x(18:19) '_IFCB122'],cellstr(string([dt1;dt2])),'UniformOutput',false);
-filename=[NOAA.filelist;UCSC.filelist;filename1];
+filename2=[NOAA.filelist;UCSC.filelist;filename1];
+filename=cellfun(@(x) [x '.mat'],cellstr(filename2),'UniformOutput',false);
 
 lat=[NOAA.lat;UCSC.lat;S.META(:,7);M.META(:,7)];
 lon=[NOAA.lon;UCSC.lon;S.META(:,8);M.META(:,8)];
 
-group1=repmat('NOAA',length(NOAA.dt),1);
-group2=repmat('UCSC',length(UCSC.dt),1);
-group3=repmat('OSU ',L,1);
+group1=repmat({'NOAA'},length(NOAA.dt),1);
+group2=repmat({'UCSC'},length(UCSC.dt),1);
+group3=repmat({'OSU'},L,1);
 group=[group1;group2;group3];
 
-ifcb=cellfun(@str2num,cellfun(@(x) x(end-2:end),filename,'UniformOutput',false));
+ifcb=cellfun(@str2num,cellfun(@(x) x(end-6:end-4),filename,'UniformOutput',false));
 
 ss=[SSOUT8NWFSC_5km;SSOUT8UCSC_10km;S.SS8out;M.SS8out];
 % ssM=NaN*ss8;
@@ -37,14 +38,21 @@ idx=isnan(ss); S(idx,:)=[]; %remote the SS nans
 
 S = sortrows(S,'ss','ascend');
 
-clearvars dt filename group ifcb lat lon ss idx
-
-save([filepath 'Data/SeascapeSummary_NOAA-OSU-UCSC'],'S');
-
-%% summarize each dataset
 [gc,ss]=groupcounts(S.ss);
-%idx=find(gc>200); %find instances of seascapes
+topSS=ss(gc>200); %find top seascapes, 200 occurences
 
+for i=1:length(topSS)
+    idx=find(S.ss==topSS(i)); %indices of a particular ss
+    SS(i).ss=topSS(i);
+    SS(i).filename=S.filename(idx);
+    SS(i).lat=S.lat(idx);
+    SS(i).lon=S.lon(idx);
+    SS(i).dt=S.dt(idx);
+    SS(i).ifcb=S.ifcb(idx);
+    SS(i).group=S.group(idx,:);
+end
+
+% summarize each dataset
 N=table(ss,gc); N.gc=NaN*N.gc; O=N; U=N;
 for i=1:length(ss)
     idx=find((S.ss==N.ss(i)) & strcmp(S.group,{'NOAA'}));
@@ -59,7 +67,11 @@ for i=1:length(ss)
     U.gc(i)=numel(idx);
 end
 
-%%
+clearvars dt filename group ifcb lat lon ss idx i gc topSS
+
+save([filepath 'Data/SeascapeSummary_NOAA-OSU-UCSC'],'S','SS','N','O','U');
+
+%% plot
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 col=[(brewermap(3,'Set2'));[.1 .1 .1]]; 
 b = bar([N.gc O.gc U.gc],'stack','linestyle','none','Barwidth',.7);
