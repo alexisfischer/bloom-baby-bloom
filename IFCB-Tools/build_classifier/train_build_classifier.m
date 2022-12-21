@@ -23,8 +23,11 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 %% Step 2: select classes of interest and find class2skip
 % Shimada classifier
-load([filepath 'GitHub\bloom-baby-bloom\NOAA\SeascapesProject\Data\topclasses_bylatitude_CCS'],'classBC');
-[class2skip] = find_class2skip(class2useName,classBC);
+load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class2use');
+[class2skip] = find_class2skip(class2useName,class2use);
+
+%load([filepath 'GitHub\bloom-baby-bloom\NOAA\SeascapesProject\Data\topclasses_bylatitude_CCS'],'classBC');
+%[class2skip] = find_class2skip(class2useName,classBC);
 
 % %% Budd Inlet
 % load([filepath 'GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'class2use');
@@ -51,7 +54,7 @@ maxn = 6000; %maximum number of images per class to include
 minn = 1000; %minimum number for inclusion
 class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single' 'Bacteriastrum'}...
+        {'Chaetoceros_chain' 'Chaetoceros_single'}...
         {'Guinardia' 'Dactyliosolen'}...
         {'Detonula' 'Cerataulina' 'Lauderia'}...
         {'Cylindrotheca' 'Nitzschia'}...
@@ -72,8 +75,7 @@ IFCB=[];
 %classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v6'; %separate Thalassiosira, only NOAA images
 %classifiername='CCS_group-PN-Ch_noCerataulinaBacteriastrum'; 
-classifiername='CCS_group-PN-Ch_mergedBacChaet'; 
-%classifiername='test'; 
+classifiername='CCS_v1'; %grouped classes similar to UCSC, with centric diatoms, nanoplankton and cryptophytes separate 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path

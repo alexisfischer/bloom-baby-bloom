@@ -15,7 +15,7 @@ if CCS==1
 %    load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_2019'])
     load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'])
     outdir=[filepath 'IFCB-Data/Shimada/manual/'];
-    num=39;
+    num=45;
 else
     load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'])
     outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
@@ -65,17 +65,9 @@ new={'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'
     'Thalassiosira_chain' 'Thalassiosira_single'...
     'Chaetoceros_chain' 'Chaetoceros_single'};
 class=[class new];
-%%
-if CCS==1
-    idx=find(ismember(class,{'Pseudo-nitzschia'}));
-    class(idx)=[]; fxCC(idx)=[];
-    class(get_class_ind(class,'zooplankton',filepath))=[]; %remove zooplankton
-else
-    class{end+1}='Mesodinium';
-end
+
 [class2use,idx]=unique(class,'stable');
 
-%%
 %class2use=(sort(class2use))';
 
 save([outdir 'TopClasses'],'class2use');
