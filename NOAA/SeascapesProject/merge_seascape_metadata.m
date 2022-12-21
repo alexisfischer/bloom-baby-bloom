@@ -38,19 +38,23 @@ idx=isnan(ss); S(idx,:)=[]; %remote the SS nans
 
 S = sortrows(S,'ss','ascend');
 
+save([filepath 'Data/SeascapeSummary_NOAA-OSU-UCSC'],'S');
+
+%%
+
 [gc,ss]=groupcounts(S.ss);
 topSS=ss(gc>200); %find top seascapes, 200 occurences
-
-for i=1:length(topSS)
-    idx=find(S.ss==topSS(i)); %indices of a particular ss
-    SS(i).ss=topSS(i);
-    SS(i).filename=S.filename(idx);
-    SS(i).lat=S.lat(idx);
-    SS(i).lon=S.lon(idx);
-    SS(i).dt=S.dt(idx);
-    SS(i).ifcb=S.ifcb(idx);
-    SS(i).group=S.group(idx,:);
-end
+% 
+% for i=1:length(topSS)
+%     idx=find(S.ss==topSS(i)); %indices of a particular ss
+%     SS(i).ss=topSS(i);
+%     SS(i).filename=S.filename(idx);
+%     SS(i).lat=S.lat(idx);
+%     SS(i).lon=S.lon(idx);
+%     SS(i).dt=S.dt(idx);
+%     SS(i).ifcb=S.ifcb(idx);
+%     SS(i).group=S.group(idx,:);
+% end
 
 % summarize each dataset
 N=table(ss,gc); N.gc=NaN*N.gc; O=N; U=N;
@@ -69,7 +73,6 @@ end
 
 clearvars dt filename group ifcb lat lon ss idx i gc topSS
 
-save([filepath 'Data/SeascapeSummary_NOAA-OSU-UCSC'],'S','SS','N','O','U');
 
 %% plot
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');

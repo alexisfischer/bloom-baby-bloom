@@ -1,8 +1,7 @@
 clear;
-Mac=1;
-%name='BI_Dinophysis_GenusLevel_v6';
-%name='BI_Dinophysis_SpeciesLevel';
+Mac=0;
 name='CCS_group-PN-Ch';
+%name='CCS_group-PN-Ch_noCerataulinaBacteriastrum';
 %name='16Jun2022_regional1000';
 
 if Mac
@@ -48,7 +47,6 @@ end
 set(gca,'xlim',[0.5 (length(class)+.5)], 'xtick', 1:length(class), 'ylim',[0 maxn],...
     'xticklabel', class,'tickdir','out');
 ylabel('total images in set'); hold on
-xtickangle(45);
 lh=legend('NWFSC','UCSC','OSU','Location','NorthOutside');
 
 set(gcf,'color','w');
@@ -96,9 +94,9 @@ fx_unclass=sum(c_all(:,end))./sum(total)   % what fraction of images went to unc
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(1,3); col]); 
-set(gca,'ylim',[1 length(class)],'xlim',[1 length(class)],...
-    'ytick',1:1:length(class), 'yticklabel', class,...
-    'xtick',1:1:length(class), 'xticklabel',class)
+set(gca,'ylim',[1 (length(class)+1)],'xlim',[1 (length(class)+1)],...
+    'ytick',1.5:1:(length(class)+.5), 'yticklabel', class,...
+    'xtick',1.2:1:(length(class)+.2), 'xticklabel',class)
 
 axis square;  col=colorbar; caxis([0 1])
 colorTitleHandle = get(col,'Title');
@@ -125,9 +123,9 @@ fx_unclass=sum(c_opt(:,end))./sum(total) % what fraction of images went to uncla
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(4,3); col]); 
-set(gca,'ylim',[1 length(classU)],'xlim',[1 length(classU)],...
-    'ytick', 1:1:length(classU), 'yticklabel', classU,...
-    'xtick', 1:1:length(classU), 'xticklabel',classU)
+set(gca,'ylim',[1 (length(classU)+1)],'xlim',[1 (length(classU)+1)],...
+    'ytick', 1.5:1:(length(classU)+.5), 'yticklabel', classU,...
+    'xtick', 1.2:1:(length(classU)+.2), 'xticklabel',classU)
 axis square;  col=colorbar; caxis([0 1])
 colorTitleHandle = get(col,'Title');
 titleString = {'Fx of test'; 'images/class'};

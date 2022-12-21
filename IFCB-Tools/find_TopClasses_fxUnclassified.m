@@ -52,7 +52,7 @@ fxCC=fxCC(idx);
 idx=find(ismember(class,{'unclassified' 'Dinophyceae_pointed'...
     'Pseudo-nitzschia_external_parasite'...
     'Chaetoceros_external_pennate' 'Dinophyceae_round' 'flagellate'...
-    'Heterocapsa_triquetra' 'ciliate' 'centric' 'nanoplankton' 'zooplankton'}));
+    'ciliate' 'zooplankton'}));
 class(idx)=[];
 fxCC(idx)=[];
 
@@ -65,7 +65,7 @@ new={'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'
     'Thalassiosira_chain' 'Thalassiosira_single'...
     'Chaetoceros_chain' 'Chaetoceros_single'};
 class=[class new];
-
+%%
 if CCS==1
     idx=find(ismember(class,{'Pseudo-nitzschia'}));
     class(idx)=[]; fxCC(idx)=[];

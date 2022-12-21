@@ -6,19 +6,19 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 %IFCB classifier production: get training features from pre-computed bin feature files
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 
-%Example inputs: 
-manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
-feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
-outpath = 'D:\general\classifier\summary\'; % location to save training set
-maxn = 5000; %maximum number of images per class to include
-minn = 1000; %minimum number for inclusion
-class2useName = 'D:\general\config\class2use_12'; %classlist
-classifiername='CCS_group-PN-Ch'; 
-varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Attheya','Aulacodiscus','Azadinium','Bacillaria','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Coscinodiscus','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dinophysis_acuminata','Dinophysis_acuta','Dinophysis_caudata','Dinophysis_fortii','Dinophysis_norvegica','Dinophysis_odiosa','Dinophysis_parva','Dinophysis_rotundata','Dinophysis_tripos','Dissodinium','Ebria','Entomoneis','Fibrocapsa','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa_triquetra','Karenia','Laboea_strobila','Licmophora','Lioloma','Lithodesmium','Melosira','Meringosphaera','Mesodinium','Nematodinium','Nitzschia','Noctiluca','Odontella','Oxyphysis','Paralia','Phaeocystis','Pleuronema','Pleurosigma','Polykrikos','Proterythropsis','Protoceratium','Protoperidinium','Pseudo-nitzschia_external_parasite','Pseudo-nitzschia_large_narrow','Pseudo-nitzschia_large_wide','Pseudo-nitzschia_small','Pyrophacus','Sea_Urchin_larvae','Striatella','Strombidium','Tiarina_fusus','Tintinnida','Tontonia','Torodinium','Verrucophora farcimen (cf)','bead','bubble','centric','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nauplii','pollen','unclassified','veliger','zooplankton'};
-varargin{2}={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
-        'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single'}};  
- varargin{3}=[];
+% %Example inputs: 
+% manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
+% feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
+% outpath = 'D:\general\classifier\summary\'; % location to save training set
+% maxn = 5000; %maximum number of images per class to include
+% minn = 1000; %minimum number for inclusion
+% class2useName = 'D:\general\config\class2use_12'; %classlist
+% classifiername='CCS_group-PN-Ch'; 
+% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Attheya','Aulacodiscus','Azadinium','Bacillaria','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Coscinodiscus','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dinophysis_acuminata','Dinophysis_acuta','Dinophysis_caudata','Dinophysis_fortii','Dinophysis_norvegica','Dinophysis_odiosa','Dinophysis_parva','Dinophysis_rotundata','Dinophysis_tripos','Dissodinium','Ebria','Entomoneis','Fibrocapsa','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa_triquetra','Karenia','Laboea_strobila','Licmophora','Lioloma','Lithodesmium','Melosira','Meringosphaera','Mesodinium','Nematodinium','Nitzschia','Noctiluca','Odontella','Oxyphysis','Paralia','Phaeocystis','Pleuronema','Pleurosigma','Polykrikos','Proterythropsis','Protoceratium','Protoperidinium','Pseudo-nitzschia_external_parasite','Pseudo-nitzschia_large_narrow','Pseudo-nitzschia_large_wide','Pseudo-nitzschia_small','Pyrophacus','Sea_Urchin_larvae','Striatella','Strombidium','Tiarina_fusus','Tintinnida','Tontonia','Torodinium','Verrucophora farcimen (cf)','bead','bubble','centric','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nauplii','pollen','unclassified','veliger','zooplankton'};
+% varargin{2}={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
+%         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
+%         {'Chaetoceros_chain' 'Chaetoceros_single'}};  
+%  varargin{3}=[];
 
 % varargin{1}=[]; %class2group with nothing to skip
 % varargin{2}=[]; %class2group with nothing to group
