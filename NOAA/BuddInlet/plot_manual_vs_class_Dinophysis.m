@@ -16,7 +16,8 @@ ml_analyzed(idx)=[]; matdate(idx)=[]; classcount(idx,:)=[]; runtype(idx)=[];
 
 %%%% load in classified data
 load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB_2021-2022'],...
-    'mdateTB','class2useTB','ml_analyzedTB','classcountTB','filecommentTB','runtypeTB');
+    'mdateTB','class2useTB','ml_analyzedTB','classcountTB_above_adhocthresh','filecommentTB','runtypeTB');
+classcountTB=classcountTB_above_adhocthresh;
 
 % remove backscatter triggered samples from data
 idx=contains(runtypeTB,'ALT'); ml_analyzedTB(idx)=[]; mdateTB(idx)=[]; filecommentTB(idx)=[]; classcountTB(idx,:)=[];
@@ -96,7 +97,7 @@ subplot(2,1,2)
 idx=(strcmp('Mesodinium', class2useTB));
 h=plot(datetime(mdateTB,'convertfrom','datenum'),classcountTB(:,idx)./ml_analyzedTB,'k-',...
     dt,classcount(:,strcmp('Mesodinium',class2use))./ml_analyzed,'r*');
-set(gca,'ylim',[0 40],'xlim',[xax1 xax2])
+set(gca,'ylim',[0 20],'xlim',[xax1 xax2])
 %datetick('x', 'm', 'keeplimits');    
     ylabel({'Mesodinium';'(cells/mL)'},'fontsize',12);
 legend([h(2),h(1)],'manual','classifier','Location','NE'); legend boxoff;

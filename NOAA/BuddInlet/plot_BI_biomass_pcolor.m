@@ -6,12 +6,12 @@ fprint=1;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB_2021-2022'],...
-    'class2useTB','classbiovolTB','ml_analyzedTB','mdateTB','classcountTB');
+    'class2useTB','classbiovolTB','ml_analyzedTB','mdateTB','classcountTB_above_adhocthresh');
+classcountTB=classcountTB_above_adhocthresh;
 addpath(genpath(filepath)); % add new data to search path
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 
-id=strcmp(class2useTB,'Dinophysis,Dinophysis_acuminata,Dinophysis_acuta,Dinophysis_caudata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_odiosa,Dinophysis_parva,Dinophysis_rotundata,Dinophysis_tripos');
-class2useTB{id}='Dinophysis';
+id=contains(class2useTB,'Dinophysis'); class2useTB{id}='Dinophysis';
 
 % %%%% Step 1: take daily average
 % [mdateTB, ml_analyzedTB ] = timeseries2ydmat(mdateTB, ml_analyzedTB);
@@ -83,10 +83,10 @@ load([filepath 'NOAA/BuddInlet/Data/DinophysisMicroscopy'],'T');
 
 h=plot(mdateTB,smooth(classcountTB(:,idx)./ml_analyzedTB,5),'k-',...
     datenum(T.SampleDate),0.001*T.DinophysisConcentrationcellsL,'r*');
-set(gca,'ylim',[0 25],'xlim',[xax1 xax2])
+set(gca,'ylim',[0 15],'xlim',[xax1 xax2])
 datetick('x', 'mmm', 'keeplimits');    
 ylabel('Dinophysis (cells/mL)','fontsize',12);
-legend(h,'Classifier','Manual Microscopy');
+legend(h,'Classifier','Manual Microscopy','Location','NW');
 
 if fprint
     set(gcf,'color','w');    
