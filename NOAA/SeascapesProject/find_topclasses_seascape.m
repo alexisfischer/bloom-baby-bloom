@@ -139,6 +139,7 @@ for i=1:length(SS)
     else
     end
     [SS(i).topclasses,idx]=unique(SS(i).topclasses,'stable');
+    SS(i).topclasses=sort(SS(i).topclasses);
 end
 
 save([filepath 'NOAA/SeascapesProject/Data/seascape_topclasses'],'SS','class2use');
