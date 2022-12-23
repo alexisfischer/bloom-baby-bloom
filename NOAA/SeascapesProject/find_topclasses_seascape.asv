@@ -1,99 +1,5 @@
 %% Find topclasses for each seascape
 clear;
-
-filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-addpath(genpath('D:\Shimada\data\')); 
-addpath(genpath('D:\BuddInlet\data\')); 
-addpath(genpath(filepath)); 
-addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); 
-load([filepath 'NOAA/SeascapesProject/Data/SeascapeSummary_NOAA-OSU-UCSC'],'S');
-
-manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
-result_path = [filepath 'NOAA\SeascapesProject\Data\']; 
-
-% get class2use
-filelist = dir([manualpath 'D*.mat']);
-load([manualpath filelist(1).name],'class2use_manual') %read first file to get classes
-numclass = length(class2use_manual);
-class2use_manual_first = class2use_manual; 
-
-% match seascapes with cell abundance from manual files
-filelistSS=S.filename;
-classcount = NaN(length(filelistSS),numclass);  %initialize output
-ml_analyzed = NaN(length(filelistSS),1); %initialize output
-for filecount = 1:length(filelistSS)   
-    filename=char(filelistSS(filecount));     
-
-    if contains(filename,{'IFCB777','IFCB117'})
-        datapath = 'D:\Shimada\data\';                
-        hdrname = [datapath filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
-        ml_analyzed(filecount) = IFCB_volume_analyzed(hdrname);         
-    elseif contains(filename,'IFCB150')
-        datapath = 'D:\BuddInlet\data\';          
-        hdrname = [datapath filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
-        ml_analyzed(filecount) = IFCB_volume_analyzed(hdrname); 
-    elseif contains(filename,'IFCB122')
-        datapath = 'D:\OSU\data\';          
-        hdrname = [datapath filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
-        ml_analyzed(filecount) = IFCB_volume_analyzed(hdrname);     
-    else
-        ml_analyzed(filecount)=5; %temporary fix until get OSU and UCSC data           
-    end
-
-    [~,~,idx]=intersect(filename,({filelist.name})');        
-    if ~isempty(idx)
-        S.manual(filecount)=1;     
-        load([manualpath char(filename)],'class2use_manual','classlist')
-        if ~isequal(class2use_manual, class2use_manual_first)
-            [t,ii] = min([length(class2use_manual_first), length(class2use_manual)]);
-            if ~isequal(class2use_manual(1:t), class2use_manual_first(1:t))
-                disp('class2use_manual does not match previous files!!!')
-                keyboard
-            else
-                if ii == 1, class2use_manual_first = class2use_manual; end %new longest list
-            end
-        end
-        for classnum = 1:numclass
-            classcount(filecount,classnum) = size(find(classlist(:,2) == classnum),1); %manual only
-        end
-        clear class2use_manual classlist
-
-    else
-        disp([(filename) ' NO matching file']);
-        S.manual(filecount)=0;
-    end
-
-end
-
-matdate=S.dt;
-seascape=S.ss;
-class2use = class2use_manual_first;
-filelist=filelistSS;
-
-%% tally of files with different seascapes across dataset
-%NOAA 
-id1=find(S.manual==1 & S.ifcb==117);
-id2=find(S.manual==1 & S.ifcb==777);
-id3=find(S.manual==1 & S.ifcb==150);
-
-N.total=length(dir('D:\Shimada\data\**\*.hdr'));
-N.ss=length(find(S.ifcb==117 | S.ifcb==777 | S.ifcb==150));
-N.manual=length(dir('D:\Shimada\manual\*.mat'));
-N.manualss=length([id1;id2;id3]);
-
-%OSU
-O.manual=length(dir('D:\OSU\manual\*.mat'));
-O.manualss=length(find(S.manual==1 & S.ifcb==122));
-
-%UCSC
-U.manual=length(dir('D:\SCW\manual\*.mat'));
-U.manualss=length(find(S.manual==1 & S.ifcb==104));
-
-save([result_path 'seascape_count_class_manual'],'matdate','seascape',...
-    'ml_analyzed','classcount','filelist','class2use','N','O','U')
-
-%% Find topclasses for each seascape
-clear;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/'; 
 addpath(genpath(filepath)); 
 
@@ -205,44 +111,127 @@ hold off
 %% produce classlists for classifier making
 %add back in species for Pseudo-nitzschia, Dinophysis, Chaetoceros, Thalassiosira classes
 
-i=1
-idx=contains(SS(i).topclasses,'Dinophysis');
-if ~isempty(idx)
-    temp={'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
-        'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
-        'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'};
-    SS(i).topclasses=[SS(i).topclasses,temp];
-else
+for i=1:length(SS)
+    idx=contains(SS(i).topclasses,'Dinophysis');
+    if ~isempty(idx)
+        temp={'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
+            'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
+            'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'};
+        SS(i).topclasses=[SS(i).topclasses,temp];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Pseudo-nitzschia');
+    if ~isempty(idx)
+        temp={'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'};
+        SS(i).topclasses=[SS(i).topclasses,temp];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Thalassiosira');
+    if ~isempty(idx)
+        temp={'Thalassiosira_chain' 'Thalassiosira_single'};
+        SS(i).topclasses=[SS(i).topclasses,temp];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Chaetoceros');
+    if ~isempty(idx)
+        temp={'Chaetoceros_chain' 'Chaetoceros_single'};
+        SS(i).topclasses=[SS(i).topclasses,temp];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Guinardia');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Dactyliosolen'}];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Dactyliosolen');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Guinardia'}];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Detonula');
+    if ~isempty(idx)
+        temp={'Cerataulina' 'Lauderia'};
+        SS(i).topclasses=[SS(i).topclasses,temp];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Cerataulina');
+    if ~isempty(idx)
+        temp={'Detonula' 'Lauderia'};
+        SS(i).topclasses=[SS(i).topclasses,temp];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Lauderia');
+    if ~isempty(idx)
+        temp={'Detonula' 'Cerataulina'};
+        SS(i).topclasses=[SS(i).topclasses,temp];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Cylindrotheca');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Nitzschia'}];
+    else
+    end
+    idx=contains(SS(i).topclasses,'Nitzschia');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Cylindrotheca'}];
+    else
+    end    
+    idx=contains(SS(i).topclasses,'Rhizosolenia');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Proboscia'}];
+    else
+    end    
+    idx=contains(SS(i).topclasses,'Proboscia');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Rhizosolenia'}];
+    else
+    end    
+    idx=contains(SS(i).topclasses,'Scrippsiella');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Heterocapsa'}];
+    else
+    end   
+    idx=contains(SS(i).topclasses,'Heterocapsa');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Scrippsiella'}];
+    else
+    end   
+    idx=contains(SS(i).topclasses,'Stephanopyxis');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Melosira'}];
+    else
+    end  
+    idx=contains(SS(i).topclasses,'Melosira');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Stephanopyxis'}];
+    else
+    end     
+    idx=contains(SS(i).topclasses,'Amylax');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Stephanopyxis'}];
+    else
+    end     
+    idx=contains(SS(i).topclasses,'Gonyaulax');
+    if ~isempty(idx)
+        SS(i).topclasses=[SS(i).topclasses,{'Stephanopyxis'}];
+    else
+    end     
+    idx=contains(SS(i).topclasses,'Protoceratium');
+    if ~isempty(idx)
+        
+        SS(i).topclasses=[SS(i).topclasses,{'Stephanopyxis'}];
+    else
+    end         
+
+
+
+
+        {'Amylax' 'Gonyaulax' 'Protoceratium'}...
+
+
+
+    [SS(i).topclasses,idx]=unique(SS(i).topclasses);
 end
-idx=contains(SS(i).topclasses,'Pseudo-nitzschia');
-if ~isempty(idx)
-    temp={'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'};
-    SS(i).topclasses=[SS(i).topclasses,temp];
-else
-end
-idx=contains(SS(i).topclasses,'Thalassiosira');
-if ~isempty(idx)
-    temp={'Thalassiosira_chain' 'Thalassiosira_single'};
-    SS(i).topclasses=[SS(i).topclasses,temp];
-else
-end
 
-
-%%
-idx=contains(class2use,'Pseudo-nitzschia');
-temp=sum(classcount(:,idx),2,'omitnan'); classcount(:,idx)=NaN;
-classcount(:,strcmp('Pseudo-nitzschia',class2use))=temp;
-
-idx=contains(class2use,'Chaetoceros');
-temp=sum(classcount(:,idx),2,'omitnan'); classcount(:,idx)=NaN;
-classcount(:,strcmp('Chaetoceros_chain',class2use))=temp;
-
-idx=contains(class2use,'Thalassiosira');
-temp=sum(classcount(:,idx),2,'omitnan'); classcount(:,idx)=NaN;
-classcount(:,strcmp('Thalassiosira_chain',class2use))=temp;
-
-
-
-
-
+save([filepath 'NOAA/SeascapesProject/Data/seascape_topclasses'],'SS','class2use');
 

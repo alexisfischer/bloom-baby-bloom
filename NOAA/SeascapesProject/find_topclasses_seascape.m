@@ -108,38 +108,88 @@ title(['Top ' num2str(num) ' classes for each seascape']);
 print(gcf,'-dpng','-r100',[filepath 'NOAA/SeascapesProject/Figs/topclass_CCS_cellcount_Seascape.png']);
 hold off 
 
-%% produce classlists for classifier making
+%% produce classlists to allow for grouped classes in classifier
 %add back in species for Pseudo-nitzschia, Dinophysis, Chaetoceros, Thalassiosira classes
 
 for i=1:length(SS)
-    idx=contains(SS(i).topclasses,'Dinophysis');
-    if ~isempty(idx)
+    if ~isempty(contains(SS(i).topclasses,'Dinophysis'))
         temp={'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
             'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
             'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'};
         SS(i).topclasses=[SS(i).topclasses,temp];
-    else
     end
-    idx=contains(SS(i).topclasses,'Pseudo-nitzschia');
-    if ~isempty(idx)
+
+    if ~isempty(contains(SS(i).topclasses,'Pseudo-nitzschia'))
         temp={'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'};
-        SS(i).topclasses=[SS(i).topclasses,temp];
-    else
+        SS(i).topclasses=[SS(i).topclasses,temp];    
     end
-    idx=contains(SS(i).topclasses,'Thalassiosira');
-    if ~isempty(idx)
-        temp={'Thalassiosira_chain' 'Thalassiosira_single'};
-        SS(i).topclasses=[SS(i).topclasses,temp];
-    else
+
+    if ~isempty(contains(SS(i).topclasses,'Thalassiosira'))
+        SS(i).topclasses=[SS(i).topclasses,{'Thalassiosira_chain' 'Thalassiosira_single'}];   
     end
-    idx=contains(SS(i).topclasses,'Chaetoceros');
-    if ~isempty(idx)
-        temp={'Chaetoceros_chain' 'Chaetoceros_single'};
-        SS(i).topclasses=[SS(i).topclasses,temp];
-    else
+
+    if ~isempty(contains(SS(i).topclasses,'Chaetoceros'))
+        SS(i).topclasses=[SS(i).topclasses,{'Chaetoceros_chain' 'Chaetoceros_single'}];   
     end
-    [SS(i).topclasses,idx]=unique(SS(i).topclasses,'stable');
-    SS(i).topclasses=sort(SS(i).topclasses);
+
+    if ~isempty(contains(SS(i).topclasses,'Guinardia'))
+        SS(i).topclasses=[SS(i).topclasses,{'Dactyliosolen'}];    
+    end
+    if ~isempty(contains(SS(i).topclasses,'Dactyliosolen'))
+        SS(i).topclasses=[SS(i).topclasses,{'Guinardia'}];  
+    end
+
+    if ~isempty(contains(SS(i).topclasses,'Detonula'))
+        SS(i).topclasses=[SS(i).topclasses,{'Cerataulina' 'Lauderia'}];    
+    end
+    if ~isempty(contains(SS(i).topclasses,'Cerataulina'))
+        SS(i).topclasses=[SS(i).topclasses,{'Detonula' 'Lauderia'}];    
+    end
+    if ~isempty(contains(SS(i).topclasses,'Lauderia'))
+        SS(i).topclasses=[SS(i).topclasses,{'Detonula' 'Cerataulina'}];    
+    end
+
+    if ~isempty(contains(SS(i).topclasses,'Cylindrotheca'))
+        SS(i).topclasses=[SS(i).topclasses,{'Nitzschia'}];    
+    end
+    if ~isempty(contains(SS(i).topclasses,'Nitzschia'))
+        SS(i).topclasses=[SS(i).topclasses,{'Cylindrotheca'}];    
+    end    
+ 
+    if ~isempty(contains(SS(i).topclasses,'Rhizosolenia'))
+        SS(i).topclasses=[SS(i).topclasses,{'Proboscia'}];
+    end    
+    if ~isempty(contains(SS(i).topclasses,'Proboscia'))
+        SS(i).topclasses=[SS(i).topclasses,{'Rhizosolenia'}];   
+    end    
+
+    if ~isempty(contains(SS(i).topclasses,'Scrippsiella'))
+        SS(i).topclasses=[SS(i).topclasses,{'Heterocapsa'}];
+    end   
+
+    if ~isempty(contains(SS(i).topclasses,'Heterocapsa'))
+        SS(i).topclasses=[SS(i).topclasses,{'Scrippsiella'}];
+    end   
+
+    if ~isempty(contains(SS(i).topclasses,'Stephanopyxis'))
+        SS(i).topclasses=[SS(i).topclasses,{'Melosira'}];    
+    end  
+    if ~isempty(contains(SS(i).topclasses,'Melosira'))
+        SS(i).topclasses=[SS(i).topclasses,{'Stephanopyxis'}];   
+    end     
+
+    if ~isempty(contains(SS(i).topclasses,'Amylax'))
+        SS(i).topclasses=[SS(i).topclasses,{'Protoceratium' 'Gonyaulax'}];  
+    end     
+    if ~isempty(contains(SS(i).topclasses,'Gonyaulax'))
+        SS(i).topclasses=[SS(i).topclasses,{'Amylax' 'Protoceratium'}];
+    end     
+    if ~isempty(contains(SS(i).topclasses,'Protoceratium'))
+        SS(i).topclasses=[SS(i).topclasses,{'Amylax' 'Gonyaulax'}];    
+    end         
+
+
+    [SS(i).topclasses,idx]=unique(SS(i).topclasses);
 end
 
 save([filepath 'NOAA/SeascapesProject/Data/seascape_topclasses'],'SS','class2use');
