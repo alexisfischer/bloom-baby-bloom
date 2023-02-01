@@ -4,7 +4,7 @@ function [ n, class_all, class2use, varargin ] = handle_train_class2group_NWFSC(
 % Heidi M. Sosik, Woods Hole Oceanographic Institution, April 2017
 % modified by Alexis Fischer, NOAA, December 2022 to add a colon to line 26
 
-for classcount = 1:length(class2group{1})   
+for classcount = 1:length(class2group{1})  
     num2group = length(class2group{1}{classcount});
     if num2group > 1
         class2group{1}{classcount} = sort(class2group{1}{classcount}); %alphabetize

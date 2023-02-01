@@ -10,19 +10,31 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 % manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
 % feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
 % outpath = 'D:\general\classifier\summary\'; % location to save training set
-% maxn = 5000; %maximum number of images per class to include
+% maxn = 6000; %maximum number of images per class to include
 % minn = 1000; %minimum number for inclusion
 % class2useName = 'D:\general\config\class2use_12'; %classlist
-% classifiername='CCS_group-PN-Ch'; 
-% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Amylax','Attheya','Aulacodiscus','Azadinium','Bacillaria','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Coscinodiscus','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dinophysis_acuminata','Dinophysis_acuta','Dinophysis_caudata','Dinophysis_fortii','Dinophysis_norvegica','Dinophysis_odiosa','Dinophysis_parva','Dinophysis_rotundata','Dinophysis_tripos','Dissodinium','Ebria','Entomoneis','Fibrocapsa','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa_triquetra','Karenia','Laboea_strobila','Licmophora','Lioloma','Lithodesmium','Melosira','Meringosphaera','Mesodinium','Nematodinium','Nitzschia','Noctiluca','Odontella','Oxyphysis','Paralia','Phaeocystis','Pleuronema','Pleurosigma','Polykrikos','Proterythropsis','Protoceratium','Protoperidinium','Pseudo-nitzschia_external_parasite','Pseudo-nitzschia_large_narrow','Pseudo-nitzschia_large_wide','Pseudo-nitzschia_small','Pyrophacus','Sea_Urchin_larvae','Striatella','Strombidium','Tiarina_fusus','Tintinnida','Tontonia','Torodinium','Verrucophora farcimen (cf)','bead','bubble','centric','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nauplii','pollen','unclassified','veliger','zooplankton'};
+% classifiername='CCS_v1'; 
+% varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Coscinodiscus','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dissodinium','Ditylum','Ebria','Entomoneis','Ephemera','Euglenoids','Fibrocapsa','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa_triquetra','Karenia','Laboea_strobila','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Meringosphaera','Mesodinium','Nematodinium','Noctiluca','Odontella','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Pleuronema','Pleurosigma','Polykrikos','Proterythropsis','Protoperidinium','Pseudo-nitzschia_external_parasite','Pyrophacus','Sea_Urchin_larvae','Striatella','Strombidium','Thalassionema','Tiarina_fusus','Tintinnida','Tontonia','Torodinium','Tropidoneis','Verrucophora farcimen (cf)','bead','bubble','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nauplii','pollen','unclassified','veliger','zooplankton'}; %class2skip
 % varargin{2}={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
 %         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
-%         {'Chaetoceros_chain' 'Chaetoceros_single'}};  
-%  varargin{3}=[];
+%         {'Chaetoceros_chain' 'Chaetoceros_single'}...
+%         {'Guinardia' 'Dactyliosolen'}...
+%         {'Detonula' 'Cerataulina' 'Lauderia'}...
+%         {'Cylindrotheca' 'Nitzschia'}...
+%         {'centric' 'Thalassiosira_single'}...
+%         {'Rhizosolenia' 'Proboscia'}...
+%         {'Scrippsiella' 'Heterocapsa_triquetra'}...
+%         {'Stephanopyxis' 'Melosira'}...
+%         {'Amylax' 'Gonyaulux' 'Protoceratium'}...
+%         {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
+%         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
+%         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}};  %class2group
+%  varargin{3}=[]; %which dataset you want the classifier to be made from
 
+% %other examples
 % varargin{1}=[]; %class2group with nothing to skip
 % varargin{2}=[]; %class2group with nothing to group
-% varargin{3}=[]; %which dataset you want the classifier to be made from
+% varargin{3}=[]; 
 
 addpath(genpath(manualpath));
 addpath(genpath(feapath_base));
@@ -33,9 +45,10 @@ if length(varargin) >= 1
     class2skip = varargin{1};
 end
 if length(varargin) > 1
-    class2group = varargin(2);
+    class2group = varargin{2};
 end
 
+%not sure what this is doing to removing it 01 Feb 2023, ADF
 if length(class2group{1}) > 1 && ischar(class2group{1}{1}) %input of one group without outer cell 
     class2group = {class2group};
 end
@@ -72,7 +85,7 @@ if ~exist([feapath fea_files{1}], 'file')
         return
     end
 end
-    
+ 
 for filecount = 1:length(manual_files) %looping over the manual files
     if feapath_flag
         feapath=[feapath_base 'features' manual_files{filecount}(2:5) '_v2' filesep];
@@ -119,7 +132,6 @@ fea_all = fea_all(:,i);
 
 clear *temp
 
-
 if ~isempty(varargin{3})
     [n, class_all, varargout] = handle_train_maxn( class2use, maxn, class_all, fea_all, files_all, roinum );
     fea_all = varargout{1};
@@ -138,7 +150,7 @@ fea_all = varargout{1};
 files_all = varargout{2};
 roinum = varargout{3};
 
-%save([outpath 'Temporary_' classifiername],'n','maxn','minn','class2skip','class2group','class_all', 'fea_all','files_all','roinum','class2use', 'featitles');
+save([outpath 'Temporary_' classifiername],'n','maxn','minn','class2skip','class2group','class_all', 'fea_all','files_all','roinum','class2use', 'featitles');
 
 [ n, class_all, class2use, varargout ] = handle_train_class2group_NWFSC( class2use, class2group, maxn, n, class_all, fea_all, files_all, roinum );
 fea_all = varargout{1};

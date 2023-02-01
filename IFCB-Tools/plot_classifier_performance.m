@@ -1,8 +1,6 @@
 clear;
 Mac=0;
-name='CCS_group-PN-Ch';
-%name='CCS_group-PN-Ch_noCerataulinaBacteriastrum';
-%name='16Jun2022_regional1000';
+name='CCS_NOAA-UCSC-OSU_v1';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
