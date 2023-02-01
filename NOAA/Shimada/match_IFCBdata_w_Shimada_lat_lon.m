@@ -6,7 +6,6 @@ function [lat,lon,ia,filelistTB,mdateTB] = match_IFCBdata_w_Shimada_lat_lon(file
 % filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 % filelistTB
 % mdateTB
-%
 
 S=load([filepath 'NOAA/Shimada/Data/IFCB_underway_Shimada' num2str(yr) '']);
 

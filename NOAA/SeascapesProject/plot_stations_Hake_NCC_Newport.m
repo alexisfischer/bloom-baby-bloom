@@ -22,14 +22,16 @@ states=load([filepath 'Shimada/Data/USwestcoast_pol']);
 load([filepath 'Shimada/Data/coast_CCS'],'coast');
 fillseg(coast); dasp(42); hold on;
 plot(states(:,1),states(:,2),'k'); hold on;
-set(gca,'ylim',[34 49],'xlim',[-127 -120],'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
+set(gca,'ylim',[34 49],'xlim',[-127 -120],'fontsize',11,'tickdir','out','box','on','xaxisloc','bottom');
 
 hake=scatter(NOAA.lon(iN),NOAA.lat(iN),10,c(2,:),'filled'); hold on
 ncce=scatter(S.lon(iO),S.lat(iO),10,c(3,:),'filled'); hold on
 nwpt=scatter(N.Lon(1:7),N.Lat(1:7),12,'r','filled'); hold on
-lh=legend([hake ncce nwpt],'Hake','NCCE','Newport','Location','Southwest'); hold on
+lh=legend([hake ncce nwpt],'Hake','NCCE','NH Line','Location','Southwest'); hold on
 legend boxoff;
-    
-% set figure parameters
+    legend boxoff; lh.FontSize = 11; hp=get(lh,'pos');
+    lh.Position=[hp(1)*.75 hp(2)*.9 hp(3) hp(4)]; hold on    
+
+% set figure parameters%
 print(gcf,'-dpng','-r100',[filepath 'SeascapesProject/Figs/stationmap_Hake-NCCE-Newport.png']);
 hold off 

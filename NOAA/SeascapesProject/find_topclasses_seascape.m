@@ -14,7 +14,7 @@ topSS=ss(gc>100);
 idx=isnan(classcount(:,1));
 classcount(idx,:)=[]; filelist(idx)=[]; seascape(idx)=[]; ml_analyzed(idx)=[];
 
-% Exclude nonliving, larvae, zooplankton, and unclassified
+% Exclude nonliving, larvae, zooplankton, centric, unclassified
 classcount(:,get_class_ind(class2use,'nonliving',filepath))=NaN;
 classcount(:,get_class_ind(class2use,'larvae',filepath))=NaN;
 classcount(:,get_class_ind(class2use,'zooplankton',filepath))=NaN;
@@ -22,6 +22,7 @@ classcount(:,strcmp('unclassified',class2use))=NaN;
 classcount(:,strcmp('flagellate',class2use))=NaN;
 classcount(:,strcmp('Dinophyceae_pointed',class2use))=NaN;
 classcount(:,strcmp('Dinophyceae_round',class2use))=NaN;
+classcount(:,strcmp('centric',class2use))=NaN;
 
 % merge species of Pseudo-nitzschia, Dinophysis, Chaetoceros, Thalassiosira classes,
 idx=contains(class2use,'Dinophysis');
