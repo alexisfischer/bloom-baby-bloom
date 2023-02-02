@@ -26,6 +26,8 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
 [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
 class2skip(end+1)={'Bacteriastrum'};
+class2skip(end+1)={'Thalassiosira_single'};
+class2skip(end+1)={'pennate'};
 
 % Shimada classifier
 %load([filepath 'bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class2use');
@@ -51,8 +53,8 @@ addpath(genpath('C:\Users\ifcbuser\Documents\'));
 manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
 feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
-maxn = 6000; %maximum number of images per class to include
-minn = 1000; %minimum number for inclusion
+maxn = 5000; %maximum number of images per class to include
+minn = 500; %minimum number for inclusion
 class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
         {'Chaetoceros_chain' 'Chaetoceros_single'}...
@@ -75,7 +77,7 @@ IFCB=[];
 %classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v6'; %separate Thalassiosira, only NOAA images
 %classifiername='CCS_group-PN-Ch_noCerataulinaBacteriastrum'; 
-classifiername='CCS_NOAA-UCSC-OSU_v2';
+classifiername='CCS_NOAA-UCSC-OSU_v3';
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
