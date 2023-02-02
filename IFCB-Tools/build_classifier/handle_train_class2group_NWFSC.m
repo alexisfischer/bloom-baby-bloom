@@ -2,7 +2,6 @@ function [ n, class_all, class2use, varargin ] = handle_train_class2group_NWFSC(
 % function [ n, class_all, class2use, varargin ] = handle_train_class2group( class2use, class2group, maxn, n, class_all, varargin )
 % ifcb-analysis; function called by compile_train_features*; subsample a training set to group specified classes
 % Heidi M. Sosik, Woods Hole Oceanographic Institution, April 2017
-% modified by Alexis Fischer, NOAA, December 2022 to add a colon to line 26
 
 for classcount = 1:length(class2group{1})  
     num2group = length(class2group{1}{classcount});
@@ -23,7 +22,7 @@ for classcount = 1:length(class2group{1})
             ind2group = ismember(class_all,indc, 'rows');
             ind2group = find(ind2group); %indices of original classes
             class_all(ind2group) = length(class2use); %reset class number to new grouped class
-            n = [n; length(ind2group)]; %add count for new class to end of list
+            n = [n, length(ind2group)]; %add count for new class to end of list 
             n(indc) = 0; %reset original classes to 0 count
             n2del = n(end)-maxn;
             if n2del > 0, %randomly remove some if more than maxn

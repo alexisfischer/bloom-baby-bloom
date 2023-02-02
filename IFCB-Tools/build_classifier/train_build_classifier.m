@@ -69,20 +69,19 @@ class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}};  
 
-%IFCB='OSU';
-IFCB=[]; 
+IFCB='NOAA'; %[]; %'OSU';
 
 %classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira,
 %classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira, Chaetoceros, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v6'; %separate Thalassiosira, only NOAA images
 %classifiername='CCS_group-PN-Ch_noCerataulinaBacteriastrum'; 
-classifiername='CCS_NOAA-UCSC-OSU_v3';
+classifiername='CCS_NOAA_v1';
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
 
-% Step 3: Train (make) the classifier
+%% Step 3: Train (make) the classifier
 result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 make_TreeBaggerClassifier(result_path, classifiername, nTrees)
