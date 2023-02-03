@@ -5,16 +5,16 @@ clear;
 %%%% modify according to dataset
 %ifcbdir='D:\Shimada\'; 
 %ifcbdir='D:\BuddInlet\';
-%ifcbdir='D:\LabData\'; 
+ifcbdir='D:\LabData\'; 
 %ifcbdir='D:\SCW\'; 
-ifcbdir='D:\general\classifier\'; 
+%ifcbdir='D:\general\classifier\'; 
 
 summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\UCSC\SCW\';
 %summarydir=[ifcbdir 'summary\'];
 
-yr='2022';
+yr='2023';
 
 addpath(genpath(summarydir));
 addpath(genpath(ifcbdir));
@@ -34,7 +34,7 @@ copy_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\' yr '\']);
 start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
 % Step 3: Extract features
-start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],false)
+start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
 
 %% Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);

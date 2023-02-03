@@ -3,7 +3,8 @@
 clear;
 filepath='C:\Users\ifcbuser\Documents\GitHub\';
 addpath(genpath(filepath));
-class2useName ='D:\general\config\class2use_12';
+%class2useName ='D:\general\config\class2use_12';
+class2useName ='D:\general\config\class2use_13';
 
 %% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 mergedpath = 'D:\general\classifier\';
@@ -21,7 +22,7 @@ BUDDpath = 'D:\BuddInlet\';
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
-%% Step 2: select classes of interest and find class2skip
+% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
 [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
@@ -46,7 +47,7 @@ class2skip(end+1)={'pennate'};
 % 
 % clearvars manualpath id
 
-%% Step 2: Compile features for the training set
+% Step 2: Compile features for the training set
 addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
@@ -55,11 +56,11 @@ feapath_base = 'D:\general\classifier\features_merged\'; %feature file location,
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
-class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
-        'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
+class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell'...
+        'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell'...
+        'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_small_5cell'...
+        'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
         {'Chaetoceros_chain' 'Chaetoceros_single'}...
-        {'Guinardia' 'Dactyliosolen'}...
-        {'Detonula' 'Cerataulina' 'Lauderia'}...
         {'Cylindrotheca' 'Nitzschia'}...
         {'Rhizosolenia' 'Proboscia'}...
         {'Scrippsiella' 'Heterocapsa_triquetra'}...
@@ -69,14 +70,14 @@ class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}};  
 
-IFCB='NOAA'; %[]; %'OSU';
+IFCB=[]; %[]; %'NOAA'; %'OSU';
 
 %classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira,
 %classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira, Chaetoceros, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v6'; %separate Thalassiosira, only NOAA images
 %classifiername='CCS_group-PN-Ch_noCerataulinaBacteriastrum'; 
-classifiername='CCS_NOAA_v1';
+classifiername='CCS_NOAA_UCSC_OSU_v4';
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path

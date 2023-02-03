@@ -1,6 +1,6 @@
 clear;
 Mac=0;
-name='CCS_NOAA_v1';
+name='CCS_NOAA_UCSC_OSU_v4';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
