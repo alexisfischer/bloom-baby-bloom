@@ -1,17 +1,17 @@
 function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
 %function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
-%
 % summarizes class results for a series of manual annotation files (as saved by startMC)
 %  Alexis D. Fischer, University of California - Santa Cruz, January 2019
-%
+%%
 %Example inputs:
-% manualpath = 'F:\IFCB104\manual\'; %manual file location
-% datapath = 'F:\IFCB104\data\'; %where to access data (hdr files)
-% summary_dir = 'C:\Users\kudelalab\Documents\GitHub\bloom-baby-bloom\SCW\Data\IFCB_summary\manual\'; %where summary file goes
+clear
+ manualpath = 'D:\Shimada\manual\'; %manual file location
+ datapath = 'D:\Shimada\data\'; %where to access data (hdr files)
+ summary_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 
-%manualpath='D:\BuddInlet\manualEmilie\Labexperiments\testPMTsettingsDANY1\';
-%datapath='D:\LabData\data\';
-%summary_dir= 'D:\BuddInlet\manualEmilie\summary\';
+addpath(genpath(summary_dir));
+addpath(genpath(datapath));
+addpath(genpath(manualpath));
 
 %make sure input paths end with filesep
 if ~isequal(manualpath(end), filesep)
@@ -38,7 +38,7 @@ for filecount = 1:length(filelist)
         
     filename = filelist(filecount).name;
     disp(filename)
-    hdrname = [datapath filesep filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
+    hdrname = [datapath filename(2:5) filesep filename(1:9) filesep regexprep(filename, 'mat', 'hdr')]; 
     ml_analyzed(filecount) = IFCB_volume_analyzed(hdrname);    
     hdr=IFCBxxx_readhdr2(hdrname);
     runtype{filecount}=hdr.runtype;

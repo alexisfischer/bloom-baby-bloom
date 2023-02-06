@@ -3,9 +3,9 @@
 clear;
 
 %%%% modify according to dataset
-%ifcbdir='D:\Shimada\'; 
+ifcbdir='D:\Shimada\'; 
 %ifcbdir='D:\BuddInlet\';
-ifcbdir='D:\LabData\'; 
+%ifcbdir='D:\LabData\'; 
 %ifcbdir='D:\SCW\'; 
 %ifcbdir='D:\general\classifier\'; 
 
@@ -14,7 +14,7 @@ summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimad
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\UCSC\SCW\';
 %summarydir=[ifcbdir 'summary\'];
 
-yr='2023';
+yr='2019';
 
 addpath(genpath(summarydir));
 addpath(genpath(ifcbdir));
@@ -54,8 +54,8 @@ adhocthresh = 0.5;
 %   feapath_generic,roibasepath_generic,adhocthresh,2021:2022);
 
 % manual results
-summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
-    [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
+% summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
+%     [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
 
 
 summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\']); 

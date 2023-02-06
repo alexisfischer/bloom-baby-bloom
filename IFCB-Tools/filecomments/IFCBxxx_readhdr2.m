@@ -2,7 +2,8 @@ function [ hdr ] = IFCBxxx_readhdr2( fullfilename )
 %import IFCBxxx series header file as separate text lines, parse to get
 %target values and return them in structure (hdr)
 % 
-% Jun2022 - Alexis Fischer modified to spit out FileComments and the runType was fixed
+% Feb2023 - Alexis Fischer modified to spit out FileComments and added
+% runType and sampleType to accomodate Windows and Linux IFCBs respectively
 %
 t = importdata(fullfilename,'', 150);
 %remove temporary file if read from URL
@@ -25,10 +26,13 @@ else
     hdr.runtime = str2num(linestr(eqpos(1)+1:spos(1)-1));
     hdr.inhibittime = str2num(linestr(eqpos(2)+1:spos(2)-1));
 end
-ii=(find(contains(t, 'Type:'))); %allows runType (windows) and sampleType (Linux) to be acommodated
-if ~isempty(ii) %ii(2)
-    linestr = char(t(ii)); %(ii(2)
-    hdr.runtype=regexprep(linestr,'runType: ','');
+
+%ii = find(contains(t,'runType') | contains(t,'sampleType'));
+ii = find(contains(t,'Type'));
+if ~isempty(ii(end))
+    linestr = char(t(ii(end)));
+    colonpos = findstr(':', linestr);
+    hdr.runtype = linestr(colonpos(1)+2:end); 
 end
 ii = strmatch('FileComment:', t);
 if ~isempty(ii)
