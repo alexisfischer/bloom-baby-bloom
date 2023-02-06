@@ -6,7 +6,6 @@ addpath(genpath(filepath));
 load([filepath 'NOAA/SeascapesProject/Data/seascape_count_class_manual'],'seascape',...
     'ml_analyzed','classcount','filelist','class2use');
 
-%%
 %find top seascapes, 100 file occurences
 [gc,ss]=groupcounts(seascape);
 topSS=ss(gc>100); 
@@ -30,7 +29,7 @@ idx=contains(class2use,'Dinophysis');
 temp=sum(classcount(:,idx),2,'omitnan'); classcount(:,idx)=NaN;
 classcount(:,strcmp('Dinophysis',class2use))=temp;
 
-idx=contains(class2use,'Pseudo-nitzschia');
+idx=contains(class2use,'Pseudo');
 temp=sum(classcount(:,idx),2,'omitnan'); classcount(:,idx)=NaN;
 classcount(:,strcmp('Pseudo-nitzschia',class2use))=temp;
 
