@@ -121,7 +121,8 @@ for i=1:length(SS)
     end
 
     if ~isempty(contains(SS(i).topclasses,'Pseudo-nitzschia'))
-        temp={'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'};
+        temp={'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_small_5cell' 'Pseudo_nitzschia_small_6cell' ...
+            'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell' 'Pseudo_nitzschia_large_3cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_large_6cell'};
         SS(i).topclasses=[SS(i).topclasses,temp];    
     end
 
