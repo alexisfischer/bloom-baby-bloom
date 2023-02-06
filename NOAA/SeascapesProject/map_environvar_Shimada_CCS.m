@@ -7,7 +7,7 @@ addpath(genpath(filepath)); % add new data to search path
 %%%%USER
 yr=2019; % 2019; 2021
 option=2; % 1=Plot the individual data points; 2=Grid the data
-
+fprint=1;
 %%%% load in underway data
 type='underway';
 load([filepath 'NOAA/Shimada/Data/environ_Shimada' num2str(yr) ''],'DT','LON','LAT','TEMP','SAL','FL');
@@ -71,6 +71,7 @@ plot(states(:,1),states(:,2),'k'); hold on;
 set(gca,'ylim',[34 49],'xlim',[-127 -120],'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
 title(yr,'fontsize',12);
     
-% set figure parameters
-print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/' name '_' type '_Shimada' num2str(yr) '.png']);
+if fprint
+    exportgraphics(gca,[filepath 'NOAA/SeascapesProject/Figs/' name '_' type '_Shimada' num2str(yr) '.png'],'Resolution',100)    
+end
 hold off 

@@ -47,11 +47,11 @@ if length(varargin) > 1
     class2group = varargin{2};
 end
 
-%not sure what this is doing to removing it 01 Feb 2023, ADF
 if length(class2group{1}) > 1 && ischar(class2group{1}{1}) %input of one group without outer cell 
     class2group = {class2group};
 end
 
+% select annotations from either NOAA, UCSC, OSU, or all combined
 if strcmp(varargin{3},'NOAA')
     manual_files = [dir([manualpath 'D*IFCB777.mat']);dir([manualpath 'D*IFCB117.mat']);dir([manualpath 'D*IFCB150.mat'])];    
 elseif strcmp(varargin{3},'UCSC')
@@ -61,6 +61,10 @@ elseif strcmp(varargin{3},'OSU')
 else
     manual_files = dir([manualpath 'D*.mat']);
 end
+
+% select annotations from a particular seascape
+
+
 
 manual_files = {manual_files.name}';
 fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
