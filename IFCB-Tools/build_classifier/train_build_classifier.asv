@@ -25,7 +25,7 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
 [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
-class2skip(end+1)={'Bacteriastrum'};
+%class2skip(end+1)={'Bacteriastrum'};
 class2skip(end+1)={'Thalassiosira_single'};
 class2skip(end+1)={'pennate'};
 %class2skip(end+1)={'Amylax'};
@@ -80,7 +80,7 @@ class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell' 'Pse
         {'Chaetoceros_chain' 'Chaetoceros_single'}...
         {'Cylindrotheca' 'Nitzschia'}...
         {'Rhizosolenia' 'Proboscia'}...
-        {'Gymnodinium' 'Heterocapsa_triquetra' 'Scrippsiella'}...
+        {'Heterocapsa_triquetra' 'Scrippsiella'}...
         {'Stephanopyxis' 'Melosira'}...
         {'cryptophyta' 'nanoplankton'}...
         {'Cerataulina' 'Detonula' 'Lauderia'}... 
@@ -93,7 +93,7 @@ IFCB='NOAA'; %[]; %'NOAA'; %'OSU';
 %classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
 %classifiername='BI_Dinophysis_GenusLevel_v6'; %separate Thalassiosira, only NOAA images
 %classifiername='CCS_group-PN-Ch_noCerataulinaBacteriastrum'; 
-classifiername='CCS_NOAA_v2';
+classifiername='CCS_NOAA_v1';
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
