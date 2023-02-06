@@ -1,6 +1,6 @@
 clear;
-Mac=0;
-name='CCS_NOAA_v2';
+Mac=1;
+name='CCS_NOAA_v1';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -79,7 +79,7 @@ title(['All CCS - Winner-takes-all: ' num2str(length(class)) ' classes ranked by
 xtickangle(45);
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'F1score_UCSC_OSU_CCS_' name '.png']);
+print(gcf,'-dpng','-r200',[figpath 'F1score_' name '.png']);
 hold off
 
 %% Winner takes All
