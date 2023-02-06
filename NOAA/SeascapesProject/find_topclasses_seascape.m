@@ -6,6 +6,7 @@ addpath(genpath(filepath));
 load([filepath 'NOAA/SeascapesProject/Data/seascape_count_class_manual'],'seascape',...
     'ml_analyzed','classcount','filelist','class2use');
 
+%%
 %find top seascapes, 100 file occurences
 [gc,ss]=groupcounts(seascape);
 topSS=ss(gc>100); 
