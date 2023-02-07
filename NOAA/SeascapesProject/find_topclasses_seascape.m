@@ -53,7 +53,7 @@ for i=1:length(topSS)
     else
         id_top=id2;
     end
-    SS(i).ss=num2str(topSS(i));
+    SS(i).ss=topSS(i); %SS(i).ss=num2str(topSS(i));
     SS(i).topclasses=(class2use(id_top));
     SS(i).filename=filelist(idx);
     SS(i).classcount=counttemp;
@@ -61,7 +61,7 @@ for i=1:length(topSS)
 end
 
 % add summmary
-SS(end+1).ss='all';
+SS(end+1).ss=[];
 sstotal=sum(classcount,1,'omitnan');
 [~,id_top]=maxk(sstotal,num); %find top cellcount classes
 SS(end).topclasses=sort(class2use(id_top));
@@ -72,9 +72,10 @@ SS(end).MCnum=sum(sum(classcount,'omitnan'),'omitnan');
 clearvars i idx id_top ss gc sstotal counttemp temp id_t topSS id2 temp
 
 %% plot # annotated files
+label={SS.ss};label(end)=[];
 figure('Units','inches','Position',[1 1 3 3],'PaperPositionMode','auto');   
-bar([SS.MCnum],'Barwidth',.5,'linestyle','none'); hold on
-set(gca,'xtick',1:length([SS.MCnum]),'xticklabel', {SS.ss},'tickdir','out'); hold on
+bar([SS(1:end-1).MCnum],'Barwidth',.5,'linestyle','none'); hold on
+set(gca,'xtick',1:length([SS.MCnum])-1,'xticklabel',label,'tickdir','out'); hold on
 ylabel('number of annotated images')
 xlabel('seascape')
 
@@ -83,6 +84,7 @@ print(gcf,'-dpng','-r100',[filepath 'NOAA/SeascapesProject/Figs/AnnotatedImagesp
 hold off 
 
 %% plot top classes using cells/ml
+label={SS.ss};label(end)={'all'};
 %remove classes that are not present for plotting
 id=NaN*ones(length(SS),length(class2use));
 for i=1:length(SS)
@@ -100,7 +102,7 @@ end
 
 figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');   
 plot(1:length(class_label),transpose(id).*(1:length(SS)),'*'); hold on
-set(gca,'ycolor','k','ylim',[.8 7.2],'ytick',1:length(SS),'yticklabel',{SS.ss},...
+set(gca,'ycolor','k','ylim',[.8 7.2],'ytick',1:length(SS),'yticklabel',label,...
     'xlim',[0 (length(class_label)+1)],'xtick', 1:length(class_label),'xticklabel', class_label,'tickdir','out'); hold on
 ylabel('seascape')
 title(['Top ' num2str(num) ' classes for each seascape']);

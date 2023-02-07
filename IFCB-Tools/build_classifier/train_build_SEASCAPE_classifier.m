@@ -1,34 +1,48 @@
 %% Training and Making a Seascape classifier
-%   Alexis D. Fischer, NOAA NWFSC, December 2022
+%   Alexis D. Fischer, NOAA NWFSC, Feb 2023
 clear;
-filepath='C:\Users\ifcbuser\Documents\';
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+
+%filepath='C:\Users\ifcbuser\Documents\';
 addpath(genpath(filepath));
-addpath(genpath('D:\general\classifier\'));
+%addpath(genpath('D:\general\classifier\'));
 
-class2useName ='D:\general\config\class2use_12';
+%USER
+class2useName ='D:\general\config\class2use_13';
+ssnum=19; 
 
-%% Step 1: find topclasses for each seascape
-
+%% Step 1: select topclasses for seascape of interest
+load([filepath 'NOAA/SeascapesProject/Data/seascape_topclasses'],'SS');
+TopClass=(SS([SS.ss]==ssnum).topclasses)';
 
 %% Step 2: find class2skip
-
-%load([filepath 'GitHub\bloom-baby-bloom\NOAA\Shimada\Data\topclasses_bylatitude_CCS'],'classBC');
 [class2skip] = find_class2skip(class2useName,TopClass);
-
+class2skip(end+1)={'Bacteriastrum'};
+class2skip(end+1)={'Thalassiosira_single'};
+class2skip(end+1)={'pennate'};
+class2skip(end+1)={'nanoplankton'};
+class2skip(end+1)={'cryptophyta'};
 
 %% Step 3: compile features for the training set
-
-manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
-feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
+classifiername='SS_test'; 
+IFCB='NOAA'; %[]; %'NOAAOSU'; %'OSU'; 
+manualpath = 'D:\general\classifier\manual_merged_ungrouped\'; % manual annotation file location
+feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 1000; %minimum number for inclusion
-class2group={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
-        'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single'}};        
-IFCB=[]; 
-
-classifiername='test'; 
+minn = 500; %minimum number for inclusion
+class2group={{'Pseudo-nitzschia' 'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell'...
+        'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell'...
+        'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_small_5cell'...
+        'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
+        {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
+        'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
+        'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
+        {'Chaetoceros_chain' 'Chaetoceros_single'}... 
+        {'Stephanopyxis' 'Melosira'}...      
+        {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}... 
+        {'Rhizosolenia' 'Proboscia'}...                
+        {'Gymnodinium' 'Heterosigma' 'Scrippsiella'}};
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
 addpath(genpath(outpath)); % add new data to search path
