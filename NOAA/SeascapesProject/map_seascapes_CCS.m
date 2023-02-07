@@ -8,8 +8,9 @@ addpath(genpath(filepath)); % add new data to search path
 fprint=1;
 yr=2019; % 2019; 2021
 
-load([filepath 'NOAA/SeascapesProject/Data/seascape_topclasses']);
-load([filepath 'NOAA/SeascapesProject/Data/SeascapeSummary_NOAA-OSU-UCSC']);
+load([filepath 'NOAA/SeascapesProject/Data/SeascapeSummary_NOAA-OSU-UCSC'],'S');
+%%
+load([filepath 'NOAA/SeascapesProject/Data/seascape_topclasses'],'SS');
 ib=find(~strcmp('NOAA',S.group)); S(ib,:)=[]; %only keep Hake survey data
 
 %only keep top seascapes

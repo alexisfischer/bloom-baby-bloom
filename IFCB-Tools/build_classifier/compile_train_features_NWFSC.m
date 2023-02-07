@@ -62,10 +62,12 @@ else
     manual_files = dir([manualpath 'D*.mat']);
 end
 
-% select annotations from a particular seascape
+%% select annotations from a particular seascape
+varargin{4}=21; %seascape from which annotations should be selected from
+load('~/Documents/MATLAB/bloom-baby-bloom/NOAA/SeascapesProject/Data/SeascapeSummary_NOAA-OSU-UCSC','S');
 
 
-
+%%
 manual_files = {manual_files.name}';
 fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
 manual_files = regexprep(manual_files, '.mat', '');    
