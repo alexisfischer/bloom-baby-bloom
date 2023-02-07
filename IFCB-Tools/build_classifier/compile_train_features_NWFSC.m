@@ -6,29 +6,27 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 %IFCB classifier production: get training features from pre-computed bin feature files
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 
-% %Example inputs: 
-% manualpath = 'D:\general\classifier\manual_merged\'; % manual annotation file location
-% feapath_base = 'D:\general\classifier\features_merged\'; %feature file location, assumes \yyyy\ organization
+%% %Example inputs: 
+% clear
+% manualpath = 'D:\general\classifier\manual_merged_ungrouped\'; % manual annotation file location
+% feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file location, assumes \yyyy\ organization
 % outpath = 'D:\general\classifier\summary\'; % location to save training set
 % maxn = 5000; %maximum number of images per class to include
 % minn = 500; %minimum number for inclusion
-% class2useName = 'D:\general\config\class2use_12'; %classlist
-% classifiername='CCS_NOAA_v1'; 
+% class2useName = 'D:\general\config\class2use_13'; %classlist
+% classifiername='CCS_NOAA_OSU_v1'; 
 % varargin{1}={'Actiniscus','Actinoptychus','Amphidinium','Asteromphalus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Clusterflagellate','Corethron','Coscinodiscus','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dissodinium','Ditylum','Ebria','Entomoneis','Ephemera','Euglenoids','Fibrocapsa','Fragilaria','Gonyaulux','Gyrodinium','Helicotheca','Hemiaulus','Heterocapsa_triquetra','Karenia','Laboea_strobila','Licmophora','Lingulodinium','Lioloma','Lithodesmium','Meringosphaera','Mesodinium','Nematodinium','Noctiluca','Odontella','Oxyphysis','Paralia','Phaeocystis','Plagiogrammopsis','Pleuronema','Pleurosigma','Polykrikos','Proterythropsis','Protoperidinium','Pseudo-nitzschia_external_parasite','Pyrophacus','Sea_Urchin_larvae','Striatella','Strombidium','Thalassionema','Tiarina_fusus','Tintinnida','Tontonia','Torodinium','Tropidoneis','Verrucophora farcimen (cf)','bead','bubble','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nauplii','pollen','unclassified','veliger','zooplankton'}; %class2skip
-% varargin{2}={{'Pseudo-nitzschia' 'Pseudo-nitzschia_large_narrow' ...
-%         'Pseudo-nitzschia_large_wide' 'Pseudo-nitzschia_small'}...
-%         {'Chaetoceros_chain' 'Chaetoceros_single'}...
-%         {'Guinardia' 'Dactyliosolen'}...
-%         {'Detonula' 'Cerataulina' 'Lauderia'}...
-%         {'Cylindrotheca' 'Nitzschia'}...
-%         {'Rhizosolenia' 'Proboscia'}...
-%         {'Scrippsiella' 'Heterocapsa_triquetra'}...
-%         {'Stephanopyxis' 'Melosira'}...
-%         {'cryptophyta' 'nanoplankton'}...
+% varargin{2}={{'Pseudo-nitzschia' 'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell'...
+%         'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell'...
+%         'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_small_5cell'...
+%         'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
 %         {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
 %         'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
-%         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}};  %class2group
-%  varargin{3}='NOAA'; %which dataset you want the classifier to be made from
+%         'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
+%         {'Chaetoceros_chain' 'Chaetoceros_single'},{'Stephanopyxis' 'Melosira'}...      
+%         {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'},{'Gymnodinium' 'Heterosigma' 'Scrippsiella'}};
+%          %class2group
+%  varargin{3}='NOAAOSU'; %which dataset you want the classifier to be made from
 
 % %other examples
 % varargin{1}=[]; %class2group with nothing to skip
@@ -58,14 +56,15 @@ elseif strcmp(varargin{3},'UCSC')
     manual_files = dir([manualpath 'D*IFCB104.mat']);
 elseif strcmp(varargin{3},'OSU')
     manual_files = dir([manualpath 'D*IFCB122.mat']);
+elseif strcmp(varargin{3},'NOAAOSU')
+    manual_files = [dir([manualpath 'D*IFCB777.mat']);dir([manualpath 'D*IFCB117.mat']);dir([manualpath 'D*IFCB150.mat']);dir([manualpath 'D*IFCB122.mat'])];        
 else
     manual_files = dir([manualpath 'D*.mat']);
 end
 
-%% select annotations from a particular seascape
-varargin{4}=21; %seascape from which annotations should be selected from
-load('~/Documents/MATLAB/bloom-baby-bloom/NOAA/SeascapesProject/Data/SeascapeSummary_NOAA-OSU-UCSC','S');
-
+% %% select annotations from a particular seascape
+% varargin{4}=21; %seascape from which annotations should be selected from
+% load('~/Documents/MATLAB/bloom-baby-bloom/NOAA/SeascapesProject/Data/SeascapeSummary_NOAA-OSU-UCSC','S');
 
 %%
 manual_files = {manual_files.name}';
