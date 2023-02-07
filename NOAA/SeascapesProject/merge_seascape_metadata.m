@@ -17,6 +17,7 @@ filename1=cellfun(@(x) ['D' x(1:4) x(6:7) x(9:10) 'T' x(12:13) x(15:16) x(18:19)
 filename2=[NOAA.filelist;UCSC.filelist;filename1];
 filename=cellfun(@(x) [x '.mat'],cellstr(filename2),'UniformOutput',false);
 
+%%
 lat=[NOAA.lat;UCSC.lat;S.META(:,7);M.META(:,7)];
 lon=[NOAA.lon;UCSC.lon;S.META(:,8);M.META(:,8)];
 
@@ -25,7 +26,7 @@ group2=repmat({'UCSC'},length(UCSC.dt),1);
 group3=repmat({'OSU'},L,1);
 group=[group1;group2;group3];
 
-ifcb=cellfun(@str2num,cellfun(@(x) x(end-6:end-4),filename,'UniformOutput',false));
+ifcb=cellfun(@(x),cellfun(@(x) x(end-6:end-4),filename,'UniformOutput',false));
 
 ss=[SSOUT8NWFSC_5km;SSOUT8UCSC_10km;S.SS8out;M.SS8out];
 % ssM=NaN*ss8;
@@ -40,21 +41,9 @@ S = sortrows(S,'ss','ascend');
 
 save([filepath 'Data/SeascapeSummary_NOAA-OSU-UCSC'],'S');
 
-%%
-
+%% group by group
 [gc,ss]=groupcounts(S.ss);
 topSS=ss(gc>200); %find top seascapes, 200 occurences
-% 
-% for i=1:length(topSS)
-%     idx=find(S.ss==topSS(i)); %indices of a particular ss
-%     SS(i).ss=topSS(i);
-%     SS(i).filename=S.filename(idx);
-%     SS(i).lat=S.lat(idx);
-%     SS(i).lon=S.lon(idx);
-%     SS(i).dt=S.dt(idx);
-%     SS(i).ifcb=S.ifcb(idx);
-%     SS(i).group=S.group(idx,:);
-% end
 
 % summarize each dataset
 N=table(ss,gc); N.gc=NaN*N.gc; O=N; U=N;
@@ -72,7 +61,6 @@ for i=1:length(ss)
 end
 
 clearvars dt filename group ifcb lat lon ss idx i gc topSS
-
 
 %% plot
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
