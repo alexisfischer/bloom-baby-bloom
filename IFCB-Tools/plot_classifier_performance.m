@@ -1,6 +1,6 @@
 clear;
 Mac=0;
-name='CCS_NOAA_v4';
+name='CCS_NOAA_v6';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -48,7 +48,7 @@ ylabel('total images in set'); hold on
 lh=legend('NWFSC','UCSC','OSU','Location','NorthOutside');
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r100',[figpath 'TrainingSet_' name '.png']);
+exportgraphics(gca,[figpath 'TrainingSet_' name '.png'],'Resolution',100)    
 hold off
 
 %% F1 scores
@@ -79,7 +79,7 @@ title(['All CCS - Winner-takes-all: ' num2str(length(class)) ' classes ranked by
 xtickangle(45);
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'F1score_' name '.png']);
+exportgraphics(gca,[figpath 'F1score_' name '.png'],'Resolution',100)    
 hold off
 
 %% Winner takes All
@@ -106,7 +106,7 @@ xlabel('Predicted Classifications','fontweight','bold')
 title('Winner-takes-all');
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'confusion_matrix_all_' name '.png']);
+exportgraphics(gca,[figpath 'confusion_matrix_all_' name '.png'],'Resolution',100)    
 hold off
 
 %% plot opt manual vs classifier checkerboard with unclassified
@@ -134,6 +134,6 @@ xlabel('Predicted Classifications','fontweight','bold')
 title('Optimal score threshold');
 
 set(gcf,'color','w');
-print(gcf,'-dpng','-r200',[figpath 'confusion_matrix_opt_' name '.png']);
+exportgraphics(gca,[figpath 'confusion_matrix_opt_' name '.png'],'Resolution',100)    
 hold off
 
