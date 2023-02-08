@@ -78,6 +78,9 @@ optb=table(class(1:end-1),total,R,P,F1);
 
 clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
 
+%% custom threshold
+
+
 %% how did regional classifier do on NWFSC dataset
 idx = contains(targets,{'IFCB777' 'IFCB117' 'IFCB150'});
 
