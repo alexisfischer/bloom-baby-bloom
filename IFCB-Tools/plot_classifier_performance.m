@@ -1,6 +1,6 @@
 clear;
 Mac=0;
-name='ss19__v2';
+name='CCS_v2';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    

@@ -2,6 +2,7 @@
 %   Alexis D. Fischer, NOAA NWFSC, December 2022
 clear;
 filepath='C:\Users\ifcbuser\Documents\GitHub\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 addpath(genpath(filepath));
 class2useName ='D:\general\config\class2use_13';
 
@@ -21,12 +22,13 @@ BUDDpath = 'D:\BuddInlet\';
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
-%% Step 2: select classes of interest and find class2skip
+% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
 [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
 class2skip(end+1)={'Bacteriastrum'};
 class2skip(end+1)={'Thalassiosira_single'};
+%class2skip(end+1)={'Heterosigma'};
 class2skip(end+1)={'pennate'};
 class2skip(end+1)={'nanoplankton'};
 class2skip(end+1)={'cryptophyta'};
@@ -58,35 +60,22 @@ feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
-class2group={{'Pseudo-nitzschia' 'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell'...
-        'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell'...
-        'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_small_5cell'...
-        'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
-        {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
-        'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
-        'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single'}... 
-        {'Stephanopyxis' 'Melosira'}...      
-        {'Rhizosolenia' 'Proboscia'}...                
-        {'Gymnodinium' 'Heterosigma' 'Scrippsiella'}};
-       
-%        {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}... 
+class2group={{'Pseudo-nitzschia' 'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell' 'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell' 'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_small_5cell' 'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
+        {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
+        {'Chaetoceros_chain' 'Chaetoceros_single'}...
+        {'Rhizosolenia' 'Proboscia'}...    
+        {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}};        
     
+%        {'Stephanopyxis' 'Melosira'}...      
 %        {'Gymnodinium' 'Heterocapsa_triquetra' 'Scrippsiella'}...
 %        {'Dactyliosolen' 'Guinardia'}};
 %        {'Cerataulina' 'Detonula' 'Lauderia'}... 
 %        {'Cylindrotheca' 'Nitzschia'}...
 
-IFCB='NOAAOSU'; %[]; %'NOAA'; %'OSU';
+group=[]; %[]; %'NOAA-OSU'; %'OSU'; 
+classifiername=['CCS' group '_v3']; 
 
-%classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira,
-%classifiername='BI_Dinophysis_GenusLevel_v4'; %separate Thalassiosira, Chaetoceros, no UCSC Dinophysis
-%classifiername='BI_Dinophysis_GenusLevel_v5'; %separate Thalassiosira, no UCSC Dinophysis
-%classifiername='BI_Dinophysis_GenusLevel_v6'; %separate Thalassiosira, only NOAA images
-%classifiername='CCS_group-PN-Ch_noCerataulinaBacteriastrum'; 
-classifiername='CCS_NOAA-OSU_v3';
-
-compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,IFCB);
+compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
@@ -94,7 +83,7 @@ result_path = 'D:\general\classifier\summary\'; %USER location of training file 
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 make_TreeBaggerClassifier(result_path, classifiername, nTrees)
 
-determine_classifier_performance([result_path 'Trees_' classifiername],'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\');
+determine_classifier_performance([result_path 'Trees_' classifiername],[summarydir 'class\']);
 
 %plot_classifier_performance
 

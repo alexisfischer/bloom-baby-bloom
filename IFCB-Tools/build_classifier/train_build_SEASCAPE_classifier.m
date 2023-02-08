@@ -36,11 +36,8 @@ class2group={{'Pseudo-nitzschia' 'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschi
         {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}... 
         {'Rhizosolenia' 'Proboscia'}...                
         {'Gymnodinium' 'Heterosigma' 'Scrippsiella'}};
-tf=find(contains(TopClass,{'Rhizosolenia' 'Proboscia'}))
-tf=find(contains(TopClass,{'Gymnodinium' 'Heterosigma' 'Scrippsiella'}))
-tf=find(contains(TopClass,{'Stephanopyxis' 'Melosira'}))
-    
-    group=[]; %[]; %'NOAA-OSU'; %'OSU'; 
+
+group=[]; %[]; %'NOAA-OSU'; %'OSU'; 
 classifiername=['ss' num2str(ssnum) '_' group '_v1']; 
 
 compile_train_features_SS(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group,ssnum,ssdir);
