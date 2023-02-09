@@ -1,21 +1,24 @@
 clear;
-Mac=1;
-name='CCS_NOAA_v8';
+Mac=0;
+name='CCS_NOAA_v7';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
     filepath = [basepath 'IFCB-Data/Shimada/class/'];
+    classidx=[basepath 'IFCB-Tools/convert_index_class/class_indices.mat'];
     figpath = [filepath 'Figs/'];
 else
     basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
     filepath = [basepath 'IFCB-Data\Shimada\class\'];
+    classidx=[basepath 'IFCB-Tools\convert_index_class\class_indices.mat'];    
     figpath = [filepath 'Figs\'];    
 end
 addpath(genpath(basepath));
 
+%%
 load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','OSU');
-[~,class]=get_class_ind( all.class,'all',[basepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
-[~,classU]=get_class_ind( opt.class,'all',[basepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
+[~,class]=get_class_ind( all.class,'all',classidx);
+[~,classU]=get_class_ind( opt.class,'all',classidx);
 maxn=round(max([opt.total]),-2);
 opt(end,:)=[];
 
@@ -39,7 +42,7 @@ hold off
 % plot bar Recall and Precision
 % sort by F1
 [all,ia]=sortrows(all,'F1','descend');
-[~,class_s]=get_class_ind( all.class, 'all', basepath);
+[~,class_s]=get_class_ind( all.class, 'all', classidx);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
@@ -67,7 +70,7 @@ hold off
 % plot bar Recall and Precision
 % sort by F1
 [opt,ia]=sortrows(opt,'F1','descend');
-[~,class_s]=get_class_ind( opt.class, 'all', basepath);
+[~,class_s]=get_class_ind( opt.class, 'all', classidx);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
