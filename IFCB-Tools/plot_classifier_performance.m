@@ -1,5 +1,5 @@
 clear;
-Mac=0;
+Mac=1;
 name='CCS_NOAA_v8';
 
 if Mac
@@ -14,8 +14,8 @@ end
 addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','OSU');
-[~,class]=get_class_ind( all.class, 'all', basepath);
-[~,classU]=get_class_ind( opt.class, 'all', basepath);
+[~,class]=get_class_ind( all.class,'all',[basepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
+[~,classU]=get_class_ind( opt.class,'all',[basepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
 maxn=round(max([opt.total]),-2);
 opt(end,:)=[];
 
