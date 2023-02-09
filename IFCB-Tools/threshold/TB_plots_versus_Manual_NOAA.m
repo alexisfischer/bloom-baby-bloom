@@ -1,11 +1,10 @@
-
-class2do_string = 'Pseudo-nitzschia'; ymax=30;
+clear
+class2do_string = 'Akashiwo'; ymax=30;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/';
 load([filepath 'threshold/Coeff_' class2do_string]);
 load([filepath 'threshold/summary_allTB_bythre_' class2do_string]);
 load([filepath 'manual/count_class_biovol_manual']); 
-load([filepath 'Data/SCW_master'],'SC');
 
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
