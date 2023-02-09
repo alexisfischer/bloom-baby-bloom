@@ -2,11 +2,11 @@ function [ ] = countcells_allTB_class_by_threshold(class2do_string,yrrange,class
 % Gives you a summary file of counts for thresholds 0.1 to 1 for the specified class
 % Alexis Fischer, April 2018
 
-%class2do_string = 'Pseudo-nitzschia'; %USER 
-% yrrange = 2015:2018;
-% classpath_generic = 'F:\IFCB104\class\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
-% out_path = 'F:\IFCB104\class\summary\'; %USER where to store the results
-% in_dir = 'F:\IFCB104\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
+% class2do_string = 'Akashiwo'; %USER 
+% yrrange = 2019:2021;
+% classpath_generic = 'D:\Shimada\class\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
+% out_path = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\threshold\'; %USER where to store the results
+% in_dir = 'D:\Shimada\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
 
 classfiles = [];
 for yr = yrrange %2014:2015 %USER
@@ -16,6 +16,10 @@ for yr = yrrange %2014:2015 %USER
     classfiles = [classfiles; cellstr([pathall char(temp.name)])];
     clear temp pathall classpath
 end
+
+%remove empty classfiles if no data collected that yr
+idx=cellfun(@isempty,classfiles);
+classfiles(idx)=[];
 
 temp = char(classfiles);
 ind = length(classpath_generic)+1;
@@ -40,6 +44,7 @@ else
     end
 end;
 
+%%
 ml_analyzed = IFCB_volume_analyzed(hdrfiles);
 
 temp = load(classfiles{1}, 'class2useTB');
@@ -59,7 +64,6 @@ classcountTB_above_thre = NaN(length(classfiles),length(threlist));
         roiids{filecount} = roiid_list;
     end
 %%
-
 ml_analyzedTB = ml_analyzed;
 mdateTB = mdate;
 filelistTB = filelist;

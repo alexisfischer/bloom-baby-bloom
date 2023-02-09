@@ -6,7 +6,7 @@ summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimad
 addpath(genpath(filepath));
 class2useName ='D:\general\config\class2use_13';
 
-%% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
+% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 mergedpath = 'D:\general\classifier\';
 UCSCpath = 'D:\SCW\';
 OSUpath = 'D:\OSU\';
@@ -32,6 +32,7 @@ class2skip(end+1)={'Thalassiosira_single'};
 class2skip(end+1)={'pennate'};
 class2skip(end+1)={'nanoplankton'};
 class2skip(end+1)={'cryptophyta'};
+class2skip(end+1)={'Pseudo-nitzschia'};
 %class2skip(end+1)={'Amylax'};
 
 % Shimada classifier
@@ -60,20 +61,19 @@ feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
-class2group={{'Pseudo-nitzschia' 'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell' 'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell' 'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_small_5cell' 'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
-        {'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
+class2group={{'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
         {'Chaetoceros_chain' 'Chaetoceros_single'}...
-        {'Rhizosolenia' 'Proboscia'}...    
         {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}};        
     
+%        {'Rhizosolenia' 'Proboscia'}...       
 %        {'Stephanopyxis' 'Melosira'}...      
 %        {'Gymnodinium' 'Heterocapsa_triquetra' 'Scrippsiella'}...
 %        {'Dactyliosolen' 'Guinardia'}};
 %        {'Cerataulina' 'Detonula' 'Lauderia'}... 
 %        {'Cylindrotheca' 'Nitzschia'}...
 
-group=[]; %[]; %'NOAA-OSU'; %'OSU'; 
-classifiername=['CCS' group '_v3']; 
+group='NOAA'; %[]; %'NOAA-OSU'; %'OSU'; 
+classifiername=['CCS' group '_v7']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
