@@ -1,6 +1,6 @@
 clear;
-Mac=0;
-name='CCS_v2';
+Mac=1;
+name='CCS_v1';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -14,28 +14,12 @@ end
 addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','OSU');
-maxn=round(max([all.total]),-2);
 [~,class]=get_class_ind( all.class, 'all', basepath);
+[~,classU]=get_class_ind( opt.class, 'all', basepath);
+maxn=round(max([opt.total]),-2);
+opt(end,:)=[];
 
 %% plot stacked total in set and F1 score comparison
-% figure('Units','inches','Position',[1 1 8 6],'PaperPositionMode','auto');
-% subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.26 0.15], [0.08 0.04]);
-% %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
-% %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
-% 
-% subplot(2,1,1)
-% b=bar([NOAA.F1 UCSC.F1 OSU.F1 all.F1],'Barwidth',1,'linestyle','none'); hold on
-% col=[brewermap(3,'Set2');[.1 .1 .1]]; 
-% for i=1:4
-%     set(b(i),'FaceColor',col(i,:));
-% end  
-% set(gca,'xlim',[0.5 (length(class)+.5)],'ycolor','k', 'xtick', 1:length(class), 'xticklabel', [],'tickdir','out'); hold on
-% ylabel('F1 score');
-% lh=legend('NWFSC','UCSC','OSU','all','Location','North');
-%     legend boxoff; lh.FontSize = 10; hp=get(lh,'pos');
-%     lh.Position=[hp(1) hp(2)+.16 hp(3) hp(4)]; hold on    
-%  
-
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 col=[(brewermap(3,'Set2'));[.1 .1 .1]]; 
 b = bar([NOAA.total UCSC.total OSU.total],'stack','linestyle','none','Barwidth',.7);
@@ -51,13 +35,10 @@ set(gcf,'color','w');
 exportgraphics(gca,[figpath 'TrainingSet_' name '.png'],'Resolution',100)    
 hold off
 
-%% F1 scores
+%% F1 scores Winner take all
 % plot bar Recall and Precision
 % sort by F1
 [all,ia]=sortrows(all,'F1','descend');
-UCSC=UCSC(ia,:);
-OSU=OSU(ia,:);
-NOAA=NOAA(ia,:);
 [~,class_s]=get_class_ind( all.class, 'all', basepath);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
@@ -75,11 +56,39 @@ plot(1:length(class_s),all.total,'k*'); hold on
 ylabel('total images in set');
 set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 maxn], 'xticklabel', class_s); hold on
 legend('Recall', 'Precision','Location','W')
-title(['All CCS - Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
+title(['Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
 xtickangle(45);
 
 set(gcf,'color','w');
-exportgraphics(gca,[figpath 'F1score_' name '.png'],'Resolution',100)    
+exportgraphics(gca,[figpath 'F1score_all_' name '.png'],'Resolution',100)    
+hold off
+
+%% F1 scores OPT
+% plot bar Recall and Precision
+% sort by F1
+[opt,ia]=sortrows(opt,'F1','descend');
+[~,class_s]=get_class_ind( opt.class, 'all', basepath);
+
+figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
+yyaxis left;
+b=bar([opt.R opt.P],'Barwidth',1,'linestyle','none'); hold on
+hline(.9,'k--');
+set(gca,'ycolor','k', 'xtick', 1:length(class_s), 'xticklabel', class_s); hold on
+ylabel('Performance');
+col=flipud(brewermap(2,'RdBu')); 
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+yyaxis right;
+plot(1:length(class_s),opt.total,'k*'); hold on
+ylabel('total images in set');
+set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 maxn], 'xticklabel', class_s); hold on
+legend('Recall', 'Precision','Location','W')
+title(['Opt score threshold: ' num2str(length(class)) ' classes ranked by F1 score'])
+xtickangle(45);
+
+set(gcf,'color','w');
+exportgraphics(gca,[figpath 'F1score_opt_' name '.png'],'Resolution',100)    
 hold off
 
 %% Winner takes All
@@ -110,9 +119,6 @@ exportgraphics(gca,[figpath 'confusion_matrix_all_' name '.png'],'Resolution',10
 hold off
 
 %% plot opt manual vs classifier checkerboard with unclassified
-classU=class;
-classU{end+1}='unclassified';
-
 figure('Units','inches','Position',[1 1 7 6],'PaperPositionMode','auto');
 cplot = zeros(size(c_opt)+1);
 cplot(1:length(classU),1:length(classU)) = c_opt;
