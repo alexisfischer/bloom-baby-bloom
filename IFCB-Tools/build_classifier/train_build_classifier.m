@@ -34,6 +34,9 @@ class2skip(end+1)={'nanoplankton'};
 class2skip(end+1)={'cryptophyta'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
+class2skip(end+1)={'Pseudo_nitzschia_small_1cell'};
+class2skip(end+1)={'Pseudo_nitzschia_large_1cell'};
+
 %class2skip(end+1)={'Amylax'};
 
 % Shimada classifier
@@ -61,8 +64,8 @@ manualpath = 'D:\general\classifier\manual_merged_ungrouped\'; % manual annotati
 feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 500; %minimum number for inclusion
-class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
+minn = 400; %minimum number for inclusion
+class2group={...
         {'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_large_2cell'}...
         {'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell',...
         'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell',...
@@ -73,15 +76,15 @@ class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
         {'Rhizosolenia' 'Proboscia'}...         
         {'Heterocapsa_triquetra' 'Scrippsiella'}...
         {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}};        
-    
+    %{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}
 %        {'Stephanopyxis' 'Melosira'}...      
 %        {'Gymnodinium' 'Heterocapsa_triquetra' 'Scrippsiella'}...
 %        {'Dactyliosolen' 'Guinardia'}};
 %        {'Cerataulina' 'Detonula' 'Lauderia'}... 
 %        {'Cylindrotheca' 'Nitzschia'}...
 
-group=[]; %[]; %'NOAA-OSU'; %'OSU'; 
-classifiername=['CCS_' group 'v5']; 
+group='NOAA'; %[]; %'NOAA-OSU'; %'OSU'; 
+classifiername=['CCS_' group '_v11']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
