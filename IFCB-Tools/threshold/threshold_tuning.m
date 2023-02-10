@@ -12,9 +12,9 @@ summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],[ifcbdir
  
 %% Step 2) Make summary file of counts for thresholds 0.1 to 1 for all classes
 load([summarydir 'class\performance_classifier_CCS_v2'],'all'); %get classlist from classifier
-class2do_string = all.class;
-for i=20:length(class2do_string)
-    countcells_allTB_class_by_threshold(class2do_string(i),yrrange,[ifcbdir 'class\classxxxx_v1\'],[summarydir 'threshold\'],[ifcbdir 'data\'])
+classlist = all.class;
+for i=20:length(classlist)
+    countcells_allTB_class_by_threshold(char(classlist(i)),yrrange,[ifcbdir 'class\classxxxx_v1\'],[summarydir 'threshold\'],[ifcbdir 'data\'])
 end
 
 %% Step 3) evaluate the right threshold to use for your class files
