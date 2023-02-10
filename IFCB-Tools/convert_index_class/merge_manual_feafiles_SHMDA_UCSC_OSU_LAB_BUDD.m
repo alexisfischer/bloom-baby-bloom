@@ -6,13 +6,14 @@ function [] = merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,merged
 %   Alexis D. Fischer, SHMDA NWFSC, September 2021
 
 % % Input path names
-% class2useName ='D:\general\config\class2use_13';
-% mergedpath = 'D:\general\classifier\';
-% UCSCpath = 'D:\SCW\';
-% OSUpath = 'D:\OSU\';
-% SHMDApath = 'D:\Shimada\';
-% LABpath = 'D:\LabData\';
-% BUDDpath = 'D:\BuddInlet\';
+clear
+class2useName ='D:\general\config\class2use_13';
+mergedpath = 'D:\general\classifier\';
+UCSCpath = 'D:\SCW\';
+OSUpath = 'D:\OSU\';
+SHMDApath = 'D:\Shimada\';
+LABpath = 'D:\LabData\';
+BUDDpath = 'D:\BuddInlet\';
 
 %%%%
 manualpath = [mergedpath 'manual_merged_UCSCgroupings\'];
@@ -88,84 +89,84 @@ end
 clearvars manual_files fea_files BUDDmanualpath i BUDDfeapath feapath
 fprintf('Finished copying corresponding BUDD manual and feature files');
 
-% %% UCSC
-% addpath(genpath(mergedpath));
-% 
-% % copy manual files to merged manual folder and convert classes
-% UCSCmanualpath = [UCSCpath 'manual\'];
-% addpath(genpath(UCSCmanualpath));
-% manual_files = dir([UCSCmanualpath 'D*104.mat']); %only select UCSC files
-% for i=1:length(manual_files)  
-%     copyfile([UCSCmanualpath manual_files(i).name],manualpath);  
-%     baseFileName = manual_files(i).name;        
-%     fullFileName = fullfile(manualpath, baseFileName);
-%     fprintf(1, 'Now converting classes in file %s\n', fullFileName);
-%     load(fullFileName,'class2use_auto','classlist','default_class_original','list_titles');
-%     
-%     %overwrite UCSC classes with NWFSC classes    
-%     [classlist(:,2)]=convert_classnum_UCSC2NWFSC(classlist(:,2)); 
-%     [classlist(:,3)]=convert_classnum_UCSC2NWFSC(classlist(:,3));     
-%     class2use_manual=class2use;
-%     if isempty(class2use_auto)
-%     else
-%         class2use_auto = class2use;
-%     end    
-%     
-%     save(fullFileName,'class2use_auto','class2use_manual','classlist','default_class_original','list_titles');
-%     clearvars class2use_auto class2use_manual classlist default_class_original list_titles baseFileName fullFileName; 
-% end
-% 
-% % copy corresponding features files to merged features folder
-% UCSCfeapathbase = [UCSCpath 'features\']; 
-% addpath(genpath(UCSCfeapathbase));
-% manual_files = {manual_files.name}';
-% fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
-% for i=1:length(fea_files)  
-%     UCSCfeapath=[UCSCfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
-%     feapath = [feapathbase manual_files{i}(2:5) filesep];
-%     copyfile([UCSCfeapath fea_files{i}],feapath); 
-% end
-% 
-% clearvars manual_files fea_files i UCSCfeapath feapath
-% fprintf('Finished copying corresponding UCSC manual and feature files');
-% 
-% %% OSU
-% addpath(genpath(mergedpath));
-% 
-% % copy manual files to merged manual folder and convert classes
-% OSUmanualpath = [OSUpath 'manual\'];
-% addpath(genpath(OSUmanualpath));
-% manual_files = dir([OSUmanualpath 'D*122.mat']); %only select IFCB122 files
-% for i=1:length(manual_files)  
-%     copyfile([OSUmanualpath manual_files(i).name],manualpath);  
-%     baseFileName = manual_files(i).name;        
-%     fullFileName = fullfile(manualpath, baseFileName);
-%     fprintf(1, 'Now converting classes in file %s\n', fullFileName);
-%     load(fullFileName,'class2use_auto','classlist','default_class_original','list_titles');
-%     
-%     %overwrite OSU classes with NWFSC classes    
-%     [classlist(:,2)]=convert_classnum_OSU2NWFSC(classlist(:,2)); 
-%     [classlist(:,3)]=convert_classnum_OSU2NWFSC(classlist(:,3));     
-%     class2use_manual=class2use;
-%     if isempty(class2use_auto)
-%     else
-%         class2use_auto = class2use;
-%     end    
-%     
-%     save(fullFileName,'class2use_auto','class2use_manual','classlist','default_class_original','list_titles');
-%     clearvars class2use_auto class2use_manual classlist default_class_original list_titles baseFileName fullFileName; 
-% end
-% 
-% % copy corresponding features files to merged features folder
-% OSUfeapathbase = [OSUpath 'features\']; 
-% addpath(genpath(OSUfeapathbase));
-% manual_files = {manual_files.name}';
-% fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
-% for i=1:length(fea_files)  
-%     OSUfeapath=[OSUfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
-%     feapath = [feapathbase manual_files{i}(2:5) filesep];
-%     copyfile([OSUfeapath fea_files{i}],feapath); 
-% end
+%% UCSC
+addpath(genpath(mergedpath));
+
+% copy manual files to merged manual folder and convert classes
+UCSCmanualpath = [UCSCpath 'manual\'];
+addpath(genpath(UCSCmanualpath));
+manual_files = dir([UCSCmanualpath 'D*104.mat']); %only select UCSC files
+for i=1:length(manual_files)  
+    copyfile([UCSCmanualpath manual_files(i).name],manualpath);  
+    baseFileName = manual_files(i).name;        
+    fullFileName = fullfile(manualpath, baseFileName);
+    fprintf(1, 'Now converting classes in file %s\n', fullFileName);
+    load(fullFileName,'class2use_auto','classlist','default_class_original','list_titles');
+    
+    %overwrite UCSC classes with NWFSC classes    
+    [classlist(:,2)]=convert_classnum_UCSC2NWFSC(classlist(:,2)); 
+    [classlist(:,3)]=convert_classnum_UCSC2NWFSC(classlist(:,3));     
+    class2use_manual=class2use;
+    if isempty(class2use_auto)
+    else
+        class2use_auto = class2use;
+    end    
+    
+    save(fullFileName,'class2use_auto','class2use_manual','classlist','default_class_original','list_titles');
+    clearvars class2use_auto class2use_manual classlist default_class_original list_titles baseFileName fullFileName; 
+end
+
+% copy corresponding features files to merged features folder
+UCSCfeapathbase = [UCSCpath 'features\']; 
+addpath(genpath(UCSCfeapathbase));
+manual_files = {manual_files.name}';
+fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
+for i=1:length(fea_files)  
+    UCSCfeapath=[UCSCfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
+    feapath = [feapathbase manual_files{i}(2:5) filesep];
+    copyfile([UCSCfeapath fea_files{i}],feapath); 
+end
+
+clearvars manual_files fea_files i UCSCfeapath feapath
+fprintf('Finished copying corresponding UCSC manual and feature files');
+
+%% OSU
+addpath(genpath(mergedpath));
+
+% copy manual files to merged manual folder and convert classes
+OSUmanualpath = [OSUpath 'manual\'];
+addpath(genpath(OSUmanualpath));
+manual_files = dir([OSUmanualpath 'D*122.mat']); %only select IFCB122 files
+for i=1:length(manual_files)  
+    copyfile([OSUmanualpath manual_files(i).name],manualpath);  
+    baseFileName = manual_files(i).name;        
+    fullFileName = fullfile(manualpath, baseFileName);
+    fprintf(1, 'Now converting classes in file %s\n', fullFileName);
+    load(fullFileName,'class2use_auto','classlist','default_class_original','list_titles');
+    
+    %overwrite OSU classes with NWFSC classes    
+    [classlist(:,2)]=convert_classnum_OSU2NWFSC(classlist(:,2)); 
+    [classlist(:,3)]=convert_classnum_OSU2NWFSC(classlist(:,3));     
+    class2use_manual=class2use;
+    if isempty(class2use_auto)
+    else
+        class2use_auto = class2use;
+    end    
+    
+    save(fullFileName,'class2use_auto','class2use_manual','classlist','default_class_original','list_titles');
+    clearvars class2use_auto class2use_manual classlist default_class_original list_titles baseFileName fullFileName; 
+end
+
+% copy corresponding features files to merged features folder
+OSUfeapathbase = [OSUpath 'features\']; 
+addpath(genpath(OSUfeapathbase));
+manual_files = {manual_files.name}';
+fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
+for i=1:length(fea_files)  
+    OSUfeapath=[OSUfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
+    feapath = [feapathbase manual_files{i}(2:5) filesep];
+    copyfile([OSUfeapath fea_files{i}],feapath); 
+end
 
 %% convert to preferred classlist
 manualdir = dir([manualpath 'D*']);

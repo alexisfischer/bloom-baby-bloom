@@ -6,7 +6,7 @@ summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimad
 addpath(genpath(filepath));
 class2useName ='D:\general\config\class2use_13';
 
-%% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
+% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 mergedpath = 'D:\general\classifier\';
 UCSCpath = 'D:\SCW\';
 OSUpath = 'D:\OSU\';
@@ -22,7 +22,7 @@ BUDDpath = 'D:\BuddInlet\';
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
-%% Step 2: select classes of interest and find class2skip
+% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
 [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
@@ -34,9 +34,6 @@ class2skip(end+1)={'nanoplankton'};
 class2skip(end+1)={'cryptophyta'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
-class2skip(end+1)={'Pseudo_nitzschia_small_1cell'};
-class2skip(end+1)={'Pseudo_nitzschia_large_1cell'};
-
 %class2skip(end+1)={'Amylax'};
 
 % Shimada classifier
@@ -60,12 +57,12 @@ class2skip(end+1)={'Pseudo_nitzschia_large_1cell'};
 addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
-manualpath = 'D:\general\classifier\manual_merged_ungrouped\'; % manual annotation file location
-feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file location, assumes \yyyy\ organization
+manualpath = 'D:\general\classifier\manual_merged_UCSCgroupings\'; % manual annotation file location
+feapath_base = 'D:\general\classifier\features_merged_UCSCgroupings\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 400; %minimum number for inclusion
-class2group={...
+minn = 500; %minimum number for inclusion
+class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
         {'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_large_2cell'}...
         {'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell',...
         'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell',...
@@ -76,15 +73,14 @@ class2group={...
         {'Rhizosolenia' 'Proboscia'}...         
         {'Heterocapsa_triquetra' 'Scrippsiella'}...
         {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}};        
-    %{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}
 %        {'Stephanopyxis' 'Melosira'}...      
 %        {'Gymnodinium' 'Heterocapsa_triquetra' 'Scrippsiella'}...
 %        {'Dactyliosolen' 'Guinardia'}};
 %        {'Cerataulina' 'Detonula' 'Lauderia'}... 
 %        {'Cylindrotheca' 'Nitzschia'}...
 
-group='NOAA'; %[]; %'NOAA-OSU'; %'OSU'; 
-classifiername=['CCS_' group '_v11']; 
+group=[]; %[]; %'NOAA-OSU'; %'OSU'; 
+classifiername=['CCS_' group 'v5']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
