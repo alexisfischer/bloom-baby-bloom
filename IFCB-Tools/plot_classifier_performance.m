@@ -15,7 +15,6 @@ else
 end
 addpath(genpath(basepath));
 
-%%
 load([filepath 'performance_classifier_' name],'topfeat','all','opt','c_all','c_opt','NOAA','UCSC','OSU');
 [~,class]=get_class_ind( all.class,'all',classidx);
 [~,classU]=get_class_ind( opt.class,'all',classidx);

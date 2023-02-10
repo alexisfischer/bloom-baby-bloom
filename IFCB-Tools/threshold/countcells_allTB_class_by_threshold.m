@@ -71,5 +71,5 @@ filelistTB = filelist;
 if ~exist(out_path, 'dir')
     mkdir(out_path)
 end
-save([out_path 'summary_allTB_bythre_' class2use{class2do}] , 'class2useTB', 'threlist', 'classcountTB_above_thre', 'classcountTB_above_thre', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'roiids', 'class2do')
+save([out_path 'summary_allTB_bythre_' class2use{class2do}] , 'class2useTB', 'threlist', 'classcountTB_above_thre', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'roiids', 'class2do')
 %save(['summary_allTB' num2str(yr)] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic', 'roiids', 'class2list')
