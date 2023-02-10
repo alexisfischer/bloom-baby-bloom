@@ -2,7 +2,7 @@ clear;
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath(filepath));
 load([filepath 'IFCB-Data/Shimada/class/performance_classifier_CCS_v2'],'all'); %get classlist from classifier
-class2do_full = char(all.class(22));
+class2do_full = char(all.class(4));
 
 if contains(class2do_full,',')
     class2do_string = [extractBefore(class2do_full,',') '_grouped'];
@@ -14,26 +14,15 @@ load([filepath 'IFCB-Data/Shimada/threshold/Coeff_' class2do_string],'slope','bi
 load([filepath 'IFCB-Data/Shimada/threshold/summary_allTB_bythre_' class2do_string],'threlist','classcountTB_above_thre','ml_analyzedTB','mdateTB');
 load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use','classcount','matdate','ml_analyzed');
 
-[~,label]=get_class_ind(class2do_full, 'all',[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
+[~,label]=get_class_ind(class2do_st, 'all',[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
 
 mdateTB=datetime(mdateTB,'convertfrom','datenum');
 y_mat=classcountTB_above_thre(:,bin)./ml_analyzedTB;
 y_mat((y_mat<0)) = 0; % cannot have negative numbers 
 
-ind = strfind(class2do_full, ',');
-if ~isempty(ind)
-    ind = [0 ind length(class2do_full)];
-    for c = 1:length(ind)-2
-        imclass(c)=find(strcmp(class2use,class2do_full(ind(c)+1:ind(c+1)-1)),1);
-    end
-    c=length(ind)-1;
-    imclass(c)=find(strcmp(class2use,class2do_full(ind(c)+1:ind(c+1))),1);
-else
-    imclass = find(strcmp(class2use,class2do_full));
-end
-
+ind2 = strmatch(class2do_string, class2use);
 mdate_mat_manual=datetime(matdate,'convertfrom','datenum');
-y_mat_manual=sum(classcount(:,imclass)./ml_analyzed,2);
+y_mat_manual=classcount(:,ind2)./ml_analyzed;
 ymax=round(max(y_mat_manual));
 
 clearvars ml_analyzedTB bin threlist ind2 i ind2 classcount ml_analyzed matdate classcountTB_above_thre class2use

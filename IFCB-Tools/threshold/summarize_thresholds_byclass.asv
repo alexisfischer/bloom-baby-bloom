@@ -9,8 +9,8 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 load([filepath 'IFCB-Data/Shimada/class/performance_classifier_CCS_v2'],'all'); %get classlist from classifier
-chosen_threshold=0.8;
-class2do_full = char(all.class(22));
+chosen_threshold=0.6;
+class2do_full = char(all.class(9))
 
 if contains(class2do_full,',')
     class2do_string = [extractBefore(class2do_full,',') '_grouped'];
@@ -26,18 +26,19 @@ thsummary=[filepath 'IFCB-Data/Shimada/threshold/summary_allTB_bythre_' class2do
 m = load(biovolmanual);
 load(thsummary,'classcountTB_above_thre','filelistTB','threlist');
 
-ind = strfind(class2do_full, ',');
+ind = strfind(class2do_full, ',')
+%%
 if ~isempty(ind)
-    ind = [0 ind length(class2do_full)];
+    ind = [0 ind length(class2do_full)]
     for c = 1:length(ind)-2
-        imclass(c)=find(strcmp(m.class2use,class2do_full(ind(c)+1:ind(c+1)-1)),1);
+        val=class2do_full(ind(c)+1:ind(c+1)-1)
+        imclass(c)=find(strcmp(m.class2use,val),1)
     end
-    c=length(ind)-1;
-    imclass(c)=find(strcmp(m.class2use,class2do_full(ind(c)+1:ind(c+1))),1);
+    imclass(length(imclass))
 else
-    imclass = find(strcmp(m.class2use,class2do_full));
+    imclass = strcmp(m.class2useclass2do_full);
 end
-
+%%
 if isfield(m, 'ml_analyzed_mat')
     goodm = find(~isnan(m.ml_analyzed_mat(:,imclass(1))));
     m.filelist = regexprep(m.filelist,'.mat', '')';
