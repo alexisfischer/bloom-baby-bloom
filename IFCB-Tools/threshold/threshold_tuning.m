@@ -19,6 +19,7 @@ for i=1:length(class2do_string)
 end
 
 %% Step 3) evaluate the right threshold to use for your class files
-summarize_thresholds_byclass(class2do_string,summarydir,[summarydir 'manual\count_class_biovol_manual'],[summarydir 'summary_allTB_bythre_' class2do_string]);
+% summarize_thresholds_byclass
 
-%% Step 4) Run TB_plots_versus_Manual
+%% Step 4) plot your data with 
+% TB_plots_versus_Manual

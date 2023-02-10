@@ -40,6 +40,6 @@ stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); hold on; %This 
     plot(mdate_mat_manual(ind_nan), y_mat_manual(ind_nan),'r*','Markersize',6,'linewidth',.8);
     set(gca,'xgrid','on','tickdir','out','xlim',[datetime('2021-06-01') datetime('2021-09-15')],'fontsize',10); 
  
-%% set figure parameters
+% set figure parameters
 exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/Figs/Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
 hold off

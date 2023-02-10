@@ -1,5 +1,4 @@
-function [ ] = summarize_thresholds_byclass(class2do_string,summarydir,biovolmanual,thsummary)
-% This is the analysis that will help you evaluate the right threshold to use for your class files
+%% This is the analysis that will help you evaluate the right threshold to use for your class files
 % Alexis Fischer, February 2023
 % When choosing a threshold, you want to look at the plots and determine which threshold 
 % gives you a slope closest to 1, an R^2 closest to 1, and a y-intercept closest to 0.
@@ -173,5 +172,3 @@ axis(axesHandles,'square')
 
 exportgraphics(gcf,[summarydir 'IFCB-Data/Shimada/threshold/Figs/' class2do_string 'Threshold' num2str(chosen_threshold) '.png'],'Resolution',100)    
 hold off
-
-end
