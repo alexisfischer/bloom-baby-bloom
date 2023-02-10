@@ -2,14 +2,14 @@ function [ ] = countcells_allTB_class_by_threshold(class2do_string,yrrange,class
 % Gives you a summary file of counts for thresholds 0.1 to 1 for the specified class
 % Alexis Fischer, April 2018
 
-% class2do_string = 'Akashiwo'; %USER 
+% class2do_string = {'Pseudo-nitzschia,Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_large_2cell,Pseudo_nitzschia_large_3cell,Pseudo_nitzschia_large_4cell,Pseudo_nitzschia_large_5cell,Pseudo_nitzschia_large_6cell,Pseudo_nitzschia_small_1cell,Pseudo_nitzschia_small_2cell,Pseudo_nitzschia_small_3cell,Pseudo_nitzschia_small_4cell,Pseudo_nitzschia_small_5cell,Pseudo_nitzschia_small_6cell'}; %USER 
 % yrrange = 2019:2021;
 % classpath_generic = 'D:\Shimada\class\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
 % out_path = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\threshold\'; %USER where to store the results
 % in_dir = 'D:\Shimada\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
 
 classfiles = [];
-for yr = yrrange %2014:2015 %USER
+for yr = yrrange 
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
     temp = dir([classpath 'D*.mat']);
     pathall = repmat(classpath, length(temp),1);
@@ -63,7 +63,7 @@ classcountTB_above_thre = NaN(length(classfiles),length(threlist));
         %[classcount(filecount,:), classcount_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:), class2useTB, roiid_list] = summarize_TBclassMVCO(classfiles{filecount}, adhocthresh, iclass);
         roiids{filecount} = roiid_list;
     end
-%%
+
 ml_analyzedTB = ml_analyzed;
 mdateTB = mdate;
 filelistTB = filelist;
@@ -71,5 +71,13 @@ filelistTB = filelist;
 if ~exist(out_path, 'dir')
     mkdir(out_path)
 end
-save([out_path 'summary_allTB_bythre_' class2use{class2do}] , 'class2useTB', 'threlist', 'classcountTB_above_thre', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'roiids', 'class2do')
+
+if cellfun(@length,class2use{class2do})>20
+    label = cellfun(@(x)x(1:20),class2use{class2do},'UniformOutput',false);
+else
+    label=class2use{class2do};
+end
+
+save([out_path 'summary_allTB_bythre_' label] , 'class2useTB', 'threlist', 'classcountTB_above_thre', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'roiids', 'class2do')
+
 %save(['summary_allTB' num2str(yr)] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic', 'roiids', 'class2list')
