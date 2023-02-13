@@ -13,12 +13,15 @@ summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],[ifcbdir
 %% Step 2) Make summary file of counts for thresholds 0.1 to 1 for all classes
 load([summarydir 'class\performance_classifier_CCS_v2'],'all'); %get classlist from classifier
 classlist = all.class;
-for i=20:length(classlist)
+for i=1:length(classlist)
     countcells_allTB_class_by_threshold(char(classlist(i)),yrrange,[ifcbdir 'class\classxxxx_v1\'],[summarydir 'threshold\'],[ifcbdir 'data\'])
 end
 
-%% Step 3) evaluate the right threshold to use for your class files
-% summarize_thresholds_byclass
+%% Step 3) Manually evaluate the best threshold to use for your class files
+% evaluate_thresholds_byclass
 
-%% Step 4) plot your data with 
-% TB_plots_versus_Manual
+%% Step 4) Manually plot your data against annotations with chosen thresholds
+% TB_plots_versus_Manual_NOAA
+
+%% Step 5) Determine classifier performance w chosen thresholds
+% classifier_oob_analysis_threshold

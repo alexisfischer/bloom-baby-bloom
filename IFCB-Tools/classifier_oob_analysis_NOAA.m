@@ -1,4 +1,4 @@
-function [ ] = determine_classifier_performance( classifiername,outpath )
+function [ ] = classifier_oob_analysis_NOAA( classifiername,outpath )
 %[ ] = classifier_oob_analysis( classifername )
 %For example:
 % determine_classifier_performance('D:\Shimada\classifier\summary\Trees_12Oct2021')
@@ -10,9 +10,11 @@ function [ ] = determine_classifier_performance( classifiername,outpath )
 % classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 %classifiername='D:\general\classifier\summary\Trees_13Jun2022';
 %outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+clear
+classifiername='~/Downloads/Trees_CCS_v7';
 
 load(classifiername,'b','classes','featitles','maxthre','targets');
-
+%%
 [Yfit,Sfit,Sstdfit] = oobPredict(b);
 [mSfit, ii] = max(Sfit');
 for count = 1:length(mSfit) 
@@ -77,8 +79,6 @@ disp(['optimal error rate (ignore unclassified) = ' num2str(1-sum(TP)./sum(total
 optb=table(class(1:end-1),total,R,P,F1);
 
 clearvars TP TN FP FN total ind count i ii t j classes2 class Pm P R ind F1 totalfxun fxUnclass
-
-%% custom threshold
 
 
 %% how did regional classifier do on NWFSC dataset
