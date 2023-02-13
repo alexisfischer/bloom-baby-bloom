@@ -6,14 +6,13 @@ function [] = merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,merged
 %   Alexis D. Fischer, SHMDA NWFSC, September 2021
 
 % % Input path names
-clear
-class2useName ='D:\general\config\class2use_13';
-mergedpath = 'D:\general\classifier\';
-UCSCpath = 'D:\SCW\';
-OSUpath = 'D:\OSU\';
-SHMDApath = 'D:\Shimada\';
-LABpath = 'D:\LabData\';
-BUDDpath = 'D:\BuddInlet\';
+% class2useName ='D:\general\config\class2use_13';
+% mergedpath = 'D:\general\classifier\';
+% UCSCpath = 'D:\SCW\';
+% OSUpath = 'D:\OSU\';
+% SHMDApath = 'D:\Shimada\';
+% LABpath = 'D:\LabData\';
+% BUDDpath = 'D:\BuddInlet\';
 
 %%%%
 manualpath = [mergedpath 'manual_merged_UCSCgroupings\'];
