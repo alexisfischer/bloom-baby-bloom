@@ -1,8 +1,8 @@
-clear;
+clear; 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath(filepath));
 load([filepath 'IFCB-Data/Shimada/class/performance_classifier_CCS_v2'],'all'); %get classlist from classifier
-class2do_full = char(all.class(22));
+class2do_full = char(all.class(19));
 
 if contains(class2do_full,',')
     class2do_string = [extractBefore(class2do_full,',') '_grouped'];
@@ -11,13 +11,19 @@ else
 end
 
 load([filepath 'IFCB-Data/Shimada/threshold/Coeff_' class2do_string],'slope','bin','chosen_threshold');
-load([filepath 'IFCB-Data/Shimada/threshold/summary_allTB_bythre_' class2do_string],'threlist','classcountTB_above_thre','ml_analyzedTB','mdateTB');
-load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use','classcount','matdate','ml_analyzed');
+load([filepath 'IFCB-Data/Shimada/threshold/summary_allTB_bythre_' class2do_string],'threlist','classcountTB_above_thre','ml_analyzedTB','filelistTB','mdateTB');
+load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
 
 [~,label]=get_class_ind(class2do_full, 'all',[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
 
-mdateTB=datetime(mdateTB,'convertfrom','datenum');
-y_mat=classcountTB_above_thre(:,bin)./ml_analyzedTB;
+for i=1:length(filelist)
+    filelist(i).newname=filelist(i).name(1:24);
+end
+
+[~,im,it] = intersect({filelist.newname}, filelistTB); %finds the matched files between automated and manually classified files
+
+mdateTB=datetime(mdateTB(it),'convertfrom','datenum');
+y_mat=classcountTB_above_thre(it,bin)./ml_analyzedTB(it);
 y_mat((y_mat<0)) = 0; % cannot have negative numbers 
 
 ind = strfind(class2do_full, ',');
@@ -36,7 +42,7 @@ mdate_mat_manual=datetime(matdate,'convertfrom','datenum');
 y_mat_manual=sum(classcount(:,imclass)./ml_analyzed,2);
 ymax=round(max(y_mat_manual));
 
-clearvars ml_analyzedTB bin threlist ind2 i ind2 classcount ml_analyzed matdate classcountTB_above_thre class2use
+clearvars ml_analyzedTB bin threlist ind2 i ind2 it im classcount ml_analyzed matdate classcountTB_above_thre class2use
 
 % Plot automated vs manual classification cell counts
 figure('Units','inches','Position',[1 1 4 3.5],'PaperPositionMode','auto');
@@ -53,7 +59,8 @@ stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); hold on; %This 
         'xticklabel',{},'ylim',[0 ymax],'fontsize',10); 
     ylabel('2019','fontsize',12);    
     title([char(label) ' (cells mL^{-1})'],'fontsize',12); 
-    
+ legend('classifier','manual','location','nw');legend boxoff;
+
 subplot(2,1,2);
 stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
     ind_nan=find(~isnan(y_mat_manual));
@@ -66,3 +73,4 @@ stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); hold on; %This 
 % set figure parameters
 exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/Figs/Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
 hold off
+
