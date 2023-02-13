@@ -11,7 +11,7 @@ classifierpath='~/Downloads/';
 load([classifierpath 'Trees_' classifiername],'b','classes','featitles','maxthre','targets');
 
 [slope,bin,chosen_threshold] = summarize_chosen_thresholds(...
-    classes,[filepath 'IFCB-Data/Shimada/threshold/'],classifiername);
+    classes,[filepath 'IFCB-Data/Shimada/threshold/' classifiername '/'],classifiername);
 
 %%%%
 [Yfit,Sfit,Sstdfit] = oobPredict(b);

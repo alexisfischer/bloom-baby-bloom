@@ -2,15 +2,16 @@
 % Alexis Fischer, February 2023
 % When choosing a threshold, you want to look at the plots and determine which threshold 
 % gives you a slope closest to 1, an R^2 closest to 1, and a y-intercept closest to 0.
-
-% %% Example inputs
 clf; clear; close all;
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
-load([filepath 'IFCB-Data/Shimada/class/performance_classifier_CCS_v2'],'all'); %get classlist from classifier
-chosen_threshold=0.8;
-class2do_full = char(all.class(22));
+addpath(genpath(filepath));
+
+classifiername='CCS_v2'; %USER
+load([filepath 'IFCB-Data/Shimada/class/performance_classifier_' classifiername],'all'); %get classlist from classifier
+
+chosen_threshold=0.8;  %USER
+class2do_full = char(all.class(22)); %USER
 
 if contains(class2do_full,',')
     class2do_string = [extractBefore(class2do_full,',') '_grouped'];
@@ -19,8 +20,8 @@ else
 end
 
 biovolmanual = [filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'];
-thsummary=[filepath 'IFCB-Data/Shimada/threshold/summary_allTB_bythre_' class2do_string];
-
+thsummary=[filepath 'IFCB-Data/Shimada/threshold/' classifiername '/summary_allTB_bythre_' class2do_string];
+%%
 [~,label]=get_class_ind(class2do_full, 'all',[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
 
 m = load(biovolmanual);
@@ -178,5 +179,5 @@ t1.Visible = 'on'; % set(t1,'Visible','on');
 axesHandles = findobj(get(fh,'Children'), 'flat','Type','axes');
 axis(axesHandles,'square')
 
-exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/Figs/Threshold_results_' class2do_string '.png'],'Resolution',100)    
+exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Figs/Threshold_results_' class2do_string '.png'],'Resolution',100)    
 hold off

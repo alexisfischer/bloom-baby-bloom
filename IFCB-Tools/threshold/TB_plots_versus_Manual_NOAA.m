@@ -1,8 +1,9 @@
 clear; 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath(filepath));
-load([filepath 'IFCB-Data/Shimada/class/performance_classifier_CCS_v2'],'all'); %get classlist from classifier
-class2do_full = char(all.class(19));
+classifiername='CCS_v2'; %USER
+load([filepath 'IFCB-Data/Shimada/class/performance_classifier_' classifiername],'all'); %get classlist from classifier
+class2do_full = char(all.class(19)); %USER
 
 if contains(class2do_full,',')
     class2do_string = [extractBefore(class2do_full,',') '_grouped'];
@@ -10,8 +11,8 @@ else
     class2do_string=class2do_full;
 end
 
-load([filepath 'IFCB-Data/Shimada/threshold/Coeff_' class2do_string],'slope','bin','chosen_threshold');
-load([filepath 'IFCB-Data/Shimada/threshold/summary_allTB_bythre_' class2do_string],'threlist','classcountTB_above_thre','ml_analyzedTB','filelistTB','mdateTB');
+load([filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Coeff_' class2do_string],'slope','bin','chosen_threshold');
+load([filepath 'IFCB-Data/Shimada/threshold/' classifiername '/summary_allTB_bythre_' class2do_string],'threlist','classcountTB_above_thre','ml_analyzedTB','filelistTB','mdateTB');
 load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
 
 [~,label]=get_class_ind(class2do_full, 'all',[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
@@ -71,6 +72,6 @@ stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); hold on; %This 
     ylabel('2021','fontsize',12);    
  
 % set figure parameters
-exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/Figs/Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
+exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Figs/Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
 hold off
 
