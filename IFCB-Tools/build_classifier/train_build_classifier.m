@@ -90,7 +90,7 @@ result_path = 'D:\general\classifier\summary\'; %USER location of training file 
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 make_TreeBaggerClassifier(result_path, classifiername, nTrees)
 
-determine_classifier_performance([result_path 'Trees_' classifiername],[summarydir 'class\']);
+classifier_oob_analysis_NOAA([result_path 'Trees_' classifiername],[summarydir 'class\']);
 
 %plot_classifier_performance
 
