@@ -79,7 +79,7 @@ class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
 %        {'Cylindrotheca' 'Nitzschia'}...
 
 group=[]; %[]; %'NOAA'; %'OSU'; 
-classifiername=['CCS_' group '_v9']; 
+classifiername=['CCS_' group 'v9']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path

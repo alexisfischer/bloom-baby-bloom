@@ -15,7 +15,7 @@ classifiername='CCS_v6';
 % %% Step 2) Make summary file of counts for thresholds 0.1 to 1 for all classes
 load([summarydir 'class\performance_classifier_' classifiername],'all'); %get classlist from classifier
 classlist = all.class;
-for i=5:length(classlist)
+for i=13:length(classlist)
     countcells_allTB_class_by_threshold(char(classlist(i)),yrrange,[ifcbdir 'class\' classifiername '\classxxxx_v1\'],...
         [summarydir 'threshold\' classifiername '\'],[ifcbdir 'data\'])
 end

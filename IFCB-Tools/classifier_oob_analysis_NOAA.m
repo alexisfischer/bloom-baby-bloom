@@ -7,8 +7,7 @@ function [ ] = classifier_oob_analysis_NOAA( classifiername,outpath )
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
 % Example Inputs
-% classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
-%classifiername='D:\general\classifier\summary\Trees_13Jun2022';
+%classifiername='D:\general\classifier\summary\Trees_CCS_NOAA-OSU_v4';
 %outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 
 load(classifiername,'b','classes','featitles','maxthre','targets');
@@ -63,7 +62,7 @@ disp(['optimal error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 totalfxun=length(find(Yfit_max==length(classes2)))./length(Yfit_max);
 fxUnclass = c_opt(:,end)./total;
 fxUnclass(end)=totalfxun;
-opt=table(class,total,R,P,F1,fxUnclass,maxthre);
+opt=table(class,total,R,P,F1,fxUnclass);
 
 % ignore unclassified
 c_optb = c_opt(1:end-1,1:end-1); %ignore the instances in 'unknown'
@@ -200,6 +199,6 @@ print(gcf,'-dtiff','-r200',[outpath 'Figs\class_vs_thresholdscores.png']);
 hold off
 
 save([outpath 'performance_classifier_' classifiername(37:end) ''],...
-    'topfeat','NOAA','UCSC','OSU','all','opt','optb','c_all','c_opt','c_optb');
+    'topfeat','NOAA','UCSC','OSU','all','opt','optb','c_all','c_opt','c_optb','maxthre');
 
 end
