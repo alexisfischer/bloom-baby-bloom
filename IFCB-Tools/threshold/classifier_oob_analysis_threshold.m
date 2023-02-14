@@ -69,5 +69,5 @@ load([filepath 'IFCB-Data/Shimada/class/performance_classifier_' classifiername]
     'topfeat','NOAA','UCSC','OSU','all','opt','optb','c_all','c_opt','c_optb');
 
 save([filepath 'IFCB-Data/Shimada/class/performance_classifier_' classifiername ],...
-    'thr','thrb','c_thr','c_thrb','chosen_threshold','topfeat','NOAA','UCSC','OSU','all','opt','optb','c_all','c_opt','c_optb');
+    'thr','thrb','c_thr','c_thrb','chosen_threshold','maxthre','topfeat','NOAA','UCSC','OSU','all','opt','optb','c_all','c_opt','c_optb');
 

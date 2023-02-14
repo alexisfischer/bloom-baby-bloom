@@ -1,11 +1,6 @@
 clear;
-<<<<<<< Updated upstream
-Mac=0;
-name='CCS_v8';
-=======
 Mac=1;
-name='CCS_v2';
->>>>>>> Stashed changes
+name='CCS_NOAA-OSU_v1';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -20,7 +15,7 @@ else
 end
 addpath(genpath(basepath));
 
-load([filepath 'performance_classifier_' name],'topfeat','all','opt','thr','c_thr','c_all','c_opt','NOAA','UCSC','OSU');
+load([filepath 'performance_classifier_' name],'topfeat','maxthre','all','opt','thr','c_thr','c_all','c_opt','NOAA','UCSC','OSU');
 [~,class]=get_class_ind( all.class,'all',classidx);
 [~,classU]=get_class_ind( opt.class,'all',classidx);
 maxn=round(max([opt.total]),-2);
@@ -79,7 +74,7 @@ figure('Units','inches','Position',[1 1 7 6],'PaperPositionMode','auto');
 cplot = zeros(size(c_all)+1);
 cplot(1:length(class),1:length(class)) = c_all;
 total=[sum(c_all,2);0];
-fx_unclass=sum(c_all(:,end))./sum(total)   % what fraction of images went to unclassified?
+fx_unclass=sum(c_all(:,end))./sum(total);   % what fraction of images went to unclassified?
 
 C = bsxfun(@rdivide, cplot, total); C(isnan(C)) = 0;
 pcolor(C); col=flipud(brewermap([],'Spectral')); colormap([ones(1,3); col]); 
