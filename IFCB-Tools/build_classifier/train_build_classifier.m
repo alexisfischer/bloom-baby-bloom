@@ -22,7 +22,7 @@ BUDDpath = 'D:\BuddInlet\';
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
-%% Step 2: select classes of interest and find class2skip
+% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
 [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
@@ -56,8 +56,8 @@ class2skip(end+1)={'Dinophysis'};
 addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
-manualpath = 'D:\general\classifier\manual_merged_ungrouped\'; % manual annotation file location
-feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file location, assumes \yyyy\ organization
+manualpath = 'D:\general\classifier\manual_merged_selectUCSC\'; % manual annotation file location
+feapath_base = 'D:\general\classifier\features_merged_selectUCSC\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
@@ -78,8 +78,8 @@ class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
 %        {'Cerataulina' 'Detonula' 'Lauderia'}... 
 %        {'Cylindrotheca' 'Nitzschia'}...
 
-group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
-classifiername=['CCS_' group '_v4']; 
+group=[]; %[]; %'NOAA'; %'OSU'; 
+classifiername=['CCS_' group '_v9']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path

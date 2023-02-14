@@ -15,8 +15,8 @@ function [] = merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,merged
 % BUDDpath = 'D:\BuddInlet\';
 
 %%%%
-manualpath = [mergedpath 'manual_merged_UCSCgroupings\'];
-feapathbase = [mergedpath 'features_merged_UCSCgroupings\'];
+manualpath = [mergedpath 'manual_merged_selectUCSC\'];
+feapathbase = [mergedpath 'features_merged_selectUCSC\'];
 load([class2useName '.mat'], 'class2use');
 
 %% Shimada
