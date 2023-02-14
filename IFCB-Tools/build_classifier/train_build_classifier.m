@@ -34,7 +34,6 @@ class2skip(end+1)={'nanoplankton'};
 class2skip(end+1)={'cryptophyta'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
-class2skip(end+1)={'Cerataulina'};
 
 % Shimada classifier
 %load([filepath 'bloom-baby-bloom\IFCB-Data\Shimada\manual\TopClasses'],'class2use');
@@ -57,8 +56,8 @@ class2skip(end+1)={'Cerataulina'};
 addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
-manualpath = 'D:\general\classifier\manual_merged_UCSCgroupings\'; % manual annotation file location
-feapath_base = 'D:\general\classifier\features_merged_UCSCgroupings\'; %feature file location, assumes \yyyy\ organization
+manualpath = 'D:\general\classifier\manual_merged_ungrouped\'; % manual annotation file location
+feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
@@ -70,17 +69,17 @@ class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
         {'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
         {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
         {'Chaetoceros_chain' 'Chaetoceros_single'}...
-        {'Rhizosolenia' 'Proboscia'}...         
+        {'Rhizosolenia' 'Proboscia'}...   
+        {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}...        
         {'Heterocapsa_triquetra' 'Scrippsiella'}};        
 %        {'Stephanopyxis' 'Melosira'}...      
 %        {'Gymnodinium' 'Heterocapsa_triquetra' 'Scrippsiella'}...
 %        {'Dactyliosolen' 'Guinardia'}};
 %        {'Cerataulina' 'Detonula' 'Lauderia'}... 
 %        {'Cylindrotheca' 'Nitzschia'}...
-%{'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}
 
-group=[]; %[]; %'NOAA-OSU'; %'OSU'; 
-classifiername=['CCS_' group 'v8']; 
+group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
+classifiername=['CCS_' group '_v4']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path

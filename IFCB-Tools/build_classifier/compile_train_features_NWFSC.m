@@ -56,7 +56,7 @@ elseif strcmp(varargin{3},'UCSC')
     manual_files = dir([manualpath 'D*IFCB104.mat']);
 elseif strcmp(varargin{3},'OSU')
     manual_files = dir([manualpath 'D*IFCB122.mat']);
-elseif strcmp(varargin{3},'NOAAOSU')
+elseif strcmp(varargin{3},'NOAA-OSU')
     manual_files = [dir([manualpath 'D*IFCB777.mat']);dir([manualpath 'D*IFCB117.mat']);dir([manualpath 'D*IFCB150.mat']);dir([manualpath 'D*IFCB122.mat'])];        
 else
     manual_files = dir([manualpath 'D*.mat']);

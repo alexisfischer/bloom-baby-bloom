@@ -10,8 +10,6 @@ function [ ] = classifier_oob_analysis_NOAA( classifiername,outpath )
 % classifiername='D:\Shimada\classifier\summary\Trees_16Feb2022_nocentric_ungrouped_PN';
 %classifiername='D:\general\classifier\summary\Trees_13Jun2022';
 %outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-clear
-classifiername='~/Downloads/Trees_CCS_v7';
 
 load(classifiername,'b','classes','featitles','maxthre','targets');
 %%
