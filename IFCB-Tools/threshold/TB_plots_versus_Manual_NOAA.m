@@ -1,10 +1,10 @@
 clear; 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath(filepath));
-classifiername='CCS_v2'; %USER
+classifiername='CCS_NOAA-OSU_v4'; %USER
 load([filepath 'IFCB-Data/Shimada/class/performance_classifier_' classifiername],'all'); %get classlist from classifier
-
-for i=1:length(all.class)
+i=20
+%for i=1:length(all.class)
     class2do_full = char(all.class(i)); %USER
     
     if contains(class2do_full,',')
@@ -76,4 +76,4 @@ for i=1:length(all.class)
     % set figure parameters
     exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Figs/Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
     hold off
-end
+%end

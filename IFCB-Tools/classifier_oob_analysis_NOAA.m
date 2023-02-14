@@ -63,7 +63,7 @@ disp(['optimal error rate = ' num2str(1-sum(TP)./sum(total)) '']);
 totalfxun=length(find(Yfit_max==length(classes2)))./length(Yfit_max);
 fxUnclass = c_opt(:,end)./total;
 fxUnclass(end)=totalfxun;
-opt=table(class,total,R,P,F1,fxUnclass);
+opt=table(class,total,R,P,F1,fxUnclass,maxthre);
 
 % ignore unclassified
 c_optb = c_opt(1:end-1,1:end-1); %ignore the instances in 'unknown'

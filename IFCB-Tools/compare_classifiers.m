@@ -1,7 +1,8 @@
 clear;
-Mac=0;
-nameL1='CCS_NOAA-OSU_v4';
-nameR1='CCS_v6';
+Mac=1;
+nameA='CCS_NOAA-OSU_v4';
+nameB='CCS_v6';
+nameC='CCS_v9';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -16,49 +17,71 @@ else
 end
 addpath(genpath(basepath));
 
-load([filepath 'performance_classifier_' nameL1],'all'); L1i=flipud(all); 
-load([filepath 'performance_classifier_' nameR1],'all'); R1=flipud(all);
-maxn=round(max([R1.total]),-2);
-[~,class]=get_class_ind( R1.class,'all',classidx);
+load([filepath 'performance_classifier_' nameA],'all'); Ai=flipud(all); 
+load([filepath 'performance_classifier_' nameB],'all'); Bi=flipud(all);
+load([filepath 'performance_classifier_' nameC],'all'); C=flipud(all);
+
+maxn=round(max([C.total]),-2);
 
 % find and fill gaps, if they exist
-L1=R1;
-[~,ib]=ismember(R1.class,L1i.class);
+A=C;
+[~,ib]=ismember(C.class,Ai.class);
 for i=1:length(ib)
     if ib(i)>0
-        L1.total(i)= L1i.total(ib(i));
-        L1.R(i)= L1i.R(ib(i));
-        L1.P(i)= L1i.P(ib(i));        
-        L1.F1(i)= L1i.F1(ib(i));                
+        A.total(i)= Ai.total(ib(i));
+        A.R(i)= Ai.R(ib(i));
+        A.P(i)= Ai.P(ib(i));        
+        A.F1(i)= Ai.F1(ib(i));                
     else
-        L1.total(i)=0;
-        L1.R(i)=NaN;
-        L1.P(i)=NaN;        
-        L1.F1(i)=NaN;                
+        A.total(i)=0;
+        A.R(i)=NaN;
+        A.P(i)=NaN;        
+        A.F1(i)=NaN;                
     end
 end
 
+B=C;
+[~,ib]=ismember(C.class,Bi.class);
+for i=1:length(ib)
+    if ib(i)>0
+        B.total(i)= Bi.total(ib(i));
+        B.R(i)= Bi.R(ib(i));
+        B.P(i)= Bi.P(ib(i));        
+        B.F1(i)= Bi.F1(ib(i));                
+    else
+        B.total(i)=0;
+        B.R(i)=NaN;
+        B.P(i)=NaN;        
+        B.F1(i)=NaN;                
+    end
+end
+clearvars Ai Bi i ib Mac
 
-%%
+
+%% pcolor comparison
+[C,idx]=sortrows(C,'F1','ascend');
+A=A(idx,:); B=B(idx,:);
+[~,class]=get_class_ind( C.class,'all',classidx);
+
 figure('Units','inches','Position',[1 1 5 6],'PaperPositionMode','auto');
 
 tiledlayout(1,1)
-blankY=ones(size(R1.F1));
-blankX=ones(1,3);
-C1 = [[L1.F1,R1.F1,blankY];blankX];
+blankY=ones(size(B.F1));
+blankX=ones(1,4);
+C1 = [[A.F1,B.F1,C.F1,blankY];blankX];
 pcolor(nexttile,C1)
 
 set(gca,'ylim',[1 (length(class)+1)],'ytick',1.5:1:length(class)+.5,...
-    'yticklabel',class,'xlim',[1 3],'xtick',1.5:1:3.5,'tickdir','out',...
-    'xticklabel',{'NOAA-OSU','NOAA-OSU-UCSC'},'fontsize',10,'xaxislocation','top');
+    'yticklabel',class,'xlim',[1 4],'xtick',1.5:1:4.5,'tickdir','out',...
+    'xticklabel',{'NOAA-OSU (v4)','NOAA-OSU-UCSC (v6)','hybrid (v4 v6)'},'fontsize',10,'xaxislocation','top');
     xtickangle(30);
 
     colormap(parula); caxis([0.8 1]);
     h=colorbar('north'); %h.Label.String = label; h.Label.FontSize = 12;               
     hp=get(h,'pos'); 
-    hp=[.4*hp(1) 1.08*hp(2) .7*hp(3) 0.7*hp(4)]; % [left, bottom, width, height].
+    hp=[.2*hp(1) 1.08*hp(2) .6*hp(3) 0.7*hp(4)]; % [left, bottom, width, height].
     set(h,'pos',hp,'xaxisloc','top','fontsize',9); 
-    h.Label.String = 'F1 score';    
+    h.Label.String = 'F1 score (out-of-bag)';    
     h.Label.FontSize = 11;  
 
     set(gcf,'color','w');
@@ -66,26 +89,32 @@ set(gca,'ylim',[1 (length(class)+1)],'ytick',1.5:1:length(class)+.5,...
 hold off
 
 %% plot comparison or Regional vs Local classifier
+[C,idx]=sortrows(C,'F1','descend');
+A=A(idx,:); B=B(idx,:);
+[~,class]=get_class_ind( C.class,'all',classidx);
+
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 
 yyaxis left;
-b=bar([L1.F1 R1.F1],'Barwidth',1,'linestyle','none'); hold on
-col=flipud(brewermap(2,'RdBu')); 
+b=bar([A.F1 B.F1 C.F1],'Barwidth',1,'linestyle','none'); hold on
+col=flipud(brewermap(3,'Set2')); 
 for i=1:length(b)
     set(b(i),'FaceColor',col(i,:));
 end  
 hold on;
+hline(.9,'k--'); hold on;
 set(gca,'xlim',[0.5 (length(class)+.5)], 'xtick', 1:length(class), 'ylim',[0 1],...
     'xticklabel', class,'ycolor','k','tickdir','out');
-ylabel('F1 score','color','k');
+ylabel('F1 score (out-of-bag)','color','k');
 
 yyaxis right;
-plot(.8:1:length(class),L1.total,'k*',1.2:1:length(class)+.2,R1.total,'ks'); hold on
+plot(.8:1:length(class),A.total,'k*',1:1:length(class),B.total,'k^',...
+    1.2:1:length(class)+.2,C.total,'ks','Markersize',4); hold on
 ylabel('total images in set');
 set(gca,'ycolor','k', 'xtick', 1:length(class),'ylim',[0 maxn], 'xticklabel', class); hold on
-legend('NOAA-OSU', 'NOAA-OSU-UCSC','Location','NorthOutside')
+legend('NOAA-OSU (v4)','NOAA-OSU-UCSC (v6)','hybrid (v4 v6)','Location','NorthOutside')
 xtickangle(45);
-%%
+
 set(gcf,'color','w');
-print(gcf,'-dpng','-r100',[figpath 'classifier_compare' nameL '.png']);
+    exportgraphics(gcf,[figpath 'F1_classifier_compare.png'],'Resolution',100)    
 hold off
