@@ -23,7 +23,7 @@ addpath(genpath([ifcbdir 'blobs\']));
 addpath(genpath([ifcbdir 'features\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
-classifier='D:\general\classifier\summary\Trees_CCS_v6';
+classifier='D:\general\classifier\summary\Trees_CCS_NOAA-OSU_v4';
 %classifier='D:\general\classifier\summary\Trees_16Jun2022_regional1000';
 
 %%

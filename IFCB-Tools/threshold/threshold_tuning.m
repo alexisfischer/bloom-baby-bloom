@@ -4,15 +4,9 @@ clear;
 ifcbdir='D:\Shimada\'; 
 summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 addpath(genpath(ifcbdir));
-addpath(genpath(summarydir));
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 yrrange = 2019:2021;
-classifiername='CCS_v9';
-
-classifier='D:\general\classifier\summary\Trees_CCS_v9';
-yr='2019';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
-yr='2021';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
+classifiername='CCS_v6';
 
 
 % %% Step 1) Make a biovolume summary file from manual results
@@ -21,8 +15,9 @@ start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcb
 % %% Step 2) Make summary file of counts for thresholds 0.1 to 1 for all classes
 load([summarydir 'class\performance_classifier_' classifiername],'all'); %get classlist from classifier
 classlist = all.class;
-for i=1:length(classlist)
-    countcells_allTB_class_by_threshold(char(classlist(i)),yrrange,[ifcbdir 'class\classxxxx_v1\'],[summarydir 'threshold\' classifiername '\'],[ifcbdir 'data\'])
+for i=5:length(classlist)
+    countcells_allTB_class_by_threshold(char(classlist(i)),yrrange,[ifcbdir 'class\' classifiername '\classxxxx_v1\'],...
+        [summarydir 'threshold\' classifiername '\'],[ifcbdir 'data\'])
 end
 
 %% Step 3) Manually evaluate the best threshold to use for your class files

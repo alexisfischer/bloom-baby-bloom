@@ -1,5 +1,5 @@
 clear;
-Mac=1;
+Mac=0;
 nameL1='CCS_NOAA-OSU_v4';
 nameR1='CCS_v6';
 
@@ -21,7 +21,7 @@ load([filepath 'performance_classifier_' nameR1],'all'); R1=flipud(all);
 maxn=round(max([R1.total]),-2);
 [~,class]=get_class_ind( R1.class,'all',classidx);
 
-%% find and fill gaps, if they exist
+% find and fill gaps, if they exist
 L1=R1;
 [~,ib]=ismember(R1.class,L1i.class);
 for i=1:length(ib)
