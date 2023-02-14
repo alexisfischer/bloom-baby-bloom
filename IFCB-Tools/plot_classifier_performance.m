@@ -1,6 +1,12 @@
+<<<<<<< Updated upstream
 clear;
 Mac=0;
 name='CCS_NOAA-OSU_v4';
+=======
+clear; close all;
+Mac=1;
+name='CCS_v3';
+>>>>>>> Stashed changes
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
