@@ -21,14 +21,13 @@ if CCS==1
 else
     load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'],'ml_analyzed','classbiovol','class2use','filelist')
     outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
-    num=30;
+    num=40;
 end
 
 % Exclude nonliving, misc zooplankton, and misc larvae
 classbiovol(:,get_class_ind(class2use,'nonliving',classidx))=NaN;
 classbiovol(:,get_class_ind(class2use,'larvae',classidx))=NaN;
 classbiovol(:,get_class_ind(class2use,'zooplankton',classidx))=NaN;
-classbiovol(:,get_class_ind(class2use,'ciliate',classidx))=NaN;
 
 % find files where >70% of images are unclassified and remove those files from top classses estimate
 bioml=classbiovol./ml_analyzed;
@@ -79,20 +78,9 @@ if ~isempty(contains(topclasses,'Chaetoceros'))
     topclasses=[topclasses,{'Chaetoceros_chain' 'Chaetoceros_single'}];   
 end
 
-if ~isempty(contains(topclasses,'Scrippsiella'))
-    topclasses=[topclasses,{'Heterocapsa_triquetra'}];
-end   
-if ~isempty(contains(topclasses,'Heterocapsa_triquetra'))
-    topclasses=[topclasses,{'Scrippsiella'}];
-end   
-
-if ~isempty(contains(topclasses,'Rhizosolenia'))
-    topclasses=[topclasses,{'Proboscia'}];
-end    
-if ~isempty(contains(topclasses,'Proboscia'))
-    topclasses=[topclasses,{'Rhizosolenia'}];   
-end        
 
 [topclasses,~]=unique(topclasses);
+
+%new=topclasses';
 
 save([outdir 'TopClasses'],'topclasses');
