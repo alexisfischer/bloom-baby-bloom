@@ -3,14 +3,14 @@
 clear;
 
 %%%% modify according to dataset
-ifcbdir='D:\Shimada\'; 
-%ifcbdir='D:\BuddInlet\';
+%ifcbdir='D:\Shimada\'; 
+ifcbdir='D:\BuddInlet\';
 %ifcbdir='D:\LabData\'; 
 %ifcbdir='D:\SCW\'; 
 %ifcbdir='D:\general\classifier\'; 
 
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\UCSC\SCW\';
 %summarydir=[ifcbdir 'summary\'];
 
@@ -53,9 +53,8 @@ adhocthresh = 0.5;
 % summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
 %   feapath_generic,roibasepath_generic,adhocthresh,2021:2022);
 
-% manual results
-% summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
-%     [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
+summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
+    [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
 
 
 summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\']); 
