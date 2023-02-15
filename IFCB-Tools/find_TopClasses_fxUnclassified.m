@@ -1,11 +1,13 @@
-% Use MC files to find who is representing the biomass to determine which classes should be used in classifier
+%% Use MC files to find who is representing the biomass to determine which classes should be used in classifier
+% remove files where >70% of biomass is unclassified from top classses estimate
 clear;
 
-CCS=1;
+CCS=0;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+addpath(genpath(filepath)); % add new data to search path
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
+classidx=[filepath 'IFCB-Tools/convert_index_class/class_indices'];
 
 % filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 % addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
@@ -17,57 +19,80 @@ if CCS==1
     outdir=[filepath 'IFCB-Data/Shimada/manual/'];
     num=45;
 else
-    load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'])
+    load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'],'ml_analyzed','classbiovol','class2use','filelist')
     outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
-    num=60;
+    num=30;
 end
 
-% Exclude nonliving
-classbiovol(:,get_class_ind(class2use,'nonliving',filepath))=NaN;
+% Exclude nonliving, misc zooplankton, and misc larvae
+classbiovol(:,get_class_ind(class2use,'nonliving',classidx))=NaN;
+classbiovol(:,get_class_ind(class2use,'larvae',classidx))=NaN;
+classbiovol(:,get_class_ind(class2use,'zooplankton',classidx))=NaN;
+classbiovol(:,get_class_ind(class2use,'ciliate',classidx))=NaN;
 
-% find files with <60% of biomass annotated
-% and remove those files from top classses estimate
-sampletotal=repmat(nansum(classbiovol,2),1,size(classbiovol,2));
-idx=(strcmp('unclassified',class2use));
-un=1-classbiovol(:,idx)./sampletotal(:,idx); 
-filename={filelist.name}';
-idx=(un<.6);
-filename_unclassified=filename(idx);
+% find files where >70% of images are unclassified and remove those files from top classses estimate
+bioml=classbiovol./ml_analyzed;
 
-classbiovol(idx,:)=[]; sampletotal(idx,:)=[];
+sampletotal=repmat(nansum(bioml,2),1,size(bioml,2));
+fxUnc=bioml(:,strcmp('unclassified',class2use))./sampletotal(:,strcmp('unclassified',class2use)); 
+idx=(fxUnc>.7);
+%filename={filelist.name}'; filename_unclassified=filename(idx);
+classbiovol(idx,:)=[]; sampletotal(idx,:)=[]; fxUnc(idx)=[]; bioml(idx,:)=[];
+clearvars classbiovol fxUnc idx filelist  ml_analyzed
+
+% Exclude select misc phytoplankton
+bioml(:,strcmp('unclassified',class2use))=NaN;
+bioml(:,strcmp('flagellate',class2use))=NaN;
+bioml(:,strcmp('Dinophyceae_pointed',class2use))=NaN;
+bioml(:,strcmp('Dinophyceae_round',class2use))=NaN;
+bioml(:,strcmp('centric',class2use))=NaN;
+bioml(:,strcmp('nanoplankton',class2use))=NaN;
+bioml(:,strcmp('Chaetoceros_external_pennate',class2use))=NaN;
 
 % find highest biomass cells
-fxC_all=classbiovol./sampletotal;
-classtotal=sum(classbiovol,1);
+fxC_all=bioml./sampletotal;
+classtotal=sum(bioml,1);
 [~,idx]=maxk(classtotal,num); %find top biomass classes
 fxC=fxC_all(:,idx);
-class=class2use(idx);
+topclasses=class2use(idx);
 
 fxCC=classtotal./(nansum(classtotal));
 fxCC=fxCC(idx);
 
-%class=class';
-%fxCC=fxCC';
-% remove select classes
-idx=find(ismember(class,{'unclassified' 'Dinophyceae_pointed'...
-    'Pseudo-nitzschia_external_parasite'...
-    'Chaetoceros_external_pennate' 'Dinophyceae_round' 'flagellate'...
-    'ciliate' 'zooplankton'}));
-class(idx)=[];
-fxCC(idx)=[];
+% produce classlists to allow for grouped classes in classifier
+%add back in species for Pseudo-nitzschia, Dinophysis, Chaetoceros, Thalassiosira classes
 
-% add select classes
-new={'Dinophysis' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
-    'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
-    'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'...
-    'Pseudo-nitzschia_large_narrow' 'Pseudo-nitzschia_large_wide' ...
-    'Pseudo-nitzschia_small' 'Pseudo-nitzschia'...
-    'Thalassiosira_chain' 'Thalassiosira_single'...
-    'Chaetoceros_chain' 'Chaetoceros_single'};
-class=[class new];
+if ~isempty(contains(topclasses,'Dinophysis'))
+    temp={'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata'...
+        'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
+        'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'};
+    topclasses=[topclasses,temp];
+end
 
-[class2use,idx]=unique(class,'stable');
+if ~isempty(contains(topclasses,'Pseudo-nitzschia'))
+    temp={'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_small_5cell' 'Pseudo_nitzschia_small_6cell' ...
+        'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell' 'Pseudo_nitzschia_large_3cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_large_6cell'};
+    topclasses=[topclasses,temp];    
+end
 
-%class2use=(sort(class2use))';
+if ~isempty(contains(topclasses,'Chaetoceros'))
+    topclasses=[topclasses,{'Chaetoceros_chain' 'Chaetoceros_single'}];   
+end
 
-save([outdir 'TopClasses'],'class2use');
+if ~isempty(contains(topclasses,'Scrippsiella'))
+    topclasses=[topclasses,{'Heterocapsa_triquetra'}];
+end   
+if ~isempty(contains(topclasses,'Heterocapsa_triquetra'))
+    topclasses=[topclasses,{'Scrippsiella'}];
+end   
+
+if ~isempty(contains(topclasses,'Rhizosolenia'))
+    topclasses=[topclasses,{'Proboscia'}];
+end    
+if ~isempty(contains(topclasses,'Proboscia'))
+    topclasses=[topclasses,{'Rhizosolenia'}];   
+end        
+
+[topclasses,~]=unique(topclasses);
+
+save([outdir 'TopClasses'],'topclasses');

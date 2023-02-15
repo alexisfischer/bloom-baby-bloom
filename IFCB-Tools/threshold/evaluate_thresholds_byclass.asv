@@ -8,13 +8,17 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
 classifiername='CCS_NOAA-OSU_v4'; %USER
-load([filepath 'IFCB-Data/Shimada/class/performance_classifier_' classifiername],'all'); %get classlist from classifier
+%classifiername='CCS_v2'; %USER
+load([filepath 'IFCB-Data/Shimada/class/performance_classifier_' classifiername],'opt','maxthre'); %get classlist from classifier
 
-class2use=all.class;
-[new,~]=sortrows(all,'F1','descend');
+opt(end,:)=[];
+class2use=opt.class;
+[new,~]=sortrows(opt,'F1','descend');
 
-chosen_threshold=0.9;  %USER
-i=20
+i=1
+optthre=maxthre(i)
+chosen_threshold=0.4;  %USER
+chosen_threshold=0.4;  %USER
 
 %for i=1:length(class2use)
 class2do_full = char(class2use(i)); %USER
@@ -105,12 +109,12 @@ save([filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Coeff_' num2str(c
 exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Figs/Threshold_range_'  num2str(class2do_string) '.png'],'Resolution',100)    
 hold off
 
-% %%%% test plot
-% figure('Units','inches','Position',[1 1 4 4],'PaperPositionMode','auto');
-% subplot(2,2,1), plot(threlist, Rsq, '.-'), xlabel('threshold score'), ylabel('r^2'), line([chosen_threshold chosen_threshold], ylim, 'color', 'r')
-% subplot(2,2,2), plot(threlist, Coeffs(:,1), '.-'), xlabel('threshold score'), ylabel('y-intercept'), line([chosen_threshold chosen_threshold], ylim, 'color', 'r')
-% subplot(2,2,3), plot(threlist, Coeffs(:,2), '.-'), xlabel('threshold score'), ylabel('slope'), line([chosen_threshold chosen_threshold], ylim, 'color', 'r')
-% subplot(2,2,4), plot(threlist, RMSE, '.-'), xlabel('threshold score'), ylabel('RMSE'), line([chosen_threshold chosen_threshold], ylim, 'color', 'r')
+%%%% test plot
+figure('Units','inches','Position',[1 1 4 4],'PaperPositionMode','auto');
+subplot(2,2,1), plot(threlist, Rsq, '.-'), xlabel('threshold score'), ylabel('r^2'), line([chosen_threshold chosen_threshold], ylim, 'color', 'r')
+subplot(2,2,2), plot(threlist, Coeffs(:,1), '.-'), xlabel('threshold score'), ylabel('y-intercept'), line([chosen_threshold chosen_threshold], ylim, 'color', 'r')
+subplot(2,2,3), plot(threlist, Coeffs(:,2), '.-'), xlabel('threshold score'), ylabel('slope'), line([chosen_threshold chosen_threshold], ylim, 'color', 'r')
+subplot(2,2,4), plot(threlist, RMSE, '.-'), xlabel('threshold score'), ylabel('RMSE'), line([chosen_threshold chosen_threshold], ylim, 'color', 'r')
 
 %to calculate what percentage of the classifier counts are within a poisson
 %confidence interval of the manual counts
@@ -232,8 +236,8 @@ stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); hold on; %This 
     datetick('x', 'mmm', 'keeplimits');        
     set(gca,'xgrid','on','tickdir','out','xlim',[datetime('2019-06-01') datetime('2019-09-15')],...
         'xticklabel',{},'ylim',[0 ymax],'fontsize',10); 
-    ylabel('2019','fontsize',12);    
-    title([char(label) ' (cells mL^{-1})'],'fontsize',12); 
+    ylabel('2019 (cells mL^{-1})','fontsize',12);    
+    title([char(label) ' (Thr=' num2str(round(chosen_threshold,2)) ')'],'fontsize',12); 
  legend('classifier','manual','location','nw');legend boxoff;
 
 subplot(2,1,2);
@@ -243,7 +247,7 @@ stem(mdateTB, y_mat./slope,'k-','Linewidth',.5,'Marker','none'); hold on; %This 
     set(gca,'xgrid','on','tickdir','out','ylim',[0 ymax],...
         'xlim',[datetime('2021-06-01') datetime('2021-09-15')],'fontsize',10); 
     datetick('x', 'mmm', 'keeplimits');    
-    ylabel('2021','fontsize',12);  
+    ylabel('2021 (cells mL^{-1})','fontsize',12);  
  
 % set figure parameters
 exportgraphics(gcf,[filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Figs/Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
