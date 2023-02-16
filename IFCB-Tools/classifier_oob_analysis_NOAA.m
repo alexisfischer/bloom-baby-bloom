@@ -1,5 +1,5 @@
 function [ ] = classifier_oob_analysis_NOAA( classifiername,outpath )
-%[ ] = classifier_oob_analysis( classifername )
+%[ ] = classifier_oob_analysis_NOAA( classifername )
 %For example:
 % determine_classifier_performance('D:\Shimada\classifier\summary\Trees_12Oct2021')
 % input classifier file name with full path

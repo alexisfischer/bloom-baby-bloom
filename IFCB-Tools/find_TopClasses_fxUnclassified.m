@@ -21,7 +21,7 @@ if CCS==1
 else
     load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'],'ml_analyzed','classbiovol','class2use','filelist')
     outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
-    num=40;
+    num=25;
 end
 
 % Exclude nonliving, misc zooplankton, and misc larvae
@@ -81,6 +81,6 @@ end
 
 [topclasses,~]=unique(topclasses);
 
-%new=topclasses';
+new=topclasses';
 
 save([outdir 'TopClasses'],'topclasses');
