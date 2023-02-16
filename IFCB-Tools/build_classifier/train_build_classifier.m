@@ -42,6 +42,7 @@ class2skip(end+1)={'Thalassiosira_single'};
 class2skip(end+1)={'pennate'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
+class2skip(end+1)={'Scrippsiella'};
 
 % Step 2: Compile features for the training set
 addpath(genpath('D:\general\classifier\'));
@@ -65,8 +66,8 @@ class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
 %        {'Heterocapsa_triquetra' 'Scrippsiella'}};               
 %        {'Rhizosolenia' 'Proboscia'}...   
 
-group='NOAA'; %[]; %'NOAA'; %'OSU'; 
-classifiername=['BI_' group '_v4']; 
+group=[]; %[]; %'NOAA'; %'OSU'; 
+classifiername=['BI_' group 'v1']; 
 
 %classifiername=['CCS_' group 'v9']; 
 
