@@ -2,7 +2,7 @@
 %   Alexis D. Fischer, NOAA NWFSC, December 2022
 clear;
 filepath='C:\Users\ifcbuser\Documents\GitHub\';
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 addpath(genpath(filepath));
 class2useName ='D:\general\config\class2use_13';
 
@@ -36,13 +36,10 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 % class2skip(end+1)={'Dinophysis'};
 
 % Budd Inlet
-load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'class2use');
-[class2skip] = find_class2skip(class2useName,class2use);
-class2skip(end+1)={'Bacteriastrum'};
+load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');
+[class2skip] = find_class2skip(class2useName,topclasses);
 class2skip(end+1)={'Thalassiosira_single'};
-class2skip(end+1)={'Heterosigma'};
 class2skip(end+1)={'pennate'};
-class2skip(end+1)={'nanoplankton'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
 
@@ -63,17 +60,15 @@ class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
         {'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
         {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
         {'Chaetoceros_chain' 'Chaetoceros_single'}...
-        {'Rhizosolenia' 'Proboscia'}...   
-        {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}...        
-        {'Heterocapsa_triquetra' 'Scrippsiella'}};        
-%        {'Stephanopyxis' 'Melosira'}...      
-%        {'Gymnodinium' 'Heterocapsa_triquetra' 'Scrippsiella'}...
-%        {'Dactyliosolen' 'Guinardia'}};
-%        {'Cerataulina' 'Detonula' 'Lauderia'}... 
-%        {'Cylindrotheca' 'Nitzschia'}...
+        {'Cerataulina' 'Detonula'}}; 
 
-group=[]; %[]; %'NOAA'; %'OSU'; 
-classifiername=['CCS_' group 'v9']; 
+%        {'Heterocapsa_triquetra' 'Scrippsiella'}};               
+%        {'Rhizosolenia' 'Proboscia'}...   
+
+group='NOAA'; %[]; %'NOAA'; %'OSU'; 
+classifiername=['BI_' group '_v4']; 
+
+%classifiername=['CCS_' group 'v9']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path

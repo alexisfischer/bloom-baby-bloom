@@ -1,6 +1,6 @@
 clear;
-Mac=1;
-name='CCS_v9';
+Mac=0;
+name='BI_NOAA_v3';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -9,7 +9,7 @@ if Mac
     figpath = [filepath 'Figs/'];
 else
     basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-    filepath = [basepath 'IFCB-Data\Shimada\class\'];
+    filepath = [basepath 'IFCB-Data\BuddInlet\class\'];
     classidx=[basepath 'IFCB-Tools\convert_index_class\class_indices.mat'];    
     figpath = [filepath 'Figs\'];    
 end
