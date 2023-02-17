@@ -2,7 +2,7 @@
 %   Alexis D. Fischer, NOAA NWFSC, December 2022
 clear;
 filepath='C:\Users\ifcbuser\Documents\GitHub\';
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 addpath(genpath(filepath));
 class2useName ='D:\general\config\class2use_13';
 
@@ -42,8 +42,9 @@ class2skip(end+1)={'Thalassiosira_single'};
 class2skip(end+1)={'pennate'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
+class2skip(end+1)={'Scrippsiella'};
 
-%% Step 2: Compile features for the training set
+% Step 2: Compile features for the training set
 addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
@@ -59,14 +60,14 @@ class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
         {'Pseudo_nitzschia_small_5cell' 'Pseudo_nitzschia_large_5cell'}...
         {'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
         {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single'}};
+        {'Chaetoceros_chain' 'Chaetoceros_single'}...
+        {'Cerataulina' 'Detonula'}}; 
 
+%        {'Heterocapsa_triquetra' 'Scrippsiella'}};               
 %        {'Rhizosolenia' 'Proboscia'}...   
-%        {'Heterocapsa_triquetra' 'Scrippsiella'}};        
-
 
 group='NOAA'; %[]; %'NOAA'; %'OSU'; 
-classifiername=['BI_' group '_v1']; 
+classifiername=['BI_' group 'v5']; 
 
 %classifiername=['CCS_' group 'v9']; 
 
@@ -78,7 +79,7 @@ result_path = 'D:\general\classifier\summary\'; %USER location of training file 
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 make_TreeBaggerClassifier(result_path, classifiername, nTrees)
 
-classifier_oob_analysis_NOAA([result_path 'Trees_' classifiername],[summarydir 'class\']);
+classifier_oob_analysis_hake([result_path 'Trees_' classifiername],[summarydir 'class\']);
 
 %plot_classifier_performance
 

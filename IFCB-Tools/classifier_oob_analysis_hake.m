@@ -8,10 +8,10 @@ function [ ] = classifier_oob_analysis_hake( classifiername,outpath )
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
 % Example Inputs
-clear
-classifiername='~/Downloads/Trees_CCS_NOAA-OSU_v4';
-val='CCS_NOAA-OSU_v4';
-outpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
+% clear
+% classifiername='~/Downloads/Trees_CCS_NOAA-OSU_v4';
+% val='CCS_NOAA-OSU_v4';
+% outpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
 
 load(classifiername,'b','featitles','classes','maxthre','targets');
 
@@ -31,6 +31,18 @@ idx = contains(targets,{'IFCB777' 'IFCB117'}); %'IFCB122'
 YfitN=Yfit(idx);
 Y=b.Y(idx);
 SfitN=Sfit(idx,:);
+
+%%
+% find optimal threshold
+classes = b.ClassNames;
+maxthre = NaN(1,length(classes));
+
+for count = 1:length(classes)
+    old_ind = strmatch(b.ClassNames(count), class2use, 'exact');
+    [X,Y,T,~,OPTROCPT] = perfcurve(b.Y,Sfit(:,count), class2use{old_ind});
+    maxthre(count)=T((X==OPTROCPT(1))&(Y==OPTROCPT(2)));
+end
+
 
 %% Hake winner take all interpretation
 [c_allHake, class] = confusionmat(Y,YfitN); 
@@ -61,7 +73,7 @@ Yfit_max(ind) = length(classes)+1; %unclassified set to last class
 classes2 = [classes(:); 'unclassified'];
 
 [c_optHake, class] = confusionmat(Y,classes2(Yfit_max));
-total = sum(c_opt')';
+total = sum(c_optHake')';
 [TP TN FP FN] = conf_mat_props(c_optHake);
 R = TP./(TP+FN); %recall
 P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
@@ -186,12 +198,11 @@ hold on, plot(1:length(classes), maxthre, '*g')
 lh = legend('optimal threshold score','Location','NE'); set(lh, 'fontsize', 10)
 
 set(gcf,'color','w');
-exportgraphics(gca,[outpath 'Figs/class_vs_thresholdscores_' val '.png'],'Resolution',100)    
-
-%exportgraphics(gca,[outpath 'Figs/class_vs_thresholdscores_' classifiername(37:end) '.png'],'Resolution',100)    
+%exportgraphics(gca,[outpath 'Figs/class_vs_thresholdscores_' val '.png'],'Resolution',100)    
+exportgraphics(gca,[outpath 'Figs/class_vs_thresholdscores_' classifiername(37:end) '.png'],'Resolution',100)    
 hold off
 
-save([outpath 'performance_classifier_' val ''],'all','c_all','opt','c_opt','allHake','c_allHake','optHake','c_optHake','maxthre','topfeat','trainingset');
-%save([outpath 'performance_classifier_' classifiername(37:end) ''],'all','c_all','opt','c_opt','maxthre','topfeat','trainingset');
+%save([outpath 'performance_classifier_' val ''],'all','c_all','opt','c_opt','allHake','c_allHake','optHake','c_optHake','maxthre','topfeat','trainingset');
+save([outpath 'performance_classifier_' classifiername(37:end) ''],'all','c_all','opt','c_opt','maxthre','topfeat','trainingset');
 
 end
