@@ -1,6 +1,7 @@
 clear;
-Mac=0;
-name='BI_NOAA_v5';
+Mac=1;
+%name='BI_NOAA_v5';
+name='CCS_NOAA-OSU_v4';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -15,20 +16,22 @@ else
 end
 addpath(genpath(basepath));
 
-load([filepath 'performance_classifier_' name],'topfeat','maxthre','all','opt','thr','c_thr','c_all','c_opt','NOAA','UCSC','OSU');
+load([filepath 'performance_classifier_' name],'topfeat','maxthre','all','opt','optHake','c_optHake','thr','c_thr','c_all','c_opt','trainingset');
+
+
 [~,class]=get_class_ind( all.class,'all',classidx);
 [~,classU]=get_class_ind( opt.class,'all',classidx);
 maxn=round(max([opt.total]),-2);
 disp(['optimal fx unclassified = ' num2str(opt.fxUnclass(end)) '']); opt(end,:)=[]; 
 
-if exist('thr')
+if exist('thr')    
     disp(['chosen threshold fx unclassified = ' num2str(thr.fxUnclass(end)) '']); thr(end,:)=[];
 end
 
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 col=[(brewermap(3,'Set2'));[.1 .1 .1]]; 
-b = bar([NOAA.total UCSC.total OSU.total],'stack','linestyle','none','Barwidth',.7);
+b = bar([trainingset.NOAA trainingset.OSU trainingset.UCSC],'stack','linestyle','none','Barwidth',.7);
 for i=1:3
     set(b(i),'FaceColor',col(i,:));
 end  
