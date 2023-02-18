@@ -1,3 +1,66 @@
+%% plot_HakeTest_performance 
+% requires input from classifier_oob_analysis_hake
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/';
+val='CCS_NOAA-OSU_v4';
+
+load([filepath 'HakeTestSet_performance_' val ''],'Nclass','maxthre','threlist','opt','class','Precision','Recall','F1score','tPos','fNeg','fPos');
+class_indices_path='~/Documents/MATLAB/bloom-baby-bloom/IFCB-Tools/convert_index_class/class_indices.mat';   
+
+%% plot OPT: Recall and Precision, sort by F1
+[opt,~]=sortrows(opt,'F1','descend');
+[opt,~]=sortrows(opt,'total','descend');
+[~,class_s]=get_class_ind( opt.class, 'all', class_indices_path);
+
+figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
+yyaxis left;
+b=bar([opt.R opt.P],'Barwidth',1,'linestyle','none'); hold on
+hline(.9,'k--');
+vline((find(opt.total<testtotal,1)-.5),'k-')
+set(gca,'ycolor','k', 'xtick', 1:length(class_s), 'xticklabel', class_s); hold on
+ylabel('Performance');
+col=flipud(brewermap(2,'RdBu')); 
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+yyaxis right;
+plot(1:length(class_s),opt.total,'k*'); hold on
+ylabel('total images in Hake test set');
+set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 max(opt.total)], 'xticklabel', class_s); hold on
+legend('Recall', 'Precision','Location','W')
+title(['Opt score threshold: ' num2str(length(opt.class)) ' classes ranked by F1 score'])
+xtickangle(45);
+
+set(gcf,'color','w');
+exportgraphics(gca,[outpath 'threshold/' val '/Figs/HakeTest_F1score_opt_' val '.png'],'Resolution',100)    
+hold off
+
+%% plot FP and FN as function of threshold
+% this might be wrong
+i=20
+[~,label]=get_class_ind(classes(i), 'all',class_indices_path);   
+
+%for i=1:length(classes)
+figure('Units','inches','Position',[1 1 4 4],'PaperPositionMode','auto');
+plot(threlist,fPos(i,:),'-',threlist,fNeg(i,:),'-');hold on
+vline(maxthre(i),'k--','opt threshold'); hold on
+xlabel('threshold')
+ylabel('Proportion of images')
+title({char(label);['(Dataset: Hake, ' num2str(Nclass(i)) ' images)']})
+%end
+legend('False Positives','False Negatives','location','NW'); legend boxoff
+
+class2do=char(classes(i));
+if contains(class2do,',')
+    label = [extractBefore(class2do,',') '_grouped'];
+else
+    label=class2do;
+end
+
+set(gcf,'color','w');
+exportgraphics(gca,[outpath 'threshold/' val '/Figs/Threshold_eval_' label '.png'],'Resolution',100)    
+hold off
+
+%% need to work on this!
 %% test classifier against hake test set
 clear;
 classifiername='CCS_v9'; %USER
