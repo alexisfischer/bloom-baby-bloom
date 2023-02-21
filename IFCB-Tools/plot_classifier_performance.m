@@ -1,6 +1,8 @@
 clear;
 Mac=0;
 name='BI_v1';
+
+%name='BI_NOAA-OSU_v1';
 %name='CCS_NOAA-OSU_v4';
 
 if Mac
@@ -16,8 +18,7 @@ else
 end
 addpath(genpath(basepath));
 
-load([filepath 'performance_classifier_' name],'topfeat','maxthre','all','opt','optHake','c_optHake','thr','c_thr','c_all','c_opt','trainingset');
-
+load([filepath 'performance_classifier_' name],'topfeat','maxthre','all','opt','thr','c_thr','c_all','c_opt','trainingset');
 
 [~,class]=get_class_ind( all.class,'all',classidx);
 [~,classU]=get_class_ind( opt.class,'all',classidx);

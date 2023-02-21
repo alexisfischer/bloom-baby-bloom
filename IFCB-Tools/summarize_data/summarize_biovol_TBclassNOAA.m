@@ -41,9 +41,8 @@ for count = 1:length(ind)
     [~,ii] = max(TBscores(ind(count),:));
     TBclass_above_adhocthresh(ind(count)) = class2useTB(ii);
 end
-%%
 
-[ind_diatom,~]=get_class_ind(class2useTB,'diatom',filepath);
+[ind_diatom,~]=get_class_ind(class2useTB,'diatom',[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']);
 %[ind_diatom] = get_diatom_ind(class2useTB,class2useTB);
 diatom_flag = zeros(size(class2useTB));
 diatom_flag(ind_diatom) = 1;

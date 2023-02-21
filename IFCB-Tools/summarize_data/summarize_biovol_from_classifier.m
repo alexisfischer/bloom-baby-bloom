@@ -5,13 +5,13 @@ function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,cla
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 
 %% %Example inputs
-% clear
+%
 % summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-% summaryfolder='IFCB-Data\BuddInlet\class\';
-% classpath_generic = 'D:\test\class\classxxxx_v1\';
-% feapath_generic = 'D:\test\features\xxxx\'; %Put in your featurepath byyear
-% roibasepath_generic = 'D:\test\data\xxxx\'; %location of raw data
-% yrrange = 2021:2022;
+% summaryfolder='IFCB-Data\Shimada\class\';
+% classpath_generic = ['D:\Shimada\class\CCS_v9\classxxxx_v1\'];
+% feapath_generic = ['D:\Shimada\features\xxxx\']; %Put in your featurepath byyear
+% roibasepath_generic = ['D:\Shimada\data\xxxx\']; %location of raw data
+% yrrange = 2019:2021;
 % adhocthresh = 0.5;
 
 classfiles = [];
@@ -63,7 +63,7 @@ filecommentTB=filelist;
 num2dostr = num2str(length(classfiles));
 
 clearvars feapath_generic classpath_generic roibasepath_generic i
-
+%%
 for i = 1:length(classfiles)
     if ~rem(i,10), disp(['reading ' num2str(i) ' of ' num2dostr]), end
   %  [classcount(i,:), classbiovol(i,:), class2useTB] = summarize_biovol_TBclassMVCO(classfiles{i}, feafiles{i});

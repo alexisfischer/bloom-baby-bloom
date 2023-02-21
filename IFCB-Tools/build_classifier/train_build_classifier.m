@@ -70,15 +70,15 @@ group='NOAA-OSU'; %[]; %'NOAA'; %'OSU';
 classifiername=['BI_' group '_v1']; 
 %classifiername=['CCS_' group 'v9']; 
 
-compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
+%compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
-make_TreeBaggerClassifier(result_path, classifiername, nTrees)
+%make_TreeBaggerClassifier(result_path, classifiername, nTrees)
 
-classifier_oob_analysis_hake([result_path 'Trees_' classifiername],[summarydir 'class\']);
+classifier_oob_analysis_og([result_path 'Trees_' classifiername],[summarydir 'class\']);
 
 %plot_classifier_performance
 
