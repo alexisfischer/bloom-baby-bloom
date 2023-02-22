@@ -44,7 +44,7 @@ start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcb
 %% Step 5: Summaries
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\Shimada\class\';
-classpath_generic = [ifcbdir 'class\CCS_v6\classxxxx_v1\'];
+classpath_generic = [ifcbdir 'class\CCS_NOAA-OSU_v4\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 manualpath=[ifcbdir 'manual\'];
