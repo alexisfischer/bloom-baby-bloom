@@ -50,14 +50,14 @@ roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 manualpath=[ifcbdir 'manual\'];
 adhocthresh = 0.5;
 
-summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
-  feapath_generic,roibasepath_generic,adhocthresh,2019:2021);
+%summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
+%  feapath_generic,roibasepath_generic,adhocthresh,2019:2021);
 
-%%
+
 summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
 
-
+%%
 summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\']); 
 %%
 manualpath='D:\BuddInlet\manualEmilie\Labexperiments\testPMTsettingsDANY1\';
