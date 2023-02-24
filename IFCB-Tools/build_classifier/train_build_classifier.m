@@ -24,7 +24,8 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 %% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
-load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
+load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
+
 [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
 class2skip(end+1)={'Bacteriastrum'};
 class2skip(end+1)={'Thalassiosira_single'};
@@ -34,6 +35,7 @@ class2skip(end+1)={'nanoplankton'};
 class2skip(end+1)={'cryptophyta'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
+class2skip(end+1)={'Gonyaulax'};
 
 % % Budd Inlet
 % load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');

@@ -1,9 +1,9 @@
 clear;
 Mac=0;
-name='BI_v1';
+name='CCS_v10';
+%name='BI_v1';
 
 %name='BI_NOAA-OSU_v1';
-%name='CCS_NOAA-OSU_v4';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -12,14 +12,14 @@ if Mac
     figpath = [filepath 'Figs/'];
 else
     basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-    filepath = [basepath 'IFCB-Data\BuddInlet\class\'];
+    filepath = [basepath 'IFCB-Data\Shimada\class\'];
     classidx=[basepath 'IFCB-Tools\convert_index_class\class_indices.mat'];    
     figpath = [filepath 'Figs\'];    
 end
 addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','maxthre','all','opt','thr','c_thr','c_all','c_opt','trainingset');
-
+%%
 [~,class]=get_class_ind( all.class,'all',classidx);
 [~,classU]=get_class_ind( opt.class,'all',classidx);
 maxn=round(max([opt.total]),-2);
