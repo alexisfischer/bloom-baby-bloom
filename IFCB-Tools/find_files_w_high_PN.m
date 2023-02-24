@@ -13,7 +13,7 @@ load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use'
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2019-2021_' classifiername],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
-%%%% sum up grouped classes
+%%%% sum up grouped classes and account for different chain length
 class2do_full=['Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell,'...
     'Pseudo_nitzschia_large_2cell,Pseudo_nitzschia_small_2cell,'...
     'Pseudo_nitzschia_large_3cell,Pseudo_nitzschia_small_3cell,'...
@@ -29,16 +29,18 @@ if ~isempty(ind)
 else
     imclass = find(strcmp(class2use,class2do_full));
 end
-man=sum(classcount(:,imclass),2);
+man1=classcount(:,imclass);
+m=ones(size(man1)); m(:,3:4)=2*m(:,3:4); m(:,5:6)=3*m(:,5:6); m(:,7:8)=4*m(:,7:8);
+man=sum(man1.*m,2);
 
 auto1=classcountTB_above_optthresh(:,strcmp('Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell',class2useTB));
 auto2=classcountTB_above_optthresh(:,strcmp('Pseudo_nitzschia_large_2cell,Pseudo_nitzschia_small_2cell',class2useTB));
-auto=sum([auto1,auto2],2);
+auto3=classcountTB_above_optthresh(:,strcmp('Pseudo_nitzschia_large_3cell,Pseudo_nitzschia_small_3cell',class2useTB));
+auto4=classcountTB_above_optthresh(:,strcmp('Pseudo_nitzschia_large_4cell,Pseudo_nitzschia_small_4cell',class2useTB));
+auto=sum([auto1,2*auto2,3*auto3,4*auto4],2);
 mdateTB=datetime(mdateTB,'convertfrom','datenum');
 matdate=datetime(matdate,'convertfrom','datenum');
 
-%class2do_full='Pseudo_nitzschia_large_2cell,Pseudo_nitzschia_small_2cell';
-% find unannotated files with high PN
 
 %%%% find matched files and class of interest
 for i=1:length(filelist)

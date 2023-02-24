@@ -1,6 +1,8 @@
 %% map IFCB data along CCS
 clear;
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+classidxpath = [filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];
+
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath(filepath)); % add new data to search path
 
@@ -11,13 +13,13 @@ option=1; % 1=Plot the individual data points; 2=Grid the data
 target='Pseudo-nitzschia'; dataformat='cells'; label={'Pseudo-nitzschia';'(chains ml^{-1})'}; cax=[0 50];
 target='Pseudo-nitzschia,Pseudo-nitzschia_large_narrow,Pseudo-nitzschia_large_wide,Pseudo-nitzschia_small';
 %%%% load in data
-load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB' num2str(yr) ''],...
+load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2019-2021'],...
     'filelistTB','class2useTB','classbiovolTB','classcountTB','ml_analyzedTB','mdateTB');
 
-[lat,lon,ia,filelistTB,mdateTB] = match_IFCBdata_w_Shimada_lat_lon(filepath,yr,filelistTB,mdateTB);
+[lat,lon,ia,filelistTB,mdateTB] = match_IFCBdata_w_Shimada_lat_lon(filepath,filelistTB,mdateTB);
 classcountTB=classcountTB(ia,:); classbiovolTB=classbiovolTB(ia,:); ml_analyzedTB=ml_analyzedTB(ia);
 
-[data] = extract_specific_IFCB_data(filepath,class2useTB,classbiovolTB,classcountTB,ml_analyzedTB,target,dataformat);
+[data] = extract_specific_IFCB_data(classidxpath,class2useTB,classbiovolTB,classcountTB,ml_analyzedTB,target,dataformat);
 clearvars filelistTB class2useTB classbiovolTB classcountTB ml_analyzedTB mdateTB ia;
 
 %%%% plot

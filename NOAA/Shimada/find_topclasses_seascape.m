@@ -2,8 +2,9 @@
 clear;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/'; 
 addpath(genpath(filepath)); 
+class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];   
 
-load([filepath 'NOAA/SeascapesProject/Data/seascape_count_class_manual'],'seascape',...
+load([filepath 'NOAA/Shimada/Data/seascape_count_class_manual'],'seascape',...
     'ml_analyzed','classcount','filelist','class2use');
 
 %find top seascapes, 100 file occurences
@@ -15,9 +16,9 @@ idx=isnan(classcount(:,1));
 classcount(idx,:)=[]; filelist(idx)=[]; seascape(idx)=[]; ml_analyzed(idx)=[];
 
 % Exclude nonliving, larvae, zooplankton, centric, unclassified
-classcount(:,get_class_ind(class2use,'nonliving',filepath))=NaN;
-classcount(:,get_class_ind(class2use,'larvae',filepath))=NaN;
-classcount(:,get_class_ind(class2use,'zooplankton',filepath))=NaN;
+classcount(:,get_class_ind(class2use,'nonliving',class_indices_path))=NaN;
+classcount(:,get_class_ind(class2use,'larvae',class_indices_path))=NaN;
+classcount(:,get_class_ind(class2use,'zooplankton',class_indices_path))=NaN;
 classcount(:,strcmp('unclassified',class2use))=NaN;
 classcount(:,strcmp('flagellate',class2use))=NaN;
 classcount(:,strcmp('Dinophyceae_pointed',class2use))=NaN;
@@ -80,7 +81,7 @@ ylabel('number of annotated images')
 xlabel('seascape')
 
 % set figure parameters
-print(gcf,'-dpng','-r100',[filepath 'NOAA/SeascapesProject/Figs/AnnotatedImagesperSeascape.png']);
+print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/AnnotatedImagesperSeascape.png']);
 hold off 
 
 %% plot top classes using cells/ml
@@ -98,7 +99,7 @@ for i=1:length(SS)
     temp=contains(class2useTop,SS(i).topclasses);  
     id(i,:)=double(temp);
 end
-[~,class_label ] = get_class_ind(class2useTop,'all', filepath);
+[~,class_label ] = get_class_ind(class2useTop,'all', class_indices_path);
 
 figure('Units','inches','Position',[1 1 8 4],'PaperPositionMode','auto');   
 plot(1:length(class_label),transpose(id).*(1:length(SS)),'*'); hold on
@@ -108,7 +109,7 @@ ylabel('seascape')
 title(['Top ' num2str(num) ' classes for each seascape']);
 
 % set figure parameters
-print(gcf,'-dpng','-r100',[filepath 'NOAA/SeascapesProject/Figs/topclass_CCS_cellcount_Seascape.png']);
+print(gcf,'-dpng','-r100',[filepath 'NOAA/Shimada/Figs/topclass_CCS_cellcount_Seascape.png']);
 hold off 
 
 %% produce classlists to allow for grouped classes in classifier
@@ -123,8 +124,8 @@ for i=1:length(SS)
     end
 
     if ~isempty(contains(SS(i).topclasses,'Pseudo-nitzschia'))
-        temp={'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_small_5cell' 'Pseudo_nitzschia_small_6cell' ...
-            'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell' 'Pseudo_nitzschia_large_3cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_large_6cell'};
+        temp={'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_small_2cell' 'Pseudo-nitzschia_small_3cell' 'Pseudo-nitzschia_small_4cell' 'Pseudo-nitzschia_small_5cell' 'Pseudo-nitzschia_small_6cell' ...
+            'Pseudo-nitzschia_large_1cell' 'Pseudo-nitzschia_large_2cell' 'Pseudo-nitzschia_large_3cell' 'Pseudo-nitzschia_large_4cell' 'Pseudo-nitzschia_large_5cell' 'Pseudo-nitzschia_large_6cell'};
         SS(i).topclasses=[SS(i).topclasses,temp];    
     end
 
@@ -196,5 +197,5 @@ for i=1:length(SS)
     [SS(i).topclasses,idx]=unique(SS(i).topclasses);
 end
 
-save([filepath 'NOAA/SeascapesProject/Data/seascape_topclasses'],'SS','class2use');
+save([filepath 'NOAA/Shimada/Data/seascape_topclasses'],'SS','class2use');
 

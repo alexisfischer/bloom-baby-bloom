@@ -1,16 +1,14 @@
-function [lat,lon,ia,filelistTB,mdateTB] = match_IFCBdata_w_Shimada_lat_lon(filepath,yr,filelistTB,mdateTB)
+function [lat,lon,ia,filelistTB] = match_IFCBdata_w_Shimada_lat_lon(filepath,filelistTB)
 % find lat lon coordinate of each file
 %
 % %Example Inputs
-% yr=2021;
 % filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-% filelistTB
-% mdateTB
+% %filelistTB
 
-S=load([filepath 'NOAA/Shimada/Data/IFCB_underway_Shimada' num2str(yr) '']);
+S=load([filepath 'NOAA/Shimada/Data/IFCB_underway_Shimada_2019_2021'],'dt','filelist','lat','lon');
 
-[~,ia,ib]=intersect(filelistTB,S.filelistTB);
-lat=S.latI(ib); lon=S.lonI(ib); 
-filelistTB=filelistTB(ia); mdateTB=mdateTB(ia);
+[~,ia,ib]=intersect(filelistTB,S.filelist);
+lat=S.lat(ib); lon=S.lon(ib); 
+filelistTB=filelistTB(ia); 
 
 end

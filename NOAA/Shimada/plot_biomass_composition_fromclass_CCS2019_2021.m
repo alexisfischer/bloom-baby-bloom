@@ -3,33 +3,15 @@ clear;
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath(filepath)); % add new data to search path
-s19=load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB2019']);
-s21=load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB2021']);
+
+classifiername='CCS_v9';
+load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2019-2021_' classifiername],...
+    'class2useTB','classbiovolTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
 fprint=1;
-all=0;
-class2useTB=s19.class2useTB;
 
-%%%% merge datasets
-classbiovolTB=[s19.classbiovolTB;s21.classbiovolTB];
-ml_analyzedTB=[s19.ml_analyzedTB;s21.ml_analyzedTB];
-mdateTB=[s19.mdateTB;s21.mdateTB];
-
-un_ind=strcmp(class2useTB,'unclassified');
-
-if all==0 
-    classbiovolTB=[s19.classbiovolTB_above_optthresh;s21.classbiovolTB_above_optthresh];
-    total_ind=sum(classbiovolTB./ml_analyzedTB,1);
-    total=sum(total_ind);
-    unclassifed=total_ind(un_ind);
-    fx_un=unclassifed./total; % find fx biomass unclassified
-    col=[brewermap(length(class2useTB)-1,'Spectral');[.8 .8 .8]];        
-else   
-    classbiovolTB(:,un_ind)=[];
-    class2useTB(un_ind)=[];
-    col=brewermap(length(class2useTB),'Spectral');    
-end
-clearvars s19 s21;
+classbiovolTB=classbiovolTB_above_optthresh;
+col=brewermap(length(class2useTB),'Spectral');    
 
 %%%% Convert Biovolume (cubic microns/cell) to ug carbon/ml
 ind_diatom = get_diatom_ind_NOAA(class2useTB);
