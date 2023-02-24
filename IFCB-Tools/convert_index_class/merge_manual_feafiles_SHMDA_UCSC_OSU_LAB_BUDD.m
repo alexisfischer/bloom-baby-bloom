@@ -5,8 +5,8 @@ function [] = merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,merged
 %   converts UCSC manual classes to SHMDA classes
 %   Alexis D. Fischer, SHMDA NWFSC, September 2021
 
-% % Input path names
-% class2useName ='D:\general\config\class2use_13';
+% % % Input path names
+% class2useName ='D:\general\config\class2use_14';
 % mergedpath = 'D:\general\classifier\';
 % UCSCpath = 'D:\SCW\';
 % OSUpath = 'D:\OSU\';
@@ -38,7 +38,7 @@ for i=1:length(fea_files)
 end
 
 clearvars manual_files fea_files SHMDAmanualpath i SHMDAfeapath feapath
-fprintf('Finished copying corresponding SHIMADA manual and feature files');
+disp('Finished copying corresponding SHIMADA manual and feature files');
 
 %% Lab Data
 addpath(genpath(LABpath));
@@ -62,7 +62,7 @@ for i=1:length(fea_files)
 end
 
 clearvars manual_files fea_files LABmanualpath i LABfeapath feapath
-fprintf('Finished copying corresponding LAB manual and feature files');
+disp('Finished copying corresponding LAB manual and feature files');
 
 %% Budd Inlet Data
 addpath(genpath(BUDDpath));
@@ -86,7 +86,29 @@ for i=1:length(fea_files)
 end
 
 clearvars manual_files fea_files BUDDmanualpath i BUDDfeapath feapath
-fprintf('Finished copying corresponding BUDD manual and feature files');
+disp('Finished copying corresponding BUDD manual and feature files');
+
+%% Emilie's Budd Inlet Discrete and alternate sample annotations
+
+% copy manual files to merged manual folder
+BUDDmanualpath = [BUDDpath 'manualEmConverted\'];
+manual_files = dir([BUDDmanualpath 'D*.mat']); %only select manual files
+for i=1:length(manual_files)  
+    copyfile([BUDDmanualpath manual_files(i).name],manualpath); 
+end
+
+% copy corresponding features files to merged features folder
+BUDDfeapathbase = [BUDDpath 'features\']; 
+manual_files = {manual_files.name}';
+fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
+for i=1:length(fea_files)  
+    BUDDfeapath=[BUDDfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
+    feapath = [feapathbase manual_files{i}(2:5) filesep];    
+    copyfile([BUDDfeapath fea_files{i}],feapath); 
+end
+
+clearvars manual_files fea_files BUDDmanualpath i BUDDfeapath feapath
+disp('Finished copying corresponding Emilie BUDD manual and feature files');
 
 %% UCSC
 addpath(genpath(mergedpath));
@@ -127,7 +149,7 @@ for i=1:length(fea_files)
 end
 
 clearvars manual_files fea_files i UCSCfeapath feapath
-fprintf('Finished copying corresponding UCSC manual and feature files');
+disp('Finished copying corresponding UCSC manual and feature files');
 
 %% OSU
 addpath(genpath(mergedpath));
@@ -179,7 +201,7 @@ for ii = 1:length(manualdir)
 end
 
 clearvars manual_files fea_files i OSUfeapath feapath
-fprintf('Finished copying corresponding OSU manual and feature files');
+disp('Finished copying corresponding OSU manual and feature files');
 
 end
 

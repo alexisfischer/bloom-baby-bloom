@@ -2,9 +2,9 @@
 %   Alexis D. Fischer, NOAA NWFSC, December 2022
 clear;
 filepath='C:\Users\ifcbuser\Documents\GitHub\';
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 addpath(genpath(filepath));
-class2useName ='D:\general\config\class2use_13';
+class2useName ='D:\general\config\class2use_14';
 
 %% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 mergedpath = 'D:\general\classifier\';
@@ -23,60 +23,61 @@ merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 %% Step 2: select classes of interest and find class2skip
-% % Regional CCS classifier
-% load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
-% [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
-% class2skip(end+1)={'Bacteriastrum'};
-% class2skip(end+1)={'Thalassiosira_single'};
-% class2skip(end+1)={'Heterosigma'};
-% class2skip(end+1)={'pennate'};
-% class2skip(end+1)={'nanoplankton'};
-% class2skip(end+1)={'cryptophyta'};
-% class2skip(end+1)={'Pseudo-nitzschia'};
-% class2skip(end+1)={'Dinophysis'};
-
-% Budd Inlet
-load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');
-[class2skip] = find_class2skip(class2useName,topclasses);
+% Regional CCS classifier
+load([filepath 'bloom-baby-bloom\NOAA\SeascapesProject\Data\seascape_topclasses'],'SS');
+[class2skip] = find_class2skip(class2useName,SS(end).topclasses);
+class2skip(end+1)={'Bacteriastrum'};
 class2skip(end+1)={'Thalassiosira_single'};
+class2skip(end+1)={'Heterosigma'};
 class2skip(end+1)={'pennate'};
+class2skip(end+1)={'nanoplankton'};
+class2skip(end+1)={'cryptophyta'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
-class2skip(end+1)={'Scrippsiella'};
+
+% % Budd Inlet
+% load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');
+% [class2skip] = find_class2skip(class2useName,topclasses);
+% class2skip(end+1)={'Thalassiosira_single'};
+% class2skip(end+1)={'pennate'};
+% class2skip(end+1)={'Pseudo-nitzschia'};
+% class2skip(end+1)={'Dinophysis'};
+% class2skip(end+1)={'Scrippsiella'};
 
 % Step 2: Compile features for the training set
 addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
-manualpath = 'D:\general\classifier\manual_merged_ungrouped\'; % manual annotation file location
-feapath_base = 'D:\general\classifier\features_merged_ungrouped\'; %feature file location, assumes \yyyy\ organization
+manualpath = 'D:\general\classifier\manual_merged_selectUCSC\'; % manual annotation file location
+feapath_base = 'D:\general\classifier\features_merged_selectUCSC\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 500; %minimum number for inclusion
-class2group={{'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_large_1cell'}...
-        {'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_large_2cell'}...
-        {'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_large_3cell'}...
-        {'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_large_4cell'}...
-        {'Pseudo_nitzschia_small_5cell' 'Pseudo_nitzschia_large_5cell'}...
-        {'Pseudo_nitzschia_small_6cell' 'Pseudo_nitzschia_large_6cell'}...
+class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
+        {'Pseudo-nitzschia_small_2cell' 'Pseudo-nitzschia_large_2cell'}...
+        {'Pseudo-nitzschia_small_3cell' 'Pseudo-nitzschia_large_3cell'}...
+        {'Pseudo-nitzschia_small_4cell' 'Pseudo-nitzschia_large_4cell'}...
+        {'Pseudo-nitzschia_small_5cell' 'Pseudo-nitzschia_large_5cell'}...
+        {'Pseudo-nitzschia_small_6cell' 'Pseudo-nitzschia_large_6cell'}...
         {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
         {'Chaetoceros_chain' 'Chaetoceros_single'}...
-        {'Cerataulina' 'Detonula'}}; 
+        {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}...
+        {'Heterocapsa_triquetra' 'Scrippsiella'}...               
+        {'Rhizosolenia' 'Proboscia'}};
 
-%        {'Heterocapsa_triquetra' 'Scrippsiella'}};               
-%        {'Rhizosolenia' 'Proboscia'}...   
+%        {'Cerataulina' 'Detonula'}};  BI
 
-group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
-classifiername=['BI_' group '_v1']; 
-%classifiername=['CCS_' group 'v9']; 
+group=[]; %[]; %'NOAA'; %'OSU'; 
+%classifiername=['BI_' group '_v1']; 
+classifiername=['CCS_' group 'v10']; 
 
-%compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
+compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
 
 % Step 3: Train (make) the classifier
 result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
-%make_TreeBaggerClassifier(result_path, classifiername, nTrees)
+make_TreeBaggerClassifier(result_path, classifiername, nTrees)
 
 classifier_oob_analysis_og([result_path 'Trees_' classifiername],[summarydir 'class\']);
 

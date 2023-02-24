@@ -14,7 +14,7 @@ summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimad
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\UCSC\SCW\';
 %summarydir=[ifcbdir 'summary\'];
 
-yr='2021';
+yr='2022';
 
 addpath(genpath(summarydir));
 addpath(genpath(ifcbdir));
@@ -23,8 +23,8 @@ addpath(genpath([ifcbdir 'blobs\']));
 addpath(genpath([ifcbdir 'features\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
-classifier='D:\general\classifier\summary\Trees_BI_NOAA-OSU_v1';
-%classifier='D:\general\classifier\summary\Trees_16Jun2022_regional1000';
+%classifier='D:\general\classifier\summary\Trees_BI_NOAA-OSU_v1';
+classifier='D:\general\classifier\summary\Trees_CCS_v9';
 
 %%
 %copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
@@ -57,11 +57,11 @@ adhocthresh = 0.5;
 summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
 
-%%
 summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],[summarydir 'manual\']); 
-%%
-manualpath='D:\BuddInlet\manualEmilie\Labexperiments\testPMTsettingsDANY1\';
-addpath(genpath(manualpath));
-addpath(genpath([ifcbdir 'data\']));
 
-summarize_cells_from_manual(manualpath,[ifcbdir 'data\'],'D:\BuddInlet\manualEmilie\');
+%% adjust classlists
+start_mc_adjust_classes_user_training('D:\general\config\class2use_14','D:\Shimada\manual\')
+start_mc_adjust_classes_user_training('D:\general\config\class2use_14','D:\BuddInlet\manual\')
+start_mc_adjust_classes_user_training('D:\general\config\class2use_14','D:\LabData\manual\')
+start_mc_adjust_classes_user_training('D:\general\config\class2use_14','D:\BuddInlet\manualEmConverted\')
+
