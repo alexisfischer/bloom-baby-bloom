@@ -40,7 +40,7 @@ clearvars b ii idx Sstdfit mSfit mSstdfit count
 
 %% select max of 1000 images for each class to test against
 Nclass=NaN*ones(size(classes));
-testtotal=500; 
+testtotal=1000; 
 for i=1:length(classes)
     imclass = find(strcmp(YN,classes(i)));
     n=length(imclass);
