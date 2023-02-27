@@ -7,12 +7,15 @@ function [ ] = classifier_oob_analysis_hake( classifiername,outpath )
 %   Alexis D. Fischer, NOAA NWFSC, February 2023
 %
 % Example Inputs
-% clear
-% classifiername='~/Downloads/Trees_CCS_NOAA-OSU_v4';
-% val='CCS_NOAA-OSU_v4';
-% outpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/';
-% addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
-% addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+clear
+val='CCS_v10';
+%outpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/';
+%addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
+%addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+
+outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+
+classifiername ='D:\general\classifier\summary\Trees_CCS_v10';
 
 load(classifiername,'b','classes','maxthre','targets');
 
