@@ -8,7 +8,7 @@ class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
-% format IFCB data
+%% format IFCB data
 classifiername='CCS_v9';
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2019-2021_' classifiername],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
@@ -33,42 +33,98 @@ class2useTB(strcmp('Dinophysis_acuminata,Dinophysis_acuta,Dinophysis_caudata,Din
 class2useTB(strcmp('Heterocapsa_triquetra,Scrippsiella',class2useTB))={'Hete_Scri'};
 class2useTB(strcmp('Thalassiosira_chain',class2useTB))={'Thalassiosira'};
 class2useTB(strcmp('Proboscia,Rhizosolenia',class2useTB))={'Prob_Rhiz'};
-class2useTB(strcmp('Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell',class2useTB))={'Pseudo-nitzschia'};
+class2useTB(strcmp('Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell',class2useTB))={'Pseudonitzschia'};
 
 clearvars ia classcountTB_above_optthresh ml_analyzedTB class_indices_path id1 id2 id3 id4 mdateTB
 
 %% match timestamps of IFCB and sensor data
-S19=load([filepath 'NOAA/Shimada/Data/environ_Shimada2019'],'DT','LON','LAT','TEMP','SAL','FL','FCO2');
-S21=load([filepath 'NOAA/Shimada/Data/environ_Shimada2021'],'DT','LON','LAT','TEMP','SAL','FL','FCO2');
+S19=load([filepath 'NOAA/Shimada/Data/environ_Shimada2019'],'DT','LON','LAT','TEMP','SAL','FL','PCO2');
+S21=load([filepath 'NOAA/Shimada/Data/environ_Shimada2021'],'DT','LON','LAT','TEMP','SAL','FL','PCO2');
 S.DT=[S19.DT;S21.DT];
 S.LON=[S19.LON;S21.LON];
 S.LAT=[S19.LAT;S21.LAT];
 S.TEMP=[S19.TEMP;S21.TEMP];
 S.SAL=[S19.SAL;S21.SAL];
-S.FCO2=[S19.FCO2;S21.FCO2];
+S.PCO2=[S19.PCO2;S21.PCO2];
 
-[idI,idS] = match_timestamps_IFCB_Shimada(dt,S.DT);
+%% round IFCB data to nearest minute
+dtI=dateshift(dt,'start','minute');
+[idI,idS] = match_timestamps_IFCB_Shimada(dtI,S.DT);
 filelistTB(idI)=[]; dt(idI)=[]; cellsmL(idI,:)=[];
-lat=S.LAT(idS); lon=S.LON(idS); temp=S.TEMP(idS); sal=S.SAL(idS); pco2=S.FCO2(idS);
+lat=S.LAT(idS); lon=S.LON(idS); temp=S.TEMP(idS); sal=S.SAL(idS); pco2=S.PCO2(idS);
+%figure; plot(lon,lat,'o'); %sanity check plot
 
-figure; plot(lon,lat,'o'); %sanity check plot
-
-clearvars S19 S21 idI idS S
+clearvars S19 S21 idI idS S dtI
 
 %% match HAB data
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); %GMT time
-HA.dt.Format='yyyy-MM-dd HH:mm:ss';        
-[idI,idS] = match_timestamps_IFCB_Shimada(HA.dt,dt);
-HA(idI,:)=[]; %remove the nans
+HA.dt.Format='yyyy-MM-dd HH:mm:ss'; dtH=dateshift(HA.dt,'start','minute');
+dtI=dateshift(dt,'start','minute');
 
-chlA_ugL=NaN*lat; chlA_ugL(idS)=HA.chlA_ugL;
-pDA_ngL=NaN*lat; pDA_ngL(idS)=HA.pDA_ngL;
-NitrateM=NaN*lat; NitrateM(idS)=HA.NitrateM;
-PhosphateM=NaN*lat; PhosphateM(idS)=HA.PhosphateM;
-SilicateM=NaN*lat; SilicateM(idS)=HA.SilicateM;
-PNcellsmL_mcpy=NaN*lat; PNcellsmL_mcpy(idS)=HA.PNcellsmL;
+[idH,idI] = match_timestamps_IFCB_Shimada(dtH,dtI);
+HA(idH,:)=[]; %remove the nans
 
-%%
-save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis'],...
+chlA_ugL=NaN*lat; chlA_ugL(idI)=HA.chlA_ugL;
+pDA_ngL=NaN*lat; pDA_ngL(idI)=HA.pDA_ngL;
+NitrateM=NaN*lat; NitrateM(idI)=HA.NitrateM;
+PhosphateM=NaN*lat; PhosphateM(idI)=HA.PhosphateM;
+SilicateM=NaN*lat; SilicateM(idI)=HA.SilicateM;
+PNcellsmL_mcpy=NaN*lat; PNcellsmL_mcpy(idI)=HA.PNcellsmL;
+
+clearvars dtH idH dtI idI
+
+%% format for .csv file
+I=array2table(cellsmL,'VariableNames',class2useTB);
+I(:,end)=[]; %remove unclassified
+E=table(dt,lat,lon,temp,sal,pco2,chlA_ugL,NitrateM,PhosphateM,SilicateM,pDA_ngL,PNcellsmL_mcpy);
+T=[E I];
+
+writetable(T,[filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.csv'])
+save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],...
     'dt','filelistTB','lat','lon','class2useTB','cellsmL','temp','sal','pco2',...
     'chlA_ugL','pDA_ngL','NitrateM','PhosphateM','SilicateM','PNcellsmL_mcpy');
+
+clearvars I E
+
+%% test plots
+% clear
+% filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+% load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis'],...
+%     'dt','filelistTB','lat','lon','class2useTB','cellsmL','temp','sal','pco2',...
+%     'chlA_ugL','pDA_ngL','NitrateM','PhosphateM','SilicateM','PNcellsmL_mcpy');
+
+
+figure('Units','inches','Position',[1 1 4 3.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.15 0.15]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.
+
+subplot(2,1,1);
+yyaxis left
+stem(dt,T.Pseudonitzschia,'-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
+    ylabel('PN cells/mL','fontsize',12); 
+    title('Hake: 2019 (top) & 2021 (bottom)')
+yyaxis right
+    plot(dt,temp,'-','Markersize',6,'linewidth',.8);
+    datetick('x', 'mmm', 'keeplimits');        
+    set(gca,'xgrid','on','tickdir','out','xlim',[datetime('2019-06-01') datetime('2019-09-15')],...
+        'xticklabel',{},'fontsize',10); 
+    ylabel('temperature','fontsize',12);        
+
+subplot(2,1,2);
+yyaxis left
+stem(dt,T.Pseudonitzschia,'-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
+    ylabel('PN cells/mL','fontsize',12);    
+yyaxis right
+    plot(dt,temp,'-','Markersize',6,'linewidth',.8);
+    set(gca,'xgrid','on','tickdir','out',...
+        'xlim',[datetime('2021-06-01') datetime('2021-09-15')],'fontsize',10); 
+    datetick('x', 'mmm', 'keeplimits');    
+    ylabel('temperature','fontsize',12);         
+
+% %% set figure parameters
+% exportgraphics(gcf,[outpath 'Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
+% hold off
+
+
+

@@ -44,6 +44,5 @@ sst=vertcat(p.sst); sst(sst==-999)=NaN;
 sal=vertcat(p.sal); sal(sal==-999)=NaN;
 fco2=vertcat(p.fco2); fco2(fco2==-999)=NaN;
 
-
-save([outpath 'pCO2_Shimada2019'],'dt','lat','lon','sst','sal','fco2');
+save([outpath 'pCO2_Shimada2021'],'dt','lat','lon','sst','sal','fco2');
 
