@@ -154,7 +154,7 @@ files_all = varargout{2};
 roinum = varargout{3};
 
 save([outpath 'Temporary_' classifiername],'n','maxn','minn','class2skip','class2group','class_all', 'fea_all','files_all','roinum','class2use', 'featitles');
-
+%%
 [ n, class_all, class2use, varargout ] = handle_train_class2group_NWFSC( class2use, class2group, maxn, n, class_all, fea_all, files_all, roinum );
 fea_all = varargout{1};
 files_all = varargout{2};
