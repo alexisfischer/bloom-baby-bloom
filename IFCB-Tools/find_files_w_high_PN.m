@@ -1,6 +1,6 @@
 %% find Shimada files with high PN
 clear;
-classifiername='CCS_v9';
+classifiername='CCS_v10';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];   
@@ -14,10 +14,10 @@ load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2019-2021_' classif
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
 %%%% sum up grouped classes and account for different chain length
-class2do_full=['Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell,'...
-    'Pseudo_nitzschia_large_2cell,Pseudo_nitzschia_small_2cell,'...
-    'Pseudo_nitzschia_large_3cell,Pseudo_nitzschia_small_3cell,'...
-    'Pseudo_nitzschia_large_4cell,Pseudo_nitzschia_small_4cell'];
+class2do_full=['Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell,'...
+    'Pseudo-nitzschia_large_2cell,Pseudo-nitzschia_small_2cell,'...
+    'Pseudo-nitzschia_large_3cell,Pseudo-nitzschia_small_3cell,'...
+    'Pseudo-nitzschia_large_4cell,Pseudo-nitzschia_small_4cell'];
 ind = strfind(class2do_full, ',');
 if ~isempty(ind)
     ind = [0 ind length(class2do_full)];
@@ -33,10 +33,10 @@ man1=classcount(:,imclass);
 m=ones(size(man1)); m(:,3:4)=2*m(:,3:4); m(:,5:6)=3*m(:,5:6); m(:,7:8)=4*m(:,7:8);
 man=sum(man1.*m,2);
 
-auto1=classcountTB_above_optthresh(:,strcmp('Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell',class2useTB));
-auto2=classcountTB_above_optthresh(:,strcmp('Pseudo_nitzschia_large_2cell,Pseudo_nitzschia_small_2cell',class2useTB));
-auto3=classcountTB_above_optthresh(:,strcmp('Pseudo_nitzschia_large_3cell,Pseudo_nitzschia_small_3cell',class2useTB));
-auto4=classcountTB_above_optthresh(:,strcmp('Pseudo_nitzschia_large_4cell,Pseudo_nitzschia_small_4cell',class2useTB));
+auto1=classcountTB_above_optthresh(:,strcmp('Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell',class2useTB));
+auto2=classcountTB_above_optthresh(:,strcmp('Pseudo-nitzschia_large_2cell,Pseudo-nitzschia_small_2cell',class2useTB));
+auto3=classcountTB_above_optthresh(:,strcmp('Pseudo-nitzschia_large_3cell,Pseudo-nitzschia_small_3cell',class2useTB));
+auto4=classcountTB_above_optthresh(:,strcmp('Pseudo-nitzschia_large_4cell,Pseudo-nitzschia_small_4cell',class2useTB));
 auto=sum([auto1,2*auto2,3*auto3,4*auto4],2);
 mdateTB=datetime(mdateTB,'convertfrom','datenum');
 matdate=datetime(matdate,'convertfrom','datenum');

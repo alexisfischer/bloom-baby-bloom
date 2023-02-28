@@ -1,7 +1,7 @@
 %% plot_HakeTest_performance 
 % requires input from classifier_oob_analysis_hake
 clear;
-name='CCS_v9';
+name='CCS_v10';
 class2do_full='Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
@@ -13,7 +13,7 @@ addpath(genpath(filepath));
 load([filepath 'IFCB-Data/Shimada/threshold/' name '/HakeTestSet_performance_' name ''],'Nclass','maxthre','threlist','opt','class','Precision','Recall','F1score','tPos','fNeg','fPos');
 testtotal=max(opt.total);
 
-%% plot OPT: Recall and Precision, sort by F1
+% plot OPT: Recall and Precision, sort by F1
 [opt,~]=sortrows(opt,'F1','descend');
 [opt,~]=sortrows(opt,'total','descend');
 [~,class_s]=get_class_ind( opt.class, 'all', class_indices_path);
@@ -31,10 +31,10 @@ for i=1:length(b)
 end  
 yyaxis right;
 plot(1:length(class_s),opt.total,'k*'); hold on
-ylabel('total images in Hake test set');
+ylabel('total images in test set');
 set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 max(opt.total)], 'xticklabel', class_s); hold on
 legend('Recall', 'Precision','Location','W')
-title(['Opt score threshold: ' num2str(length(opt.class)) ' classes ranked by F1 score'])
+title([num2str(max(opt.total)) ' image Hake test set: ' num2str(length(opt.class)) ' classes ranked by F1 score'])
 xtickangle(45);
 
 set(gcf,'color','w');
