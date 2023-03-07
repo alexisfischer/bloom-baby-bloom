@@ -22,7 +22,7 @@ BUDDpath = 'D:\BuddInlet\';
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
-%% Step 2: select classes of interest and find class2skip
+% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
 
@@ -71,7 +71,7 @@ class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
 
 group=[]; %[]; %'NOAA'; %'OSU'; 
 %classifiername=['BI_' group '_v1']; 
-classifiername=['CCS_' group 'v10']; 
+classifiername=['CCS_' group 'v11']; 
 
 %compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
