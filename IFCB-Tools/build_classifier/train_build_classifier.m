@@ -56,7 +56,7 @@ manualpath = 'D:\general\classifier\manual_merged_selectUCSC\'; % manual annotat
 feapath_base = 'D:\general\classifier\features_merged_selectUCSC\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 350; %minimum number for inclusion
+minn = 500; %minimum number for inclusion
 class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
         {'Pseudo-nitzschia_small_2cell' 'Pseudo-nitzschia_large_2cell'}...
         {'Pseudo-nitzschia_small_3cell' 'Pseudo-nitzschia_large_3cell'}...
@@ -73,7 +73,7 @@ class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
 
 group=[]; %[]; %'NOAA'; %'OSU'; 
 %classifiername=['BI_' group '_v1']; 
-classifiername=['CCS_' group 'v13']; 
+classifiername=['CCS_' group 'v14']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
