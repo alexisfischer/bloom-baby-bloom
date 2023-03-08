@@ -2,7 +2,7 @@
 % requires input from classifier_oob_analysis_hake
 clear;
 name='CCS_v10';
-class2do_full='Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell';
+class2do_full='Pseudo-nitzschia_large_2cell,Pseudo-nitzschia_small_2cell';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 outpath = [filepath 'IFCB-Data/Shimada/threshold/' name '/Figs/'];

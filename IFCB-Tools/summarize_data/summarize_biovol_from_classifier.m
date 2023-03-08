@@ -100,7 +100,7 @@ if length(yrrange) > 1
     yrrangestr = [yrrangestr '-' num2str(yrrange(end))];
 end
 
-save([summarydir_base summaryfolder 'summary_biovol_allTB_' yrrangestr] ,'runtypeTB','filecommentTB',...
+save([summarydir_base summaryfolder 'summary_biovol_allTB'] ,'runtypeTB','filecommentTB',...
     'class2useTB', 'classC_TB*', 'classcountTB*', 'classbiovolTB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB')
 %    save([resultpath 'summary_biovol_allTB'] , 'class2useTB', 'classcountTB*', 'classbiovolTB*', 'classC_TB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'feapath_generic')
 clear *files* classcount* classbiovol* classC* 

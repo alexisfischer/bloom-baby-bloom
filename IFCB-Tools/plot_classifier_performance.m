@@ -1,8 +1,6 @@
 clear;
 Mac=0;
 name='CCS_v11';
-%name='BI_v1';
-
 %name='BI_NOAA-OSU_v1';
 
 if Mac
