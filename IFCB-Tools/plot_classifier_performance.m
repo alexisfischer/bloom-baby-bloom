@@ -1,6 +1,12 @@
 clear;
 Mac=0;
+<<<<<<< Updated upstream
 name='CCS_v11';
+=======
+name='CCS_v12';
+%name='BI_v1';
+
+>>>>>>> Stashed changes
 %name='BI_NOAA-OSU_v1';
 
 if Mac
