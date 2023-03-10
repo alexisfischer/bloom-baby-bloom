@@ -43,7 +43,7 @@ auto=classcountTB_above_optthresh(it,strcmp(class2do_full,class2useTB));
 clearvars im it i imclass ind;
 
 %%%% Plot automated vs manual classification cell counts
-figure('Units','inches','Position',[1 1 4 3.5],'PaperPositionMode','auto');
+figure('Units','inches','Position',[1 1 3.5 3.5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.14 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
@@ -56,7 +56,7 @@ subplot(2,1,1);
 stem(mdateTB,auto./ml_analyzedTB,'k-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
     plot(matdate,man./ml_analyzed,'r*','Markersize',6,'linewidth',.8);
     datetick('x', 'mmm', 'keeplimits');        
-    set(gca,'xgrid','on','tickdir','out','xlim',[datetime('2019-06-01') datetime('2019-09-15')],...
+    set(gca,'xgrid','on','tickdir','out','xlim',[datetime('2019-06-15') datetime('2019-09-15')],...
         'xticklabel',{},'ylim',[0 ymax],'fontsize',10); 
     ylabel('2019','fontsize',12);    
     title([char(label) ' (cells mL^{-1})'],'fontsize',12); 
@@ -66,7 +66,7 @@ subplot(2,1,2);
 stem(mdateTB,auto./ml_analyzedTB,'k-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
     plot(matdate,man./ml_analyzed,'r*','Markersize',6,'linewidth',.8);
     set(gca,'xgrid','on','tickdir','out','ylim',[0 ymax],...
-        'xlim',[datetime('2021-06-01') datetime('2021-09-15')],'fontsize',10); 
+        'xlim',[datetime('2021-06-15') datetime('2021-09-15')],'fontsize',10); 
     datetick('x', 'mmm', 'keeplimits');    
     ylabel('2021','fontsize',12);    
  
