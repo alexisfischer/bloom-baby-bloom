@@ -25,7 +25,7 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 %% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
-SS(end).topclasses(end+1)={'Navicula'};
+%SS(end).topclasses(end+1)={'Navicula'};
 
 [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
 class2skip(end+1)={'Bacteriastrum'};
@@ -55,7 +55,7 @@ manualpath = 'D:\general\classifier\manual_merged_selectUCSC\'; % manual annotat
 feapath_base = 'D:\general\classifier\features_merged_selectUCSC\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 500; %minimum number for inclusion
+minn = 400; %minimum number for inclusion
 class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
         {'Pseudo-nitzschia_small_2cell' 'Pseudo-nitzschia_large_2cell'}...
         {'Pseudo-nitzschia_small_3cell' 'Pseudo-nitzschia_large_3cell'}...
@@ -72,7 +72,7 @@ class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
 
 group=[]; %[]; %'NOAA'; %'OSU'; 
 %classifiername=['BI_' group '_v1']; 
-classifiername=['CCS_' group 'v15']; 
+classifiername=['CCS_' group 'v16']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
