@@ -1,7 +1,7 @@
 %% plot manual vs classifier results for Shimada
 clear;
-classifiername='CCS_v15';
-class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
+classifiername='CCS_v16';
+class2do_full='Pseudo-nitzschia_large_4cell,Pseudo-nitzschia_small_4cell';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 outpath = [filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Figs/'];
@@ -13,7 +13,7 @@ load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use'
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
-%% match up data
+% match up data
 %%%% find matched files and class of interest
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
@@ -43,8 +43,8 @@ auto=classcountTB_above_optthresh(it,strcmp(class2do_full,class2useTB));
 clearvars im it i imclass ind;
 
 %%%% Plot automated vs manual classification cell counts
-figure('Units','inches','Position',[1 1 3.5 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.14 0.04]);
+figure('Units','inches','Position',[1 1 3.2 3],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.16 0.1]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
