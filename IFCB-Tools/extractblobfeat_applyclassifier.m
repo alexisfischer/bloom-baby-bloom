@@ -24,7 +24,7 @@ addpath(genpath([ifcbdir 'features\']));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
 %classifier='D:\general\classifier\summary\Trees_BI_NOAA-OSU_v1';
-classifier='D:\general\classifier\summary\Trees_CCS_v11';
+classifier='D:\general\classifier\summary\Trees_CCS_v13';
 
 %%
 %copy_data_into_folders('C:\SFTP-BuddInlet\',[ifcbdir 'data\' yr '\']);
@@ -37,14 +37,14 @@ start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'
 start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
 
 %% Step 4: Apply classifier
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\CCS_v11\class' yr '_v1\']);
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\CCS_v13\class' yr '_v1\']);
 yr='2021';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\CCS_v11\class' yr '_v1\']);
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\CCS_v13\class' yr '_v1\']);
 
 % Step 5: Summaries
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\Shimada\class\';
-classpath_generic = [ifcbdir 'class\CCS_v11\classxxxx_v1\'];
+classpath_generic = [ifcbdir 'class\CCS_v13\classxxxx_v1\'];
 %classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
@@ -54,6 +54,7 @@ adhocthresh = 0.5;
 summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
  feapath_generic,roibasepath_generic,adhocthresh,2019:2021);
 
+%%
 summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
 
