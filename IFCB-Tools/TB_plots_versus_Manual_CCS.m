@@ -1,6 +1,6 @@
 %% plot manual vs classifier results for Shimada
 clear;
-classifiername='CCS_v11';
+classifiername='CCS_v15';
 class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
@@ -13,7 +13,7 @@ load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use'
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
-% match up data
+%% match up data
 %%%% find matched files and class of interest
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);

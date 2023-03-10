@@ -1,6 +1,6 @@
 clear;
-Mac=0;
-name='CCS_v15';
+Mac=1;
+name='CCS_v14';
 %name='BI_NOAA-OSU_v1';
 
 if Mac
@@ -17,7 +17,7 @@ end
 addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','maxthre','all','opt','thr','c_thr','c_all','c_opt','trainingset');
-
+%%
 [~,class]=get_class_ind( all.class,'all',classidx);
 [~,classU]=get_class_ind( opt.class,'all',classidx);
 maxn=round(max([opt.total]),-2);
