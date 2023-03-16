@@ -9,18 +9,18 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
 %% format IFCB data
-classifiername='CCS_v9';
-load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2019-2021_' classifiername],...
+classifiername='CCS_v16';
+load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
 dt=datetime(mdateTB,'convertfrom','datenum'); dt.Format='yyyy-MM-dd HH:mm:ss';        
 cellsmL = classcountTB_above_optthresh./ml_analyzedTB;    
 
 %%%% sum up PN
-id1=find(strcmp('Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell',class2useTB));
-id2=find(strcmp('Pseudo_nitzschia_large_2cell,Pseudo_nitzschia_small_2cell',class2useTB));
-id3=find(strcmp('Pseudo_nitzschia_large_3cell,Pseudo_nitzschia_small_3cell',class2useTB));
-id4=find(strcmp('Pseudo_nitzschia_large_4cell,Pseudo_nitzschia_small_4cell',class2useTB));
+id1=find(strcmp('Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell',class2useTB));
+id2=find(strcmp('Pseudo-nitzschia_large_2cell,Pseudo-nitzschia_small_2cell',class2useTB));
+id3=find(strcmp('Pseudo-nitzschia_large_3cell,Pseudo-nitzschia_small_3cell',class2useTB));
+id4=find(strcmp('Pseudo-nitzschia_large_4cell,Pseudo-nitzschia_small_4cell',class2useTB));
 
 cellsmL(:,id1)=sum([cellsmL(:,id1),2*cellsmL(:,id2),3*cellsmL(:,id3),4*cellsmL(:,id4)],2);
 cellsmL(:,[id2,id3,id4])=[];
@@ -33,7 +33,7 @@ class2useTB(strcmp('Dinophysis_acuminata,Dinophysis_acuta,Dinophysis_caudata,Din
 class2useTB(strcmp('Heterocapsa_triquetra,Scrippsiella',class2useTB))={'Hete_Scri'};
 class2useTB(strcmp('Thalassiosira_chain',class2useTB))={'Thalassiosira'};
 class2useTB(strcmp('Proboscia,Rhizosolenia',class2useTB))={'Prob_Rhiz'};
-class2useTB(strcmp('Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_small_1cell',class2useTB))={'Pseudonitzschia'};
+class2useTB(strcmp('Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell',class2useTB))={'Pseudonitzschia'};
 
 clearvars ia classcountTB_above_optthresh ml_analyzedTB class_indices_path id1 id2 id3 id4 mdateTB
 

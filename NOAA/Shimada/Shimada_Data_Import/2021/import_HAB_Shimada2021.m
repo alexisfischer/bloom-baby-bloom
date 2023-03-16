@@ -74,4 +74,6 @@ val=Tn.PO4StdDev(ia); HA21.PO4StdDev(ib)=val;
 val=Tn.SiAveConcM(ia); HA21.SiAveConcM(ib)=val;
 val=Tn.SiStdDev(ia); HA21.SiStdDev(ib)=val;
 
+HA21.Longitude=-HA21.Longitude;
+
 save('~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/Shimada_HAB_2021','HA21');

@@ -10,7 +10,7 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
 load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
-load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2019-2021_' classifiername],...
+load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
 %%%% sum up grouped classes and account for different chain length

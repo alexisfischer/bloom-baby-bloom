@@ -1,11 +1,6 @@
 clear;
-<<<<<<< Updated upstream
 Mac=1;
-name='CCS_v14';
-=======
-Mac=0;
 name='CCS_v16';
->>>>>>> Stashed changes
 %name='BI_NOAA-OSU_v1';
 
 if Mac
@@ -42,7 +37,7 @@ end
 set(gca,'xlim',[0.5 (length(class)+.5)], 'xtick', 1:length(class), 'ylim',[0 maxn],...
     'xticklabel', class,'tickdir','out');
 ylabel('total images in set'); hold on
-lh=legend('NWFSC','UCSC','OSU','Location','NorthOutside');
+lh=legend('NWFSC','OSU','UCSC','Location','NorthOutside');
 
 set(gcf,'color','w');
 exportgraphics(gca,[figpath 'TrainingSet_' name '.png'],'Resolution',100)    
@@ -67,7 +62,7 @@ yyaxis right;
 plot(1:length(class_s),all.total,'k*'); hold on
 ylabel('total images in set');
 set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 maxn], 'xticklabel', class_s); hold on
-legend('Recall', 'Precision','Location','W')
+legend('Sensitivity', 'Precision','Location','W')
 title(['Winner-takes-all: ' num2str(length(class)) ' classes ranked by F1 score'])
 xtickangle(45);
 
@@ -121,7 +116,7 @@ yyaxis right;
 plot(1:length(class_s),opt.total,'k*'); hold on
 ylabel('total images in set');
 set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 maxn], 'xticklabel', class_s); hold on
-legend('Recall', 'Precision','Location','W')
+legend('Sensitivity', 'Precision','Location','W')
 title(['Opt score threshold: ' num2str(length(class)) ' classes ranked by F1 score'])
 xtickangle(45);
 
