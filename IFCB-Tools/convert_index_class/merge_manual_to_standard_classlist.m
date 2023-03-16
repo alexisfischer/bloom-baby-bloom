@@ -4,9 +4,12 @@
 
 %% Input path names
 clear;
-class2useName ='D:\general\config\class2use_13';
-NEWpath = 'D:\LabData\manualEmConverted\';
-OLDpath = 'D:\BuddInlet\manualEmilie\Labexperiments\filestobuildclassifier\';
+class2useName ='D:\general\config\class2use_15';
+NEWpath = 'D:\BuddInlet\manual_DiscreteSamples\';
+OLDpath = 'D:\BuddInlet\manualEmilie\Discretsamples\';
+
+%NEWpath = 'D:\BuddInlet\manual_AltSamples\';
+%OLDpath = 'D:\BuddInlet\manualEmilie\Alternatesamples\';
 
 addpath(genpath(NEWpath));
 addpath(genpath(OLDpath));
@@ -16,10 +19,6 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\'));
 load([class2useName '.mat'], 'class2use');
 
 %% Emilie's discrete and alternate samples
-%NEWpath = 'D:\LabData\manualEmConverted\';
-%OLDpath = 'D:\BuddInlet\manualEmilie\Alternatesamples\';
-%OLDpath = 'D:\BuddInlet\manualEmilie\Discretsamples\';
-%OLDpath = 'D:\BuddInlet\manualEmilie\Labexperiments\filestobuildclassifier\';
 
 % copy manual files to merged manual folder and convert classes
 manual_files = dir([OLDpath 'D*150.mat']); 

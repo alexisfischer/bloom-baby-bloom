@@ -8,14 +8,14 @@ function [ ] = classifier_oob_analysis_hake( classifiername,outpath )
 %
 % Example Inputs
 clear
-val='CCS_v10';
+val='CCS_v16';
 %outpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/';
 %addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
 %addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 
 outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 
-classifiername ='D:\general\classifier\summary\Trees_CCS_v10';
+classifiername ='D:\general\classifier\summary\Trees_CCS_v16';
 
 load(classifiername,'b','classes','maxthre','targets');
 

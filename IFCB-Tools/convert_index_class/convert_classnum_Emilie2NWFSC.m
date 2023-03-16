@@ -6,13 +6,13 @@ function [ classnum ] = convert_classnum_Emilie2NWFSC( Z )
 % classnum output: conversion to NWFSC classlist
 %  Alexis D. Fischer, NWFSC, February 2023
 
-% %Discrete and Alternate classlist
-% NWFSC_num = [1	43	117	118	119	120	121	122	123	124	125	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1];
-% Emilie_num =[1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31	32	33	34	35	36	37	38	39	40	41];
+%Discrete and Alternate classlist
+NWFSC_num = [1	43	117	118	119	120	121	122	123	124	125	43	43	43	43	43	139	139	117	140	137	137	118	138	141	141	119	142	143	143	122	144	43	43	43	43	43	43	43	43	43];
+Emilie_num = [1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21	22	23	24	25	26	27	28	29	30	31	32	33	34	35	36	37	38	39	40	41];
 
-%LabExpt classlist
-NWFSC_num =  [1	72	117	1	1	1	1	1	1];
-Emilie_num = [1	2	3	4	5	6	7	8	9];
+% %LabExpt classlist
+% NWFSC_num =  [1	72	117	1	1	1	1	1	1];
+% Emilie_num = [1	2	3	4	5	6	7	8	9];
 
 classnum=changem(Z,NWFSC_num,Emilie_num);
 

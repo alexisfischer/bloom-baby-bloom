@@ -4,19 +4,19 @@ clear;
 
 CCS=0;
 
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath(filepath)); % add new data to search path
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-classidx=[filepath 'IFCB-Tools/convert_index_class/class_indices'];
+% filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+% addpath(genpath(filepath)); % add new data to search path
+% addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+% classidx=[filepath 'IFCB-Tools/convert_index_class/class_indices'];
 
-% filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-% addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
-% addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
+filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
+classidx=[filepath 'IFCB-Tools\convert_index_class\class_indices'];
 
 if CCS==1
-%    load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_2019'])
-    load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'])
-    outdir=[filepath 'IFCB-Data/Shimada/manual/'];
+    load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'])
+    outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];
     num=45;
 else
     load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'],'ml_analyzed','classbiovol','class2use','filelist')
@@ -69,8 +69,8 @@ if ~isempty(contains(topclasses,'Dinophysis'))
 end
 
 if ~isempty(contains(topclasses,'Pseudo-nitzschia'))
-    temp={'Pseudo_nitzschia_small_1cell' 'Pseudo_nitzschia_small_2cell' 'Pseudo_nitzschia_small_3cell' 'Pseudo_nitzschia_small_4cell' 'Pseudo_nitzschia_small_5cell' 'Pseudo_nitzschia_small_6cell' ...
-        'Pseudo_nitzschia_large_1cell' 'Pseudo_nitzschia_large_2cell' 'Pseudo_nitzschia_large_3cell' 'Pseudo_nitzschia_large_4cell' 'Pseudo_nitzschia_large_5cell' 'Pseudo_nitzschia_large_6cell'};
+    temp={'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_small_2cell' 'Pseudo-nitzschia_small_3cell' 'Pseudo-nitzschia_small_4cell' 'Pseudo-nitzschia_small_5cell' 'Pseudo-nitzschia_small_6cell' ...
+        'Pseudo-nitzschia_large_1cell' 'Pseudo-nitzschia_large_2cell' 'Pseudo-nitzschia_large_3cell' 'Pseudo-nitzschia_large_4cell' 'Pseudo-nitzschia_large_5cell' 'Pseudo-nitzschia_large_6cell'};
     topclasses=[topclasses,temp];    
 end
 
