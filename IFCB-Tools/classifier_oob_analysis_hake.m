@@ -7,8 +7,6 @@ function [ ] = classifier_oob_analysis_hake( classifiername,outpath )
 %   Alexis D. Fischer, NOAA NWFSC, February 2023
 %
 % Example Inputs
-clear
-val='CCS_v16';
 %outpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/';
 %addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
 %addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));

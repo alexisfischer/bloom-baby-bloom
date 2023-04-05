@@ -20,19 +20,22 @@ fprint=1;
 %%%% load in discrete data
 type='discrete';
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
-data=HA.chlA_ugL; cax=[0 20]; label={'Extracted';'Chl a (ug/L)'}; name='CHL';
+%data=HA.chlA_ugL; cax=[0 20]; label={'Extracted';'Chl a (ug/L)'}; name='CHL';
 %data=HA.pDA_ngL; cax=[0 300]; label='pDA (ng/L)'; name='PDA';
-%data=HA.PNcellsmL; cax=[0 20]; label={'Pseudo-nitzschia';'(cells/mL)'}; name='PNcellsmL';
+data=HA.PNcellsmL; cax=[0 20]; label={'Pseudo-nitzschia';'(cells/mL)'}; name='PNcellsmL';
 %data=HA.NitrateM; cax=[0 20]; label='Nitrate (M)'; name='NIT';
 %data=HA.PhosphateM; cax=[0 3]; label='Phosphate (M)'; name='PHS';
 %data=HA.SilicateM; cax=[0 70]; label='Silicate (M)'; name='SIL';
 
-if yr==2019
-    idx=find(HA.dt<datetime('01-Jan-2020'));
-    data=data(idx); LAT = HA.lat(idx); LON = HA.lon(idx);  
-elseif yr==2021
-    idx=find(HA.dt>datetime('01-Jan-2020'));
-    data=data(idx); LAT = HA.lat(idx); LON = HA.lon(idx);  
+if strcmp(type,'discrete')
+    if yr==2019
+        idx=find(HA.dt<datetime('01-Jan-2020'));
+        data=data(idx); LAT = HA.lat(idx); LON = HA.lon(idx);  
+    elseif yr==2021
+        idx=find(HA.dt>datetime('01-Jan-2020'));
+        data=data(idx); LAT = HA.lat(idx); LON = HA.lon(idx);  
+    end
+else
 end
 
 idx=isnan(data); data(idx)=[]; LAT(idx)=[]; LON(idx)=[];

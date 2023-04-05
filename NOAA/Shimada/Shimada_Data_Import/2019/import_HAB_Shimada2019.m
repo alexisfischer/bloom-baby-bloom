@@ -1,21 +1,61 @@
 %% Import 2019 Shimada HAB samples
 clear;
 
-opts = spreadsheetImportOptions("NumVariables", 35);
-opts.Sheet = "2019_SummerHake_Shimada";
-opts.DataRange = "A2:AI341";
-opts.VariableNames = ["Var1", "Var2", "GMTdate_forDB", "GMTTime", "StationID", "Var6", "Var7", "StationDepthm", "WaterTempC", "S", "SamplingDepthm", "Fluorometer", "PseudonitzschiaSpprelativeAbundance", "AlexandriumSpprelativeAbundance", "DinophysisSpprelativeAbundance", "Var16", "Var17", "Lat_dd", "Lon_dd", "Var20", "Total_PNcellsL", "LargeCellsInCount", "pDAngL", "Chl_agL", "Paustralis", "Pmultiseries", "Pfraudulenta", "Pseriata", "Ppseudodelicatissima", "Pheimii", "Pcuspidata", "Ppungens", "NitrateM", "PhosphateM", "SilicateM"];
-opts.SelectedVariableNames = ["GMTdate_forDB", "GMTTime", "StationID", "StationDepthm", "WaterTempC", "S", "SamplingDepthm", "Fluorometer", "PseudonitzschiaSpprelativeAbundance", "AlexandriumSpprelativeAbundance", "DinophysisSpprelativeAbundance", "Lat_dd", "Lon_dd", "Total_PNcellsL", "LargeCellsInCount", "pDAngL", "Chl_agL", "Paustralis", "Pmultiseries", "Pfraudulenta", "Pseriata", "Ppseudodelicatissima", "Pheimii", "Pcuspidata", "Ppungens", "NitrateM", "PhosphateM", "SilicateM"];
-opts.VariableTypes = ["char", "char", "datetime", "double", "double", "char", "char", "double", "double", "double", "double", "double", "double", "double", "double", "char", "char", "double", "double", "char", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double"];
-opts = setvaropts(opts, ["Var1", "Var2", "Var6", "Var7", "Var16", "Var17", "Var20"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["Var1", "Var2", "Var6", "Var7", "Var16", "Var17", "Var20"], "EmptyFieldRule", "auto");
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+addpath(genpath(filepath));
+
+%%% Nutrients
+opts = spreadsheetImportOptions("NumVariables", 10);
+opts.Sheet = "edited";
+opts.DataRange = "A2:J337";
+opts.VariableNames = ["GMTdate_forDB", "GMTTime", "StationID", "Var4", "Var5", "Lat_dd", "Lon_dd", "NitrateM", "PhosphateM", "SilicateM"];
+opts.SelectedVariableNames = ["GMTdate_forDB", "GMTTime", "StationID", "Lat_dd", "Lon_dd", "NitrateM", "PhosphateM", "SilicateM"];
+opts.VariableTypes = ["datetime", "double", "double", "char", "char", "double", "double", "double", "double", "double"];
+opts = setvaropts(opts, ["Var4", "Var5"], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, ["Var4", "Var5"], "EmptyFieldRule", "auto");
 opts = setvaropts(opts, "GMTdate_forDB", "InputFormat", "");
-HA19 = readtable("/Users/afischer/Documents/NOAA_research/Shimada/50_SH_2019_SummerHake_DataLog_ADF.xlsx", opts, "UseExcel", false);
+N = readtable("/Users/alexis.fischer/Documents/Shimada2019/HAKE2019_Nuts.xlsx", opts, "UseExcel", false);
+
+N.GMTdate_forDB=datetime(datenum(N.GMTdate_forDB)+N.GMTTime,'ConvertFrom','datenum');
+N.NitrateM(N.NitrateM==-9999)=NaN;
+N.PhosphateM(N.PhosphateM==-9999)=NaN;
+N.SilicateM(N.SilicateM==-9999)=NaN;
 clear opts
+
+%% Other discrete samples
+opts = spreadsheetImportOptions("NumVariables", 25);
+opts.Sheet = "2019_SummerHake_Shimada";
+opts.DataRange = "A2:Y340";
+opts.VariableNames = ["Var1", "Var2", "GMTdate_forDB", "GMTTime", "StationID", "Var6", "Var7", "StationDepthm", "WaterTempC", "S", "SamplingDepthm", "Fluorometer", "PseudonitzschiaSpprelativeAbundance", "AlexandriumSpprelativeAbundance", "DinophysisSpprelativeAbundance", "Var16", "Var17", "Lat_dd", "Lon_dd", "Var20", "Total_PNcellsL", "LargeCellsInCount", "pDAngL", "Chl_agL", "SEMSpeciesInfo"];
+opts.SelectedVariableNames = ["GMTdate_forDB", "GMTTime", "StationID", "StationDepthm", "WaterTempC", "S", "SamplingDepthm", "Fluorometer", "PseudonitzschiaSpprelativeAbundance", "AlexandriumSpprelativeAbundance", "DinophysisSpprelativeAbundance", "Lat_dd", "Lon_dd", "Total_PNcellsL", "LargeCellsInCount", "pDAngL", "Chl_agL", "SEMSpeciesInfo"];
+opts.VariableTypes = ["char", "char", "datetime", "double", "double", "char", "char", "double", "double", "double", "double", "double", "double", "double", "double", "char", "char", "double", "double", "char", "double", "double", "double", "double", "char"];
+opts = setvaropts(opts, ["Var1", "Var2", "Var6", "Var7", "Var16", "Var17", "Var20", "SEMSpeciesInfo"], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, ["Var1", "Var2", "Var6", "Var7", "Var16", "Var17", "Var20", "SEMSpeciesInfo"], "EmptyFieldRule", "auto");
+opts = setvaropts(opts, "GMTdate_forDB", "InputFormat", "");
+HA19 = readtable("/Users/alexis.fischer/Documents/Shimada2019/50_SH_2019_SummerHake_DataLog_corrected.xlsx", opts, "UseExcel", false);
 
 HA19.GMTdate_forDB=datetime(datenum(HA19.GMTdate_forDB)+HA19.GMTTime,'ConvertFrom','datenum');
 HA19 = renamevars(HA19,'GMTdate_forDB','dt');
 HA19 = removevars(HA19,'GMTTime');
+clear opts
 
+HA19.Total_PNcellsL(HA19.Total_PNcellsL==-9999)=NaN;
+HA19.LargeCellsInCount(HA19.LargeCellsInCount==-9999)=NaN;
+HA19.pDAngL(HA19.pDAngL==-9999)=NaN;
+HA19.Chl_agL(HA19.Chl_agL==-9999)=NaN;
 
+%% merge data
+[~,ia,ib]=intersect(HA19.StationID,N.StationID);
+HA19.NitrateM=NaN*HA19.StationID;
+HA19.PhosphateM=HA19.NitrateM;
+HA19.SilicateM=HA19.NitrateM;
+
+HA19.NitrateM(ia)=N.NitrateM(ib);
+HA19.PhosphateM(ia)=N.PhosphateM(ib);
+HA19.SilicateM(ia)=N.SilicateM(ib);
+
+%% sanity check plot
+%figure; plot(N.GMTdate_forDB,N.SilicateM,'^',HA19.dt,HA19.SilicateM,'o')
+%%
 save('~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/Shimada_HAB_2019','HA19');
