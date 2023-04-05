@@ -4,13 +4,16 @@ function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
 %  Alexis D. Fischer, University of California - Santa Cruz, January 2019
 %%
 %Example inputs:
-%  manualpath = 'D:\BuddInlet\manual_AltSamples\'; %manual file location
-%  datapath = 'D:\BuddInlet\data\'; %where to access data (hdr files)
-%  summary_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+clear
+ manualpath = 'D:\LabData\manual\'; %manual file location
+ datapath = 'D:\LabData\data\'; %where to access data (hdr files)
+ summary_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\LabData\manual\';
 
 addpath(genpath(summary_dir));
 addpath(genpath(datapath));
 addpath(genpath(manualpath));
+addpath(genpath(manualpath));
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\'));
 
 %make sure input paths end with filesep
 if ~isequal(manualpath(end), filesep)
@@ -33,7 +36,9 @@ ml_analyzed = NaN(length(filelist),1);
 runtype={filelist.name}';
 filecomment={filelist.name}';
 
-for filecount = 1:length(filelist)
+%for filecount = 1:length(filelist)
+%for filecount = 123:length(filelist)
+for filecount = 130:length(filelist)
         
     filename = filelist(filecount).name;
     disp(filename)

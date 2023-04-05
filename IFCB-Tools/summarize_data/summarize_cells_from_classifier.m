@@ -4,10 +4,10 @@ function [ ] = summarize_cells_from_classifier(ifcbdir, summarydir, yrrange)
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
 %Example inputs:
-clear
-ifcbdir='D:\test\';
-summarydir = 'D:\Shimada\LabData\summary\';
-yrrange = 2021:2022;  %one value or range (e.g., 2017:2018)
+% clear
+% ifcbdir='D:\test\';
+% summarydir = 'D:\Shimada\LabData\summary\';
+% yrrange = 2021:2022;  %one value or range (e.g., 2017:2018)
 
 addpath(genpath(ifcbdir));
 addpath(genpath(summarydir));

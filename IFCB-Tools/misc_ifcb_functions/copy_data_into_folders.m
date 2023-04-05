@@ -1,26 +1,27 @@
 function [] = copy_data_into_folders(in_dir_base, out_dir_data_base)
+% copies raw IFCB data into Synology folder
+% Alexis Fischer, April 2023
 
-% sorts raw IFCB data into folders according to datestamp
-% Alexis Fischer, April 2018
+%Example inputs
+% in_dir_base = 'C:\SFTP-BuddInlet\2023\'; % example input
+% out_dir_data_base = 'D:\Buddinlet\data\2023\'; % example input
 
-% in_dir_base = 'D:\FTP-BuddInlet\'; % example input
-% out_dir_data_base = 'D:\BuddInlet\data\2022\'; % example input
+yeardir = dir([in_dir_base 'D*']);
 
-%in_dir_base = 'D:\FTP-BuddInlet\'; % example input
-%out_dir_data_base = 'D:\BuddInlet\data\2022\'; % example input
-
-daydir = dir([in_dir_base 'D2*']);
-
-for i = 1:length(daydir)
-    daystr=daydir(i).name(1:9);
-    out_folder=[out_dir_data_base, daystr,'\'];
-    if ~exist(out_folder, 'dir');
+for i = 1:length(yeardir)
+    daystr=yeardir(i).name;
+    daydir = dir([in_dir_base daystr '\' 'D*']);
+    out_folder=[out_dir_data_base daystr '\'];
+    if ~exist(out_folder, 'dir')
         mkdir(out_folder);
     end
-    in_dir_temp = [in_dir_base daydir(i).name];
-    
-    if ~isfile([out_folder daydir(i).name]);
-        copyfile(in_dir_temp, out_folder);
+
+    for j=1:length(daydir)
+        in_dir_temp = [in_dir_base daystr '\' daydir(j).name];      
+        if ~isfile([out_folder daydir(j).name])
+            copyfile(in_dir_temp, out_folder);
+        end
     end
+
 end
 end
