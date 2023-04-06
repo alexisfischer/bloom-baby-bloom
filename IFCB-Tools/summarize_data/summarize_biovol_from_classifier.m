@@ -93,16 +93,16 @@ if ~exist([summarydir_base summaryfolder], 'dir')
     mkdir(resultpath)
 end
 
-yrrangestr = num2str(yrrange(1));
-if length(yrrange) > 1
-    yrrangestr = [yrrangestr '-' num2str(yrrange(end))];
-end
+% yrrangestr = num2str(yrrange(1));
+% if length(yrrange) > 1
+%     yrrangestr = [yrrangestr '-' num2str(yrrange(end))];
+% end
 
-save([summarydir_base summaryfolder 'summary_biovol_allTB_' yrrangestr] ,'runtypeTB','filecommentTB',...
+save([summarydir_base summaryfolder 'summary_biovol_allTB'] ,'runtypeTB','filecommentTB',...
     'class2useTB', 'classC_TB*', 'classcountTB*', 'classbiovolTB*', 'classwidthTB*', 'ml_analyzedTB', 'mdateTB', 'filelistTB')
 
 disp('Summary file stored here:')
-disp([summarydir_base summaryfolder 'summary_biovol_allTB_' yrrangestr])
+disp([summarydir_base summaryfolder 'summary_biovol_allTB_'])
 
 clear *files* classcount* classbiovol* classC* classwidth*
 
