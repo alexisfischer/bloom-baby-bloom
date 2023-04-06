@@ -4,17 +4,17 @@ function [PNcount_above_optthresh,PNcount,opt_cell1,opt_cell2,opt_cell3,opt_cell
 % Alexis D. Fischer, NOAA, April 2023
 %%
 % % % %Example inputs for testing
-% i=122; 
+% i=1; %122
 % classfile=classfiles{i}
 % feafile=feafiles{i};
 
 load(classfile,'roinum','TBclass','TBclass_above_threshold')
 
-if strcmp(char(classfile(45:51)),'IFCB777') 
+if contains(char(classfile),'IFCB777') 
     micron_factor=1/3.7695;
-elseif strcmp(char(classfile(45:51)),'IFCB117') 
+elseif contains(char(classfile),'IFCB117') 
     micron_factor=1/3.8617;
-elseif strcmp(char(classfile(45:51)),'IFCB150') 
+elseif contains(char(classfile),'IFCB150') 
     micron_factor=1/3.8149;
 end
 

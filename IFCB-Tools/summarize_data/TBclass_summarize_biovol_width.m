@@ -12,11 +12,11 @@ function[classcountTB,classbiovolTB,classC_TB,classwidthTB,...
 
 load(classfile)
 
-if strcmp(char(classfile(45:51)),'IFCB777') 
+if contains(char(classfile),'IFCB777') 
     micron_factor=1/3.7695;
-elseif strcmp(char(classfile(45:51)),'IFCB117') 
+elseif contains(char(classfile),'IFCB117') 
     micron_factor=1/3.8617;
-elseif strcmp(char(classfile(45:51)),'IFCB150') 
+elseif contains(char(classfile),'IFCB150') 
     micron_factor=1/3.8149;
 end
 

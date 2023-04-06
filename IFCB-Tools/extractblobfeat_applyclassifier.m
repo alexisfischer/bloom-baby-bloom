@@ -44,10 +44,10 @@ feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 adhocthresh = 0.5;
 
-% summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
-%  feapath_generic,roibasepath_generic,adhocthresh,2019:2021);
+summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
+    feapath_generic,roibasepath_generic,adhocthresh,2019:2021);
 
-% summarize PN width
+%% summarize PN width
 summarize_PN_width_from_classifier([summarydir_base 'IFCB-Data\Shimada\class\'],...
     feapath_generic,roibasepath_generic,classpath_generic,2019:2021)
 

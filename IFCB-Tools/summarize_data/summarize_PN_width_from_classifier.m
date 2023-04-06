@@ -6,12 +6,12 @@ function [ ] = summarize_PN_width_from_classifier(summarydir,feapath_generic,roi
 % Alexis D. Fischer, NOAA NWFSC, April 2023
 %
 %% Example inputs
-clear
-summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-feapath_generic = 'D:\Shimada\features\xxxx\'; %Put in your featurepath byyear
-roibasepath_generic = 'D:\Shimada\data\xxxx\'; %location of raw data
-classpath_generic = 'D:\Shimada\class\CCS_v16\classxxxx_v1\';
-yrrange = 2019:2021;
+% clear
+% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+% feapath_generic = 'D:\Shimada\features\xxxx\'; %Put in your featurepath byyear
+% roibasepath_generic = 'D:\Shimada\data\xxxx\'; %location of raw data
+% classpath_generic = 'D:\Shimada\class\CCS_v16\classxxxx_v1\';
+% yrrange = 2019:2021;
 
 classfiles = [];
 filelistTB = [];
