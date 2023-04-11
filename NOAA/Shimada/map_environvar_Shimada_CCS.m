@@ -7,7 +7,7 @@ addpath(genpath(filepath)); % add new data to search path
 %%%%USER
 yr=2019; % 2019; 2021
 option=2; % 1=Plot the individual data points; 2=Grid the data
-fprint=1;
+fprint=0;
 
 %%%% load in underway data
 %type='underway';

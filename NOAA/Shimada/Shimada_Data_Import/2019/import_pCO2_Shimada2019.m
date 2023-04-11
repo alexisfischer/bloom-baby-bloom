@@ -4,10 +4,11 @@ filepath='~/Documents/Shimada2019/2019_pco2data/';
 outpath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/';
 
 addpath(outpath);
-%addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
-%addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
+%addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+%addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 
 filedir = dir([filepath '*.csv']);
+
 for i=1:length(filedir)
     disp(filedir(i).name);   
     
@@ -46,4 +47,6 @@ sal=vertcat(p.sal); sal(sal==-999)=NaN;
 fco2=vertcat(p.fco2); fco2(fco2==-999)=NaN;
 
 save([outpath 'pCO2_Shimada2019'],'dt','lat','lon','sst','sal','fco2');
+
+%%
 

@@ -1,4 +1,4 @@
-%PN frequency histogram
+%PN chain length frequency histogram
 clear;
 classifiername='CCS_v13';
 class2do_full='Pseudo-nitzschia_large_3cell,Pseudo-nitzschia_small_3cell';

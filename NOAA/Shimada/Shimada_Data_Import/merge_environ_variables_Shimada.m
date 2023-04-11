@@ -6,7 +6,7 @@
 
 clear;
 filepath= '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/'; 
-yr='2021'; %'2019'
+yr='2019'; %'2021'
 addpath(genpath(filepath)); 
 
 %%%% lat lon coordinates

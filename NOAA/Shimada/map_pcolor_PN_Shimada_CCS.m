@@ -1,4 +1,4 @@
-%% map IFCB data along CCS
+%% map pcolor PN data along CCS
 clear;
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 classidxpath = [filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];
@@ -61,10 +61,10 @@ end
     hold on    
 
 % Plot map
-states=load([filepath 'NOAA/Shimada/Data/USwestcoast_pol']);
-load([filepath 'NOAA/Shimada/Data/coast_CCS'],'coast');
+states=load([filepath 'NOAA/Shimada/Data/USwestcoast_pol.mat']);
+load([filepath 'NOAA/Shimada/Data/coast_CCS.mat'],'coast');
 fillseg(coast); dasp(42); hold on;
-plot(states(:,1),states(:,2),'k'); hold on;
+plot(states.lon,states.lat,'k'); hold on;
 set(gca,'ylim',[34 49],'xlim',[-127 -120],'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
 title(yr,'fontsize',12);
    
