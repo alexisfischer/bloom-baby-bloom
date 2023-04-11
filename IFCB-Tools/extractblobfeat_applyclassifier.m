@@ -24,7 +24,6 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 classifier='D:\general\classifier\summary\Trees_BI_NOAA-OSU_v2';
 %classifier='D:\general\classifier\summary\Trees_CCS_v16';
 
-
 copy_data_into_folders('C:\SFTP-BuddInlet\2023\',[ifcbdir 'data\' yr '\']);
 
 % Step 2: Extract blobs

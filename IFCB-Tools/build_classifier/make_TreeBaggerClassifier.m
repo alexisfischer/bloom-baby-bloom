@@ -7,8 +7,9 @@ function [ ] = make_TreeBaggerClassifier( result_path, classifiername, nTrees)
 %
 %run compile_train_features_user_training.m first to store input results in train_filename
 % Example inputs:
+% clear;
 % result_path = 'D:\general\classifier\summary\'; %USER location of training file and classifier output
-% classifiername='BI_Dinophysis_SpeciesLevel';
+% classifiername='BI_NOAA-OSU_v2';
 % nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 
 load([result_path 'Train_' classifiername],'class2use','class_vector','featitles','nclass','targets','train'); 
@@ -44,6 +45,7 @@ plot(oobError(b), 'b-');
 xlabel('Number of Grown Trees');
 ylabel('Out-of-Bag Classification Error');
 
+%%
 %use code like this to add trees to an existing forest
 %b = growTrees(b,100); %specify how many to add
 %plot(oobError(b), 'g');
@@ -55,7 +57,7 @@ if isempty(find(mSfit-t)), clear t, else disp('check for error...'); end;
 [c1, gord1] = confusionmat(b.Y,Yfit); %transposed from mine
 clear t
 
-% find optimal threshold
+%% find optimal threshold
 classes = b.ClassNames;
 maxthre = NaN(1,length(classes));
 
@@ -66,7 +68,7 @@ for count = 1:length(classes)
 end
 clear count fpr tpr thr iaccu accu
 
-save([result_path 'Trees_' classifiername],'b', 'targets', 'featitles', 'classes', 'maxthre','-v7.3')
+save([result_path 'Trees_' classifiername],'b', 'targets','featitles','classes','maxthre','-v7.3')
 
 disp('Classifier file stored here:')
 disp([result_path 'Trees_' classifiername])

@@ -7,13 +7,11 @@ function [ ] = classifier_oob_analysis_og( classifiername,outpath )
 % test classifier on Hake survey dataset
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 %
-% Example Inputs
+%% Example Inputs
 % clear
-% classifiername='~/Downloads/Trees_CCS_v9';
-% val='CCS_v9';
-% outpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/class/';
-% addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
-% addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+% classifiername ='D:\general\classifier\summary\Trees_CCS_v16';
+% outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+% adhocthresh=0.5;
 
 load(classifiername,'b','featitles','classes','maxthre','targets');
 
@@ -70,6 +68,34 @@ fxUnclass(end)=totalfxun;
 opt=table(class,total,R,P,F1,fxUnclass);
 
 clearvars TP TN FP FN total Pm P R ii F1 count class i j ind win
+
+%% winning score assessment where only take probabilities greater than adhocthresh
+% if winning score is less than adhocthresh, then leave zero
+t = ones(size(Sfit))*adhocthresh;
+win = (Sfit > t);
+
+[ia,ib] = find(win);
+Yfit_max = NaN(size(Yfit));
+Yfit_max(ia) = ib;
+ind = find(sum(win')>1);
+for count = 1:length(ind)
+    [~,Yfit_max(ind(count))] = max(Sfit(ind(count),:));
+end
+Yfit_max(isnan(Yfit_max)) = length(classes)+1; %unclassified set to last class
+
+[c_aht, ~] = confusionmat(b.Y,classes2(Yfit_max));
+total = sum(c_aht')';
+
+[TP TN FP FN] = conf_mat_props(c_aht);
+R = TP./(TP+FN); %recall
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+F1= 2*((P.*R)./(P+R));  
+
+fxUnclass = c_aht(:,end)./total;
+class=classes2;
+aht=table(class,total,R,P,F1,fxUnclass);
+aht(end,:)=[];
+clearvars i ia ib F1 R P t TP TN FP FN ind win Yfit_max
 
 %% count whos in training set
 %find gaps, if they exist
@@ -143,6 +169,6 @@ set(gcf,'color','w');
 exportgraphics(gca,[outpath 'Figs/class_vs_thresholdscores_' classifiername(37:end) '.png'],'Resolution',100)    
 hold off
 
-save([outpath 'performance_classifier_' classifiername(37:end) ''],'all','c_all','opt','c_opt','maxthre','topfeat','trainingset');
+save([outpath 'performance_classifier_' classifiername(37:end) ''],'all','c_all','c_aht','aht','adhocthresh','opt','c_opt','maxthre','topfeat','trainingset');
 
 end

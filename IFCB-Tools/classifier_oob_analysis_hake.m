@@ -1,21 +1,18 @@
-function [ ] = classifier_oob_analysis_hake( classifiername,outpath )
-%[ ] = classifier_oob_analysis_hake( classifiername,outpath )
+function [ ] = classifier_oob_analysis_hake( classifierpath,outpath )
+%[ ] = classifier_oob_analysis_hake( classifierpath,outpath )
 %For example:
 % input classifier file name with full path
 % expects output from make_TreeBaggerClassifier*.m
 % test classifier on Hake survey dataset
 %   Alexis D. Fischer, NOAA NWFSC, February 2023
 %
-% Example Inputs
-%outpath = '~/Documents/MATLAB/bloom-baby-bloom/IFCB-Data/Shimada/';
-%addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
-%addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+% % Example Inputs
+% clear
+% classifierpath ='D:\general\classifier\summary\Trees_CCS_v16';
+% outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+% adhocthresh=0.5;
 
-outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-
-classifiername ='D:\general\classifier\summary\Trees_CCS_v16';
-
-load(classifiername,'b','classes','maxthre','targets');
+load(classifierpath,'b','classes','maxthre','targets');
 
 [Yfit,Sfit,Sstdfit] = oobPredict(b);
 [mSfit, ii] = max(Sfit');
@@ -59,6 +56,7 @@ for i=1:length(classes)
 end
 
 clearvars n imclass i n2del i2del shuffle_ind
+
 %% calculate FP, FN, etc for each class at each threshold score
 classes2 = [classes(:); 'unclassified'];
 threlist = (0:.1:1);
@@ -116,6 +114,34 @@ end
 
 clearvars i ia ib F1 R P t TP TN FP FN ind win Yfit_max count
 
+%% winning score assessment where only take probabilities greater than adhocthresh
+% if winning score is less than adhocthresh, then leave zero
+t = ones(size(SfitN))*adhocthresh;
+win = (SfitN > t);
+
+[ia,ib] = find(win);
+Yfit_max = NaN(size(YfitN));
+Yfit_max(ia) = ib;
+ind = find(sum(win')>1);
+for count = 1:length(ind)
+    [~,Yfit_max(ind(count))] = max(SfitN(ind(count),:));
+end
+Yfit_max(isnan(Yfit_max)) = length(classes)+1; %unclassified set to last class
+
+[C, ~] = confusionmat(YN,classes2(Yfit_max));
+total = sum(C')';
+
+[TP TN FP FN] = conf_mat_props(C);
+R = TP./(TP+FN); %recall
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+F1= 2*((P.*R)./(P+R));  
+
+fxUnclass = C(:,end)./total;
+class=classes2;
+aht=table(class,total,R,P,F1,fxUnclass);
+aht(end,:)=[];
+clearvars i ia ib F1 R P t TP TN FP FN ind win Yfit_max
+
 %% opt threshold
 t = repmat(maxthre,length(YfitN),1);
 win = (SfitN > t);
@@ -157,5 +183,5 @@ clearvars i ia ib F1 R P t TP TN FP FN ind win Yfit_max
 % ylabel('number of images')
 % title(classes(val))
 %%
-save([outpath 'threshold/' classifiername(37:end) '/HakeTestSet_performance_' classifiername(37:end) ''],'Nclass','maxthre','threlist','opt','class','Precision','Recall','F1score','tPos','fNeg','fPos');
-%save([outpath 'threshold/' val '/HakeTestSet_performance_' val ''],'Nclass','maxthre','threlist','opt','class','Precision','Recall','F1score','tPos','fNeg','fPos');
+save([outpath 'threshold/' classifierpath(37:end) '/HakeTestSet_performance_' classifierpath(37:end) ''],...
+    'Nclass','maxthre','threlist','opt','aht','adhocthresh','class','Precision','Recall','F1score','tPos','fNeg','fPos');

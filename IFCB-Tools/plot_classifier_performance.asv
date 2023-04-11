@@ -17,7 +17,7 @@ end
 addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','maxthre','all',...
-    'opt','thr','c_thr','c_all','c_opt','c_aht','aht','adhocthresh','trainingset');
+    'opt','thr','c_thr','c_all','c_opt','c_wth','winT','winthre','trainingset');
 
 [~,class]=get_class_ind( all.class,'all',classidx);
 [~,classU]=get_class_ind( opt.class,'all',classidx);
@@ -96,33 +96,6 @@ title('Winner-takes-all');
 
 set(gcf,'color','w');
 exportgraphics(gca,[figpath 'confusion_matrix_all_' name '.png'],'Resolution',100)    
-hold off
-
-%% F1 scores Winner take all, above adhocthresh
-% plot bar Recall and Precision, sort by F1
-[aht,~]=sortrows(aht,'F1','descend');
-[~,class_s]=get_class_ind( aht.class, 'all', classidx);
-
-figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
-yyaxis left;
-b=bar([aht.R aht.P],'Barwidth',1,'linestyle','none'); hold on
-hline(.9,'k--');
-set(gca,'ycolor','k', 'xtick', 1:length(class_s), 'xticklabel', class_s); hold on
-ylabel('Performance');
-col=flipud(brewermap(2,'RdBu')); 
-for i=1:length(b)
-    set(b(i),'FaceColor',col(i,:));
-end  
-yyaxis right;
-plot(1:length(class_s),aht.total,'k*'); hold on
-ylabel('total images in set');
-set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 maxn], 'xticklabel', class_s); hold on
-legend('Sensitivity', 'Precision','Location','W')
-title(['adhocthreshold(' num2str(adhocthresh) '): ' num2str(length(class)) ' classes ranked by F1 score'])
-xtickangle(45);
-
-set(gcf,'color','w');
-exportgraphics(gca,[figpath 'F1score_aht_' name '.png'],'Resolution',100)    
 hold off
 
 %% F1 scores OPT

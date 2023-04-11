@@ -1,22 +1,60 @@
 %% plot_HakeTest_performance 
 % requires input from classifier_oob_analysis_hake
 clear;
+Mac=0;
 name='CCS_v16';
-class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
 
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-outpath = [filepath 'IFCB-Data/Shimada/threshold/' name '/Figs/'];
-class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];   
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+if Mac
+    basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
+    filepath = [basepath 'IFCB-Data/Shimada/threshold/' name '/'];
+    classidx=[basepath 'IFCB-Tools/convert_index_class/class_indices.mat'];
+    figpath = [filepath 'Figs/'];
+else
+    basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+    filepath = [basepath 'IFCB-Data\Shimada\threshold\' name '\'];
+    classidx=[basepath 'IFCB-Tools\convert_index_class\class_indices.mat'];    
+    figpath = [filepath 'Figs\'];    
+end
 addpath(genpath(filepath));
 
-load([filepath 'IFCB-Data/Shimada/threshold/' name '/HakeTestSet_performance_' name ''],'Nclass','maxthre','threlist','opt','class','Precision','Recall','F1score','tPos','fNeg','fPos');
+class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
+
+load([filepath 'HakeTestSet_performance_' name ''],'Nclass','maxthre','aht',...
+    'adhocthresh','threlist','opt','class','Precision','Recall','F1score','tPos','fNeg','fPos');
 testtotal=max(opt.total);
+
+%% plot adhocthreshold: Recall and Precision, sort by F1
+[aht,~]=sortrows(aht,'F1','descend');
+[aht,~]=sortrows(aht,'total','descend');
+[~,class_s]=get_class_ind( aht.class, 'all', classidx);
+
+figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
+yyaxis left;
+b=bar([aht.R aht.P],'Barwidth',1,'linestyle','none'); hold on
+hline(.9,'k--');
+vline((find(aht.total<testtotal,1)-.5),'k-')
+set(gca,'ycolor','k', 'xtick', 1:length(class_s), 'xticklabel', class_s); hold on
+ylabel('Performance');
+col=flipud(brewermap(2,'RdBu')); 
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+yyaxis right;
+plot(1:length(class_s),aht.total,'k*'); hold on
+ylabel('total images in test set');
+set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 max(aht.total)], 'xticklabel', class_s); hold on
+legend('Recall', 'Precision','Location','W')
+title([num2str(max(aht.total)) ' image Hake test set: ' num2str(length(aht.class)) ' classes ranked by F1 score'])
+xtickangle(45);
+
+set(gcf,'color','w');
+exportgraphics(gca,[figpath 'HakeTest_F1score_aht_' name '.png'],'Resolution',100)    
+hold off
 
 %% plot OPT: Recall and Precision, sort by F1
 [opt,~]=sortrows(opt,'F1','descend');
 [opt,~]=sortrows(opt,'total','descend');
-[~,class_s]=get_class_ind( opt.class, 'all', class_indices_path);
+[~,class_s]=get_class_ind( opt.class, 'all', classidx);
 
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 yyaxis left;
@@ -38,11 +76,11 @@ title([num2str(max(opt.total)) ' image Hake test set: ' num2str(length(opt.class
 xtickangle(45);
 
 set(gcf,'color','w');
-exportgraphics(gca,[outpath 'HakeTest_F1score_opt_' name '.png'],'Resolution',100)    
+exportgraphics(gca,[figpath 'HakeTest_F1score_opt_' name '.png'],'Resolution',100)    
 hold off
 
 %% plot FP and FN as function of threshold
-[~,label]=get_class_ind(class2do_full, 'all',class_indices_path);
+[~,label]=get_class_ind(class2do_full, 'all',classidx);
 
 figure('Units','inches','Position',[1 1 4 4],'PaperPositionMode','auto');
 plot(threlist,fPos(i,:),'-',threlist,fNeg(i,:),'-');hold on
@@ -60,5 +98,5 @@ else
 end
 
 set(gcf,'color','w');
-exportgraphics(gca,[outpath 'Threshold_eval_' label '.png'],'Resolution',100)    
+exportgraphics(gca,[figpath 'Threshold_eval_' label '.png'],'Resolution',100)    
 hold off
