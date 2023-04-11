@@ -20,8 +20,36 @@ addpath(genpath(filepath));
 class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
 
 load([filepath 'HakeTestSet_performance_' name ''],'Nclass','maxthre','aht',...
-    'adhocthresh','threlist','opt','class','Precision','Recall','F1score','tPos','fNeg','fPos');
+    'adhocthresh','threlist','opt','all','class','Precision','Recall','F1score','tPos','fNeg','fPos');
 testtotal=max(opt.total);
+
+%% plot winner-takes-all: Recall and Precision, sort by F1
+[all,~]=sortrows(all,'F1','descend');
+[all,~]=sortrows(all,'total','descend');
+[~,class_s]=get_class_ind( all.class, 'all', classidx);
+
+figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
+yyaxis left;
+b=bar([all.R all.P],'Barwidth',1,'linestyle','none'); hold on
+hline(.9,'k--');
+vline((find(all.total<testtotal,1)-.5),'k-')
+set(gca,'ycolor','k', 'xtick', 1:length(class_s), 'xticklabel', class_s); hold on
+ylabel('Performance');
+col=flipud(brewermap(2,'RdBu')); 
+for i=1:length(b)
+    set(b(i),'FaceColor',col(i,:));
+end  
+yyaxis right;
+plot(1:length(class_s),all.total,'k*'); hold on
+ylabel('total images in test set');
+set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 max(all.total)], 'xticklabel', class_s); hold on
+legend('Recall', 'Precision','Location','W')
+title([num2str(max(all.total)) ' image Hake test set: ' num2str(length(all.class)) ' classes ranked by F1 score (Winner-takes-all)'])
+xtickangle(45);
+
+set(gcf,'color','w');
+exportgraphics(gca,[figpath 'HakeTest_F1score_all_' name '.png'],'Resolution',100)    
+hold off
 
 %% plot adhocthreshold: Recall and Precision, sort by F1
 [aht,~]=sortrows(aht,'F1','descend');
@@ -44,7 +72,7 @@ plot(1:length(class_s),aht.total,'k*'); hold on
 ylabel('total images in test set');
 set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 max(aht.total)], 'xticklabel', class_s); hold on
 legend('Recall', 'Precision','Location','W')
-title([num2str(max(aht.total)) ' image Hake test set: ' num2str(length(aht.class)) ' classes ranked by F1 score'])
+title([num2str(max(aht.total)) ' image Hake test set: ' num2str(length(aht.class)) ' classes ranked by F1 score (ad hoc threshold=' num2str(adhocthresh) ')'])
 xtickangle(45);
 
 set(gcf,'color','w');
@@ -72,7 +100,7 @@ plot(1:length(class_s),opt.total,'k*'); hold on
 ylabel('total images in test set');
 set(gca,'ycolor','k', 'xtick', 1:length(class_s),'ylim',[0 max(opt.total)], 'xticklabel', class_s); hold on
 legend('Recall', 'Precision','Location','W')
-title([num2str(max(opt.total)) ' image Hake test set: ' num2str(length(opt.class)) ' classes ranked by F1 score'])
+title([num2str(max(opt.total)) ' image Hake test set: ' num2str(length(opt.class)) ' classes ranked by F1 score (opt score threshold)'])
 xtickangle(45);
 
 set(gcf,'color','w');

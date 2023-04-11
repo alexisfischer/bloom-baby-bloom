@@ -114,6 +114,20 @@ end
 
 clearvars i ia ib F1 R P t TP TN FP FN ind win Yfit_max count
 
+%% winner takes all interpretation of scores
+[C, ~] = confusionmat(YN,YfitN); 
+total = sum(C')';
+
+[TP TN FP FN] = conf_mat_props(C);
+R = TP./(TP+FN); %recall
+P = TP./(TP+FP); %precision = TP/(TP+FP) = diag(c1)./sum(c1)'
+F1= 2*((P.*R)./(P+R));  
+
+fxUnclass = C(:,end)./total;
+class=classes;
+all=table(class,total,R,P,F1,fxUnclass);
+clearvars i ia ib F1 R P t TP TN FP FN ind win Yfit_max
+
 %% winning score assessment where only take probabilities greater than adhocthresh
 % if winning score is less than adhocthresh, then leave zero
 t = ones(size(SfitN))*adhocthresh;
@@ -184,4 +198,4 @@ clearvars i ia ib F1 R P t TP TN FP FN ind win Yfit_max
 % title(classes(val))
 %%
 save([outpath 'threshold/' classifierpath(37:end) '/HakeTestSet_performance_' classifierpath(37:end) ''],...
-    'Nclass','maxthre','threlist','opt','aht','adhocthresh','class','Precision','Recall','F1score','tPos','fNeg','fPos');
+    'Nclass','maxthre','threlist','opt','aht','all','adhocthresh','class','Precision','Recall','F1score','tPos','fNeg','fPos');
