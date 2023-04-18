@@ -4,10 +4,10 @@ function [ ] = summarize_cells_from_manual( manualpath, datapath, summary_dir)
 %  Alexis D. Fischer, University of California - Santa Cruz, January 2019
 %%
 %Example inputs:
-clear
- manualpath = 'D:\LabData\manual\'; %manual file location
- datapath = 'D:\LabData\data\'; %where to access data (hdr files)
- summary_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\LabData\manual\';
+% clear
+%  manualpath = 'D:\LabData\manual\'; %manual file location
+%  datapath = 'D:\LabData\data\'; %where to access data (hdr files)
+%  summary_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\LabData\manual\';
 
 addpath(genpath(summary_dir));
 addpath(genpath(datapath));

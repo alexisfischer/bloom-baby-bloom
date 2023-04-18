@@ -54,6 +54,7 @@ summarize_PN_width_from_classifier([summarydir_base 'IFCB-Data\Shimada\class\'],
 summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
     [ifcbdir 'data\'],[ifcbdir 'features\'],1/3.4)
 
+%%
 summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
 %summarize_cells_from_manual([ifcbdir 'manualEmilie\AlternateSamples\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
