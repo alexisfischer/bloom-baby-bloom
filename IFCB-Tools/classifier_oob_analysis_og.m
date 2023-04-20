@@ -1,5 +1,5 @@
-function [ ] = classifier_oob_analysis_og( classifiername,outpath )
-%[ ] = classifier_oob_analysis_hake( classifername )
+function [ ] = classifier_oob_analysis_og( classifiername,outpath,adhocthresh)
+%[ ] = classifier_oob_analysis_hake( classifername,outpath,adhocthresh)
 %For example:
 % determine_classifier_performance('D:\Shimada\classifier\summary\Trees_12Oct2021')
 % input classifier file name with full path

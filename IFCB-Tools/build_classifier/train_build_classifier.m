@@ -4,7 +4,7 @@ clear;
 filepath='C:\Users\ifcbuser\Documents\GitHub\';
 summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 addpath(genpath(filepath));
-class2useName ='D:\general\config\class2use_14';
+class2useName ='D:\general\config\class2use_16';
 
 %% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 mergedpath = 'D:\general\classifier\';
@@ -21,31 +21,30 @@ BUDDpath = 'D:\BuddInlet\';
 
 merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
-
 %% Step 2: select classes of interest and find class2skip
-% % Regional CCS classifier
-% load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
-% %SS(end).topclasses(end+1)={'Navicula'};
-% 
-% [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
-% class2skip(end+1)={'Bacteriastrum'};
-% class2skip(end+1)={'Thalassiosira_single'};
-% class2skip(end+1)={'Heterosigma'};
-% class2skip(end+1)={'pennate'};
-% class2skip(end+1)={'nanoplankton'};
-% class2skip(end+1)={'cryptophyta'};
-% class2skip(end+1)={'Pseudo-nitzschia'};
-% class2skip(end+1)={'Dinophysis'};
-% class2skip(end+1)={'Gonyaulax'};
+% Regional CCS classifier
+load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
+SS(end).topclasses(end+1)={'Navicula'};
 
-% Budd Inlet
-load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');
-[class2skip] = find_class2skip(class2useName,topclasses);
+[class2skip] = find_class2skip(class2useName,SS(end).topclasses);
+class2skip(end+1)={'Bacteriastrum'};
 class2skip(end+1)={'Thalassiosira_single'};
+class2skip(end+1)={'Heterosigma'};
 class2skip(end+1)={'pennate'};
+class2skip(end+1)={'nanoplankton'};
+class2skip(end+1)={'cryptophyta'};
 class2skip(end+1)={'Pseudo-nitzschia'};
 class2skip(end+1)={'Dinophysis'};
-class2skip(end+1)={'Scrippsiella'};
+class2skip(end+1)={'Gonyaulax'};
+
+% % Budd Inlet
+% load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');
+% [class2skip] = find_class2skip(class2useName,topclasses);
+% class2skip(end+1)={'Thalassiosira_single'};
+% class2skip(end+1)={'pennate'};
+% class2skip(end+1)={'Pseudo-nitzschia'};
+% class2skip(end+1)={'Dinophysis'};
+% class2skip(end+1)={'Scrippsiella'};
 
 % Step 2: Compile features for the training set
 addpath(genpath('D:\general\classifier\'));
@@ -63,18 +62,18 @@ class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
         {'Pseudo-nitzschia_small_5cell' 'Pseudo-nitzschia_large_5cell'}...
         {'Pseudo-nitzschia_small_6cell' 'Pseudo-nitzschia_large_6cell'}...
         {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single'}...
-        {'Cerataulina' 'Detonula'}};  %BI
-        
-%         {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}... %CCS
-%         {'Heterocapsa_triquetra' 'Scrippsiella'}...              %CCS
-%         {'Rhizosolenia' 'Proboscia'}}; %CCS
+        {'Chaetoceros_chain' 'Chaetoceros_single'}...      
+        {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}... %CCS
+        {'Heterocapsa_triquetra' 'Scrippsiella'}...              %CCS
+        {'Rhizosolenia' 'Proboscia'}}; %CCS
+
+%        {'Cerataulina' 'Detonula'}};  %BI
 
 
-%group=[]; %[]; %'NOAA'; %'OSU'; 
-group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
-classifiername=['BI_' group '_v2']; 
-%classifiername=['CCS_' group 'v16']; 
+group=[]; %[]; %'NOAA'; %'OSU'; 
+%group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
+%classifiername=['BI_' group '_v2']; 
+classifiername=['CCS_' group 'v17']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
@@ -84,18 +83,7 @@ result_path = 'D:\general\classifier\summary\'; %USER location of training file 
 nTrees = 100; %USER how many trees in your forest; choose enough to reach asymptotic error rate in "out-of-bag" classifications
 make_TreeBaggerClassifier(result_path, classifiername, nTrees)
 
-classifier_oob_analysis_og([result_path 'Trees_' classifiername],[summarydir 'class\']);
+classifier_oob_analysis_og([result_path 'Trees_' classifiername],[summarydir 'class\'],0.5);
 
 %plot_classifier_performance
 
-%% Find the volume sampled in milliliters for >1 IFCB files
-%examples
-myfiles = { 'http://ifcb-data.whoi.edu/IFCB102_PiscesNov2014/D20141118T234705_IFCB102.hdr';...
-    'http://ifcb-data.whoi.edu/IFCB102_PiscesNov2014/D20141106T132705_IFCB102.hdr' }
-ml = IFCB_volume_analyzed( myfiles )
-
-%% Extract the date and time from a sample file name and convert it to
-% MATLAB serial date numbers (for convenient plotting, for instance)
-
-myfiles = { 'D20141118T234705_IFCB102'; 'D20141106T132705_IFCB102' }
-IFCB_file2date( myfiles )

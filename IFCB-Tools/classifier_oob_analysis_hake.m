@@ -6,9 +6,9 @@ function [ ] = classifier_oob_analysis_hake( classifierpath,outpath )
 % test classifier on Hake survey dataset
 %   Alexis D. Fischer, NOAA NWFSC, February 2023
 %
-% % Example Inputs
+%% Example Inputs
 % clear
-% classifierpath ='D:\general\classifier\summary\Trees_CCS_v16';
+% classifierpath ='D:\general\classifier\summary\Trees_CCS_v17';
 % outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
 % adhocthresh=0.5;
 
