@@ -4,13 +4,13 @@ clear;
 
 %%%% modify according to dataset
 %ifcbdir='D:\Shimada\'; 
-%ifcbdir='D:\BuddInlet\';
-ifcbdir='D:\LabData\'; 
+ifcbdir='D:\BuddInlet\';
+%ifcbdir='D:\LabData\'; 
 %ifcbdir='D:\SCW\'; 
 %ifcbdir='D:\general\classifier\'; 
 
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\UCSC\SCW\';
 %summarydir=[ifcbdir 'summary\'];
 
@@ -20,19 +20,19 @@ addpath(genpath(summarydir));
 addpath(genpath(ifcbdir));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
-%%
+
 classifier='D:\general\classifier\summary\Trees_BI_NOAA-OSU_v2';
 %classifier='D:\general\classifier\summary\Trees_CCS_v16';
 
 copy_data_into_folders('C:\SFTP-BuddInlet\2023\',[ifcbdir 'data\' yr '\']);
 
-%% Step 2: Extract blobs
+% Step 2: Extract blobs
 start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
 % Step 3: Extract features
 start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
 
-%% Step 4: Apply classifier
+% Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
 %% Step 5: Summaries

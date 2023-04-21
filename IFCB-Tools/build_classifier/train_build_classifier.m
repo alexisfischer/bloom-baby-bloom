@@ -70,10 +70,10 @@ class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
 %        {'Cerataulina' 'Detonula'}};  %BI
 
 
-group=[]; %[]; %'NOAA'; %'OSU'; 
+group='NOAA'; %[]; %'NOAA'; %'OSU'; 
 %group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
 %classifiername=['BI_' group '_v2']; 
-classifiername=['CCS_' group 'v17']; 
+classifiername=['CCS_' group '_v1']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
