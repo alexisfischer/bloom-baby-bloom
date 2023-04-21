@@ -1,8 +1,8 @@
 %USER SET PATHS
 %where are your manual classification results? same resultpath as for manual_classify
-resultpath = 'D:\OSU\manual\'; % manual annotation file location
-outputpath = 'D:\general\ROI_images\OSU\'; %USER where to write out pngs
-roibasepath = 'D:\OSU\data\xxxx\'; %USER where are your ROIs, put xxxx to mark loaction so of year digits
+resultpath = 'D:\Shimada\manual\'; % manual annotation file location
+outputpath = 'D:\general\ROI_images\NOAA\'; %USER where to write out pngs
+roibasepath = 'D:\Shimada\data\xxxx\'; %USER where are your ROIs, put xxxx to mark loaction so of year digits
 %urlbase = 'http://ifcb-data.whoi.edu/mvco/'; %USER where is your dashboard\web server
 
 resultfilelist = dir([resultpath 'D*.mat']);
@@ -15,7 +15,7 @@ for filecount = 1:length(resultfilelist),
 
     %USER CHOOSE A LINE AND EDIT FOR YOUR CASE
     %category = class2use_manual; %use this syntax to export ALL categories
-    category = {'Leptocylindrus'}; %use this syntax to export ONLY the listed categories
+    category = {'Nitzschia'}; %use this syntax to export ONLY the listed categories
     %category = setdiff(class2use_manual, {'bad' 'ciliate' 'detritus'});  %use this syntax to export all EXCEPT the listed categories
     %category = setdiff(class2use_manual, {'other' 'misc_nano'});  %use this syntax to export all EXCEPT the listed categories
 

@@ -8,7 +8,6 @@ class2useName ='D:\general\config\class2use_16';
 
 %% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 mergedpath = 'D:\general\classifier\';
-UCSCpath = 'D:\SCW\';
 OSUpath = 'D:\OSU\';
 SHMDApath = 'D:\Shimada\';
 LABpath = 'D:\LabData\';
@@ -19,9 +18,10 @@ BUDDpath = 'D:\BuddInlet\';
 %start_mc_adjust_classes_user_training(class2useName,[SHMDApath 'manual\'])
 %start_mc_adjust_classes_user_training(class2useName,[BUDDpath 'manual\']);
 
-merge_manual_feafiles_SHMDA_UCSC_OSU_LAB_BUDD(class2useName,mergedpath,UCSCpath,OSUpath,SHMDApath,LABpath,BUDDpath)
+merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
-%% Step 2: select classes of interest and find class2skip
+
+% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
 SS(end).topclasses(end+1)={'Navicula'};
@@ -50,8 +50,8 @@ class2skip(end+1)={'Gonyaulax'};
 addpath(genpath('D:\general\classifier\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
-manualpath = 'D:\general\classifier\manual_merged_selectUCSC\'; % manual annotation file location
-feapath_base = 'D:\general\classifier\features_merged_selectUCSC\'; %feature file location, assumes \yyyy\ organization
+manualpath = 'D:\general\classifier\manual_merged_selectOSU\'; % manual annotation file location
+feapath_base = 'D:\general\classifier\features_merged_selectOSU\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 1000; %minimum number for inclusion
@@ -70,8 +70,8 @@ class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
 %        {'Cerataulina' 'Detonula'}};  %BI
 
 
-group='NOAA'; %[]; %'NOAA'; %'OSU'; 
-%group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
+%group='NOAA'; %[]; %'NOAA'; %'OSU'; 
+group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
 %classifiername=['BI_' group '_v2']; 
 classifiername=['CCS_' group '_v1']; 
 
