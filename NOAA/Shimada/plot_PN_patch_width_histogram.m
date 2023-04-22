@@ -29,6 +29,11 @@ elseif yr==2021
     P=P21;
 end
 
+%% remove data south of 40 N so ~equivalent between 2019 and 2021
+idx=find(lat<40);
+    dt=dt(idx); width=width(idx); ml_analyzedTB=ml_analyzedTB(idx); PNcount=PNcount_above_optthresh(idx);
+
+
 clearvars mdateTB PNwidth_opt ia idx PNwidth_opt P19 P21 filelistTB lat lon PNcount_above_optthresh;
 
 %% plot cell count with patches in different colors

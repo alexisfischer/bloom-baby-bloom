@@ -8,8 +8,8 @@ addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
 fprint=1; %0 
-yr=2019; % 2019; 2021 
-width=1; %0
+yr=2021; % 2019; 2021 
+width=0; %0
 
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],...
     'dt','lat','lon','class2useTB','cellsmL','PN_width','sal','temp','pco2');
@@ -40,10 +40,10 @@ clearvars P19 P21 idx cellsmL class2useTB lat lon PN_width;
 figure('Units','inches','Position',[1 1 3.5 3.5],'PaperPositionMode','auto');
 
 for i=1:length(P)
-    bubblechart(sal(P(i).idx),temp(P(i).idx),data(P(i).idx),P(i).col,'MarkerFaceAlpha',0); hold on        
+    bubblechart(sal(P(i).idx),temp(P(i).idx),data(P(i).idx),P(i).col,'MarkerFaceAlpha',0,'linewidth',1.5); hold on        
 end
 remain=sum([P.idx],2); iremain=find(remain==0);    
-bubblechart(sal(iremain),temp(iremain),data(iremain),[.3 .3 .3],'MarkerFaceAlpha',0); hold on;
+bubblechart(sal(iremain),temp(iremain),data(iremain),[.3 .3 .3],'MarkerFaceAlpha',0,'linewidth',1.5); hold on;
 
 bubblesize([1 10]);
 bubblelegend(label,'Location','southwest');
@@ -66,7 +66,7 @@ if fprint==1
 end
 hold off 
 
-%%%% patches overlaid on PCO2 vs Temperature
+%% patches overlaid on PCO2 vs Temperature
 figure('Units','inches','Position',[1 1 3.5 3.5],'PaperPositionMode','auto');
 
 for i=1:length(P)

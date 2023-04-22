@@ -1,7 +1,7 @@
 %% plot manual vs classifier results for Shimada
 clear;
 classifiername='CCS_v16';
-class2do_full='Pseudo-nitzschia_large_4cell,Pseudo-nitzschia_small_4cell';
+class2do_full='Pseudo-nitzschia_large_2cell,Pseudo-nitzschia_small_2cell';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 outpath = [filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Figs/'];
@@ -13,7 +13,19 @@ load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use'
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
     'class2useTB','classcountTB','classcountTB_above_optthresh','classcountTB_above_adhocthresh','filelistTB','mdateTB','ml_analyzedTB');
 
-mdateTB=datetime(mdateTB,'convertfrom','datenum');
+%%%% eliminate manual files with high fx of unclassified data
+[badfilelist] = findmanualfiles_w_highUnclassified([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],0.2,'Pseudo-nitzschia');
+[~,ia,~]=intersect({filelist.name}',badfilelist);
+filelist(ia)=[]; classcount(ia,:)=[]; matdate(ia)=[]; ml_analyzed(ia)=[];
+
+%%%% find matched files and class of interest
+for i=1:length(filelist)
+    filelist(i).newname=filelist(i).name(1:24);
+end
+[~,im,it] = intersect({filelist.newname}, filelistTB); %finds the matched files between automated and manually classified files
+mdateTB=datetime(mdateTB(it),'convertfrom','datenum');
+ml_analyzedTB=ml_analyzedTB(it);
+filelistTB=filelistTB(it);
 matdate=datetime(matdate,'convertfrom','datenum');
 
 %%%% sum up grouped classes
@@ -29,14 +41,17 @@ else
     imclass = find(strcmp(class2use,class2do_full));
 end
 
-man=sum(classcount(:,imclass),2);
-auto=classcountTB(:,strcmp(class2do_full,class2useTB));
-%auto=classcountTB_above_optthresh(:,strcmp(class2do_full,class2useTB));
-%auto=classcountTB_above_adhocthresh(:,strcmp(class2do_full,class2useTB));
+man=sum(classcount(im,imclass),2);
+%auto=classcountTB(it,strcmp(class2do_full,class2useTB));
+%auto=classcountTB_above_optthresh(it,strcmp(class2do_full,class2useTB));
+auto=classcountTB_above_adhocthresh(it,strcmp(class2do_full,class2useTB));
 
-clearvars im it i imclass ind;
+T=table({filelist.newname}',mdateTB,man,auto);
 
-%%%% Plot automated vs manual classification cell counts
+
+clearvars im it i imclass ind ia;
+
+% Plot automated vs manual classification cell counts
 figure('Units','inches','Position',[1 1 3.2 3],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.16 0.1]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 

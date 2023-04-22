@@ -30,10 +30,11 @@ else
 end
 
 man=sum(classcount(:,imclass),2);
-%auto=classcountTB(:,strcmp(class2do_full,class2useTB));
+auto=classcountTB(:,strcmp(class2do_full,class2useTB));
 %auto=classcountTB_above_optthresh(:,strcmp(class2do_full,class2useTB));
-auto=classcountTB_above_adhocthresh(:,strcmp(class2do_full,class2useTB));
+%auto=classcountTB_above_adhocthresh(:,strcmp(class2do_full,class2useTB));
 
+%%
 clearvars im it i imclass ind;
 
 %%%% Plot automated vs manual classification cell counts
@@ -70,8 +71,8 @@ else
     class2do_string=class2do_full;
 end
 
-%% set figure parameters
-exportgraphics(gcf,[outpath 'nomatch_Manual_automated-adhoc_' num2str(class2do_string) '.png'],'Resolution',100)    
+% set figure parameters
+exportgraphics(gcf,[outpath 'nomatch_Manual_automated-all_' num2str(class2do_string) '.png'],'Resolution',100)    
 hold off
 
 %% match up data

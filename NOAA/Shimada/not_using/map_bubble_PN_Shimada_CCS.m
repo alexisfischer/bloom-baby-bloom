@@ -8,7 +8,7 @@ addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
 fprint=1;
-yr=2019; % 2019; 2021
+yr=2021; % 2019; 2021
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],...
     'dt','lat','lon','class2useTB','cellsmL');
 target='Pseudonitzschia'; dataformat='cells'; label='PN per mL';

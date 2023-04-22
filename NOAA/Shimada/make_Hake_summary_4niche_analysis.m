@@ -74,6 +74,18 @@ PNcellsmL_mcpy=NaN*lat; PNcellsmL_mcpy(idI)=HA.PNcellsmL;
 
 clearvars dtH idH dtI idI
 
+%% remove data south of 40 N so ~equivalent between 2019 and 2021
+idx=find(lat<40);
+dt(idx)=[]; filelistTB(idx)=[]; lat(idx)=[]; lon(idx)=[]; cellsmL(idx,:)=[];
+PN_width(idx)=[]; temp(idx)=[]; sal(idx)=[]; pco2(idx)=[]; chlA_ugL(idx)=[];
+pDA_ngL(idx)=[]; NitrateM(idx)=[]; PhosphateM(idx)=[]; SilicateM(idx)=[]; PNcellsmL_mcpy(idx)=[];
+
+%remove data from the Strait
+idx=find(lat>48 & lon>-124.7);
+dt(idx)=[]; filelistTB(idx)=[]; lat(idx)=[]; lon(idx)=[]; cellsmL(idx,:)=[];
+PN_width(idx)=[]; temp(idx)=[]; sal(idx)=[]; pco2(idx)=[]; chlA_ugL(idx)=[];
+pDA_ngL(idx)=[]; NitrateM(idx)=[]; PhosphateM(idx)=[]; SilicateM(idx)=[]; PNcellsmL_mcpy(idx)=[];
+
 %% format for .csv file
 I=array2table(cellsmL,'VariableNames',class2useTB);
 I(:,end)=[]; %remove unclassified
