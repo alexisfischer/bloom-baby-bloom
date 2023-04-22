@@ -9,7 +9,7 @@ function [ ] = classifier_oob_analysis_og( classifiername,outpath,adhocthresh)
 %
 %% Example Inputs
 % clear
-% classifiername ='D:\general\classifier\summary\Trees_CCS_v16';
+% classifiername ='D:\general\classifier\summary\Trees_CCS_NOAA-OSU_v5';
 % outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
 % adhocthresh=0.5;
 
