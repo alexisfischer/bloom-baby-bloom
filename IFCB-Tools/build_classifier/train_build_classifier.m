@@ -21,7 +21,7 @@ BUDDpath = 'D:\BuddInlet\';
 merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,OSUpath,SHMDApath,LABpath,BUDDpath)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
-% Step 2: select classes of interest and find class2skip
+%% Step 2: select classes of interest and find class2skip
 % Regional CCS classifier
 load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
 SS(end).topclasses(end+1)={'Navicula'};
@@ -54,7 +54,7 @@ manualpath = 'D:\general\classifier\manual_merged_selectOSU\'; % manual annotati
 feapath_base = 'D:\general\classifier\features_merged_selectOSU\'; %feature file location, assumes \yyyy\ organization
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
-minn = 1000; %minimum number for inclusion
+minn = 400; %minimum number for inclusion
 class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
         {'Pseudo-nitzschia_small_2cell' 'Pseudo-nitzschia_large_2cell'}...
         {'Pseudo-nitzschia_small_3cell' 'Pseudo-nitzschia_large_3cell'}...
