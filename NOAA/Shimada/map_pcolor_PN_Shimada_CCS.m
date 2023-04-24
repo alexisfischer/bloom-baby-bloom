@@ -8,12 +8,13 @@ addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
 fprint=1;
-yr=2021; % 2019; 2021
+yr=2019; % 2019; 2021
 option=2; % 1=Plot the individual data points; 2=Grid the data
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'dt','lat','lon','class2useTB','cellsmL');
 target='Pseudonitzschia'; dataformat='cells'; label={'PN per mL'}; cax=[0 30]; 
 data=cellsmL(:,strcmp(target,class2useTB));
 
+lon=lon-.08;
 if yr==2019
     idx=find(dt<datetime('01-Jan-2020'));
     data=data(idx); lat = lat(idx); lon = lon(idx);  
@@ -29,11 +30,11 @@ if option==1
     view(2); hold on
 else
     % Set grid resolution (degrees)
-    res = 0.2; % Coarser=0.2; Finer=0.1
+    res = 0.18; % Coarser=0.2; Finer=0.1
     
     % Create grid
-    lon_grid = min(lon):res:max(lon);
-    lat_grid = min(lat):res:max(lat);
+    lon_grid = min(lon):res:max(lon)+.5;
+    lat_grid = min(lat):res:max(lat)+.5;
     nx = length(lon_grid);
     ny = length(lat_grid);
     
@@ -51,7 +52,7 @@ else
     clearvars lat_plot lon_plot ii jj nx ny lon_grid lat_grid data_grid res
 
 end
-    colormap(parula); caxis(cax);
+    colormap(brewermap([],'OrRd')); caxis(cax);
     axis([min(lon) max(lon) min(lat) max(lat)]);
     h=colorbar('east'); h.Label.String = label;              
     hp=get(h,'pos'); 

@@ -1,7 +1,7 @@
 clear;
-Mac=0;
+Mac=1;
 %name='CCS_v17';
-name='CCS_NOAA-OSU_v5';
+name='CCS_NOAA-OSU_v6';
 %name='BI_NOAA-OSU_v2';
 
 if Mac
@@ -32,14 +32,14 @@ end
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 col=[(brewermap(3,'Set2'));[.1 .1 .1]]; 
-b = bar([trainingset.NOAA trainingset.OSU trainingset.UCSC],'stack','linestyle','none','Barwidth',.7);
-for i=1:3
+b = bar([trainingset.NOAA trainingset.OSU],'stack','linestyle','none','Barwidth',.7);
+for i=1:length(b)
     set(b(i),'FaceColor',col(i,:));
 end  
 set(gca,'xlim',[0.5 (length(class)+.5)], 'xtick', 1:length(class), 'ylim',[0 maxn],...
     'xticklabel', class,'tickdir','out');
 ylabel('total images in set'); hold on
-lh=legend('NWFSC','OSU','UCSC','Location','NorthOutside');
+lh=legend('NWFSC','OSU','Location','NorthOutside');
 
 set(gcf,'color','w');
 exportgraphics(gca,[figpath 'TrainingSet_' name '.png'],'Resolution',100)    
