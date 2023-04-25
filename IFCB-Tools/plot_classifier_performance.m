@@ -1,7 +1,7 @@
 clear;
-Mac=1;
+Mac=0;
 %name='CCS_v17';
-name='CCS_NOAA-OSU_v6';
+name='CCS_NOAA-OSU_v7';
 %name='BI_NOAA-OSU_v2';
 
 if Mac
