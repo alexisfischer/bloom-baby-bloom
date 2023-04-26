@@ -1,10 +1,10 @@
 %% plot manual vs classifier results for Shimada
 clear;
-classifiername='CCS_NOAA-OSU_v6';
-class2do_full='Pseudo-nitzschia_large_3cell,Pseudo-nitzschia_small_3cell';
-%type='all';
+classifiername='CCS_NOAA-OSU_v5';
+class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
+type='all';
 %type='adhoc';
-type='opt';
+%type='opt';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 outpath = [filepath 'IFCB-Data/Shimada/threshold/' classifiername '/Figs/'];
@@ -43,7 +43,6 @@ if ~isempty(ind)
 else
     imclass = find(strcmp(class2use,class2do_full));
 end
-
 man=sum(classcount(im,imclass),2);
 
 if strcmp(type,'all')

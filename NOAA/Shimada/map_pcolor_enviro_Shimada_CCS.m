@@ -5,16 +5,16 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-yr=2019; % 2019; 2021
+yr=2021; % 2019; 2021
 option=2; % 1=Plot the individual data points; 2=Grid the data
 fprint=1;
 
 %%%% load in underway data
 load([filepath 'NOAA/Shimada/Data/environ_Shimada' num2str(yr) ''],'DT','LON','LAT','TEMP','SAL','FL','PCO2');
 %data=TEMP; cax=[10 20]; label='SST (^oC)'; name='SST';
-data=SAL; cax=[30 35]; label='Sal (psu)'; name='SAL';
+%data=SAL; cax=[30 35]; label='Sal (psu)'; name='SAL';
 %data=FL; cax=[0 5]; label={'Chl';'Fluorescence'}; name='FL';
-%data=PCO2; cax=[0 800]; label={'PCO2 (ppm)'}; name='PCO2';
+data=PCO2; cax=[0 800]; label={'PCO2 (ppm)'}; name='PCO2';
 
 idx=isnan(data); data(idx)=[]; LAT(idx)=[]; LON(idx)=[];
 lon=LON; lat=LAT;
@@ -29,8 +29,8 @@ else
     res = 0.2; % Coarser=0.2; Finer=0.1
     
     % Create grid
-    lon_grid = min(lon):res:max(lon);
-    lat_grid = min(lat):res:max(lat);
+    lon_grid = min(lon):res:max(lon)+.5;
+    lat_grid = min(lat):res:max(lat)+.5;
     nx = length(lon_grid);
     ny = length(lat_grid);
     

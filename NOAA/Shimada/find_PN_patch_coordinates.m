@@ -7,7 +7,8 @@ col=brewermap(5,'Set2');
 %2019
 idx=find(dt<datetime('01-Jan-2020'));
 lattemp = lat(idx); lontemp = lon(idx); 
-P19(1).idx=(lattemp>=46.5 & lontemp<-123); 
+%P19(1).idx=(lattemp>=46.5 & lontemp<-123); 
+P19(1).idx=(lattemp>=47.8 & lontemp<-123); 
 P19(2).idx=(lattemp>=45.7 & lattemp<46.5); 
 P19(3).idx=(lattemp>=43.3 & lattemp<45.7); 
 P19(4).idx=(lattemp<43.3); 

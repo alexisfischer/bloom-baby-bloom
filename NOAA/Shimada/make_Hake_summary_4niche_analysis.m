@@ -9,7 +9,7 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
 %%%% format IFCB data
-classifiername='CCS_v16';
+classifiername='CCS_NOAA-OSU_v6';
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
@@ -36,7 +36,7 @@ class2useTB(strcmp('Proboscia,Rhizosolenia',class2useTB))={'Prob_Rhiz'};
 class2useTB(strcmp('Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell',class2useTB))={'Pseudonitzschia'};
 
 %%%% merge IFCB data with PN cell width data
-S=load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB.mat'],'PNwidth_opt','filelistTB');
+S=load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_CCS_NOAA-OSU_v6.mat'],'PNwidth_opt','filelistTB');
 [~,~,ib]=intersect(filelistTB,S.filelistTB); PN_width=[S.PNwidth_opt(ib).mean]';
 
 clearvars ia ib S classcountTB_above_optthresh ml_analyzedTB class_indices_path id1 id2 id3 id4 mdateTB

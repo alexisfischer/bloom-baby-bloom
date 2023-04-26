@@ -8,7 +8,7 @@ class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
-load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB.mat'],...
+load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_CCS_NOAA-OSU_v6.mat'],...
     'mdateTB','PNwidth_opt','filelistTB','ml_analyzedTB','PNcount_above_optthresh');
 
 dt=datetime(mdateTB,'ConvertFrom','datenum');
@@ -49,7 +49,7 @@ max_21=max([PNcount_above_optthresh(id21)./ml_analyzedTB(id21)])
 
 subplot(2,2,1);
 plot(lat(id19),PNcount_above_optthresh(id19)./ml_analyzedTB(id19),'-')
-set(gca,'xlim',[40 49],'fontsize',10,'tickdir','out');
+set(gca,'xlim',[40 49],'ylim',[0 150],'fontsize',10,'tickdir','out');
 ylabel('PN per mL','fontsize',12)
 title('2019(top) 2021(bottom)')
 
@@ -60,7 +60,7 @@ ylabel('Count','fontsize',12)
 
 subplot(2,2,3);
 plot(lat(id21),PNcount_above_optthresh(id21)./ml_analyzedTB(id21),'-')
-set(gca,'xlim',[40 49],'fontsize',10,'tickdir','out');
+set(gca,'xlim',[40 49],'ylim',[0 150],'fontsize',10,'tickdir','out');
 ylabel('PN per mL','fontsize',12)
 xlabel('Latitude (^oN)','fontsize',12)
 

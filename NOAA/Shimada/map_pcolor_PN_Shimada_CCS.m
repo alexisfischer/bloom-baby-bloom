@@ -14,7 +14,8 @@ load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'dt','l
 target='Pseudonitzschia'; dataformat='cells'; label={'PN per mL'}; cax=[0 30]; 
 data=cellsmL(:,strcmp(target,class2useTB));
 
-lon=lon-.08;
+col=brewermap([],'OrRd');
+%lon=lon-.05;
 if yr==2019
     idx=find(dt<datetime('01-Jan-2020'));
     data=data(idx); lat = lat(idx); lon = lon(idx);  
@@ -51,8 +52,10 @@ else
     shading flat; hold on;
     clearvars lat_plot lon_plot ii jj nx ny lon_grid lat_grid data_grid res
 
+    k = boundary(lon,lat); hold on;
+    plot(lon(k),lat(k),'color',col(end,:));   hold on;     
 end
-    colormap(brewermap([],'OrRd')); caxis(cax);
+    colormap(col); caxis(cax);
     axis([min(lon) max(lon) min(lat) max(lat)]);
     h=colorbar('east'); h.Label.String = label;              
     hp=get(h,'pos'); 
