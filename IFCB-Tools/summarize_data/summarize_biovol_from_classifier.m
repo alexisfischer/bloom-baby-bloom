@@ -1,4 +1,4 @@
-function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,micron_factor,yrrange)
 %function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
 %
 % Inputs automatic classified results and outputs a summary file of counts and biovolume
@@ -14,6 +14,7 @@ function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,cla
 % roibasepath_generic = 'D:\test\data\xxxx\'; %location of raw data
 % yrrange = 2019:2021;
 % adhocthresh = 0.5;
+% micron_factor=1/2.7;
 
 classfiles = [];
 filelistTB = [];
@@ -81,7 +82,7 @@ for i = 1:length(classfiles)
     [classcountTB(i,:),classbiovolTB(i,:),classC_TB(i,:),classwidthTB(i,:),...
     classcountTB_above_optthresh(i,:),classbiovolTB_above_optthresh(i,:),classC_TB_above_optthresh(i,:),classwidthTB_above_optthresh(i,:),...
     classcountTB_above_adhocthresh(i,:),classbiovolTB_above_adhocthresh(i,:),classC_TB_above_adhocthresh(i,:),classwidthTB_above_adhocthresh(i,:)]...
-    =TBclass_summarize_biovol_width(classfiles{i},feafiles{i},adhocthresh,summarydir_base);
+    =TBclass_summarize_biovol_width(classfiles{i},feafiles{i},adhocthresh,micron_factor,summarydir_base);
         
     hdr=IFCBxxx_readhdr2(hdrname{i});
     runtypeTB{i}=hdr.runtype;

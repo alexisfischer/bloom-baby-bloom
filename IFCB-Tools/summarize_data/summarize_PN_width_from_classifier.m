@@ -1,4 +1,4 @@
-function [ ] = summarize_PN_width_from_classifier(summarydir,feapath_generic,roibasepath_generic,classpath_generic,yrrange)
+function [ ] = summarize_PN_width_from_classifier(summarydir,feapath_generic,roibasepath_generic,classpath_generic,micron_factor,yrrange)
 %function [ ] = summarize_PN_width_from_classifier(summarydir,feapath_generic,roibasepath_generic,classpath_generic,yrrange)
 % Inputs classifier and features files and outputs a summary file of
 % minor axis length for all Pseudo-nitzschia chain lengths
@@ -6,12 +6,13 @@ function [ ] = summarize_PN_width_from_classifier(summarydir,feapath_generic,roi
 % Alexis D. Fischer, NOAA NWFSC, April 2023
 %
 %% Example inputs
-% clear
-% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-% feapath_generic = 'D:\Shimada\features\xxxx\'; %Put in your featurepath byyear
-% roibasepath_generic = 'D:\Shimada\data\xxxx\'; %location of raw data
-% classpath_generic = 'D:\Shimada\class\CCS_v16\classxxxx_v1\';
-% yrrange = 2019:2021;
+clear
+summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+feapath_generic = 'D:\Shimada\features\xxxx\'; %Put in your featurepath byyear
+roibasepath_generic = 'D:\Shimada\data\xxxx\'; %location of raw data
+classpath_generic = 'D:\Shimada\class\CCS_NOAA-OSU_v7\classxxxx_v1\';
+yrrange = 2019:2021;
+micron_factor=1/3.8;
 
 classfiles = [];
 filelistTB = [];
@@ -61,11 +62,11 @@ num2dostr = num2str(length(classfiles));
 PNcount_above_optthresh=NaN(length(classfiles),1);
 PNcount=NaN(length(classfiles),1);
 
-%% extract PN 
+% extract PN 
 for i = 1:length(classfiles)
-    if ~rem(i,10), disp(['reading ' num2str(i) ' of ' num2dostr]), end  
+    if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end  
     [PNcount_above_optthresh(i),PNcount(i),opt_cell1,opt_cell2,opt_cell3,opt_cell4,...
-        wta_cell1,wta_cell2,wta_cell3,wta_cell4]=TBclass_summarize_PN_width(classfiles{i},feafiles{i});
+        wta_cell1,wta_cell2,wta_cell3,wta_cell4]=TBclass_summarize_PN_width(classfiles{i},feafiles{i},micron_factor);
 
     PNwidth_opt(i).cell1=opt_cell1;
     PNwidth_opt(i).cell2=opt_cell2;
@@ -88,13 +89,7 @@ for i = 1:length(classfiles)
     clearvars opt_cell1 opt_cell2 opt_cell3 opt_cell4 wta_cell1 wta_cell2 wta_cell3 wta_cell4 hdr
 end
 
-% yrrangestr = num2str(yrrange(1));
-% if length(yrrange) > 1
-%     yrrangestr = [yrrangestr '-' num2str(yrrange(end))];
-% end
-
-save([summarydir 'summary_PN_allTB'],'runtypeTB','filecommentTB',...
-    'class2useTB','ml_analyzedTB','mdateTB','filelistTB','PN*');
+%save([summarydir 'summary_PN_allTB'],'runtypeTB','filecommentTB','class2useTB','ml_analyzedTB','mdateTB','filelistTB','PN*');
 
 disp('Summary file stored here:')
 disp([summarydir 'summary_PN_allTB'])

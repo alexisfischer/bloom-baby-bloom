@@ -1,9 +1,9 @@
 %IFCB777
-%http://localhost:8000/image?image=00340&dataset=Shimada&bin=D20190722T130522_IFCB777
-%http://localhost:8000/image?image=00491&dataset=Shimada&bin=D20190724T032751_IFCB777
-%http://localhost:8000/image?image=01626&dataset=Shimada&bin=D20190731T184454_IFCB777
-%http://localhost:8000/image?image=00690&dataset=Shimada&bin=D20190730T044653_IFCB777
-%http://localhost:8000/image?image=00289&dataset=Shimada&bin=D20190817T070259_IFCB777
+% http://localhost:8000/image?image=00340&dataset=Shimada&bin=D20190722T130522_IFCB777
+% http://localhost:8000/image?image=00491&dataset=Shimada&bin=D20190724T032751_IFCB777
+% http://localhost:8000/image?image=01626&dataset=Shimada&bin=D20190731T184454_IFCB777
+% http://localhost:8000/image?image=00690&dataset=Shimada&bin=D20190730T044653_IFCB777
+% http://localhost:8000/image?image=00289&dataset=Shimada&bin=D20190817T070259_IFCB777
 
 %IFCB117 
 %http://localhost:8000/image?image=01683&dataset=Shimada&bin=D20210722T220341_IFCB117
@@ -26,26 +26,23 @@
 % D20230420T200047_IFCB150_00587
 %%
 clear;
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\'));
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
+addpath(genpath('D:\Shimada\'));
 
-% preallocate
-MinorAxisLength=NaN*ones(4,1);
-MajorAxisLength=MinorAxisLength;
-roi_number=MajorAxisLength;
-micron_factor=MajorAxisLength;
+% bead_dim_um=100; %um
+% filename{1}='D20230420T195649_IFCB150'; roi_number(1)=46;
+% filename{2}='D20230420T200047_IFCB150'; roi_number(2)=680;
+% filename{3}='D20230420T200047_IFCB150'; roi_number(3)=325;
+% filename{4}='D20230420T200047_IFCB150'; roi_number(4)=587;
 
-bead_dim_um=100; %um
-filename{1}='D20230420T195649_IFCB150'; roi_number(1)=46;
-filename{2}='D20230420T200047_IFCB150'; roi_number(2)=680;
-filename{3}='D20230420T200047_IFCB150'; roi_number(2)=325;
-filename{4}='D20230420T200047_IFCB150'; roi_number(2)=587;
-
-% bead_dim_um=5.7; %um
-% filename{1}='D20190722T130522_IFCB777'; roi_number(1)=340;
-% filename{2}='D20190724T032751_IFCB777'; roi_number(2)=491;
-% filename{3}='D20190731T184454_IFCB777'; roi_number(3)=1626;
-% filename{4}='D20190730T044653_IFCB777'; roi_number(4)=690;
-% filename{5}='D20190817T070259_IFCB777'; roi_number(5)=289;
-% 
+bead_dim_um=5.7; %um
+filename{1}='D20190722T130522_IFCB777'; roi_number(1)=340;
+filename{2}='D20190724T032751_IFCB777'; roi_number(2)=491;
+filename{3}='D20190731T184454_IFCB777'; roi_number(3)=1626;
+filename{4}='D20190730T044653_IFCB777'; roi_number(4)=690;
+filename{5}='D20190817T070259_IFCB777'; roi_number(5)=289;
+%%
 % filename{6}='D20210722T220341_IFCB117'; roi_number(6)=1683;
 % filename{7}='D20210731T221907_IFCB117'; roi_number(7)=11;
 % filename{8}='D20210806T152317_IFCB117'; roi_number(8)=257;
@@ -53,10 +50,15 @@ filename{4}='D20230420T200047_IFCB150'; roi_number(2)=587;
 % filename{10}='D20210903T214137_IFCB117'; roi_number(10)=729;
 
 filename=filename';
+% preallocate
+MinorAxisLength=NaN*ones(length(filename),1);
+MajorAxisLength=MinorAxisLength;
+roi_number=MajorAxisLength;
+micron_factor=MajorAxisLength;
 
 for i=1:length(roi_number)
     currentfile=filename{i};
-    feafile=['D:\BuddInlet\features\' currentfile(2:5) '\' currentfile '_fea_v2.csv'];
+    feafile=['D:\Shimada\features\' currentfile(2:5) '\' currentfile '_fea_v2.csv']
     
     feastruct = importdata(feafile);
     ind = strcmp('roi_number',feastruct.textdata);
@@ -74,8 +76,16 @@ for i=1:length(roi_number)
 end
 
 T=table(filename,roi_number,MinorAxisLength,MajorAxisLength,micron_factor);
+
+micron_factor_IFCB150=mean(T.micron_factor(1:end))
+
 %%
 micron_factor_IFCB777=mean(T.micron_factor(1:5))
 micron_factor_IFCB117=mean(T.micron_factor(6:10))
+
+%%
+imageJ=17.5; %pixels
+
+micron_factor=imageJ./bead_dim_um
 
 

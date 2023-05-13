@@ -1,7 +1,7 @@
 function[classcountTB,classbiovolTB,classC_TB,classwidthTB,...
     classcountTB_above_optthresh,classbiovolTB_above_optthresh,classC_TB_above_optthresh,classwidthTB_above_optthresh,...
     classcountTB_above_adhocthresh,classbiovolTB_above_adhocthresh,classC_TB_above_adhocthresh,classwidthTB_above_adhocthresh]...
-    =TBclass_summarize_biovol_width(classfile,feafile,adhocthresh,filepath)
+    =TBclass_summarize_biovol_width(classfile,feafile,adhocthresh,micron_factor,filepath)
 %%
 % Alexis D. Fischer, NOAA, September 2022
 
@@ -12,13 +12,13 @@ function[classcountTB,classbiovolTB,classC_TB,classwidthTB,...
 
 load(classfile)
 
-if contains(char(classfile),'IFCB777') 
-    micron_factor=1/3.7695;
-elseif contains(char(classfile),'IFCB117') 
-    micron_factor=1/3.8617;
-elseif contains(char(classfile),'IFCB150') 
-    micron_factor=1/3.8149;
-end
+% if contains(char(classfile),'IFCB777') 
+%     micron_factor=1/3.7695;
+% elseif contains(char(classfile),'IFCB117') 
+%     micron_factor=1/3.8617;
+% elseif contains(char(classfile),'IFCB150') 
+%     micron_factor=1/3.8149;
+% end
 
 classcountTB = NaN(length(class2useTB),1);
 classcountTB_above_optthresh = classcountTB;
