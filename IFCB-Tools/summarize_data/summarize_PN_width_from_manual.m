@@ -91,7 +91,7 @@ end
 
 micron_factor=round(1./micron_factor,2);
 
-save([summarydir 'summary_PN_width_manual'],'runtype','filecomment',...
+save([summarydir 'summary_PN_width_manual_micron-factor' num2str(micron_factor) ''],'runtype','filecomment',...
     'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','PN*');
 
 disp('Summary file stored here:')
