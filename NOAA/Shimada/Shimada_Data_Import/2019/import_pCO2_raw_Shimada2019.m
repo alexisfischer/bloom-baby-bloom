@@ -75,30 +75,17 @@ for i=1:length(Tdir)
     IntakeTemp=[IntakeTemp;tbl.IntakeTemp];
     Salinity=[Salinity;tbl.Salinity]; 
     AirTemp=[AirTemp;tbl.AirTemp];
-    clearvars opts tbl dur d h
-    
+    clearvars opts tbl dur d h    
 end
 
+T=timetable(dt,AirTemp, atmCond, AtmPressure, CO2aW, CO2bW, CO2Umm, condTemp, drip1, dryBoxTemp, dryDruck, equCond, equPress, equPump, equTemp, error, FETExtV, FETIntV, H2OaW, H2ObW, H2OFlow, H2OMmm, IntakeTemp, licorFlow, licorPress, licorTemp, O2Sat, O2Temp, O2Umm, pHTemp, Salinity, stdVal, type, ventFlow);
+clearvars name indir Tdir i dti dt AirTemp atmCond AtmPressure CO2aW CO2bW CO2Umm condTemp drip1 dryBoxTemp dryDruck equCond equPress equPump equTemp error FETExtV FETIntV H2OaW H2ObW H2OFlow H2OMmm IntakeTemp licorFlow licorPress licorTemp O2Sat O2Temp O2Umm pHTemp stdVal Salinity type ventFlow;
 
 %% merge with lat lon
-load([outpath 'lat_lon_time_Shimada2019'],'DT','LON','LAT');
+T.dt=dateshift(T.dt,'start','minute');
+load([filepath 'NOAA/Shimada/Data/environ_Shimada2019'],'DT','LON','LAT','TEMP');
+TSG45_T=TEMP;
+TT=timetable(DT,LAT,LON,TSG45_T);
+T=synchronize(T,TT,'first');
 
-[~,ia,ib]=intersect(dt,DT);
-DT=dt(ia); LAT=LAT(ib); LON=LON(ib); 
-TYPE=type(ia); ERROR=error(ia); EQUTEMP=equTemp(ia); STDVAL=stdVal(ia); 
-CO2AW=CO2aW(ia); CO2BW=CO2bW(ia); CO2UMM=CO2Umm(ia); H2OAW=H2OaW(ia); 
-H2OBW=H2ObW(ia); H2OMMM=H2OMmm(ia); LICORTEMP=licorTemp(ia); LICORPRESS=licorPress(ia); 
-DRYDRUCK=dryDruck(ia); EQUPRESS=equPress(ia); H2OFLOW=H2OFlow(ia); 
-LICORFLOW=licorFlow(ia); EQUPUMP=equPump(ia); VENTFLOW=ventFlow(ia); 
-ATMCOND=atmCond(ia); EQUCOND=equCond(ia); DRIP1=drip1(ia); CONDTEMP=condTemp(ia);
-DRYBOXTEMP=dryBoxTemp(ia); O2UMM=O2Umm(ia); O2SAT=O2Sat(ia); O2TEMP=O2Temp(ia);
-PHTEMP=pHTemp(ia); FETINTV=FETIntV(ia); FETEXTV=FETExtV(ia); ATMPRESSURE=AtmPressure(ia); 
-INTAKETEMP=IntakeTemp(ia); SALINITY=Salinity(ia); AIRTEMP=AirTemp(ia);
-
-T=table(DT,LAT,LON,TYPE,ERROR,EQUTEMP,STDVAL,...
-CO2AW,CO2BW,CO2UMM,H2OAW,H2OBW,H2OMMM,LICORTEMP,LICORPRESS,...
-DRYDRUCK,EQUPRESS,H2OFLOW,LICORFLOW,EQUPUMP,VENTFLOW,...
-ATMCOND,EQUCOND,DRIP1,CONDTEMP,DRYBOXTEMP,O2UMM,O2SAT,...
-O2TEMP,PHTEMP,FETINTV,FETEXTV,ATMPRESSURE,INTAKETEMP,SALINITY,AIRTEMP);
-
-writetable(T,[outpath 'raw_pCO2_Shimada2019.csv'])
+writetimetable(T,[outpath 'raw_pCO2_Shimada2019.csv'])

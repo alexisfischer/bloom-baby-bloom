@@ -24,7 +24,7 @@ load([filepath 'performance_classifier_' name],'topfeat','maxthre','all',...
 [~,classU]=get_class_ind( opt.class,'all',classidx);
 maxn=round(max([opt.total]),-2);
 disp(['optimal fx unclassified = ' num2str(opt.fxUnclass(end)) '']); opt(end,:)=[]; 
-
+%%
 if exist('thr')    
     disp(['chosen threshold fx unclassified = ' num2str(thr.fxUnclass(end)) '']); thr(end,:)=[];
 end

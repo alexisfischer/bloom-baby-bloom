@@ -1,6 +1,6 @@
 %% plot manual vs classifier results for Shimada
 clear;
-classifiername='CCS_NOAA-OSU_v5';
+classifiername='CCS_NOAA-OSU_v7';
 class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
 type='all';
 %type='adhoc';

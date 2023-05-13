@@ -7,7 +7,7 @@ function [ ] = summarize_PN_width_from_manual(summarydir,feapath_generic,roibase
 %
 %% Example inputs
 % clear
-% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\manual\';
 % feapath_generic = 'D:\Shimada\features\xxxx\'; %Put in your featurepath byyear
 % roibasepath_generic = 'D:\Shimada\data\xxxx\'; %location of raw data
 % manualpath = 'D:\Shimada\manual\';
@@ -89,14 +89,11 @@ for i = 1:length(manualfiles)
     clearvars Lcell1 Lcell2 Lcell3 Lcell4 Scell1 Scell2 Scell3 Scell4 hdr
 end
 
-% yrrangestr = num2str(yrrange(1));
-% if length(yrrange) > 1
-%     yrrangestr = [yrrangestr '-' num2str(yrrange(end))];
-% end
+micron_factor=round(1./micron_factor,2);
 
-save([summarydir 'summary_PN_manual'],'runtype','filecomment',...
-    'class2use_manual','ml_analyzed','mdate','filelist','PN*');
+save([summarydir 'summary_PN_width_manual'],'runtype','filecomment',...
+    'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','PN*');
 
 disp('Summary file stored here:')
-disp([summarydir 'summary_PN_manual'])
+disp([summarydir 'summary_PN_manual_micron-factor' num2str(micron_factor) ''])
 end

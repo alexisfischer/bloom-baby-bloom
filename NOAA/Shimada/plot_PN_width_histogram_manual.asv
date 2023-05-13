@@ -1,0 +1,94 @@
+%% plot PN cell width histogram
+% complete dataset
+clear;
+
+yr=2019;
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+outpath = [filepath 'NOAA/Shimada/Figs/'];
+class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];   
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+addpath(genpath(filepath));
+
+load([filepath 'IFCB-Data/Shimada/manual/summary_PN_width_manual'],...
+    'ml_analyzed','mdate','filelist','PN*');
+
+dt=datetime(mdate,'ConvertFrom','datenum');
+
+[lat,lon,ia,filelist] = match_IFCBdata_w_Shimada_lat_lon(filepath,filelist);
+dt=dt(ia); PNwidth_large=PNwidth_large(ia); filelist=filelist(ia); 
+ml_analyzed=ml_analyzed(ia); PNwidth_small=PNwidth_small(ia);
+
+% remove data south of 40 N so ~equivalent between 2019 and 2021
+    idx=find(lat<40); dt(idx)=[]; lat(idx)=[]; lon(idx)=[]; PNwidth_large(idx)=[];
+    ml_analyzed(idx)=[]; PNwidth_small(idx)=[];
+% remove data from the Strait
+    idx=find(lat>48 & lon>-124.7); dt(idx)=[]; lat(idx)=[]; lon(idx)=[]; 
+    PNwidth_large(idx)=[]; ml_analyzed(idx)=[]; PNwidth_small(idx)=[];
+
+if yr==2019
+    idx=find(dt<datetime('01-Jan-2020'));
+    dt=dt(idx); lat = lat(idx); lon = lon(idx); ml_analyzed=ml_analyzed(idx);
+    PNwidth_large=PNwidth_large(idx); PNwidth_small=PNwidth_small(idx);
+elseif yr==2021
+    idx=find(dt>datetime('01-Jan-2020'));
+    dt=dt(idx); lat = lat(idx); lon = lon(idx); ml_analyzed=ml_analyzed(idx);
+    PNwidth_large=PNwidth_large(idx); PNwidth_small=PNwidth_small(idx);
+end
+clearvars ia idx mdate filelist idx
+
+%%
+figure;
+histogram([PNwidth_small.total],1:.5:9); hold on
+histogram([PNwidth_large.total],1:.5:9); hold on
+set(gca,'xtick',1:2:9,'fontsize',10,'tickdir','out');
+ylabel('Count','fontsize',11)
+xlabel(yr,'fontsize',11)
+
+legend('small','large')
+title(micron_factor,'fontsize',11)
+   
+    %%
+figure('Units','inches','Position',[1 1 6.5 4.5],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.1 0.12], [0.12 0.07], [0.1 0.04]);
+%subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
+%where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
+
+%2019
+id19=find(dt<datetime('01-Jan-2021'));
+mean_width_19=nanmean([PNwidth_large(id19).total])
+std_width_19=std([PNwidth_large(id19).total])
+max_19=max([PNwidth_small(id19)./ml_analyzed(id19)])
+
+%2021
+id21=find(dt>datetime('01-Jan-2021'));
+mean_width_21=nanmean([PNwidth_large(id21).total])
+std_width_21=std([PNwidth_large(id21).total])
+max_21=max([PNwidth_small(id21)./ml_analyzed(id21)])
+
+subplot(2,2,1);
+plot(lat(id19),PNwidth_small(id19)./ml_analyzed(id19),'-')
+set(gca,'xlim',[40 49],'ylim',[0 150],'fontsize',10,'tickdir','out');
+ylabel('PN per mL','fontsize',12)
+title('2019(top) 2021(bottom)')
+
+subplot(2,2,2);
+histogram([PNwidth_large(id19).total],0:1:10);
+set(gca,'xtick',0:2:10,'fontsize',10,'tickdir','out');
+ylabel('Count','fontsize',12)
+
+subplot(2,2,3);
+plot(lat(id21),PNwidth_small(id21)./ml_analyzed(id21),'-')
+set(gca,'xlim',[40 49],'ylim',[0 150],'fontsize',10,'tickdir','out');
+ylabel('PN per mL','fontsize',12)
+xlabel('Latitude (^oN)','fontsize',12)
+
+subplot(2,2,4);
+histogram([PNwidth_large(id21).total],0:1:10);
+set(gca,'xtick',0:2:10,'fontsize',10,'tickdir','out');
+xlabel('Width (\mum)','fontsize',12)
+ylabel('Count','fontsize',12)
+
+%% set figure parameters
+exportgraphics(gcf,[outpath 'PN_width_histogram_CCS.png'],'Resolution',100)    
+hold off
+
