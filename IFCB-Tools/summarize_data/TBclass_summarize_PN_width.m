@@ -19,8 +19,8 @@ load(classfile,'roinum','TBclass','TBclass_above_threshold')
 % end
 
 feastruct = importdata(feafile);
-ind = strcmp('MinorAxisLength',feastruct.textdata);
-targets.MinorAxisLength = feastruct.data(:,ind)*micron_factor;
+ind = strcmp('MinorAxisLength',feastruct.textdata); targets.MinorAxisLength = feastruct.data(:,ind)*micron_factor;
+ind = strcmp('roi_number',feastruct.textdata); targets.roi_number = feastruct.data(:,ind);
 
 opt_cell1=targets.MinorAxisLength(contains(TBclass_above_threshold,'1cell'))';
 opt_cell2=targets.MinorAxisLength(contains(TBclass_above_threshold,'2cell'))';

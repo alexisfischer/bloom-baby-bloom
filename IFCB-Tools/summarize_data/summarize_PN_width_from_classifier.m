@@ -62,7 +62,7 @@ num2dostr = num2str(length(classfiles));
 PNcount_above_optthresh=NaN(length(classfiles),1);
 PNcount=NaN(length(classfiles),1);
 
-% extract PN 
+%% extract PN 
 for i = 1:length(classfiles)
     if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end  
     [PNcount_above_optthresh(i),PNcount(i),opt_cell1,opt_cell2,opt_cell3,opt_cell4,...
@@ -89,8 +89,11 @@ for i = 1:length(classfiles)
     clearvars opt_cell1 opt_cell2 opt_cell3 opt_cell4 wta_cell1 wta_cell2 wta_cell3 wta_cell4 hdr
 end
 
-%save([summarydir 'summary_PN_allTB'],'runtypeTB','filecommentTB','class2useTB','ml_analyzedTB','mdateTB','filelistTB','PN*');
+micron_factor=round(1./micron_factor,2);
+
+save([summarydir 'summary_PN_allTB_micron-factor' num2str(micron_factor) ''],...
+    'runtypeTB','filecommentTB','class2useTB','ml_analyzedTB','mdateTB','filelistTB','micron_factor','PN*');
 
 disp('Summary file stored here:')
-disp([summarydir 'summary_PN_allTB'])
+disp([summarydir 'summary_PN_allTB_micron-factor' num2str(micron_factor) ''])
 end

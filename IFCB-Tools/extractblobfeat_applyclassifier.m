@@ -3,14 +3,14 @@
 clear;
 
 %%%% modify according to dataset
-%ifcbdir='D:\Shimada\'; 
-ifcbdir='D:\BuddInlet\';
+ifcbdir='D:\Shimada\'; 
+%ifcbdir='D:\BuddInlet\';
 %ifcbdir='D:\LabData\'; 
 %ifcbdir='D:\SCW\'; 
 %ifcbdir='D:\general\classifier\'; 
 
-%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
+summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
+%summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\UCSC\SCW\';
 %summarydir=[ifcbdir 'summary\'];
 
@@ -21,9 +21,9 @@ addpath(genpath(ifcbdir));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
-classifier='D:\general\classifier\summary\Trees_BI_NOAA-OSU_v2';
-%classifier='D:\general\classifier\summary\Trees_CCS_NOAA-OSU_v5';
-
+%classifier='D:\general\classifier\summary\Trees_BI_NOAA-OSU_v2';
+classifier='D:\general\classifier\summary\Trees_CCS_NOAA-OSU_v7';
+%%
 copy_data_into_folders('C:\SFTP-BuddInlet\2023\',[ifcbdir 'data\' yr '\']);
 
 % Step 2: Extract blobs
@@ -42,11 +42,11 @@ start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcb
 %% Step 5: Summaries
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\Shimada\class\';
-classpath_generic = [ifcbdir 'class\CCS_NOAA-OSU_v5\classxxxx_v1\'];
+classpath_generic = [ifcbdir 'class\CCS_NOAA-OSU_v7\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 adhocthresh = 0.5;
-micron_factor=1/2.7; %pixels/micron
+micron_factor=1/3.8; %pixels/micron
 
 summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
     feapath_generic,roibasepath_generic,adhocthresh,micron_factor,2019:2021);
