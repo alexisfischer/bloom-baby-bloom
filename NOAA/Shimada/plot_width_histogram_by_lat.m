@@ -8,6 +8,7 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
 yr=2021; % 2019; 2021
+
 load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_CCS_NOAA-OSU_v7.mat'],...
     'mdateTB','PNwidth_opt','filelistTB','PNcount_above_optthresh','ml_analyzedTB');
 dt=datetime(mdateTB,'ConvertFrom','datenum');
@@ -70,7 +71,7 @@ subplot(1,3,[2,3])
     set(gca,'ylim',[range(1) range(end)],'yticklabel',{},'xlim',[t0 tend],...
         'xaxislocation','top','xtick',t0:2:tend,'fontsize',9,'tickdir','out','box','on');
 xlabel('Width (\mum)','fontsize',11);
-xline(3.5,'-r','linewidth',1); hold on
+xline(3.88,'-w','linewidth',1); hold on
 
 for i=1:length(P)
     text(tend+.25,mean([P(i).latmin,P(i).latmax])-.1,num2str(length(P(i).idx)),'fontsize',8,'color','k'); hold on

@@ -26,5 +26,6 @@ set(gca,'ylim',[0.02 0.42],'xlim',[1 9],'xtick',1:2:9,'fontsize',9,...
 xlabel('Width (\mum)','fontsize',11);
 
 % set figure parameters
+
 exportgraphics(gcf,'~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Figs/PN_width_literature.png','Resolution',300)    
 hold off

@@ -13,7 +13,7 @@ fprint=1;
 load([filepath 'NOAA/Shimada/Data/environ_Shimada' num2str(yr) ''],'DT','LON','LAT','TEMP','SAL','FL','PCO2');
 data=TEMP; cax=[10 20]; label={'SST';'(^oC)'}; name='SST'; col=brewermap(256,'BuPu');xloc=-123.6;yloc=43.8;
 %data=SAL; cax=[30 35]; label={'Salinity';'  (psu)'}; name='SAL'; col=parula;xloc=-124.2;yloc=43.5;
-%data=PCO2; cax=[0 800]; label={'pCO_2';'(ppm)'}; name='PCO2';col=brewermap(256,'Blues');xloc=-123.9;yloc=43.8;
+%data=PCO2; cax=[200 800]; label={'pCO_2';'(ppm)'}; name='PCO2'; col=brewermap(256,'RdPu');xloc=-123.9;yloc=43.8;
 
 % remove Nans
 idx=isnan(data); data(idx)=[]; LAT(idx)=[]; LON(idx)=[]; lon=LON; lat=LAT;
@@ -69,6 +69,6 @@ title(yr,'fontsize',12);
 text(xloc,yloc,label,'fontsize',11); hold on
 
 if fprint==1
-    exportgraphics(gca,[filepath 'NOAA/Shimada/Figs/' name '_sensor_Shimada' num2str(yr) '.png'],'Resolution',100)    
+    exportgraphics(gca,[filepath 'NOAA/Shimada/Figs/' name '_sensor_Shimada' num2str(yr) '.png'],'Resolution',300)    
 end
 hold off 

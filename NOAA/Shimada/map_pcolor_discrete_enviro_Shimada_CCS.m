@@ -11,11 +11,11 @@ fprint=1;
 %%%% load in discrete data
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
 %data=HA.chlA_ugL; cax=[1 20]; label={'Extracted';'Chl a (ug/L)'};%name='CHL'; xloc=-124;yloc=43.5; col=brewermap(256,'BuGn');
-data=HA.pDA_ngL; cax=[1 100]; label={' pDA';'(ng/L)'}; name='PDA';xloc=-123.8;yloc=43.8;col=brewermap(256,'Reds');
+%data=HA.pDA_ngL; cax=[1 100]; label={' pDA';'(ng/L)'}; name='PDA';xloc=-123.8;yloc=43.8;col=brewermap(256,'Reds');
 %data=HA.PNcellsmL; cax=[0 20]; label={'PN/mL'}; name='PNcellsmL'; xloc=-123.9;yloc=43.8;col=brewermap(256,'BuGn');
 %data=HA.NitrateM; cax=[0 20]; label={'Nitrate';'  (M)'}; name='NIT'; xloc=-124;yloc=43.5;col=brewermap(256,'BuGn');
 %data=HA.PhosphateM; cax=[0 3]; label={'Phosphate';'    (M)'}; name='PHS'; xloc=-124;yloc=43.5;col=brewermap(256,'BuGn');
-%data=HA.SilicateM; cax=[0 100]; label={'Silicate';'   (M)'}; name='SIL'; xloc=-124.1;yloc=43.8;col=brewermap(256,'BuGn');
+data=HA.SilicateM; cax=[0 100]; label={'Silicate';'   (M)'}; name='SIL'; xloc=-124.1;yloc=43.8;col=brewermap(256,'BuGn');
 
     if yr==2019
         idx=find(HA.dt<datetime('01-Jan-2020'));
@@ -53,6 +53,6 @@ title(yr,'fontsize',12);
 text(xloc,yloc,label,'fontsize',11); hold on
 
 if fprint==1
-    exportgraphics(gca,[filepath 'NOAA/Shimada/Figs/' name '_discrete_Shimada' num2str(yr) '.png'],'Resolution',100)    
+    exportgraphics(gca,[filepath 'NOAA/Shimada/Figs/' name '_discrete_Shimada' num2str(yr) '.png'],'Resolution',300)    
 end
 hold off 

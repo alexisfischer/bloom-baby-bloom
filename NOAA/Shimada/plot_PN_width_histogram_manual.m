@@ -8,7 +8,7 @@ class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
-%% import Pn width data from literature
+%%%% import Pn width data from literature
 s(1).width=[1.1 2]; s(1).name='delicatissima';
 s(2).width=[1.5 3.4]; s(2).name='pseudodelicatissima';
 s(3).width=[2.4 3.5]; s(3).name='pungens';
@@ -19,11 +19,13 @@ s(6).width=[6.5 8]; s(6).name='australis';
 s(1).letter='A'; s(2).letter='B'; s(3).letter='C';
 s(4).letter='D'; s(5).letter='E'; s(6).letter='F';
 
-col=brewermap(5,'RdBu'); 
-s(1).color=col(4,:); s(2).color=col(4,:); s(3).color=col(4,:);
-s(4).color=col(2,:); s(5).color=col(2,:); s(6).color=col(2,:);
+col=brewermap(8,'RdBu'); 
+Scol=col(7,:); Lcol=col(2,:);
 
-%% import PN data from manual counts
+s(1).color=col(6,:); s(2).color=col(6,:); s(3).color=col(6,:);
+s(4).color=col(3,:); s(5).color=col(3,:); s(6).color=col(3,:);
+
+%%%% import PN data from manual counts
 load([filepath 'IFCB-Data/Shimada/manual/summary_PN_width_manual_micron-factor' num2str(micron_factor) ''],...
     'ml_analyzed','mdate','filelist','PN*','micron_factor');
 dt=datetime(mdate,'ConvertFrom','datenum');
@@ -40,32 +42,30 @@ dt=datetime(mdate,'ConvertFrom','datenum');
     idx=find(lat>48 & lon>-124.7); dt(idx)=[]; lat(idx)=[]; lon(idx)=[]; 
     PNwidth_large(idx)=[]; ml_analyzed(idx)=[]; PNwidth_small(idx)=[];
 
-clearvars ia idx mdate filelist idx col
+clearvars ia idx mdate filelist idx
 
-%%
+
 figure('Units','inches','Position',[1 1 3.5 3.5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.12 0.05], [0.15 0.04]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.07 0.12], [0.15 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-subplot(2,1,1)
-    histogram([PNwidth_small.total],1:.25:9); hold on
-    histogram([PNwidth_large.total],1:.25:9); hold on
-    xline(3.87,':r','linewidth',1.5); hold on
-    %    xline(3.88,':r','3.9 \mum','LabelHorizontalAlignment','center','linewidth',1.5); hold on
-    set(gca,'xlim',[1 9],'xtick',1:2:9,'xticklabel',{},'xticklabel',{},'fontsize',10,'xaxislocation','top','tickdir','out');
-    ylabel('Manual count','fontsize',11)
-    legend('"small"','"large"'); legend boxoff
-
-subplot(2,1,2)
+subplot(3,1,1)
     for i=1:length(s)
-        line(s(i).width,[i./16 i./16],'color',s(i).color,'linewidth',13); hold on
-        text(mean(s(i).width)-.45,i./16+.005,['' s(i).name(1:4) '.'],'fontsize',11); hold on
+        line(s(i).width,[i./16 i./16],'color',s(i).color,'linewidth',9); hold on
+        text(mean(s(i).width)-.45,i./16+.005,['' s(i).name(1:4) '.'],'fontsize',10); hold on
     end
-    %xline(3.88,'-r','linewidth',1); hold on
     set(gca,'ylim',[0.02 0.42],'xlim',[1 9],'xtick',1:2:9,'fontsize',9,...
-        'xaxislocation','bottom','tickdir','out','yticklabel',{}); box on
+        'xaxislocation','top','tickdir','out','yticklabel',{}); box on
     xlabel('Width (\mum)','fontsize',11);
+
+subplot(3,1,[2 3])
+    histogram([PNwidth_small.total],1:.25:9,'FaceColor',Scol); hold on
+    histogram([PNwidth_large.total],1:.25:9,'FaceColor',Lcol); hold on
+    xline(3.87,':k','linewidth',1.5); hold on
+    set(gca,'xlim',[1 9],'xtick',1:2:9,'fontsize',10,'xaxislocation','bottom','tickdir','out');
+    ylabel('PN Image Count','fontsize',11)
+    legend('small','large'); legend boxoff
 
 % set figure parameters
 exportgraphics(gcf,[outpath 'PN_width_histogram_manual_CCS.png'],'Resolution',300)    
