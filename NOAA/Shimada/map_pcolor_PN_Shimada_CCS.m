@@ -12,11 +12,11 @@ yr=2021; % 2019; 2021
 option=2; % 1=Plot the individual data points; 2=Grid the data
 res = 0.15; % Coarser=0.2; Finer=0.1 % Set grid resolution (degrees)
 
-%load([filepath 'NOAA/Shimada/Data/samplingboundary_Shimada'],'bndry19','bndry21');
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
-lat=P.LAT; lon=P.LON; dt=P.DT;
-data=P.Pseudonitzschia; label={'   log';'PN/mL'}; cax=[0 2]; 
+%data=P.Pseudonitzschia_small; label={' small';'PN/mL'}; name='small_PN';  
+data=P.Pseudonitzschia_large; label={' large';'PN/mL'}; name='large_PN'; 
 
+lat=P.LAT; lon=P.LON; dt=P.DT; cax=[0 2]; 
 col=brewermap(256,'OrRd'); col(1:30,:)=[];
 if yr==2019
     idx=find(dt<datetime('01-Jan-2020'));
@@ -56,7 +56,7 @@ else
 end 
 
    % plot(bndry.lon,bndry.lat,'color',col(end,:));   hold on;     
-    colormap(col); caxis(cax);
+    colormap(col); clim(cax);
     axis([min(lon) max(lon) min(lat) max(lat)]);
     h=colorbar('east');             
     hp=get(h,'pos');     
@@ -74,6 +74,6 @@ title(yr,'fontsize',11);
 text(-124,43.7,label,'fontsize',11); hold on
 
 if fprint
-    exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/Psuedo-nitzschia_Shimada' num2str(yr) '.png'],'Resolution',100)    
+    exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/' name '_Shimada' num2str(yr) '.png'],'Resolution',300)    
 end
 hold off 

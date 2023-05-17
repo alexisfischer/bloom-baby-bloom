@@ -2,9 +2,9 @@
 % merge IFCB data, sensor data, and discrete data
 %
 clear;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];   
 
+th=3.9; %small and large PN width threshold
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
@@ -33,7 +33,7 @@ for i=1:length(idx)
     T.SilicateM(idx(i)-val:idx(i)+val)=T.SilicateM(idx(i));
 end
 
-clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT idx i
+clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT idx i val
 
 %% format IFCB data
 classifiername='CCS_NOAA-OSU_v7';
@@ -43,15 +43,6 @@ load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],.
 dt=datetime(mdateTB,'convertfrom','datenum'); dt.Format='yyyy-MM-dd HH:mm:ss';        
 cellsmL = classcountTB_above_optthresh./ml_analyzedTB;    
 
-%%%% sum up PN
-id1=find(strcmp('Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell',class2useTB));
-id2=find(strcmp('Pseudo-nitzschia_large_2cell,Pseudo-nitzschia_small_2cell',class2useTB));
-id3=find(strcmp('Pseudo-nitzschia_large_3cell,Pseudo-nitzschia_large_4cell,Pseudo-nitzschia_small_3cell,Pseudo-nitzschia_small_4cell',class2useTB));
-
-cellsmL(:,id1)=sum([cellsmL(:,id1),2*cellsmL(:,id2),3.5*cellsmL(:,id3)],2);
-cellsmL(:,[id2,id3])=[];
-class2useTB([id2,id3])=[];
-
 %%%% rename grouped classes 
 class2useTB(strcmp('Cerataulina,Dactyliosolen,Detonula,Guinardia',class2useTB))={'Cera_Dact_Deto_Guin'};
 class2useTB(strcmp('Chaetoceros_chain,Chaetoceros_single',class2useTB))={'Chaetoceros'};
@@ -59,13 +50,41 @@ class2useTB(strcmp('Dinophysis_acuminata,Dinophysis_acuta,Dinophysis_caudata,Din
 class2useTB(strcmp('Heterocapsa_triquetra,Scrippsiella',class2useTB))={'Hete_Scri'};
 class2useTB(strcmp('Thalassiosira_chain',class2useTB))={'Thalassiosira'};
 class2useTB(strcmp('Proboscia,Rhizosolenia',class2useTB))={'Prob_Rhiz'};
-class2useTB(strcmp('Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell',class2useTB))={'Pseudonitzschia'};
+
+%%%% remove unclassified and PN from regular summary
+idx=contains(class2useTB,'Pseudo-nitzschia'); cellsmL(:,idx)=[]; class2useTB(idx)=[];
+idx=contains(class2useTB,'unclassified'); cellsmL(:,idx)=[]; class2useTB(idx)=[];
+clearvars ml_analyzedTB idx classcountTB_above_optthresh mdateTB
+
+%% split PN into small and large cells
+load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNwidth_opt','ml_analyzedTB');
+
+%preallocate
+smallPN1=NaN*ml_analyzedTB; smallPN2=smallPN1; smallPN3=smallPN1; 
+largePN1=smallPN1; largePN2=smallPN1; largePN3=smallPN1;
+for i=1:length(PNwidth_opt)
+    idx=(PNwidth_opt(i).cell1<th);
+    smallPN1(i)=sum(idx); largePN1(i)=sum(~idx);
+    
+    idx=(PNwidth_opt(i).cell2<th);
+    smallPN2(i)=sum(idx); largePN2(i)=sum(~idx);
+    
+    idx=(PNwidth_opt(i).cell3<th);
+    smallPN3(i)=sum(idx); largePN3(i)=sum(~idx);
+end
+
+%sum up by cell count
+cellsmL(:,end+1)=sum([smallPN1,2*smallPN2,3.5*smallPN3],2)./ml_analyzedTB;
+cellsmL(:,end+1)=sum([largePN1,2*largePN2,3.5*largePN3],2)./ml_analyzedTB;
+class2useTB(end+1)={'Pseudonitzschia_small'};
+class2useTB(end+1)={'Pseudonitzschia_large'};
 
 %%%% round IFCB data to nearest minute and match with environmental data
 dt=dateshift(dt,'start','minute'); 
-TT = array2timetable(cellsmL(:,1:end-1),'RowTimes',dt,'VariableNames',class2useTB(1:end-1));
+TT = array2timetable(cellsmL(:,1:end),'RowTimes',dt,'VariableNames',class2useTB(1:end));
 TT=addvars(TT,filelistTB,'Before',class2useTB(1));
-clearvars ia ib S cellsmL filelistTB dt classcountTB_above_optthresh class2useTB ml_analyzedTB class_indices_path id1 id2 id3 id4 mdateTB
+
+clearvars class2useTB th dt cellsmL filelistTB i idx ml_analyzedTB PNwidth_opt mdateTB smallPN1 smallPN2 smallPN3 largePN1 largePN2 largePN3
 
 %% merge environmental data with IFCB data
 TT=synchronize(TT,T,'first');
@@ -84,92 +103,3 @@ writetimetable(TT,[filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.
 save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'TT','P');
 
 clearvars I E T idx val
-
-%%
-% %% test plots
-% % clear
-% % filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-% % load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis'],...
-% %     'dt','filelistTB','lat','lon','class2useTB','cellsmL','temp','sal','pco2',...
-% %     'chlA_ugL','pDA_ngL','NitrateM','PhosphateM','SilicateM','PNcellsmL_mcpy');
-% 
-% 
-% figure('Units','inches','Position',[1 1 4 3.5],'PaperPositionMode','auto');
-% subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.15 0.15]);
-% %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
-% %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
-% 
-% subplot(2,1,1);
-% yyaxis left
-%     idx=dt<datetime('01-Jan-2020');
-% stem(lat(idx),T.Pseudonitzschia(idx),'-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
-%     ylabel('PN cells/mL','fontsize',12); 
-%     title('Hake: 2019 (top) & 2021 (bottom)')
-% yyaxis right
-%     plot(lat(idx),pco2(idx),'-','Markersize',6,'linewidth',.8);
-%     set(gca,'xgrid','on','tickdir','out','xlim',[34 49],'xticklabel',{},'fontsize',10); 
-%     ylabel('temperature','fontsize',12);        
-% 
-%     l=lat(idx);
-%     p=pco2(idx);
-% 
-%     id=isnan(p);
-%     l(id)=[];
-%     p(id)=[];
-%     %%
-% subplot(2,1,2);
-% yyaxis left
-%     idx=dt>datetime('01-Jan-2020');
-% stem(lat(idx),T.Pseudonitzschia(idx),'-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
-%     ylabel('PN cells/mL','fontsize',12);    
-% yyaxis right
-%     plot(lat(idx),pco2(idx),'-','Markersize',6,'linewidth',.8);
-%     set(gca,'xgrid','on','tickdir','out','xlim',[34 49],'fontsize',10); 
-%     ylabel('temperature','fontsize',12);         
-% 
-% % %% set figure parameters
-% % exportgraphics(gcf,[outpath 'Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
-% % hold off
-% 
-% %% test plots
-% % clear
-% % filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-% % load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis'],...
-% %     'dt','filelistTB','lat','lon','class2useTB','cellsmL','temp','sal','pco2',...
-% %     'chlA_ugL','pDA_ngL','NitrateM','PhosphateM','SilicateM','PNcellsmL_mcpy');
-% 
-% 
-% figure('Units','inches','Position',[1 1 4 3.5],'PaperPositionMode','auto');
-% subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.15 0.15]);
-% %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
-% %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
-% 
-% subplot(2,1,1);
-% yyaxis left
-% stem(dt,T.Pseudonitzschia,'-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
-%     ylabel('PN cells/mL','fontsize',12); 
-%     title('Hake: 2019 (top) & 2021 (bottom)')
-% yyaxis right
-%     plot(dt,pco2,'-','Markersize',6,'linewidth',.8);
-%     datetick('x', 'mmm', 'keeplimits');        
-%     set(gca,'xgrid','on','tickdir','out','xlim',[datetime('2019-06-01') datetime('2019-09-15')],...
-%         'xticklabel',{},'fontsize',10); 
-%     ylabel('temperature','fontsize',12);        
-% 
-% subplot(2,1,2);
-% yyaxis left
-% stem(dt,T.Pseudonitzschia,'-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
-%     ylabel('PN cells/mL','fontsize',12);    
-% yyaxis right
-%     plot(dt,pco2,'-','Markersize',6,'linewidth',.8);
-%     set(gca,'xgrid','on','tickdir','out',...
-%         'xlim',[datetime('2021-06-01') datetime('2021-09-15')],'fontsize',10); 
-%     datetick('x', 'mmm', 'keeplimits');    
-%     ylabel('temperature','fontsize',12);         
-% 
-% % %% set figure parameters
-% % exportgraphics(gcf,[outpath 'Manual_automated_' num2str(class2do_string) '.png'],'Resolution',100)    
-% % hold off
-% 
-
-

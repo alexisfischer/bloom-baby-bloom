@@ -9,7 +9,7 @@ addpath(genpath(filepath));
 
 yr=2021; % 2019; 2021
 
-load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_CCS_NOAA-OSU_v7.mat'],...
+load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8.mat'],...
     'mdateTB','PNwidth_opt','filelistTB','PNcount_above_optthresh','ml_analyzedTB');
 dt=datetime(mdateTB,'ConvertFrom','datenum');
 
