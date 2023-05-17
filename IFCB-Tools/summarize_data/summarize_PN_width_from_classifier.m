@@ -5,14 +5,14 @@ function [ ] = summarize_PN_width_from_classifier(summarydir,feapath_generic,roi
 %
 % Alexis D. Fischer, NOAA NWFSC, April 2023
 %
-%% Example inputs
-clear
-summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
-feapath_generic = 'D:\Shimada\features\xxxx\'; %Put in your featurepath byyear
-roibasepath_generic = 'D:\Shimada\data\xxxx\'; %location of raw data
-classpath_generic = 'D:\Shimada\class\CCS_NOAA-OSU_v7\classxxxx_v1\';
-yrrange = 2019:2021;
-micron_factor=1/3.8;
+% Example inputs
+% clear
+% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+% feapath_generic = 'D:\Shimada\features\xxxx\'; %Put in your featurepath byyear
+% roibasepath_generic = 'D:\Shimada\data\xxxx\'; %location of raw data
+% classpath_generic = 'D:\Shimada\class\CCS_NOAA-OSU_v7\classxxxx_v1\';
+% yrrange = 2019:2021;
+% micron_factor=1/3.8;
 
 classfiles = [];
 filelistTB = [];
@@ -62,36 +62,34 @@ num2dostr = num2str(length(classfiles));
 PNcount_above_optthresh=NaN(length(classfiles),1);
 PNcount=NaN(length(classfiles),1);
 
-%% extract PN 
+%%%% extract PN 
 for i = 1:length(classfiles)
     if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end  
-    [PNcount_above_optthresh(i),PNcount(i),opt_cell1,opt_cell2,opt_cell3,opt_cell4,...
-        wta_cell1,wta_cell2,wta_cell3,wta_cell4]=TBclass_summarize_PN_width(classfiles{i},feafiles{i},micron_factor);
+    [PNcount_above_optthresh(i),PNcount(i),opt_cell1,opt_cell2,opt_cell3,...
+        wta_cell1,wta_cell2,wta_cell3]=TBclass_summarize_PN_width(classfiles{i},feafiles{i},micron_factor);
 
     PNwidth_opt(i).cell1=opt_cell1;
     PNwidth_opt(i).cell2=opt_cell2;
     PNwidth_opt(i).cell3=opt_cell3;
-    PNwidth_opt(i).cell4=opt_cell4;
-    PNwidth_opt(i).total=[opt_cell1,opt_cell2,opt_cell3,opt_cell4];
+    PNwidth_opt(i).total=[opt_cell1,opt_cell2,opt_cell3];
     PNwidth_opt(i).mean=mean(PNwidth_opt(i).total);
 
     PNwidth_wta(i).cell1=wta_cell1;
     PNwidth_wta(i).cell2=wta_cell2;
     PNwidth_wta(i).cell3=wta_cell3;
-    PNwidth_wta(i).cell4=wta_cell4;
-    PNwidth_wta(i).total=[wta_cell1,wta_cell2,wta_cell3,wta_cell4];
+    PNwidth_wta(i).total=[wta_cell1,wta_cell2,wta_cell3];
     PNwidth_wta(i).mean=mean(PNwidth_wta(i).total);
     
     hdr=IFCBxxx_readhdr2(hdrname{i});
     runtypeTB{i}=hdr.runtype;
     filecommentTB{i}=hdr.filecomment;    
 
-    clearvars opt_cell1 opt_cell2 opt_cell3 opt_cell4 wta_cell1 wta_cell2 wta_cell3 wta_cell4 hdr
+    clearvars opt_cell1 opt_cell2 opt_cell3 wta_cell1 wta_cell2 wta_cell3 hdr
 end
 
 micron_factor=round(1./micron_factor,2);
 
-save([summarydir 'summary_PN_allTB_micron-factor' num2str(micron_factor) ''],...
+save([summarydir 'summary_PN_allTB_micron-factor' num2str(micron_factor) '.mat'],...
     'runtypeTB','filecommentTB','class2useTB','ml_analyzedTB','mdateTB','filelistTB','micron_factor','PN*');
 
 disp('Summary file stored here:')
