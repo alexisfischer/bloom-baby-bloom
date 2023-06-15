@@ -3,7 +3,8 @@
 %
 clear;
 
-th=3.9; %small and large PN width threshold
+thm=3.4; %large PN width threshold
+thl=6.5; %australis width threshold
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
@@ -18,7 +19,7 @@ T=timetable(DT,LAT,LON,TEMP,SAL,PCO2);
 
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); %GMT time
 HA.dt.Format='yyyy-MM-dd HH:mm:ss'; HA.dt=dateshift(HA.dt,'start','minute');
-H=table2timetable(HA); H=removevars(H,{'st','lat','lon','PNcellsmL'});
+H=table2timetable(HA); H=removevars(H,{'st','lat','lon','PNcellsmL','fx_pseu','fx_heim','fx_pung','fx_mult','fx_frau','fx_aust'});
 H.pDA_ngL(H.pDA_ngL<0)=0; H=sortrows(H);
 T = synchronize(T,H,'first','fillwithmissing');
 
@@ -61,22 +62,32 @@ load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNw
 
 %preallocate
 smallPN1=NaN*ml_analyzedTB; smallPN2=smallPN1; smallPN3=smallPN1; 
+medPN1=smallPN1; medPN2=smallPN1; medPN3=smallPN1;
 largePN1=smallPN1; largePN2=smallPN1; largePN3=smallPN1;
+
 for i=1:length(PNwidth_opt)
-    idx=(PNwidth_opt(i).cell1<th);
-    smallPN1(i)=sum(idx); largePN1(i)=sum(~idx);
+    ids=(PNwidth_opt(i).cell1<thm);
+    idm=(PNwidth_opt(i).cell1>=thm & PNwidth_opt(i).cell1<thl);
+    idl=(PNwidth_opt(i).cell1>=thl);
+    smallPN1(i)=sum(ids); medPN1(i)=sum(idm); largePN1(i)=sum(idl);
     
-    idx=(PNwidth_opt(i).cell2<th);
-    smallPN2(i)=sum(idx); largePN2(i)=sum(~idx);
+    ids=(PNwidth_opt(i).cell2<thm);
+    idm=(PNwidth_opt(i).cell2>=thm & PNwidth_opt(i).cell2<thl);
+    idl=(PNwidth_opt(i).cell2>=thl);
+    smallPN2(i)=sum(ids); medPN2(i)=sum(idm); largePN2(i)=sum(idl);
     
-    idx=(PNwidth_opt(i).cell3<th);
-    smallPN3(i)=sum(idx); largePN3(i)=sum(~idx);
+    ids=(PNwidth_opt(i).cell3<thm);
+    idm=(PNwidth_opt(i).cell3>=thm & PNwidth_opt(i).cell3<thl);
+    idl=(PNwidth_opt(i).cell3>=thl);
+    smallPN3(i)=sum(ids); medPN3(i)=sum(idm); largePN3(i)=sum(idl);
 end
 
 %sum up by cell count
 cellsmL(:,end+1)=sum([smallPN1,2*smallPN2,3.5*smallPN3],2)./ml_analyzedTB;
+cellsmL(:,end+1)=sum([medPN1,2*medPN2,3.5*medPN3],2)./ml_analyzedTB;
 cellsmL(:,end+1)=sum([largePN1,2*largePN2,3.5*largePN3],2)./ml_analyzedTB;
 class2useTB(end+1)={'Pseudonitzschia_small'};
+class2useTB(end+1)={'Pseudonitzschia_medium'};
 class2useTB(end+1)={'Pseudonitzschia_large'};
 
 %%%% round IFCB data to nearest minute and match with environmental data

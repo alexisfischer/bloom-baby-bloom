@@ -7,17 +7,20 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-fprint=1;
-yr=2021; % 2019; 2021
-option=2; % 1=Plot the individual data points; 2=Grid the data
+fprint=0;
+unit=0.06;
+yr=2019; % 2019; 2021
+option=1; % 1=Plot the individual data points; 2=Grid the data
 res = 0.15; % Coarser=0.2; Finer=0.1 % Set grid resolution (degrees)
 
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
-%data=P.Pseudonitzschia_small; label={' small';'PN/mL'}; name='small_PN';  
-data=P.Pseudonitzschia_large; label={' large';'PN/mL'}; name='large_PN'; 
+%data=P.Pseudonitzschia_small; label={'small';'PN/mL'}; name='small_PN';  
+%data=P.Pseudonitzschia_medium; label={'medium';'PN/mL'}; name='medium_PN'; 
+data=P.Pseudonitzschia_large; label={'large';'PN/mL'}; name='large_PN'; 
 
-lat=P.LAT; lon=P.LON; dt=P.DT; cax=[0 2]; 
-col=brewermap(256,'OrRd'); col(1:30,:)=[];
+lat=P.LAT; lon=P.LON-unit; dt=P.DT; cax=[0 2]; 
+col=brewermap(256,'Purples'); col(1:30,:)=[];
+
 if yr==2019
     idx=find(dt<datetime('01-Jan-2020'));
     data=data(idx); lat = lat(idx); lon = lon(idx);  
@@ -31,9 +34,10 @@ end
 logdata=log10(data);
 %%%% plot
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 2.5 4]); 
+%scatter(lon,lat,1,[.3 .3 .3],'o','filled'); hold on
 
-if option==1
-    scatter3(lon,lat,logdata,10,logdata,'filled'); view(2); hold on
+if option==1    
+    scatter(lon,lat,15,logdata,'o','filled');  hold on
 
 else
     % Create grid
@@ -51,7 +55,6 @@ else
     [lat_plot,lon_plot] = meshgrid(lat_grid,lon_grid);
     h=pcolor(lon_plot-res/2,lat_plot-res/2,data_grid); % have to shift lat/lon for pcolor with flat shading     
     shading flat; hold on;
-  %  set(h,'EdgeColor',[.3 .3 .3],'linewidth',.5)
     clearvars lat_plot lon_plot ii jj nx ny lon_grid lat_grid data_grid res
 end 
 
@@ -69,9 +72,31 @@ end
     load([filepath 'NOAA/Shimada/Data/coast_CCS.mat'],'coast');
     fillseg(coast); dasp(42); hold on;
     plot(states.lon,states.lat,'k'); hold on;
-set(gca,'ylim',[39.9 49],'xlim',[-126.6 -122.3],'xtick',-126:2:-121,'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
-title(yr,'fontsize',11);
-text(-124,43.7,label,'fontsize',11); hold on
+    set(gca,'ylim',[39.9 49],'xlim',[-126.6 -122.3],'xtick',-126:2:-121,'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
+    title(yr,'fontsize',11);
+    %text(-124,43.7,label,'fontsize',11); hold on
+
+load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); 
+HA.lon=HA.lon-unit;
+sem=NaN*ones(size(HA.st));
+HA=addvars(HA,sem,'after','dt');
+
+HA((HA.lat<40),:)=[]; %remove CA stations
+if yr==2019
+    H=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
+    H=flipud(H); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
+    scatter([H.lon],[H.lat],20,'o','k','MarkerFaceColor','none'); hold on
+    text([H.lon]-0.6,[H.lat],num2str([H.st2]),'fontsize',8)
+
+    [~,idx]=intersect(HA.st,[205;262;338]);
+    scatter(HA.lon(idx),HA.lat(idx),20,'o','r','MarkerFaceColor','none','linewidth',1); hold on    
+
+else
+    idx=find(HA.dt>datetime('01-Jan-2020'));
+    H = HA(idx,:);
+    [~,idx]=intersect(H.st,[48;50;54;67;73;90;97;99;100]);
+    scatter(H.lon(idx),H.lat(idx),20,'o','r','MarkerFaceColor','none','linewidth',1); hold on    
+end
 
 if fprint
     exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/' name '_Shimada' num2str(yr) '.png'],'Resolution',300)    

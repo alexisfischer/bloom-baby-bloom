@@ -1,4 +1,4 @@
-%% plot station map of hake, NCC, and Newport lines
+%% plot Hake cruise tracks
 clear;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';

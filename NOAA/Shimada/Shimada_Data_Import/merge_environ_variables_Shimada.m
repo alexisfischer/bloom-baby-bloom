@@ -70,7 +70,7 @@ TT.sal = fillmissing(TT.sal,'linear','SamplePoints',TT.DT,'MaxGap',minutes(20));
     end
 
     clearvars T dt temp sal id di idx i
-
+    
 %% fluorescence
 load([filepath 'Data/fluorescence_Shimada' yr],'dt','fl');
     T=timetable(dt,fl);
@@ -98,8 +98,30 @@ load([filepath 'Data/pCO2_Shimada' yr],'dt','fco2','sst');
 
     clearvars T dt fco2 id da db idx i
 
+%% air temperature (only 2019)
+load([filepath 'Data/airtemperature_Shimada' yr],'dt','airtemp');
+    T=timetable(dt,airtemp);
+    TT = synchronize(TT,T,'first','mean');
+    TT.airtemp = fillmissing(TT.airtemp,'linear','SamplePoints',TT.DT,'MaxGap',minutes(20));
+    %figure; plot(dt,airtemp,'-',TT.DT,TT.airtemp,'-')
+
+    clearvars T dt fl id di idx i 
+
+%% air pressure (only 2019)
+load([filepath 'Data/airpressure_Shimada' yr],'dt','atmp');
+    T=timetable(dt,atmp);
+    TT = synchronize(TT,T,'first','mean');
+    TT.atmp = fillmissing(TT.atmp,'linear','SamplePoints',TT.DT,'MaxGap',minutes(20));
+    %figure; plot(dt,atmp,'-',TT.DT,TT.atmp,'-')
+
+    clearvars T dt fl id di idx i 
+
 %%
 %figure; plot(LON(ib),LAT(ib),'o'); % test plot
 
-TEMP=TT.temp; SAL=TT.sal; FL=TT.fl; PCO2=TT.pco2; LON=TT.LON; LAT=TT.LAT; DT=TT.DT; TEMPi=TT.sst;
-save([filepath 'Data/environ_Shimada' yr],'DT','LON','LAT','TEMP','SAL','FL','PCO2','TEMPi');
+TEMP=TT.temp; SAL=TT.sal; FL=TT.fl; PCO2=TT.pco2; LON=TT.LON; LAT=TT.LAT; 
+DT=TT.DT; TEMPi=TT.sst; AIRTEMP=TT.airtemp; ATMP=TT.atmp;
+
+save([filepath 'Data/environ_Shimada' yr],'DT','LON','LAT','TEMP','SAL',...
+    'FL','PCO2','ATMP','AIRTEMP','TEMPi');
+

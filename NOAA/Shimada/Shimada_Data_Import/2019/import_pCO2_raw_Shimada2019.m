@@ -79,13 +79,28 @@ for i=1:length(Tdir)
 end
 
 T=timetable(dt,AirTemp, atmCond, AtmPressure, CO2aW, CO2bW, CO2Umm, condTemp, drip1, dryBoxTemp, dryDruck, equCond, equPress, equPump, equTemp, error, FETExtV, FETIntV, H2OaW, H2ObW, H2OFlow, H2OMmm, IntakeTemp, licorFlow, licorPress, licorTemp, O2Sat, O2Temp, O2Umm, pHTemp, Salinity, stdVal, type, ventFlow);
+T=removevars(T,{'AirTemp','AtmPressure','IntakeTemp','Salinity'});
 clearvars name indir Tdir i dti dt AirTemp atmCond AtmPressure CO2aW CO2bW CO2Umm condTemp drip1 dryBoxTemp dryDruck equCond equPress equPump equTemp error FETExtV FETIntV H2OaW H2ObW H2OFlow H2OMmm IntakeTemp licorFlow licorPress licorTemp O2Sat O2Temp O2Umm pHTemp stdVal Salinity type ventFlow;
 
 %% merge with lat lon
 T.dt=dateshift(T.dt,'start','minute');
-load([filepath 'NOAA/Shimada/Data/environ_Shimada2019'],'DT','LON','LAT','TEMP');
-TSG45_T=TEMP;
-TT=timetable(DT,LAT,LON,TSG45_T);
-T=synchronize(T,TT,'first');
+load([filepath 'NOAA/Shimada/Data/environ_Shimada2019'],'DT','LON','LAT','TEMP','SAL','AIRTEMP','ATMP');
+IntakeTemp_TSG45=TEMP;
+Salinity_TSG45=SAL;
+AirTemp_SAMOS=AIRTEMP;
+AtmPressure_SAMOS=ATMP;
 
-writetimetable(T,[outpath 'raw_pCO2_Shimada2019.csv'])
+TT=timetable(DT,LAT,LON,IntakeTemp_TSG45,Salinity_TSG45,AirTemp_SAMOS,AtmPressure_SAMOS);
+T=synchronize(T,TT,'first');
+dt=T.dt;
+
+T=timetable2table(T);
+day=dt; day.Format='yyyy-MM-dd';      
+time=dt; time.Format='HH:mm:ss';    
+
+T=addvars(T,day,'Before','dt');
+T=addvars(T,time,'Before','dt');
+T=removevars(T,'dt');
+
+%%
+writetable(T,[outpath 'raw_pCO2_Shimada2019.csv'])

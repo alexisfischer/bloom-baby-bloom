@@ -39,18 +39,16 @@ for i=1:length(filedir)
 end
 
 % create merged table
-dt=vertcat(p.dt);
+dtt=vertcat(p.dt);
 lat=vertcat(p.lat); 
 lon=vertcat(p.lon);
 sst=vertcat(p.sst); sst(sst==-999)=NaN;
 sal=vertcat(p.sal); sal(sal==-999)=NaN;
 fco2=vertcat(p.fco2); fco2(fco2==-999)=NaN;
 
-%% merge with raw data
+% order by date
+[dt,ia]=sort(dtt);
+lat=lat(ia); lon=lon(ia); sst=sst(ia); sal=sal(ia); fco2=fco2(ia);
 
-
-%%
 save([outpath 'pCO2_Shimada2019'],'dt','lat','lon','sst','sal','fco2');
-
-%%
 

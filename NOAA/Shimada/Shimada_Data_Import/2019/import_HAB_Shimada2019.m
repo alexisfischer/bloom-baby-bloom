@@ -55,6 +55,35 @@ HA19.NitrateM(ia)=N.NitrateM(ib);
 HA19.PhosphateM(ia)=N.PhosphateM(ib);
 HA19.SilicateM(ia)=N.SilicateM(ib);
 
+%% Import and Add SEM species data
+opts = spreadsheetImportOptions("NumVariables", 13);
+opts.Sheet = "subset";
+opts.DataRange = "A2:M12";
+opts.VariableNames = ["Datepst", "Var2", "Var3", "StationID", "Var5", "Var6", "Var7", "pseudodelicatissima", "heimii", "pungens", "multiseries", "fraudulenta", "australis"];
+opts.SelectedVariableNames = ["Datepst", "StationID", "pseudodelicatissima", "heimii", "pungens", "multiseries", "fraudulenta", "australis"];
+opts.VariableTypes = ["datetime", "char", "char", "double", "char", "char", "char", "double", "double", "double", "double", "double", "double"];
+opts = setvaropts(opts, ["Var2", "Var3", "Var5", "Var6", "Var7"], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, ["Var2", "Var3", "Var5", "Var6", "Var7"], "EmptyFieldRule", "auto");
+T = readtable("/Users/alexis.fischer/Documents/Shimada2019/HAB_SEM_Shimada2019.xlsx", opts, "UseExcel", false);
+
+clear opts
+
+[c,ia,ib]=intersect(HA19.StationID,T.StationID);
+
+HA19.fx_pseu=NaN*ones(size(HA19.SilicateM));
+HA19.fx_heim=HA19.fx_pseu;
+HA19.fx_pung=HA19.fx_pseu;
+HA19.fx_mult=HA19.fx_pseu;
+HA19.fx_frau=HA19.fx_pseu;
+HA19.fx_aust=HA19.fx_pseu;
+
+HA19.fx_pseu(ia)=T.pseudodelicatissima(ib);
+HA19.fx_heim(ia)=T.heimii(ib);
+HA19.fx_pung(ia)=T.pungens(ib);
+HA19.fx_mult(ia)=T.multiseries(ib);
+HA19.fx_frau(ia)=T.fraudulenta(ib);
+HA19.fx_aust(ia)=T.australis(ib);
+
 %% sanity check plot
 %figure; plot(N.GMTdate_forDB,N.SilicateM,'^',HA19.dt,HA19.SilicateM,'o')
 %%
