@@ -1,5 +1,6 @@
-clear; 
-close all;
+clear; close all;
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/CharacteristicPNGs/PN_small/';
 
 pixPerUm = 3.8;

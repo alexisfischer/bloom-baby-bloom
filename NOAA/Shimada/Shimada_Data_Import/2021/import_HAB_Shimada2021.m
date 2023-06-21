@@ -1,6 +1,9 @@
 %% Import 2021 Shimada HAB samples
 clear;
-filename="/Users/alexis.fischer/Documents/Shimada2021/Shimada 2021 HAB Data.xlsx";
+filepath='/Users/alexis.fischer/Documents/Shimada2021/';
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
+addpath(genpath(filepath));
 
 opts = spreadsheetImportOptions("NumVariables", 5);
 opts.Sheet = "Field sample log";
@@ -8,7 +11,7 @@ opts.DataRange = "A2:E93";
 opts.VariableNames = ["DayGMT", "TimeGMT", "Latitude", "Longitude", "StationID"];
 opts.VariableTypes = ["datetime", "double", "double", "double", "double"];
 opts = setvaropts(opts, "DayGMT", "InputFormat", "");
-HA21 = readtable(filename, opts, "UseExcel", false);
+HA21 = readtable([filepath 'Shimada 2021 HAB Data.xlsx'], opts, "UseExcel", false);
 HA21.StationID((isnan(HA21.StationID)))=999; %replace nan from 43A with 999
 
 %add time
@@ -33,7 +36,7 @@ opts.SelectedVariableNames = ["StationID", "pDAngL"];
 opts.VariableTypes = ["char", "double", "char", "char", "char", "char", "double"];
 opts = setvaropts(opts, ["Var1", "Var3", "Var4", "Var5", "Var6"], "WhitespaceRule", "preserve");
 opts = setvaropts(opts, ["Var1", "Var3", "Var4", "Var5", "Var6"], "EmptyFieldRule", "auto");
-Tp = readtable(filename, opts, "UseExcel", false);
+Tp = readtable([filepath 'Shimada 2021 HAB Data.xlsx'], opts, "UseExcel", false);
 Tp.StationID((isnan(Tp.StationID)))=999; %replace nan from 43A with 999
 clear opts
 
@@ -45,7 +48,7 @@ opts.SelectedVariableNames = ["StationID", "FinalChlAgL"];
 opts.VariableTypes = ["char", "double", "char", "char", "char", "char", "char", "double"];
 opts = setvaropts(opts, ["Var1", "Var3", "Var4", "Var5", "Var6", "Var7"], "WhitespaceRule", "preserve");
 opts = setvaropts(opts, ["Var1", "Var3", "Var4", "Var5", "Var6", "Var7"], "EmptyFieldRule", "auto");
-Tc = readtable(filename, opts, "UseExcel", false);
+Tc = readtable([filepath 'Shimada 2021 HAB Data.xlsx'], opts, "UseExcel", false);
 Tc.StationID((isnan(Tc.StationID)))=999; %replace nan from 43A with 999
 clear opts
 
@@ -54,12 +57,11 @@ opts.Sheet = "Nutrient Data";
 opts.DataRange = "A2:G94";
 opts.VariableNames = ["StationID", "NO3AveConcM", "NO3StdDev", "PO4AveConcM", "PO4StdDev", "SiAveConcM", "SiStdDev"];
 opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double"];
-Tn = readtable(filename, opts, "UseExcel", false);
+Tn = readtable([filepath 'Shimada 2021 HAB Data.xlsx'], opts, "UseExcel", false);
 Tn.StationID((isnan(Tn.StationID)))=999; %replace nan from 43A with 999
 clear opts
 
 %% match up station number with time
-
 [~,ia,ib]=intersect(Tp.StationID,HA21.StationID);
 val=Tp.pDAngL(ia); HA21.pDA_ngL(ib)=val;
 
@@ -75,5 +77,36 @@ val=Tn.SiAveConcM(ia); HA21.SiAveConcM(ib)=val;
 val=Tn.SiStdDev(ia); HA21.SiStdDev(ib)=val;
 
 HA21.Longitude=-HA21.Longitude;
+
+%% import SEM data
+opts = spreadsheetImportOptions("NumVariables", 18);
+opts.Sheet = "subset";
+opts.DataRange = "A2:R10";
+opts.VariableNames = ["DayGMT", "Var2", "Var3", "Var4", "StationID", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "delicatissima", "pseudodelicatissima", "heimii", "pungens", "multiseries", "fraudulenta", "australis"];
+opts.SelectedVariableNames = ["DayGMT", "StationID", "delicatissima", "pseudodelicatissima", "heimii", "pungens", "multiseries", "fraudulenta", "australis"];
+opts.VariableTypes = ["datetime", "char", "char", "char", "double", "char", "char", "char", "char", "char", "char", "double", "double", "double", "double", "double", "double", "double"];
+opts = setvaropts(opts, ["Var2", "Var3", "Var4", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11"], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, ["Var2", "Var3", "Var4", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11"], "EmptyFieldRule", "auto");
+T = readtable([filepath 'Shimada 2021 SEM.xlsx'], opts, "UseExcel", false);
+
+[~,ia,ib]=intersect(HA21.StationID,T.StationID);
+
+HA21.fx_deli=NaN*ones(size(HA21.SiAveConcM));
+HA21.fx_pseu=HA21.fx_deli;
+HA21.fx_heim=HA21.fx_deli;
+HA21.fx_pung=HA21.fx_deli;
+HA21.fx_mult=HA21.fx_deli;
+HA21.fx_frau=HA21.fx_deli;
+HA21.fx_aust=HA21.fx_deli;
+
+HA21.fx_deli(ia)=T.delicatissima(ib);
+HA21.fx_pseu(ia)=T.pseudodelicatissima(ib);
+HA21.fx_heim(ia)=T.heimii(ib);
+HA21.fx_pung(ia)=T.pungens(ib);
+HA21.fx_mult(ia)=T.multiseries(ib);
+HA21.fx_frau(ia)=T.fraudulenta(ib);
+HA21.fx_aust(ia)=T.australis(ib);
+
+%%
 
 save('~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/Shimada_HAB_2021','HA21');

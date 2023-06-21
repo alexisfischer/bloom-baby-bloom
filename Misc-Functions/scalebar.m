@@ -78,7 +78,7 @@ classdef scalebar < handle % & uiw.mixin.AssignPVPairs
         FontSize = 10;          % Fontsize of scalebar text
         FontWeight = 'normal'   % Fontweight of scalebar text
         
-        Margin = [10, 10]       % Pixel units of offset from corner of image.
+        Margin = [14 14]       % Pixel units of offset from corner of image.
     end
     
     properties (Dependent)

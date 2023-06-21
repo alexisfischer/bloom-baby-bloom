@@ -16,14 +16,15 @@ PhosphateM=[HA19.PhosphateM;HA21.PO4AveConcM];
 SilicateM=[HA19.SilicateM;HA21.SiAveConcM];
 PNcellsmL=[HA19.Total_PNcellsL;NaN*HA21.StationID]./1000;
 
-fx_pseu=[HA19.fx_pseu;NaN*HA21.StationID];
-fx_heim=[HA19.fx_heim;NaN*HA21.StationID];
-fx_pung=[HA19.fx_pung;NaN*HA21.StationID];
-fx_mult=[HA19.fx_mult;NaN*HA21.StationID];
-fx_frau=[HA19.fx_frau;NaN*HA21.StationID];
-fx_aust=[HA19.fx_aust;NaN*HA21.StationID];
+fx_deli=[0*HA19.StationID;HA21.fx_deli];
+fx_pseu=[HA19.fx_pseu;HA21.fx_pseu];
+fx_heim=[HA19.fx_heim;HA21.fx_heim];
+fx_pung=[HA19.fx_pung;HA21.fx_pung];
+fx_mult=[HA19.fx_mult;HA21.fx_mult];
+fx_frau=[HA19.fx_frau;HA21.fx_frau];
+fx_aust=[HA19.fx_aust;HA21.fx_aust];
 
 HA=table(dt,st,lat,lon,chlA_ugL,pDA_ngL,NitrateM,PhosphateM,SilicateM,PNcellsmL,...
-    fx_pseu,fx_heim,fx_pung,fx_mult,fx_frau,fx_aust);
+    fx_deli,fx_pseu,fx_heim,fx_pung,fx_mult,fx_frau,fx_aust);
 
 save([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');

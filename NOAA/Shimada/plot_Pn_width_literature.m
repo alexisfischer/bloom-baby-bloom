@@ -6,7 +6,7 @@ s(2).width=[1.5 3.4]; s(2).name='pseudodelicatissima';
 s(3).width=[2.4 5.3]; s(3).name='pungens';
 s(4).width=[3.4 6]; s(4).name='multiseries';
 s(5).width=[4 6]; s(5).name='hemii';
-s(6).width=[4.5 6.5]; s(6).name='fraudulenta';
+s(6).width=[4.5 7.0]; s(6).name='fraudulenta';
 s(7).width=[6.5 8]; s(7).name='australis';
 
 low=brewermap(2,'Blues'); 

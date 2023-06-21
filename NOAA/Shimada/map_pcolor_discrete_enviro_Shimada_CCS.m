@@ -43,22 +43,29 @@ scatter(lon(~ind),lat(~ind),20,data(~ind),'filled'); hold on
     hold on    
 
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); 
-HA((HA.lat<40),:)=[]; %remove CA stations
 HA.lon=HA.lon-unit;
+sem=NaN*ones(size(HA.st));
+HA=addvars(HA,sem,'after','dt');
+HA((HA.lat<40),:)=[]; %remove CA stations
+HA=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
+
 if yr==2019
-    H=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
-    H=flipud(H); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
+    idx=find(HA.dt<datetime('01-Jan-2020')); HA=HA(idx,:);    
+    H=flipud(HA); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
     scatter([H.lon],[H.lat],20,'o','k','MarkerFaceColor','none'); hold on
     text([H.lon]-0.6,[H.lat],num2str([H.st2]),'fontsize',8)
 
     [~,idx]=intersect(HA.st,[205;262;338]);
     scatter(HA.lon(idx),HA.lat(idx),20,'o','r','MarkerFaceColor','none','linewidth',1); hold on    
-    
+
 else
-    idx=find(HA.dt>datetime('01-Jan-2020'));
-    H = HA(idx,:);
-    [~,idx]=intersect(H.st,[48;50;54;67;73;90;97;99;100]);
-    scatter(H.lon(idx),H.lat(idx),20,'o','r','MarkerFaceColor','none','linewidth',1); hold on
+    idx=find(HA.dt>datetime('01-Jan-2020'));HA=HA(idx,:); 
+    H=flipud(HA); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
+    scatter([H.lon],[H.lat],20,'o','k','MarkerFaceColor','none'); hold on
+    text([H.lon]-0.9,[H.lat],num2str([H.st2]+9),'fontsize',8)
+
+    %[~,idx]=intersect(H.st,[48;50;54;67;73;90;97;99;100]);
+    %scatter(H.lon(idx),H.lat(idx),20,'o','r','MarkerFaceColor','none','linewidth',1); hold on    
 end
 
 % Plot map
