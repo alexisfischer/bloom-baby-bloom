@@ -79,15 +79,15 @@ val=Tn.SiStdDev(ia); HA21.SiStdDev(ib)=val;
 HA21.Longitude=-HA21.Longitude;
 
 %% import SEM data
-opts = spreadsheetImportOptions("NumVariables", 18);
-opts.Sheet = "subset";
-opts.DataRange = "A2:R10";
-opts.VariableNames = ["DayGMT", "Var2", "Var3", "Var4", "StationID", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "delicatissima", "pseudodelicatissima", "heimii", "pungens", "multiseries", "fraudulenta", "australis"];
-opts.SelectedVariableNames = ["DayGMT", "StationID", "delicatissima", "pseudodelicatissima", "heimii", "pungens", "multiseries", "fraudulenta", "australis"];
-opts.VariableTypes = ["datetime", "char", "char", "char", "double", "char", "char", "char", "char", "char", "char", "double", "double", "double", "double", "double", "double", "double"];
-opts = setvaropts(opts, ["Var2", "Var3", "Var4", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["Var2", "Var3", "Var4", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11"], "EmptyFieldRule", "auto");
-T = readtable([filepath 'Shimada 2021 SEM.xlsx'], opts, "UseExcel", false);
+opts = spreadsheetImportOptions("NumVariables", 23);
+opts.Sheet = "Shimada_2021_Hake";
+opts.DataRange = "A2:W09";
+opts.VariableNames = ["Var1", "Var2", "Var3", "Var4", "StationID", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var15", "Var16", "SEMDelicatissima", "SEMPseudodelicatissima", "SEMHeimii", "SEMPungens", "SEMMultiseries", "SEMFraudulenta", "SEMAustralis"];
+opts.SelectedVariableNames = ["StationID", "SEMDelicatissima", "SEMPseudodelicatissima", "SEMHeimii", "SEMPungens", "SEMMultiseries", "SEMFraudulenta", "SEMAustralis"];
+opts.VariableTypes = ["char", "char", "char", "char", "double", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "double", "double", "double", "double", "double", "double", "double"];
+opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var4", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var15", "Var16"], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var4", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var15", "Var16"], "EmptyFieldRule", "auto");
+T = readtable("/Users/alexis.fischer/Documents/Shimada2021/HAB_SEM_Shimada2021.xlsx", opts, "UseExcel", false);
 
 [~,ia,ib]=intersect(HA21.StationID,T.StationID);
 
@@ -99,13 +99,13 @@ HA21.fx_mult=HA21.fx_deli;
 HA21.fx_frau=HA21.fx_deli;
 HA21.fx_aust=HA21.fx_deli;
 
-HA21.fx_deli(ia)=T.delicatissima(ib);
-HA21.fx_pseu(ia)=T.pseudodelicatissima(ib);
-HA21.fx_heim(ia)=T.heimii(ib);
-HA21.fx_pung(ia)=T.pungens(ib);
-HA21.fx_mult(ia)=T.multiseries(ib);
-HA21.fx_frau(ia)=T.fraudulenta(ib);
-HA21.fx_aust(ia)=T.australis(ib);
+HA21.fx_deli(ia)=T.SEMDelicatissima(ib);
+HA21.fx_pseu(ia)=T.SEMPseudodelicatissima(ib);
+HA21.fx_heim(ia)=T.SEMHeimii(ib);
+HA21.fx_pung(ia)=T.SEMPungens(ib);
+HA21.fx_mult(ia)=T.SEMMultiseries(ib);
+HA21.fx_frau(ia)=T.SEMFraudulenta(ib);
+HA21.fx_aust(ia)=T.SEMAustralis(ib);
 
 %%
 

@@ -7,19 +7,20 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-fprint=1;
+fprint=0;
 unit=0.06;
-yr=2021; % 2019; 2021
+yr=2019; % 2019; 2021
 option=1; % 1=Plot the individual data points; 2=Grid the data
 res = 0.15; % Coarser=0.2; Finer=0.1 % Set grid resolution (degrees)
 
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
-%data=P.Pseudonitzschia_small; label={'small';'PN/mL'}; name='small_PN';  
-data=P.Pseudonitzschia_medium; label={'medium';'PN/mL'}; name='medium_PN'; 
-%data=P.Pseudonitzschia_large; label={'large';'PN/mL'}; name='large_PN'; 
+%data=P.PN_cell; label={'log PN (cells/mL)'}; name='PN'; cax=[0 2];
+%data=P.diatom_biovol; label={'  diatom';'  bvl/mL'}; name='diatom'; cax=[1 7.3];
+data=P.tox_cell./1000; label={'Cellular DA (pg/cell)'}; name='tox_cell'; cax=[0 100]; 
 
-lat=P.LAT; lon=P.LON-unit; dt=P.DT; cax=[0 2]; 
-col=brewermap(256,'Purples'); col(1:30,:)=[];
+lat=P.LAT; lon=P.LON-unit; dt=P.DT;  
+%col=brewermap(256,'YlGn'); col(1:30,:)=[];
+col=brewermap(256,'YlOrBr'); col(1:30,:)=[];
 
 if yr==2019
     idx=find(dt<datetime('01-Jan-2020'));
@@ -29,14 +30,17 @@ elseif yr==2021
     data=data(idx); lat = lat(idx); lon = lon(idx); 
 end
 
-logdata=log10(data);
+%logdata=log10(data);
+logdata=(data);
+
 %%%% plot
-fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 2.5 4]); 
+fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 2 4.7]); 
 %scatter(lon,lat,1,[.3 .3 .3],'o','filled'); hold on
 
 if option==1    
     scatter(lon,lat,15,logdata,'o','filled');  hold on
-
+    % scatter(lon(~ind),lat(~ind),15,logdata(~ind),'o','filled'); hold on
+    % scatter(lon(ind),lat(ind),1,[.3 .3 .3],'o','filled'); hold on
 else
     % Create grid
     lon_grid = min(lon):res:max(lon)+.5;
@@ -58,20 +62,23 @@ end
 
     colormap(col); clim(cax);
     axis([min(lon) max(lon) min(lat) max(lat)]);
-    h=colorbar('east');             
-    hp=get(h,'pos');     
-    hp=[0.83*hp(1) 1*hp(2) .6*hp(3) .32*hp(4)]; % [left, bottom, width, height].
-    set(h,'pos',hp,'xaxisloc','left','fontsize',9);
-    hold on    
+    h=colorbar('northoutside'); hp=get(h,'pos');    
+    set(h,'pos',hp,'xaxisloc','top','fontsize',9,'tickdir','out');
+    xtickangle(0); hold on;    
+    hold on     
+
+colorTitleHandle = get(h,'Title');
+set(colorTitleHandle,'String',label,'fontsize',11);
 
     % Plot map
     states=load([filepath 'NOAA/Shimada/Data/USwestcoast_pol.mat']);
     load([filepath 'NOAA/Shimada/Data/coast_CCS.mat'],'coast');
     fillseg(coast); dasp(42); hold on;
     plot(states.lon,states.lat,'k'); hold on;
-    set(gca,'ylim',[39.9 49],'xlim',[-126.6 -122.3],'xtick',-126:2:-121,'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
-    title(yr,'fontsize',11);
-    %text(-124,43.7,label,'fontsize',11); hold on
+set(gca,'ylim',[39.9 49],'xlim',[-126.6 -123.5],'xtick',-127:2:-124,...
+    'xticklabel',{'127 W','125 W'},'yticklabel',...
+    {'40 N','41 N','42 N','43 N','44 N','45 N','46 N','47 N','48 N','49 N'},...
+    'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
 
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); 
 HA.lon=HA.lon-unit;
@@ -82,21 +89,14 @@ HA=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
 
 if yr==2019
     idx=find(HA.dt<datetime('01-Jan-2020')); HA=HA(idx,:);    
-    H=flipud(HA); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
+    H=flipud(HA); H.st2(:)=(1:1:length(H.st)); %order them top to bottom
     scatter([H.lon],[H.lat],20,'o','k','MarkerFaceColor','none'); hold on
-    text([H.lon]-0.6,[H.lat],num2str([H.st2]),'fontsize',8)
-
-    [~,idx]=intersect(HA.st,[205;262;338]);
-    scatter(HA.lon(idx),HA.lat(idx),20,'o','r','MarkerFaceColor','none','linewidth',1); hold on    
-
+    text([H.lon]-0.4,[H.lat]-.1,num2str([H.st2]),'fontsize',8)
 else
     idx=find(HA.dt>datetime('01-Jan-2020'));HA=HA(idx,:); 
     H=flipud(HA); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
     scatter([H.lon],[H.lat],20,'o','k','MarkerFaceColor','none'); hold on
-    text([H.lon]-0.9,[H.lat],num2str([H.st2]+9),'fontsize',8)
-
-    %[~,idx]=intersect(H.st,[48;50;54;67;73;90;97;99;100]);
-    %scatter(H.lon(idx),H.lat(idx),20,'o','r','MarkerFaceColor','none','linewidth',1); hold on    
+    text([H.lon]-0.6,[H.lat]-.15,num2str([H.st2]+9),'fontsize',8); hold on
 end
 
 if fprint

@@ -20,10 +20,13 @@ addpath(genpath(basepath));
 load([filepath 'performance_classifier_' name],'topfeat','maxthre','all',...
     'opt','thr','c_thr','c_all','c_opt','c_aht','aht','adhocthresh','trainingset');
 
+disp(['optimal fx unclassified = ' num2str(opt.fxUnclass(end)) '']); 
+
+%%
+opt(end,:)=[]; 
 [~,class]=get_class_ind( all.class,'all',classidx);
 [~,classU]=get_class_ind( opt.class,'all',classidx);
 maxn=round(max([opt.total]),-2);
-disp(['optimal fx unclassified = ' num2str(opt.fxUnclass(end)) '']); opt(end,:)=[]; 
 %%
 if exist('thr')    
     disp(['chosen threshold fx unclassified = ' num2str(thr.fxUnclass(end)) '']); thr(end,:)=[];

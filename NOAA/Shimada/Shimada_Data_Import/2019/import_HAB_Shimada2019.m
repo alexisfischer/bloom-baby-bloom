@@ -43,6 +43,7 @@ clear opts
 HA19.Total_PNcellsL(HA19.Total_PNcellsL==-9999)=NaN;
 HA19.LargeCellsInCount(HA19.LargeCellsInCount==-9999)=NaN;
 HA19.pDAngL(HA19.pDAngL==-9999)=NaN;
+HA19.pDAngL(HA19.pDAngL<0)=0;
 HA19.Chl_agL(HA19.Chl_agL==-9999)=NaN;
 
 %% merge data
@@ -56,33 +57,35 @@ HA19.PhosphateM(ia)=N.PhosphateM(ib);
 HA19.SilicateM(ia)=N.SilicateM(ib);
 
 %% Import and Add SEM species data
-opts = spreadsheetImportOptions("NumVariables", 13);
-opts.Sheet = "subset";
-opts.DataRange = "A2:M12";
-opts.VariableNames = ["Datepst", "Var2", "Var3", "StationID", "Var5", "Var6", "Var7", "pseudodelicatissima", "heimii", "pungens", "multiseries", "fraudulenta", "australis"];
-opts.SelectedVariableNames = ["Datepst", "StationID", "pseudodelicatissima", "heimii", "pungens", "multiseries", "fraudulenta", "australis"];
-opts.VariableTypes = ["datetime", "char", "char", "double", "char", "char", "char", "double", "double", "double", "double", "double", "double"];
-opts = setvaropts(opts, ["Var2", "Var3", "Var5", "Var6", "Var7"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["Var2", "Var3", "Var5", "Var6", "Var7"], "EmptyFieldRule", "auto");
+opts = spreadsheetImportOptions("NumVariables", 36);
+opts.Sheet = "2019 Shimada PHATS HAB data";
+opts.DataRange = "A2:AJ15";
+opts.VariableNames = ["Var1", "Var2", "Var3", "StationID", "Var5", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var15", "Var16", "Var17", "Var18", "Var19", "Var20", "Var21", "Var22", "Var23", "Var24", "Var25", "Var26", "Var27", "Var28", "Var29", "SEMDelicatissima", "SEMPseudodelicatissima", "SEMHeimii", "SEMPungens", "SEMMultiseries", "SEMFraudulenta", "SEMAustralis"];
+opts.SelectedVariableNames = ["StationID", "SEMDelicatissima", "SEMPseudodelicatissima", "SEMHeimii", "SEMPungens", "SEMMultiseries", "SEMFraudulenta", "SEMAustralis"];
+opts.VariableTypes = ["char", "char", "char", "double", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "char", "double", "double", "double", "double", "double", "double", "double"];
+opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var5", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var15", "Var16", "Var17", "Var18", "Var19", "Var20", "Var21", "Var22", "Var23", "Var24", "Var25", "Var26", "Var27", "Var28", "Var29"], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, ["Var1", "Var2", "Var3", "Var5", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "Var15", "Var16", "Var17", "Var18", "Var19", "Var20", "Var21", "Var22", "Var23", "Var24", "Var25", "Var26", "Var27", "Var28", "Var29"], "EmptyFieldRule", "auto");
 T = readtable("/Users/alexis.fischer/Documents/Shimada2019/HAB_SEM_Shimada2019.xlsx", opts, "UseExcel", false);
 
 clear opts
 
 [c,ia,ib]=intersect(HA19.StationID,T.StationID);
 
-HA19.fx_pseu=NaN*ones(size(HA19.SilicateM));
-HA19.fx_heim=HA19.fx_pseu;
-HA19.fx_pung=HA19.fx_pseu;
-HA19.fx_mult=HA19.fx_pseu;
-HA19.fx_frau=HA19.fx_pseu;
-HA19.fx_aust=HA19.fx_pseu;
+HA19.fx_deli=NaN*ones(size(HA19.SilicateM));
+HA19.fx_pseu=HA19.fx_deli;
+HA19.fx_heim=HA19.fx_deli;
+HA19.fx_pung=HA19.fx_deli;
+HA19.fx_mult=HA19.fx_deli;
+HA19.fx_frau=HA19.fx_deli;
+HA19.fx_aust=HA19.fx_deli;
 
-HA19.fx_pseu(ia)=T.pseudodelicatissima(ib);
-HA19.fx_heim(ia)=T.heimii(ib);
-HA19.fx_pung(ia)=T.pungens(ib);
-HA19.fx_mult(ia)=T.multiseries(ib);
-HA19.fx_frau(ia)=T.fraudulenta(ib);
-HA19.fx_aust(ia)=T.australis(ib);
+HA19.fx_deli(ia)=T.SEMDelicatissima(ib);
+HA19.fx_pseu(ia)=T.SEMPseudodelicatissima(ib);
+HA19.fx_heim(ia)=T.SEMHeimii(ib);
+HA19.fx_pung(ia)=T.SEMPungens(ib);
+HA19.fx_mult(ia)=T.SEMMultiseries(ib);
+HA19.fx_frau(ia)=T.SEMFraudulenta(ib);
+HA19.fx_aust(ia)=T.SEMAustralis(ib);
 
 %% sanity check plot
 %figure; plot(N.GMTdate_forDB,N.SilicateM,'^',HA19.dt,HA19.SilicateM,'o')

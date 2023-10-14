@@ -3,6 +3,7 @@
 %
 clear;
 
+classifiername='CCS_NOAA-OSU_v7';
 thm=3.4; %large PN width threshold
 thl=6.5; %australis width threshold
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
@@ -19,30 +20,66 @@ T=timetable(DT,LAT,LON,TEMP,SAL,PCO2);
 
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); %GMT time
 HA.dt.Format='yyyy-MM-dd HH:mm:ss'; HA.dt=dateshift(HA.dt,'start','minute');
-H=table2timetable(HA); H=removevars(H,{'st','lat','lon','PNcellsmL','fx_pseu','fx_heim','fx_pung','fx_mult','fx_frau','fx_aust'});
-H.pDA_ngL(H.pDA_ngL<0)=0; H=sortrows(H);
+H=table2timetable(HA); H=removevars(H,{'st','lat','lon','PNcellsmL','fx_pseu','fx_heim','fx_pung','fx_mult','fx_frau','fx_aust','fx_deli'});
+H.pDA_pgmL(H.pDA_pgmL<0)=0; H=sortrows(H);
 T = synchronize(T,H,'first','fillwithmissing');
 
-%%%% duplicate HA data for 11 minutes before and after data collection
-val=11;
+% %% find distance between each data point
+% T.km=NaN*T.Silicate_uM;
+% wgs84 = wgs84Ellipsoid; 
+% 
+% for i=1:length(idx)
+%     T.kmi(i)=distance(T.LAT(i),T.LON(i),T.LAT(i+1),T.LON(i+1),wgs84);
+% end
+
+T.kmi=ones(size(T.Silicate_uM));
+T.km_gap=NaN*T.Silicate_uM;
+
+%%%% duplicate HA data for X minutes before and after data collection
+val=10;
+range=(1:1:10)';
+dist=[flipud(range);0;range];
 idx=find(~isnan(T.chlA_ugL));
 for i=1:length(idx)
-    T.chlA_ugL(idx(i)-val:idx(i)+val)=T.chlA_ugL(idx(i));
-    T.pDA_ngL(idx(i)-val:idx(i)+val)=T.pDA_ngL(idx(i));
-    T.NitrateM(idx(i)-val:idx(i)+val)=T.NitrateM(idx(i));
-    T.PhosphateM(idx(i)-val:idx(i)+val)=T.PhosphateM(idx(i));
-    T.SilicateM(idx(i)-val:idx(i)+val)=T.SilicateM(idx(i));
+    %fill before
+        irange=idx(i)-val:idx(i)-1;
+        T.km_gap(irange)=flipud(cumsum([T.kmi(irange)]));
+    %fill after
+        irange=idx(i)+1:idx(i)+val;
+        T.km_gap(irange)=cumsum([T.kmi(irange)]);
+        T.km_gap(idx(i))=0;
+
+    irange=idx(i)-val:idx(i)+val;
+    T.chlA_ugL(irange)=T.chlA_ugL(idx(i));
+    T.pDA_pgmL(irange)=T.pDA_pgmL(idx(i));
+    T.Nitrate_uM(irange)=T.Nitrate_uM(idx(i));
+    T.Phosphate_uM(irange)=T.Phosphate_uM(idx(i));
+    T.Silicate_uM(irange)=T.Silicate_uM(idx(i));
+    T.SiNi(irange)=T.SiNi(idx(i));
+    T.PhNi(irange)=T.PhNi(idx(i));      
 end
 
-clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT idx i val
+%max distance traveled in 10 mins = 5km
+T.km_gap=T.km_gap*.5;
+
+clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT i 
 
 %% format IFCB data
-classifiername='CCS_NOAA-OSU_v7';
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
-    'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
+    'class2useTB','classcountTB_above_optthresh','classbiovolTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
 dt=datetime(mdateTB,'convertfrom','datenum'); dt.Format='yyyy-MM-dd HH:mm:ss';        
 cellsmL = classcountTB_above_optthresh./ml_analyzedTB;    
+
+%%%% sum PN biovolume into one variable all variables except and PN from regular summary
+id1=find(contains(class2useTB,'Pseudo-nitzschia_large_1cell')); 
+id2=find(contains(class2useTB,'Pseudo-nitzschia_large_2cell')); 
+id3=find(contains(class2useTB,'Pseudo-nitzschia_large_3cell')); 
+PN_bvmL = sum(classbiovolTB_above_optthresh(:,[id1,id2,id3]),2)./ml_analyzedTB;
+
+%%% sum diatom biovolume
+[ia,class_label]=get_class_ind(class2useTB,'diatom',[filepath 'IFCB-Tools/convert_index_class/class_indices']);
+diatom_bvmL=sum(classbiovolTB_above_optthresh(:,ia),2)./ml_analyzedTB-PN_bvmL;
 
 %%%% rename grouped classes 
 class2useTB(strcmp('Cerataulina,Dactyliosolen,Detonula,Guinardia',class2useTB))={'Cera_Dact_Deto_Guin'};
@@ -55,6 +92,7 @@ class2useTB(strcmp('Proboscia,Rhizosolenia',class2useTB))={'Prob_Rhiz'};
 %%%% remove unclassified and PN from regular summary
 idx=contains(class2useTB,'Pseudo-nitzschia'); cellsmL(:,idx)=[]; class2useTB(idx)=[];
 idx=contains(class2useTB,'unclassified'); cellsmL(:,idx)=[]; class2useTB(idx)=[];
+
 clearvars ml_analyzedTB idx classcountTB_above_optthresh mdateTB
 
 %% split PN into small and large cells
@@ -90,6 +128,22 @@ class2useTB(end+1)={'Pseudonitzschia_small'};
 class2useTB(end+1)={'Pseudonitzschia_medium'};
 class2useTB(end+1)={'Pseudonitzschia_large'};
 
+%mean width
+width=[PNwidth_opt.mean]';
+width(isnan(width))=0;
+cellsmL(:,end+1)=width;
+class2useTB(end+1)={'mean_PNwidth'};
+
+%sum all PN
+cellsmL(:,end+1)=sum([cellsmL(:,contains(class2useTB,'Pseudonitzschia'))],2);
+class2useTB(end+1)={'PN_cell'};
+
+%add biovol
+cellsmL(:,end+1)=PN_bvmL;
+cellsmL(:,end+1)=diatom_bvmL;
+class2useTB(end+1)={'PN_biovol'};
+class2useTB(end+1)={'diatom_biovol'};
+
 %%%% round IFCB data to nearest minute and match with environmental data
 dt=dateshift(dt,'start','minute'); 
 TT = array2timetable(cellsmL(:,1:end),'RowTimes',dt,'VariableNames',class2useTB(1:end));
@@ -98,19 +152,32 @@ TT=addvars(TT,filelistTB,'Before',class2useTB(1));
 clearvars class2useTB th dt cellsmL filelistTB i idx ml_analyzedTB PNwidth_opt mdateTB smallPN1 smallPN2 smallPN3 largePN1 largePN2 largePN3
 
 %% merge environmental data with IFCB data
-TT=synchronize(TT,T,'first');
+P=synchronize(TT,T,'first');
+
+P.pDA_fgmL=P.pDA_pgmL.*0.001.*1000000; %convert to fg/mL
 
 % make 2019 and 2021 datasets equivalent
-TT(TT.LAT<40,:)=[]; % remove data south of 40 N
-TT(TT.LAT>47.5 & TT.LON>-124.7,:)=[]; %remove data from the Strait
-P=TT;
+P(P.LAT<40,:)=[]; % remove data south of 40 N
+P(P.LAT>47.5 & P.LON>-124.7,:)=[]; %remove data from the Strait
+P=movevars(P,{'LAT' 'LON' 'km_gap' 'TEMP' 'SAL' 'PCO2' 'Nitrate_uM' 'Phosphate_uM' ...
+    'Silicate_uM' 'PhNi' 'SiNi' 'chlA_ugL' 'pDA_pgmL' 'pDA_fgmL'},'Before','filelistTB');
+P(isnan(P.LAT),:)=[];
 
-%%%% remove sensor data gaps
-idx=ismissing(TT.TEMP); TT(idx,:)=[];
-idx=ismissing(TT.PCO2); TT(idx,:)=[];
+%%find toxicity/cell and toxicity/biovolume
+P.tox_small=P.pDA_fgmL./P.Pseudonitzschia_small;
+P.tox_medium=P.pDA_fgmL./P.Pseudonitzschia_medium;
+P.tox_large=P.pDA_fgmL./P.Pseudonitzschia_large;
+P.tox_cell=P.pDA_fgmL./P.PN_cell;
+P.tox_biovol=P.pDA_fgmL./P.PN_biovol;
+
+P.tox_small(P.tox_small==Inf)=0;
+P.tox_medium(P.tox_medium==Inf)=0;
+P.tox_large(P.tox_large==Inf)=0;
+P.tox_cell(P.tox_cell==Inf)=0;
+P.tox_biovol(P.tox_biovol==Inf)=0;
 
 %% format for .csv file
 writetimetable(TT,[filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.csv'])
-save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'TT','P');
+save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
 
-clearvars I E T idx val
+clearvars E T idx val
