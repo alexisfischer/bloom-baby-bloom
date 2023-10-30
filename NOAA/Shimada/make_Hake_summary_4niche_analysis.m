@@ -24,36 +24,38 @@ H=table2timetable(HA); H=removevars(H,{'st','lat','lon','PNcellsmL','fx_pseu','f
 H.pDA_pgmL(H.pDA_pgmL<0)=0; H=sortrows(H);
 T = synchronize(T,H,'first','fillwithmissing');
 
-%%%% find Euclidian distance in km between each data point
-REQUIRES MAPPING TOOLBOX
-T.kmi=NaN*T.Silicate_uM;
-wgs84 = wgs84Ellipsoid; 
-for i=1:length(idx)
-    T.kmi(i)=distance(T.LAT(i),T.LON(i),T.LAT(i+1),T.LON(i+1),wgs84);
+%%%% find distance in km between samples
+%REQUIRES MAPPING TOOLBOX
+T.sample_km=NaN*T.Silicate_uM;
+for i=1:(length(T.sample_km)-1)
+    T.sample_km(i)=deg2km(distance(T.LAT(i),T.LON(i),T.LAT(i+1),T.LON(i+1))); 
 end
 
-%%
-% %% no longer using this bc have mapping toolbox
-%Does not REQUIRE MAPPING TOOLBOX
-%T.kmi=ones(size(T.Silicate_uM));
+%% find distance in km each sample and the coast
+load([filepath 'NOAA/Shimada/Data/coast_CCS.mat'],'coast');
+coast=coast((coast(:,2)>=40 & coast(:,2)<=49),:); %shorten this to just NCC
+C.lat=coast(:,2); C.lon=coast(:,1);
+T.coast_km=NaN*T.Silicate_uM; %preallocate
+for i=1:(length(T.coast_km))
+    [dist,~]=(distance(T.LAT(i),T.LON(i),C.lat,C.lon)); % get all the possible combinations
+    T.coast_km(i) = deg2km(min(dist)); %find the minimum distance
+end
 
-load([filepath 'NOAA/Shimada/Data/T_distance']);
-T.km_gap=NaN*T.Silicate_uM;
+%% duplicate HA data for X minutes before and after data collection
+% this is to determine the distance between IFCB and discrete samples
 X=10; % minutes. max gap allowed 
 range=(1:1:10)';
 dist=[flipud(range);0;range];
+T.gap_km=NaN*T.Silicate_uM;
 idx=find(~isnan(T.chlA_ugL));
-
-%%%% duplicate HA data for X minutes before and after data collection
 for i=1:length(idx)
-%i=1
     %fill before
-        irange=idx(i)-X:idx(i)-1;
-        T.km_gap(irange)=flipud(cumsum([T.kmi(irange)]));
+    irange=idx(i)-X:idx(i)-1;
+    T.gap_km(irange)=flipud(cumsum([T.sample_km(irange)]));
     %fill after
-        irange=idx(i)+1:idx(i)+X;
-        T.km_gap(irange)=cumsum([T.kmi(irange)]);
-        T.km_gap(idx(i))=0;
+    irange=idx(i)+1:idx(i)+X;
+    T.gap_km(irange)=cumsum([T.sample_km(irange)]);
+    T.gap_km(idx(i))=0;
 
     irange=idx(i)-X:idx(i)+X;
     T.chlA_ugL(irange)=T.chlA_ugL(idx(i));
@@ -64,11 +66,8 @@ for i=1:length(idx)
     T.S2N(irange)=T.S2N(idx(i));
     T.P2N(irange)=T.P2N(idx(i));      
 end
-%%
-T.km_gap=T.km_gap*.5;
 
 clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT i 
-
 
 %% format IFCB data
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
@@ -173,7 +172,7 @@ P.pDA_fgmL=P.pDA_pgmL.*0.001.*1000000; %convert to fg/mL
 % make 2019 and 2021 datasets equivalent
 P(P.LAT<40,:)=[]; % remove data south of 40 N
 P(P.LAT>47.5 & P.LON>-124.7,:)=[]; %remove data from the Strait
-P=movevars(P,{'LAT' 'LON' 'km_gap' 'TEMP' 'SAL' 'PCO2' 'Nitrate_uM' 'Phosphate_uM' ...
+P=movevars(P,{'LAT' 'LON' 'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'Nitrate_uM' 'Phosphate_uM' ...
     'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'pDA_pgmL' 'pDA_fgmL'},'Before','filelistTB');
 P(isnan(P.LAT),:)=[];
 
