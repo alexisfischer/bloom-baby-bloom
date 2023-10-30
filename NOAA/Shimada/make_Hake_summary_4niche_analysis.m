@@ -10,7 +10,7 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
-%% match timestamps of sensor data and HAB data
+%%%% match timestamps of sensor data and HAB data
 %%%% merge 2019 and 2021 data
 S19=load([filepath 'NOAA/Shimada/Data/environ_Shimada2019'],'DT','LON','LAT','TEMP','SAL','PCO2');
 S21=load([filepath 'NOAA/Shimada/Data/environ_Shimada2021'],'DT','LON','LAT','TEMP','SAL','PCO2');
@@ -24,45 +24,51 @@ H=table2timetable(HA); H=removevars(H,{'st','lat','lon','PNcellsmL','fx_pseu','f
 H.pDA_pgmL(H.pDA_pgmL<0)=0; H=sortrows(H);
 T = synchronize(T,H,'first','fillwithmissing');
 
-% %% find distance between each data point
-% T.km=NaN*T.Silicate_uM;
-% wgs84 = wgs84Ellipsoid; 
-% 
-% for i=1:length(idx)
-%     T.kmi(i)=distance(T.LAT(i),T.LON(i),T.LAT(i+1),T.LON(i+1),wgs84);
-% end
+%%%% find Euclidian distance in km between each data point
+REQUIRES MAPPING TOOLBOX
+T.kmi=NaN*T.Silicate_uM;
+wgs84 = wgs84Ellipsoid; 
+for i=1:length(idx)
+    T.kmi(i)=distance(T.LAT(i),T.LON(i),T.LAT(i+1),T.LON(i+1),wgs84);
+end
 
-T.kmi=ones(size(T.Silicate_uM));
+%%
+% %% no longer using this bc have mapping toolbox
+%Does not REQUIRE MAPPING TOOLBOX
+%T.kmi=ones(size(T.Silicate_uM));
+
+load([filepath 'NOAA/Shimada/Data/T_distance']);
 T.km_gap=NaN*T.Silicate_uM;
-
-%%%% duplicate HA data for X minutes before and after data collection
-val=10;
+X=10; % minutes. max gap allowed 
 range=(1:1:10)';
 dist=[flipud(range);0;range];
 idx=find(~isnan(T.chlA_ugL));
+
+%%%% duplicate HA data for X minutes before and after data collection
 for i=1:length(idx)
+%i=1
     %fill before
-        irange=idx(i)-val:idx(i)-1;
+        irange=idx(i)-X:idx(i)-1;
         T.km_gap(irange)=flipud(cumsum([T.kmi(irange)]));
     %fill after
-        irange=idx(i)+1:idx(i)+val;
+        irange=idx(i)+1:idx(i)+X;
         T.km_gap(irange)=cumsum([T.kmi(irange)]);
         T.km_gap(idx(i))=0;
 
-    irange=idx(i)-val:idx(i)+val;
+    irange=idx(i)-X:idx(i)+X;
     T.chlA_ugL(irange)=T.chlA_ugL(idx(i));
     T.pDA_pgmL(irange)=T.pDA_pgmL(idx(i));
     T.Nitrate_uM(irange)=T.Nitrate_uM(idx(i));
     T.Phosphate_uM(irange)=T.Phosphate_uM(idx(i));
     T.Silicate_uM(irange)=T.Silicate_uM(idx(i));
-    T.SiNi(irange)=T.SiNi(idx(i));
-    T.PhNi(irange)=T.PhNi(idx(i));      
+    T.S2N(irange)=T.S2N(idx(i));
+    T.P2N(irange)=T.P2N(idx(i));      
 end
-
-%max distance traveled in 10 mins = 5km
+%%
 T.km_gap=T.km_gap*.5;
 
 clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT i 
+
 
 %% format IFCB data
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
@@ -77,9 +83,13 @@ id2=find(contains(class2useTB,'Pseudo-nitzschia_large_2cell'));
 id3=find(contains(class2useTB,'Pseudo-nitzschia_large_3cell')); 
 PN_bvmL = sum(classbiovolTB_above_optthresh(:,[id1,id2,id3]),2)./ml_analyzedTB;
 
-%%% sum diatom biovolume
-[ia,class_label]=get_class_ind(class2useTB,'diatom',[filepath 'IFCB-Tools/convert_index_class/class_indices']);
-diatom_bvmL=sum(classbiovolTB_above_optthresh(:,ia),2)./ml_analyzedTB-PN_bvmL;
+%%%% get ratio of of dinos to diatoms 
+% sum diatom biovolume
+[idiatom,~]=get_class_ind(class2useTB,'diatom',[filepath 'IFCB-Tools/convert_index_class/class_indices']);
+[idino,~]=get_class_ind(class2useTB,'dinoflagellate',[filepath 'IFCB-Tools/convert_index_class/class_indices']);
+diatom_bvmL=sum(classbiovolTB_above_optthresh(:,idiatom),2)./ml_analyzedTB;
+dino_bvmL=sum(classbiovolTB_above_optthresh(:,idino),2)./ml_analyzedTB;
+dino_diat_ratio=dino_bvmL./diatom_bvmL;
 
 %%%% rename grouped classes 
 class2useTB(strcmp('Cerataulina,Dactyliosolen,Detonula,Guinardia',class2useTB))={'Cera_Dact_Deto_Guin'};
@@ -141,8 +151,12 @@ class2useTB(end+1)={'PN_cell'};
 %add biovol
 cellsmL(:,end+1)=PN_bvmL;
 cellsmL(:,end+1)=diatom_bvmL;
+cellsmL(:,end+1)=dino_bvmL;
+cellsmL(:,end+1)=dino_diat_ratio;
 class2useTB(end+1)={'PN_biovol'};
 class2useTB(end+1)={'diatom_biovol'};
+class2useTB(end+1)={'dino_biovol'};
+class2useTB(end+1)={'dino_diat_ratio'};
 
 %%%% round IFCB data to nearest minute and match with environmental data
 dt=dateshift(dt,'start','minute'); 
@@ -160,7 +174,7 @@ P.pDA_fgmL=P.pDA_pgmL.*0.001.*1000000; %convert to fg/mL
 P(P.LAT<40,:)=[]; % remove data south of 40 N
 P(P.LAT>47.5 & P.LON>-124.7,:)=[]; %remove data from the Strait
 P=movevars(P,{'LAT' 'LON' 'km_gap' 'TEMP' 'SAL' 'PCO2' 'Nitrate_uM' 'Phosphate_uM' ...
-    'Silicate_uM' 'PhNi' 'SiNi' 'chlA_ugL' 'pDA_pgmL' 'pDA_fgmL'},'Before','filelistTB');
+    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'pDA_pgmL' 'pDA_fgmL'},'Before','filelistTB');
 P(isnan(P.LAT),:)=[];
 
 %%find toxicity/cell and toxicity/biovolume
@@ -180,4 +194,4 @@ P.tox_biovol(P.tox_biovol==Inf)=0;
 writetimetable(TT,[filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.csv'])
 save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
 
-clearvars E T idx val
+clearvars E T idx X

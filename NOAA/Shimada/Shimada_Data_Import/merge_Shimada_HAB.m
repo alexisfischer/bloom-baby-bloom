@@ -21,30 +21,30 @@ Nitrate_uM(Nitrate_uM<0.6)=.01;
 Phosphate_uM(Phosphate_uM<0.6)=.01;
 Silicate_uM(Silicate_uM<1.1)=.01;
 
-% %%%% take into account limit of detection
-% Nitrate_uM(Nitrate_uM<0.6)=0.6;
-% Phosphate_uM(Phosphate_uM<0.6)=0.6;
-% Silicate_uM(Silicate_uM<1.1)=1.1;
-
 %nitrate deficit relative to silicate, Si* (Si* = Si(OH)4 - NO3−) 
 %Sstar=Silicate_uM./15-Nitrate_uM./16;    
-SiNi=log10((Nitrate_uM./16)./(Silicate_uM./15));
+%N2S=log10((Nitrate_uM./16)./(Silicate_uM./15));
+S2N=log10(Silicate_uM./Nitrate_uM);
 for i=1:length(Nitrate_uM)
     if Nitrate_uM(i)==.01 && Silicate_uM(i)==.01
-        SiNi(i)=0;        
+        S2N(i)=0;                
     end
 end
-%figure; plot(lat,SiNi2,'b^',lat,SiNi,'ro')
+
+%idx=(dt<datetime('01-Jan-2021'));
+%figure; plot(lat(idx),S2N(idx),'ro',lat(~idx),S2N(~idx),'bo'); legend('2019','2021')
 
 %nitrate deficit relative to phosphate, P* (P* = PO43− - NO3− / 16), 
 %Pstar=Phosphate_uM-Nitrate_uM./16; 
-PhNi=log10((Nitrate_uM./16)./Phosphate_uM);   
+%N2P=log10((Nitrate_uM./16)./Phosphate_uM);   
+P2N=log10(Phosphate_uM./(Nitrate_uM./16));   
 for i=1:length(Nitrate_uM)
     if Nitrate_uM(i)==.01 && Phosphate_uM(i)==.01
-        PhNi(i)=0;         
+        P2N(i)=0;         
     end
 end
-%figure; plot(lat,PhNi2,'b^',lat,PhNi,'ro')
+%idx=(dt<datetime('01-Jan-2021'));
+%figure; plot(lat(idx),P2N(idx),'ro',lat(~idx),P2N(~idx),'bo'); legend('2019','2021')
 
 fx_deli=[HA19.fx_deli;HA21.fx_deli];
 fx_pseu=[HA19.fx_pseu;HA21.fx_pseu];
@@ -55,6 +55,6 @@ fx_frau=[HA19.fx_frau;HA21.fx_frau];
 fx_aust=[HA19.fx_aust;HA21.fx_aust];
 
 HA=table(dt,st,lat,lon,chlA_ugL,PNcellsmL,pDA_pgmL,Nitrate_uM,Phosphate_uM,Silicate_uM,...
-   SiNi,PhNi,fx_deli,fx_pseu,fx_heim,fx_pung,fx_mult,fx_frau,fx_aust);
+   S2N,P2N,fx_deli,fx_pseu,fx_heim,fx_pung,fx_mult,fx_frau,fx_aust);
 
 save([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');

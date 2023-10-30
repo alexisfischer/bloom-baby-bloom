@@ -6,7 +6,7 @@ addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
 yr=2021; % 2019; 2021
-fprint=0;
+fprint=1;
 leftsubplot=0; %special formatting for the leftmost subplot
 unit=0.06;
 
@@ -14,16 +14,14 @@ unit=0.06;
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
 HA((HA.lat<40),:)=[]; %remove CA stations
 %data=HA.chlA_ugL; cax=[1 20]; ticks=[1,10,20]; label={'Extracted';'Chl a (ug/L)'};%name='CHL'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0;
-%data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^- (\muM)'}; name='NIT'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
+data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^- (\muM)'}; name='NIT'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
 %data=HA.Phosphate_uM; cax=[0 3]; ticks=[0,1.5,3]; label={'PO_4^{3−} (\muM)'}; name='PHS';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
 %data=HA.Silicate_uM; cax=[0 48]; ticks=[0,24,48]; label={'Si(OH)_4 (\muM)'}; name='SIL';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
-%data=HA.Silicate_uM; cax=[0 200]; ticks=[0,200]; label={'Si(OH)_4 (\muM)'}; name='SILHi';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
+%data=HA.Silicate_uM; cax=[0 300]; ticks=[0,300]; label={'Si(OH)_4 (\muM)'}; name='SILHi';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
 %data=HA.pDA_pgmL; cax=[6.4 300]; ticks=[66,200,300]; lim=6.4; label={'pDA (pg/mL)'}; name='pDA'; c1=flipud(brewermap(100,'YlGn')); c1=c1(30:75,:); c2=(brewermap(220,'YlOrRd')); c2(1:30,:)=[]; c2(95:115,:)=[]; col=vertcat(c1,c2);
 %data=HA.SiNi; cax=[-1 1]; ticks=[-1 0 1]; label={'SiNi'}; name='SiNi';col=flipud(brewermap(256,'RdBu')); lim=-10;
-data=HA.PhNi; cax=[-1 1]; ticks=[-1 0 1]; label={'PhNi'}; name='PhNi';col=flipud(brewermap(256,'RdBu')); lim=-10;
+%data=HA.PhNi; cax=[-1 1]; ticks=[-1 0 1]; label={'PhNi'}; name='PhNi';col=flipud(brewermap(256,'RdBu')); lim=-10;
 
-idx=length(find(data>0))
-%%
 if yr==2019    
     idx=find(HA.dt<datetime('01-Jan-2020') & HA.lat>42);
     data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx);  
@@ -32,10 +30,12 @@ elseif yr==2021
     data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx);  
 end
 
+idx=(find(data>lim))
 %idx=find(lat>44 & lat<46);
-%nanmean(data(idx))
+nanmean(data(idx))
+nanstd(data(idx))
 %length(find(data(idx)>lim))./length(data(idx))
-
+%%
 if strcmp(name,'SiNi') || strcmp(name,'PhNi') 
     val=HA.Nitrate_uM; val=val(idx);
 end
@@ -110,8 +110,8 @@ if leftsubplot == 1
     {'40 N','41 N','42 N','43 N','44 N','45 N','46 N','47 N','48 N','49 N'},'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');    
    text(-124.25,47.75,{'JF';'Eddy'},'fontsize',9); hold on
    text(-123.85,46.2,{'Colum.';'River'},'fontsize',9); hold on
-   text(-123.9,44,{'Heceta';'Bank'},'fontsize',9); hold on
-   text(-124,42,{'Trinidad';' Head'},'fontsize',9); hold on
+   text(-124,44,{'Heceta';'Bank'},'fontsize',9); hold on
+   text(-124,41.65,{'Trinidad';' Head'},'fontsize',9); hold on
 end
     xtickangle(0); hold on;    
 

@@ -7,20 +7,22 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-fprint=0;
+fprint=1;
 unit=0.06;
-yr=2019; % 2019; 2021
-option=1; % 1=Plot the individual data points; 2=Grid the data
+yr=2021; % 2019; 2021
+option=2; % 1=Plot the individual data points; 2=Grid the data
 res = 0.15; % Coarser=0.2; Finer=0.1 % Set grid resolution (degrees)
 
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
 %data=P.PN_cell; label={'log PN (cells/mL)'}; name='PN'; cax=[0 2];
 %data=P.diatom_biovol; label={'  diatom';'  bvl/mL'}; name='diatom'; cax=[1 7.3];
-data=P.tox_cell./1000; label={'Cellular DA (pg/cell)'}; name='tox_cell'; cax=[0 100]; 
+%data=P.tox_cell./1000; label={'Cellular DA (pg/cell)'}; name='tox_cell'; cax=[0 100]; 
+data=P.dino_diat_ratio; label={'dino:diat ratio'}; name='ratio'; cax=[0 1]; 
 
 lat=P.LAT; lon=P.LON-unit; dt=P.DT;  
 %col=brewermap(256,'YlGn'); col(1:30,:)=[];
 col=brewermap(256,'YlOrBr'); col(1:30,:)=[];
+%col=flipud(brewermap(256,'PiYG')); 
 
 if yr==2019
     idx=find(dt<datetime('01-Jan-2020'));

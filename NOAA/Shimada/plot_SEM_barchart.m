@@ -6,7 +6,7 @@ addpath(genpath(filepath)); % add new data to search path
 
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
 
-yr=2021;
+yr=2019;
 
 HA=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
 HA((HA.lat<41),:)=[]; %remove CA stations
@@ -30,10 +30,7 @@ elseif yr==2021
     HA.lat(end)=HA.lat(end)+.1;    
 end
 
-c=brewermap(7,'Set3'); col=[c(4,:);c(1:3,:);c(5:end,:)];
-% low=brewermap(2,'Blues'); mh=brewermap(7,'YlOrRd'); 
-% col(1,:)=mh(7,:); col(2,:)=mh(6,:); col(3,:)=mh(4,:); col(4,:)=mh(3,:); 
-% col(5,:)=mh(2,:); col(6,:)=mh(1,:); col(7,:)=low(2,:);
+c=brewermap(7,'Set3'); col=[c(4,:);c(6,:);c(1,:);c(3,:);c(2,:);c(5,:);c(7,:)];
 
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 1.7 3.85]); 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.14 0.14], [0.12 0.03], [0.06 0.06]);
@@ -65,6 +62,7 @@ exportgraphics(gcf,[filepath 'NOAA/Shimada/Figs/SEM_bar_Shimada' num2str(yr) '.p
 hold off
 
 %%
+
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 1.7 3.85]); 
 
 b=bar(HA.lat,[HA.fx_aust,HA.fx_mult,HA.fx_frau,HA.fx_heim,HA.fx_pseu,HA.fx_pung,HA.fx_deli],...
@@ -75,7 +73,7 @@ end
 set(gca,'ylim',[0 1],'ytick',.5:.5:1,'xlim',[39.9 49],'xtick',HA.lat,...
     'xticklabel',num2str(HA.stlabel),'fontsize',9);
  legend({'\itaustralis','\itmultiseries','\itfraudulenta','\itheimii','\itpseudodeli.',...
-     '\itpungens','\itdelicatatisi.'},'Location','NorthOutside','fontsize',8);legend boxoff; hold on;
+     '\itpungens','\itdelicatatiss.'},'Location','NorthOutside','fontsize',9);legend boxoff; hold on;
 ylabel('fx of sample','fontsize',10); hold on;
 view([90 -90])
 

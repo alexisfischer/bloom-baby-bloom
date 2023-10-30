@@ -82,8 +82,10 @@ if leftsubplot == 1
         'xticklabel',{'127 W','125 W','123 W'},'yticklabel',...    
     {'40 N','41 N','42 N','43 N','44 N','45 N','46 N','47 N','48 N','49 N'},'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');    
    text(-124.25,47.75,{'JF';'Eddy'},'fontsize',9); hold on
-   text(-123.9,44,{'Heceta';'Bank'},'fontsize',9); hold on
-   text(-124,42,{'Trinidad';' Head'},'fontsize',9); hold on
+   text(-123.85,46.2,{'Colum.';'River'},'fontsize',9); hold on
+   text(-123.85,43.75,{'Heceta';'Bank'},'fontsize',9); hold on
+   text(-123.95,41.65,{'Trinidad';' Head'},'fontsize',9); hold on
+
 end
     xtickangle(0); hold on;    
 

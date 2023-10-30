@@ -5,13 +5,15 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-fprint=0; %0=don't print, 1=print
+fprint=1; %0=don't print, 1=print
 type=1; %1=discrete, 2=sensor
-yr='2019';
-%yr='2021';
+%yr='2019';
+yr='2021';
 %yr='2019 & 2021';
 
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+%P(P.PN_cell==0,:)=[];
+P(isnan(P.pDA_pgmL),:)=[];
 
 if length(yr)==4
     if strcmp(yr,'2019')    
@@ -23,8 +25,8 @@ else
 end
 
 if type==1
-    X=[P.TEMP,P.SAL,P.PCO2,P.Nitrate_uM,P.Silicate_uM,P.Phosphate_uM,P.SiNi,P.PhNi];
-    Xlabel={'Temperature' 'Salinity' 'pCO2' 'Nitrate' 'Silicate' 'Phosphate' 'Si Limitation' 'P Limitation' };
+    X=[P.TEMP,P.SAL,P.PCO2,P.Nitrate_uM,P.Silicate_uM,P.Phosphate_uM,P.S2N,P.P2N];
+    Xlabel={'Temperature' 'Salinity' 'pCO2' 'Nitrate' 'Silicate' 'Phosphate' 'Si:N' 'P:N' };
     Y=[P.PN_cell,P.pDA_pgmL];
     Ylabel={'PN' 'pDA'};
     pos=[1 1 2.5 4.3];

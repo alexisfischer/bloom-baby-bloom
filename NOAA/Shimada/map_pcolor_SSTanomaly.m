@@ -5,7 +5,7 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-yr=2021; % 2019; 2021
+yr=2019; % 2019; 2021
 fprint=1;
 res=0.2; % Coarser=0.2; Finer=0.1 % Set grid resolution (degrees)
 cax=[-4 4]; ticks=-4:4:4; col=flipud(brewermap(256,'RdBu')); 
@@ -63,8 +63,9 @@ plot(states.lon,states.lat,'k'); hold on;
         'xticklabel',{'127 W','125 W','123 W'},'yticklabel',...
     {'40 N','41 N','42 N','43 N','44 N','45 N','46 N','47 N','48 N','49 N'},'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');    
    text(-124.25,47.75,{'JF';'Eddy'},'fontsize',9); hold on
-   text(-123.9,44,{'Heceta';'Bank'},'fontsize',9); hold on
-   text(-124,42,{'Trinidad';' Head'},'fontsize',9); hold on
+   text(-123.85,46.2,{'Colum.';'River'},'fontsize',9); hold on
+   text(-124,44,{'Heceta';'Bank'},'fontsize',9); hold on
+   text(-124,41.65,{'Trinidad';' Head'},'fontsize',9); hold on
    xtickangle(0); hold on;    
 
 if fprint==1

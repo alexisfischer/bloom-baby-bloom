@@ -18,16 +18,16 @@ HA((HA.lat<40),:)=[]; %remove CA stations
 % HA.Nitrate_uM(HA.Nitrate_uM<=0.6)=0;
 % HA.Phosphate_uM(HA.Phosphate_uM<=0.6)=0;
 % HA.Silicate_uM(HA.Silicate_uM<=1.1)=0;
-% HA.PhNi_n=log10(HA.Phosphate_uM./(HA.Nitrate_uM./16)); 
-% HA.SiNi_n=log10(HA.Silicate_uM./15./(HA.Nitrate_uM./16)); 
-% HA=movevars(HA,'PhNi_n','After','PhNi');
-% HA=movevars(HA,'SiNi_n','After','SiNi');
+% HA.N2P_n=log10(HA.Phosphate_uM./(HA.Nitrate_uM./16)); 
+% HA.N2S_n=log10(HA.Silicate_uM./15./(HA.Nitrate_uM./16)); 
+% HA=movevars(HA,'N2P_n','After','N2P');
+% HA=movevars(HA,'N2S_n','After','N2S');
 % 
 % % convert Inf into values
-% HA.PhNi_n(HA.PhNi_n==-Inf)=-1;
-% HA.SiNi_n(HA.SiNi_n==-Inf)=-1;
-% HA.PhNi_n(HA.PhNi_n==Inf)=1;
-% HA.SiNi_n(HA.SiNi_n==Inf)=1;
+% HA.N2P_n(HA.N2P_n==-Inf)=-1;
+% HA.N2S_n(HA.N2S_n==-Inf)=-1;
+% HA.N2P_n(HA.N2P_n==Inf)=1;
+% HA.N2S_n(HA.N2S_n==Inf)=1;
 
 if yr==2019    
     HA((HA.dt>datetime('01-Jan-2020')),:)=[];
@@ -36,13 +36,13 @@ elseif yr==2021
     HA((HA.dt<datetime('01-Jan-2020')),:)=[];
 end
 
-if strcmp(val,'P') % Phosphate:Nitrate
+if strcmp(val,'P') % Nitrate:Phosphate
     lat=HA.lat; lon=HA.lon; label='     N:Ph'; name='Pstar'; lim=0.01; 
-    data=HA.PhNi;
+    data=HA.N2P;
     %Nitrate replete relative to Phosphate: 2019 17%, 2021 11%
 else % Silicate:Nitrate
     lat=HA.lat; lon=HA.lon; label='     N:Si'; name='Sstar'; lim=0.01; 
-    data=HA.SiNi;    
+    data=HA.N2S;    
     %Nitrate replete relative to Silicate: 2019 0%, 2021 8%
 end
 
