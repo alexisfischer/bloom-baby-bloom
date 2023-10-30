@@ -8,10 +8,9 @@ load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
 idx=find(P.DT<datetime('01-Jan-2020')); cells19=P.PN_cell(idx); tox19=P.tox_cell(idx)./1000; km19=P.gap_km(idx);
 idx=find(P.DT>datetime('01-Jan-2020')); cells21=P.PN_cell(idx); tox21=P.tox_cell(idx)./1000; km21=P.gap_km(idx);
 
-idx=find(~isnan(P.gap_km));
-mdl=fitlm(P.gap_km(idx),P.tox_cell(idx))
+%idx=find(~isnan(P.gap_km));
+%mdl=fitlm(P.gap_km(idx),P.tox_cell(idx))
 
-%%
 %median([tox19],'omitnan')
 %maxk([tox19],2)
 
@@ -56,6 +55,4 @@ set(gca,'yscale','log','ylim',[5*10^-2 10^3],'ytick',[10^-1 10^0 10^1 10^2 10^3]
     'xlim',[0 5],'tickdir','out','yticklabel',{},'fontsize',10)
 box on; axis square
 
-
-%%
 exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/CellularToxicity.png'],'Resolution',300)    
