@@ -8,13 +8,14 @@ addpath(genpath(filepath)); % add new data to search path
 yr=2021; % 2019; 2021
 option=2; % 1=Plot the individual data points; 2=Grid the data
 leftsubplot=0; %special formatting for the leftmost subplot
-fprint=0;
+fprint=1;
 
 %%%% load in underway data
-load([filepath 'NOAA/Shimada/Data/environ_Shimada' num2str(yr) ''],'DT','LON','LAT','TEMP','SAL','FL','PCO2');
-data=TEMP; cax=[10 20];  ticks=10:5:20; label={'SST (^oC)'}; name='SST'; col=brewermap(256,'BuPu');
+load([filepath 'NOAA/Shimada/Data/environ_Shimada' num2str(yr) ''],'DT','LON','LAT','FL','TEMP','SAL','FL','PCO2');
+%data=TEMP; cax=[10 20];  ticks=10:5:20; label={'SST (^oC)'}; name='SST'; col=brewermap(256,'BuPu');
 %data=SAL; cax=[30 35]; ticks=[30,32,35]; label={'SSS (psu)'}; name='SAL'; col=parula;
 %data=PCO2; cax=[200 800]; ticks=200:600:800; label={'pCO_2 (ppm)'}; name='PCO2'; col=brewermap(256,'RdPu');
+data=FL; cax=[0 8]; ticks=0:4:8; label={'Chl Fl (RFU)'}; name='FL'; col=brewermap(256,'BuGn');
 
 % remove Nans
 idx=isnan(data); data(idx)=[]; LAT(idx)=[]; LON(idx)=[]; lon=LON; lat=LAT;
