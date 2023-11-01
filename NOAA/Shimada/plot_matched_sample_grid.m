@@ -1,4 +1,5 @@
-%% map underway environmental data along CCS
+%% plot matched sampling grid
+% requires input from match_discrete_samplegrid
 clear; %close all;
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
@@ -6,35 +7,29 @@ addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
 yr=2019; % 2019; 2021
-fprint=0;
+fprint=1;
 leftsubplot=0; %special formatting for the leftmost subplot
 unit=0.06;
 
 %%%% load in discrete data
-load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
+%load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
+load([filepath 'NOAA/Shimada/Data/matched_discrete_samples_2019_2021'],'HA');
 HA((HA.lat<40),:)=[]; %remove CA stations
 data=HA.chlA_ugL; cax=[0 20]; ticks=[0,10,20]; label={'Chl a (ug/L)'}; name='CHL'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=.1;
-%data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^- (\muM)'}; name='NIT'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
-%data=HA.Phosphate_uM; cax=[0 3]; ticks=[0,1.5,3]; label={'PO_4^{3−} (\muM)'}; name='PHS';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
-%data=HA.Silicate_uM; cax=[0 48]; ticks=[0,24,48]; label={'Si(OH)_4 (\muM)'}; name='SIL';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
-%data=HA.Silicate_uM; cax=[0 300]; ticks=[0,300]; label={'Si(OH)_4 (\muM)'}; name='SILHi';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
-%data=HA.pDA_pgmL; cax=[6.4 300]; ticks=[66,200,300]; lim=6.4; label={'pDA (pg/mL)'}; name='pDA'; c1=flipud(brewermap(100,'YlGn')); c1=c1(30:75,:); c2=(brewermap(220,'YlOrRd')); c2(1:30,:)=[]; c2(95:115,:)=[]; col=vertcat(c1,c2);
-%data=HA.SiNi; cax=[-1 1]; ticks=[-1 0 1]; label={'SiNi'}; name='SiNi';col=flipud(brewermap(256,'RdBu')); lim=-10;
-%data=HA.PhNi; cax=[-1 1]; ticks=[-1 0 1]; label={'PhNi'}; name='PhNi';col=flipud(brewermap(256,'RdBu')); lim=-10;
 
 if yr==2019    
     idx=find(HA.dt<datetime('01-Jan-2020') & HA.lat>42);
-    data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx);  
+    data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx); match=HA.match(idx); 
 elseif yr==2021
     idx=find(HA.dt>datetime('01-Jan-2020'));
-    data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx);  
+    data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx); match=HA.match(idx); 
 end
 
 if strcmp(name,'SiNi') || strcmp(name,'PhNi') 
     val=HA.Nitrate_uM; val=val(idx);
 end
 
-idx=isnan(data); data(idx)=[]; lat(idx)=[]; lon(idx)=[];
+idx=isnan(data); data(idx)=[]; lat(idx)=[]; lon(idx)=[]; match(idx)=[];
 lon=lon-unit;
 
 %%%% plot
@@ -55,6 +50,10 @@ end
 
 scatter(lon(ind),lat(ind),2,[.3 .3 .3],'o','filled'); hold on
 scatter(lon(~ind),lat(~ind),20,data(~ind),'filled'); hold on
+
+if yr==2019    
+    scatter(lon(match),lat(match),20,'k','o','linewidth',.2); hold on %match ups
+end
 
     colormap(col); clim(cax);
     axis([min(lon) max(lon) min(lat) max(lat)]);
