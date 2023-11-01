@@ -12,11 +12,11 @@ addpath(genpath(filepath));
 
 %%%% match timestamps of sensor data and HAB data
 %%%% merge 2019 and 2021 data
-S19=load([filepath 'NOAA/Shimada/Data/environ_Shimada2019'],'DT','LON','LAT','TEMP','SAL','PCO2');
-S21=load([filepath 'NOAA/Shimada/Data/environ_Shimada2021'],'DT','LON','LAT','TEMP','SAL','PCO2');
+S19=load([filepath 'NOAA/Shimada/Data/environ_Shimada2019'],'DT','LON','LAT','TEMP','SAL','PCO2','FL');
+S21=load([filepath 'NOAA/Shimada/Data/environ_Shimada2021'],'DT','LON','LAT','TEMP','SAL','PCO2','FL');
 DT=[S19.DT;S21.DT]; LON=[S19.LON;S21.LON]; LAT=[S19.LAT;S21.LAT];
-TEMP=[S19.TEMP;S21.TEMP]; SAL=[S19.SAL;S21.SAL]; PCO2=[S19.PCO2;S21.PCO2];
-T=timetable(DT,LAT,LON,TEMP,SAL,PCO2);
+TEMP=[S19.TEMP;S21.TEMP]; SAL=[S19.SAL;S21.SAL]; PCO2=[S19.PCO2;S21.PCO2]; FL=[S19.FL;S21.FL];
+T=timetable(DT,LAT,LON,TEMP,SAL,PCO2,FL);
 
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); %GMT time
 HA.dt.Format='yyyy-MM-dd HH:mm:ss'; HA.dt=dateshift(HA.dt,'start','minute');
@@ -67,7 +67,7 @@ for i=1:length(idx)
     T.P2N(irange)=T.P2N(idx(i));      
 end
 
-clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT i 
+clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT i FL
 
 %% format IFCB data
 load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
@@ -172,7 +172,7 @@ P.pDA_fgmL=P.pDA_pgmL.*0.001.*1000000; %convert to fg/mL
 % make 2019 and 2021 datasets equivalent
 P(P.LAT<40,:)=[]; % remove data south of 40 N
 P(P.LAT>47.5 & P.LON>-124.7,:)=[]; %remove data from the Strait
-P=movevars(P,{'LAT' 'LON' 'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'Nitrate_uM' 'Phosphate_uM' ...
+P=movevars(P,{'LAT' 'LON' 'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'FL' 'Nitrate_uM' 'Phosphate_uM' ...
     'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'pDA_pgmL' 'pDA_fgmL'},'Before','filelistTB');
 P(isnan(P.LAT),:)=[];
 

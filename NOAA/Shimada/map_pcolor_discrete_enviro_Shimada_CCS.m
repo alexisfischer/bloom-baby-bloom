@@ -13,8 +13,8 @@ unit=0.06;
 %%%% load in discrete data
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
 HA((HA.lat<40),:)=[]; %remove CA stations
-%data=HA.chlA_ugL; cax=[1 20]; ticks=[1,10,20]; label={'Extracted';'Chl a (ug/L)'};%name='CHL'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0;
-data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^- (\muM)'}; name='NIT'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
+data=HA.chlA_ugL; cax=[0 20]; ticks=[0,10,20]; label={'Chl a (ug/L)'}; name='CHL'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=.1;
+%data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^- (\muM)'}; name='NIT'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
 %data=HA.Phosphate_uM; cax=[0 3]; ticks=[0,1.5,3]; label={'PO_4^{3−} (\muM)'}; name='PHS';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
 %data=HA.Silicate_uM; cax=[0 48]; ticks=[0,24,48]; label={'Si(OH)_4 (\muM)'}; name='SIL';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
 %data=HA.Silicate_uM; cax=[0 300]; ticks=[0,300]; label={'Si(OH)_4 (\muM)'}; name='SILHi';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
@@ -30,12 +30,15 @@ elseif yr==2021
     data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx);  
 end
 
-idx=(find(data>lim))
-%idx=find(lat>44 & lat<46);
-nanmean(data(idx))
-nanstd(data(idx))
-%length(find(data(idx)>lim))./length(data(idx))
+max(data)
+
 %%
+%idx=(find(data>lim))
+%idx=find(lat>44 & lat<46);
+%nanmean(data(idx))
+%nanstd(data(idx))
+%length(find(data(idx)>lim))./length(data(idx))
+
 if strcmp(name,'SiNi') || strcmp(name,'PhNi') 
     val=HA.Nitrate_uM; val=val(idx);
 end
