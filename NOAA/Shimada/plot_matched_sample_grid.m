@@ -6,8 +6,8 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-yr=2021; % 2019; 2021
-fprint=0;
+yr=2019; % 2019; 2021
+fprint=1;
 leftsubplot=0; %special formatting for the leftmost subplot
 unit=0.06;
 
@@ -50,10 +50,7 @@ end
 
 scatter(lon(ind),lat(ind),2,[.3 .3 .3],'o','filled'); hold on
 scatter(lon(~ind),lat(~ind),20,data(~ind),'filled'); hold on
-
-%if yr==2019    
-    scatter(lon(match),lat(match),20,'k','o','linewidth',.2); hold on %match ups
-%end
+scatter(lon(match),lat(match),20,'k','o','linewidth',.2); hold on %match ups
 
     colormap(col); clim(cax);
     axis([min(lon) max(lon) min(lat) max(lat)]);

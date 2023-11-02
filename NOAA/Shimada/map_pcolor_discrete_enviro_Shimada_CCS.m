@@ -7,14 +7,14 @@ addpath(genpath(filepath)); % add new data to search path
 %%%%USER
 yr=2019; % 2019; 2021
 fprint=0;
-leftsubplot=0; %special formatting for the leftmost subplot
+leftsubplot=1; %special formatting for the leftmost subplot
 unit=0.06;
 
 %%%% load in discrete data
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
 HA((HA.lat<40),:)=[]; %remove CA stations
-data=HA.chlA_ugL; cax=[0 20]; ticks=[0,10,20]; label={'Chl a (ug/L)'}; name='CHL'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=.1;
-%data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^- (\muM)'}; name='NIT'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
+%data=HA.chlA_ugL; cax=[0 20]; ticks=[0,10,20]; label={'Chl a (ug/L)'}; name='CHL'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=.1;
+data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^{1-} (\muM)'}; name='NIT'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
 %data=HA.Phosphate_uM; cax=[0 3]; ticks=[0,1.5,3]; label={'PO_4^{3−} (\muM)'}; name='PHS';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=0.6;
 %data=HA.Silicate_uM; cax=[0 48]; ticks=[0,24,48]; label={'Si(OH)_4 (\muM)'}; name='SIL';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
 %data=HA.Silicate_uM; cax=[0 300]; ticks=[0,300]; label={'Si(OH)_4 (\muM)'}; name='SILHi';col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=1.1;
