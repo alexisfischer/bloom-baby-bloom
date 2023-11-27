@@ -31,7 +31,7 @@ for i=1:(length(T.sample_km)-1)
     T.sample_km(i)=deg2km(distance(T.LAT(i),T.LON(i),T.LAT(i+1),T.LON(i+1))); 
 end
 
-%% find distance in km each sample and the coast
+%%%% find distance in km each sample and the coast
 load([filepath 'NOAA/Shimada/Data/coast_CCS.mat'],'coast');
 coast=coast((coast(:,2)>=40 & coast(:,2)<=49),:); %shorten this to just NCC
 C.lat=coast(:,2); C.lon=coast(:,1);
@@ -41,7 +41,7 @@ for i=1:(length(T.coast_km))
     T.coast_km(i) = deg2km(min(dist)); %find the minimum distance
 end
 
-%% duplicate HA data for X minutes before and after data collection
+%%%% duplicate HA data for X minutes before and after data collection
 % this is to determine the distance between IFCB and discrete samples
 X=10; % minutes. max gap allowed 
 range=(1:1:10)';
@@ -75,6 +75,7 @@ load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],.
 
 dt=datetime(mdateTB,'convertfrom','datenum'); dt.Format='yyyy-MM-dd HH:mm:ss';        
 cellsmL = classcountTB_above_optthresh./ml_analyzedTB;    
+bvmL = classbiovolTB_above_optthresh./ml_analyzedTB;    
 
 %images=sum(sum(classcountTB_above_optthresh,2))*3404/4497
 
@@ -82,6 +83,7 @@ cellsmL = classcountTB_above_optthresh./ml_analyzedTB;
 id1=find(contains(class2useTB,'Pseudo-nitzschia_large_1cell')); 
 id2=find(contains(class2useTB,'Pseudo-nitzschia_large_2cell')); 
 id3=find(contains(class2useTB,'Pseudo-nitzschia_large_3cell')); 
+PN_cellsmL = sum(classcountTB_above_optthresh(:,[id1,id2,id3]),2)./ml_analyzedTB;
 PN_bvmL = sum(classbiovolTB_above_optthresh(:,[id1,id2,id3]),2)./ml_analyzedTB;
 
 %%%% get ratio of of dinos to diatoms 
@@ -101,75 +103,86 @@ class2useTB(strcmp('Thalassiosira_chain',class2useTB))={'Thalassiosira'};
 class2useTB(strcmp('Proboscia,Rhizosolenia',class2useTB))={'Prob_Rhiz'};
 
 %%%% remove unclassified and PN from regular summary
-idx=contains(class2useTB,'Pseudo-nitzschia'); cellsmL(:,idx)=[]; class2useTB(idx)=[];
-idx=contains(class2useTB,'unclassified'); cellsmL(:,idx)=[]; class2useTB(idx)=[];
+idx=contains(class2useTB,'Pseudo-nitzschia'); cellsmL(:,idx)=[]; bvmL(:,idx)=[]; class2useTB(idx)=[];
+idx=contains(class2useTB,'unclassified'); cellsmL(:,idx)=[]; bvmL(:,idx)=[]; class2useTB(idx)=[];
 
-clearvars ml_analyzedTB idx classcountTB_above_optthresh mdateTB
+%%%% add PN back
+class2useTB(end+1)={'Pseudo-nitzschia'};
+cellsmL(:,end+1)=PN_cellsmL;
+bvmL(:,end+1)=PN_bvmL;
 
-%% split PN into small and large cells
-load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNwidth_opt','ml_analyzedTB');
+clearvars PN_bvmL PN_cellsmL ml_analyzedTB idx classcountTB_above_optthresh classbiovolTB_above_optthresh mdateTB id1 id2 id3
 
-%preallocate
-smallPN1=NaN*ml_analyzedTB; smallPN2=smallPN1; smallPN3=smallPN1; 
-medPN1=smallPN1; medPN2=smallPN1; medPN3=smallPN1;
-largePN1=smallPN1; largePN2=smallPN1; largePN3=smallPN1;
+%%%% split PN into small and large cells (not using)
+% load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNwidth_opt','ml_analyzedTB');
+%
+% %preallocate
+% smallPN1=NaN*ml_analyzedTB; smallPN2=smallPN1; smallPN3=smallPN1; 
+% medPN1=smallPN1; medPN2=smallPN1; medPN3=smallPN1;
+% largePN1=smallPN1; largePN2=smallPN1; largePN3=smallPN1;
+% 
+% for i=1:length(PNwidth_opt)
+%     ids=(PNwidth_opt(i).cell1<thm);
+%     idm=(PNwidth_opt(i).cell1>=thm & PNwidth_opt(i).cell1<thl);
+%     idl=(PNwidth_opt(i).cell1>=thl);
+%     smallPN1(i)=sum(ids); medPN1(i)=sum(idm); largePN1(i)=sum(idl);
+% 
+%     ids=(PNwidth_opt(i).cell2<thm);
+%     idm=(PNwidth_opt(i).cell2>=thm & PNwidth_opt(i).cell2<thl);
+%     idl=(PNwidth_opt(i).cell2>=thl);
+%     smallPN2(i)=sum(ids); medPN2(i)=sum(idm); largePN2(i)=sum(idl);
+% 
+%     ids=(PNwidth_opt(i).cell3<thm);
+%     idm=(PNwidth_opt(i).cell3>=thm & PNwidth_opt(i).cell3<thl);
+%     idl=(PNwidth_opt(i).cell3>=thl);
+%     smallPN3(i)=sum(ids); medPN3(i)=sum(idm); largePN3(i)=sum(idl);
+% end
+% 
+% %sum up by cell count
+% cellsmL(:,end+1)=sum([smallPN1,2*smallPN2,3.5*smallPN3],2)./ml_analyzedTB;
+% cellsmL(:,end+1)=sum([medPN1,2*medPN2,3.5*medPN3],2)./ml_analyzedTB;
+% cellsmL(:,end+1)=sum([largePN1,2*largePN2,3.5*largePN3],2)./ml_analyzedTB;
+% class2useTB(end+1)={'Pseudonitzschia_small'};
+% class2useTB(end+1)={'Pseudonitzschia_medium'};
+% class2useTB(end+1)={'Pseudonitzschia_large'};
+% 
+% %mean width
+% width=[PNwidth_opt.mean]';
+% width(isnan(width))=0;
+% cellsmL(:,end+1)=width;
+% class2useTB(end+1)={'mean_PNwidth'};
+% 
+% %sum all PN
+% cellsmL(:,end+1)=sum([cellsmL(:,contains(class2useTB,'Pseudonitzschia'))],2);
+% cellsmL(:,end+1)=sum([cellsmL(:,contains(class2useTB,'Pseudonitzschia'))],2);
+% 
+% class2useTB(end+1)={'PN_cell'};
 
-for i=1:length(PNwidth_opt)
-    ids=(PNwidth_opt(i).cell1<thm);
-    idm=(PNwidth_opt(i).cell1>=thm & PNwidth_opt(i).cell1<thl);
-    idl=(PNwidth_opt(i).cell1>=thl);
-    smallPN1(i)=sum(ids); medPN1(i)=sum(idm); largePN1(i)=sum(idl);
-    
-    ids=(PNwidth_opt(i).cell2<thm);
-    idm=(PNwidth_opt(i).cell2>=thm & PNwidth_opt(i).cell2<thl);
-    idl=(PNwidth_opt(i).cell2>=thl);
-    smallPN2(i)=sum(ids); medPN2(i)=sum(idm); largePN2(i)=sum(idl);
-    
-    ids=(PNwidth_opt(i).cell3<thm);
-    idm=(PNwidth_opt(i).cell3>=thm & PNwidth_opt(i).cell3<thl);
-    idl=(PNwidth_opt(i).cell3>=thl);
-    smallPN3(i)=sum(ids); medPN3(i)=sum(idm); largePN3(i)=sum(idl);
-end
-
-%sum up by cell count
-cellsmL(:,end+1)=sum([smallPN1,2*smallPN2,3.5*smallPN3],2)./ml_analyzedTB;
-cellsmL(:,end+1)=sum([medPN1,2*medPN2,3.5*medPN3],2)./ml_analyzedTB;
-cellsmL(:,end+1)=sum([largePN1,2*largePN2,3.5*largePN3],2)./ml_analyzedTB;
-class2useTB(end+1)={'Pseudonitzschia_small'};
-class2useTB(end+1)={'Pseudonitzschia_medium'};
-class2useTB(end+1)={'Pseudonitzschia_large'};
-
-%mean width
-width=[PNwidth_opt.mean]';
-width(isnan(width))=0;
-cellsmL(:,end+1)=width;
-class2useTB(end+1)={'mean_PNwidth'};
-
-%sum all PN
-cellsmL(:,end+1)=sum([cellsmL(:,contains(class2useTB,'Pseudonitzschia'))],2);
-class2useTB(end+1)={'PN_cell'};
-
-%add biovol
-cellsmL(:,end+1)=PN_bvmL;
-cellsmL(:,end+1)=diatom_bvmL;
-cellsmL(:,end+1)=dino_bvmL;
-cellsmL(:,end+1)=dino_diat_ratio;
-class2useTB(end+1)={'PN_biovol'};
-class2useTB(end+1)={'diatom_biovol'};
-class2useTB(end+1)={'dino_biovol'};
-class2useTB(end+1)={'dino_diat_ratio'};
+%%%% add biovol
+class2useTB_b=class2useTB;
+bvmL(:,end+1)=diatom_bvmL;
+bvmL(:,end+1)=dino_bvmL;
+bvmL(:,end+1)=dino_diat_ratio;
+class2useTB_b(end+1)={'diatom'};
+class2useTB_b(end+1)={'dino'};
+class2useTB_b(end+1)={'dino_diat_ratio'};
 
 %%%% round IFCB data to nearest minute and match with environmental data
 dt=dateshift(dt,'start','minute'); 
 TT = array2timetable(cellsmL(:,1:end),'RowTimes',dt,'VariableNames',class2useTB(1:end));
 TT=addvars(TT,filelistTB,'Before',class2useTB(1));
 
+TB = array2timetable(bvmL(:,1:end),'RowTimes',dt,'VariableNames',class2useTB_b(1:end));
+TB=addvars(TB,filelistTB,'Before',class2useTB(1));
+
 clearvars class2useTB th dt cellsmL filelistTB i idx ml_analyzedTB PNwidth_opt mdateTB smallPN1 smallPN2 smallPN3 largePN1 largePN2 largePN3
 
 %% merge environmental data with IFCB data
 P=synchronize(TT,T,'first');
+PB=synchronize(TB,T,'first');
 
 P.pDA_fgmL=P.pDA_pgmL.*0.001.*1000000; %convert to fg/mL
+PB.pDA_fgmL=PB.pDA_pgmL.*0.001.*1000000; %convert to fg/mL
 
 % make 2019 and 2021 datasets equivalent
 P(P.LAT<40,:)=[]; % remove data south of 40 N
@@ -178,21 +191,30 @@ P=movevars(P,{'LAT' 'LON' 'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'F
     'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'pDA_pgmL' 'pDA_fgmL'},'Before','filelistTB');
 P(isnan(P.LAT),:)=[];
 
-%%find toxicity/cell and toxicity/biovolume
-P.tox_small=P.pDA_fgmL./P.Pseudonitzschia_small;
-P.tox_medium=P.pDA_fgmL./P.Pseudonitzschia_medium;
-P.tox_large=P.pDA_fgmL./P.Pseudonitzschia_large;
-P.tox_cell=P.pDA_fgmL./P.PN_cell;
-P.tox_biovol=P.pDA_fgmL./P.PN_biovol;
+% make 2019 and 2021 datasets equivalent
+% remove non biovolume
+PB(PB.LAT<40,:)=[]; % remove data south of 40 N
+PB(PB.LAT>47.5 & PB.LON>-124.7,:)=[]; %remove data from the Strait
+PB=removevars(PB,{'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'FL' 'Nitrate_uM' 'Phosphate_uM' ...
+    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL'});
+PB(isnan(PB.LAT),:)=[];
 
-P.tox_small(P.tox_small==Inf)=0;
-P.tox_medium(P.tox_medium==Inf)=0;
-P.tox_large(P.tox_large==Inf)=0;
-P.tox_cell(P.tox_cell==Inf)=0;
-P.tox_biovol(P.tox_biovol==Inf)=0;
+%%find toxicity/cell and toxicity/biovolume
+% P.tox_small=P.pDA_fgmL./P.Pseudonitzschia_small;
+% P.tox_medium=P.pDA_fgmL./P.Pseudonitzschia_medium;
+% P.tox_large=P.pDA_fgmL./P.Pseudonitzschia_large;
+P.tox_PNcell=P.pDA_fgmL./P.Pseudo-nitzschia;
+PB.tox_PNbv=PB.pDA_fgmL./PB.Pseudo-nitzschia;
+
+% P.tox_small(P.tox_small==Inf)=0;
+% P.tox_medium(P.tox_medium==Inf)=0;
+% P.tox_large(P.tox_large==Inf)=0;
+P.tox_PNcell(P.tox_cell==Inf)=0;
+PB.tox_PNbv(PB.tox_biovol==Inf)=0;
 
 %% format for .csv file
 writetimetable(TT,[filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.csv'])
-save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_cells.mat'],'P');
+save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_biovolume.mat'],'PB');
 
 clearvars E T idx X

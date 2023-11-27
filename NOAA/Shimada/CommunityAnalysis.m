@@ -11,40 +11,38 @@ addpath(genpath(filepath)); % add new data to search path
 fprint=1;
 yr=2021; % 2019; 2021
 
-load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_biovolume.mat'],'PB');
 
 if yr==2019
-    idx=find(P.DT>datetime('01-Jan-2020'));
-    P(idx,:)=[];
+    PB(PB.DT>datetime('01-Jan-2020'),:)=[];
 elseif yr==2021
-    idx=find(P.DT<datetime('01-Jan-2020'));
-    P(idx,:)=[];
+    PB(PB.DT<datetime('01-Jan-2020'),:)=[];
 end
 
-%diat=mean(P.diatom_biovol./(P.dino_biovol+P.diatom_biovol));
+%diat=mean(P.diatom./(P.dino+P.diatom));
 
-names=P.Properties.VariableNames([19:37,42]);
-cells=timetable2table(P(:,[19:37,42]));
-cells(:,1)=[];
-cells=table2array(cells);
-lat=P.LAT;
+names=PB.Properties.VariableNames(2:21);
+bvmL=timetable2table(PB(:,2:21));
+bvmL(:,1)=[];
+bvmL=table2array(bvmL);
+lat=PB.LAT;
 
 % Create grid
 res = 0.2; %Set grid resolution (degrees)
 lat_grid = min(lat):res:max(lat)+.5;
 ny = length(lat_grid);
-nx = size(cells,2);
+nx = size(bvmL,2);
 
 % Average data on grid
 data_grid = nan(ny,nx); 
 for i = 1:nx
-    data=cells(:,i);
+    data=bvmL(:,i);
     for j = 1:ny
         data_grid(j,i) = mean(data(lat>=lat_grid(j)-res/2 & lat<lat_grid(j)+res/2),'omitnan');
     end
 end
 
-% calculate fractions of cells
+% calculate fractions of bvmL
 total=sum(data_grid,2);
 fx = data_grid./total;
 
@@ -55,15 +53,16 @@ fxi=fx(:,i);
 names=names(i);
 
 col=brewermap(length(names),'Spectral');
-col=col(i,:);
-idx=contains(names,'PN_cell');
+rng("default"); idx=randperm(length(names));
+col=col(idx,:);
+idx=contains(names,'Pseudo-nitzschia');
 col(idx,:)=[0 0 0];
 
 % find the dominant phytoplankton
 fx_2=nanmean(fxi);
 fx_PN=nanmean(fxi(:,idx));
 
-clearvars i j nx ny data_grid total res lat data cells t
+clearvars i j nx ny data_grid total res lat data bvmL t
 
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 6 5]); 
 b=bar(lat_grid,fxi,'stacked','EdgeColor','none'); hold on;
