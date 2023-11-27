@@ -1,0 +1,89 @@
+%% Import wind data from Cape Elizabeth NDBC #46041 
+%u = E-W or cross-shore velocity
+%v = N-S or alongshore velocity
+% The upwelling season at this latitude is defined from a climatological mean ...
+% to occur from 27 April to 26 September [Schwing et al., 2006]. 
+
+clear;
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+addpath(genpath(filepath)); % add new data to search path
+
+% 2019
+filename = '/Users/alexis.fischer/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/46041h2019.txt';
+startRow = 3;
+formatSpec = '%4f%3f%3f%3f%3f%4f%5f%[^\n\r]';
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+YYYY = dataArray{:, 1};
+MM = dataArray{:, 2};
+DD = dataArray{:, 3};
+hh = dataArray{:, 4};
+mm = dataArray{:, 5};
+dtt=datetime(YYYY,MM,DD,hh,mm,YYYY);
+
+dir = dataArray{:, 6}; dir(dir==999)=NaN;
+spd = dataArray{:, 7}; spd(spd==999)=NaN;
+[dt,dir,~] = ts_aggregation(dtt,dir,1,'day',@mean); 
+[~,spd,~] = ts_aggregation(dtt,spd,1,'day',@mean);
+dir=inpaintn(dir); spd=inpaintn(spd);
+[u,v] = UVfromDM(dir,spd);
+w19=table; w19.dt=dt; w19.u=u; w19.v=v;
+
+idx=find(dt>datetime('27-Apr-2019') & dt<datetime('26-Sep-2019'));
+w19.cui(idx)=-(cumsum(v(idx)));
+
+clearvars filename startRow formatSpec fileID dataArray ans DD dtt hh mm MM YYYY u v dir spd dt;
+
+% 2021
+filename = '/Users/alexis.fischer/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/Data/46041h2021.txt';
+startRow = 3;
+formatSpec = '%4f%3f%3f%3f%3f%4f%5f%[^\n\r]';
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', '', 'WhiteSpace', '', 'TextType', 'string', 'EmptyValue', NaN, 'HeaderLines' ,startRow-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+fclose(fileID);
+YYYY = dataArray{:, 1};
+MM = dataArray{:, 2};
+DD = dataArray{:, 3};
+hh = dataArray{:, 4};
+mm = dataArray{:, 5};
+dtt=datetime(YYYY,MM,DD,hh,mm,YYYY);
+
+dir = dataArray{:, 6}; dir(dir==999)=NaN;
+spd = dataArray{:, 7}; spd(spd==999)=NaN;
+[dt,dir,~] = ts_aggregation(dtt,dir,1,'day',@mean); 
+[~,spd,~] = ts_aggregation(dtt,spd,1,'day',@mean);
+dir=inpaintn(dir); spd=inpaintn(spd);
+[u,v] = UVfromDM(dir,spd);
+w21=table; w21.dt=dt; w21.u=u; w21.v=v;
+w21.cui(idx)=-(cumsum(v(idx)));
+
+clearvars filename startRow formatSpec fileID dataArray ans DD dtt hh mm MM YYYY u v dir spd dt;
+
+%%
+figure
+subplot(2,1,1)
+yyaxis left
+    plot(w19.dt,w19.v,'-','Color','k','linewidth',2); hold on;
+    yline(0);
+    set(gca,'xlim',[datetime('01-May-2019') datetime('26-Sep-2019')],...
+        'ylim',[-11 10],'ytick',-7:7:7,'fontsize',10,'tickdir','out','ycolor','k');    
+    ylabel('2019 (m s^{-1})','fontsize',11);
+yyaxis right
+    plot(w19.dt,w19.cui,'--','Color','r','linewidth',2); hold on;
+    set(gca,'ylim',[-200 200],'ycolor','r')
+    title('North-south wind stress')
+
+subplot(2,1,2)
+    plot(w21.dt,w21.v,'-','Color','k','linewidth',2); hold on;
+    yline(0);
+    set(gca,'xlim',[datetime('01-May-2021') datetime('26-Sep-2021')],...
+        'ylim',[-11 10],'ytick',-7:7:7,'fontsize',10,'tickdir','out','ycolor','k');    
+    ylabel('2021 (m s^{-1})','fontsize',11);
+yyaxis right
+    plot(w21.dt,w21.cui,'--','Color','r','linewidth',2); hold on;  
+    set(gca,'ylim',[-200 200],'ycolor','r')
+     
+%%
+save([filepath 'NOAA/Shimada/Data/Wind_Shimada'],'w19','w21');

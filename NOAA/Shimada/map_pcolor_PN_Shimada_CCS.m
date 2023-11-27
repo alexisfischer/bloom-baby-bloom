@@ -14,10 +14,12 @@ option=2; % 1=Plot the individual data points; 2=Grid the data
 res = 0.15; % Coarser=0.2; Finer=0.1 % Set grid resolution (degrees)
 
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+
+%data=P.PN_biovol./sum([P.diatom_biovol,P.dino_biovol],2); label={'fx PN biovol'}; name='fxPN'; cax=[0 .3];
 %data=P.PN_cell; label={'log PN (cells/mL)'}; name='PN'; cax=[0 2];
 %data=P.diatom_biovol; label={'  diatom';'  bvl/mL'}; name='diatom'; cax=[1 7.3];
 %data=P.tox_cell./1000; label={'Cellular DA (pg/cell)'}; name='tox_cell'; cax=[0 100]; 
-data=P.dino_diat_ratio; label={'dino:diat ratio'}; name='ratio'; cax=[0 1]; 
+%data=P.dino_diat_ratio; label={'dino:diat ratio'}; name='ratio'; cax=[0 1]; 
 
 lat=P.LAT; lon=P.LON-unit; dt=P.DT;  
 %col=brewermap(256,'YlGn'); col(1:30,:)=[];
@@ -32,8 +34,9 @@ elseif yr==2021
     data=data(idx); lat = lat(idx); lon = lon(idx); 
 end
 
-%logdata=log10(data);
-logdata=(data);
+
+logdata=log10(data);
+%logdata=(data);
 
 %%%% plot
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 2 4.7]); 

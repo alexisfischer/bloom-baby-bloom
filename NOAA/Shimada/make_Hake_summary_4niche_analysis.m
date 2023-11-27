@@ -76,6 +76,8 @@ load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],.
 dt=datetime(mdateTB,'convertfrom','datenum'); dt.Format='yyyy-MM-dd HH:mm:ss';        
 cellsmL = classcountTB_above_optthresh./ml_analyzedTB;    
 
+%images=sum(sum(classcountTB_above_optthresh,2))*3404/4497
+
 %%%% sum PN biovolume into one variable all variables except and PN from regular summary
 id1=find(contains(class2useTB,'Pseudo-nitzschia_large_1cell')); 
 id2=find(contains(class2useTB,'Pseudo-nitzschia_large_2cell')); 
