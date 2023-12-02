@@ -3,8 +3,8 @@ function [] = copy_data_into_folders(in_dir_base, out_dir_data_base)
 % Alexis Fischer, April 2023
 
 %Example inputs
-% in_dir_base = 'C:\SFTP-BuddInlet\2023\'; % example input
-% out_dir_data_base = 'D:\Buddinlet\data\2023\'; % example input
+%in_dir_base='F:\Shimada\data\2023_raw\'; % example input
+%out_dir_data_base = 'F:\Shimada\data\2023\'; % example input
 
 yeardir = dir([in_dir_base 'D*']);
 
