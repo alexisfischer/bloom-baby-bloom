@@ -9,7 +9,7 @@ addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
 fprint=1;
-yr=2021; % 2019; 2021
+yr=2019; % 2019; 2021
 
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_biovolume.mat'],'PB');
 
@@ -18,8 +18,6 @@ if yr==2019
 elseif yr==2021
     PB(PB.DT<datetime('01-Jan-2020'),:)=[];
 end
-
-%diat=mean(P.diatom./(P.dino+P.diatom));
 
 names=PB.Properties.VariableNames(2:21);
 bvmL=timetable2table(PB(:,2:21));
@@ -47,14 +45,16 @@ total=sum(data_grid,2);
 fx = data_grid./total;
 
 % reorder by highest fraction
+col=brewermap(length(names),'Spectral');
+rng("default"); idx=randperm(length(names));
+col=col(idx,:);
+
 t=sum(fx,1,'omitnan');
 [~,i]=sort(t,'descend');
 fxi=fx(:,i);
 names=names(i);
+col=col(i,:);
 
-col=brewermap(length(names),'Spectral');
-rng("default"); idx=randperm(length(names));
-col=col(idx,:);
 idx=contains(names,'Pseudo-nitzschia');
 col(idx,:)=[0 0 0];
 
@@ -73,7 +73,7 @@ end
 set(gca,'ylim',[0 1],'ytick',.1:.1:1,'xlim',[39.9 49],'xtick',40:1:49,...
     'fontsize',9,'yaxislocation','right');
 legend(names,'Location','EastOutside','fontsize',9);legend boxoff; hold on;
-ylabel('fx of sample','fontsize',10); hold on;
+ylabel('fx of sample biomass','fontsize',10); hold on;
 view([90 -90])
 
 if fprint

@@ -37,11 +37,11 @@ pcolor(lon_plot-res/2,lat_plot-res/2,data_grid) % have to shift lat/lon for pcol
 shading flat; hold on;
 %contour(lon_plot-res/2,lat_plot-res/2,data_grid,[2.5 2.5],'k-');
 
-clearvars lat_plot lon_plot ii jj nx ny lon_grid lat_grid data_grid 
+%clearvars lat_plot lon_plot ii jj nx ny lon_grid lat_grid data_grid 
 
 colormap(col); clim(cax);
 axis([min(lon) max(lon) min(lat) max(lat)]);
-
+%%
 h=colorbar('northoutside','xtick',ticks); hp=get(h,'pos');    
 set(h,'pos',hp,'xaxisloc','top','fontsize',9,'tickdir','out');
 %h=colorbar('east'); hp=get(h,'pos');     

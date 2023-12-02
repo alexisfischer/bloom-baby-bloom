@@ -61,29 +61,5 @@ w21.cui(idx)=-(cumsum(v(idx)));
 
 clearvars filename startRow formatSpec fileID dataArray ans DD dtt hh mm MM YYYY u v dir spd dt;
 
-%%
-figure
-subplot(2,1,1)
-yyaxis left
-    plot(w19.dt,w19.v,'-','Color','k','linewidth',2); hold on;
-    yline(0);
-    set(gca,'xlim',[datetime('01-May-2019') datetime('26-Sep-2019')],...
-        'ylim',[-11 10],'ytick',-7:7:7,'fontsize',10,'tickdir','out','ycolor','k');    
-    ylabel('2019 (m s^{-1})','fontsize',11);
-yyaxis right
-    plot(w19.dt,w19.cui,'--','Color','r','linewidth',2); hold on;
-    set(gca,'ylim',[-200 200],'ycolor','r')
-    title('North-south wind stress')
+save([filepath 'NOAA/Shimada/Data/wind_46041'],'w19','w21');
 
-subplot(2,1,2)
-    plot(w21.dt,w21.v,'-','Color','k','linewidth',2); hold on;
-    yline(0);
-    set(gca,'xlim',[datetime('01-May-2021') datetime('26-Sep-2021')],...
-        'ylim',[-11 10],'ytick',-7:7:7,'fontsize',10,'tickdir','out','ycolor','k');    
-    ylabel('2021 (m s^{-1})','fontsize',11);
-yyaxis right
-    plot(w21.dt,w21.cui,'--','Color','r','linewidth',2); hold on;  
-    set(gca,'ylim',[-200 200],'ycolor','r')
-     
-%%
-save([filepath 'NOAA/Shimada/Data/Wind_Shimada'],'w19','w21');
