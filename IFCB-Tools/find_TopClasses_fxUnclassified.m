@@ -21,7 +21,7 @@ if CCS==1
 else
     load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'],'ml_analyzed','classbiovol','class2use','filelist')
     outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
-    num=25;
+    num=30;
 end
 %new=class2use';
 
@@ -64,12 +64,7 @@ fxCC=fxCC(idx);
 
 if sum(contains(topclasses,'Dinophysis'))>0
     disp('Dinophysis')
-    temp={'Dinophysis_sp' 'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' ...
-        'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' ...
-        'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos' ...
-        'Dinophysis_sp_dividing' 'Dinophysis_sp_mating' 'D_acuminata_dividing' ...
-        'D_acuminata_mating' 'D_fortii_dividing' 'D_fortii_mating' ...
-        'D_norvegica_dividing' 'D_norvegica_mating' 'D_parva_dividing' 'D_parva_mating'};
+    temp={'Dinophysis_acuminata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_parva'};
     topclasses=[topclasses,temp];
 end
 
