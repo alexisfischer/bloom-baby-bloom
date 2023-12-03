@@ -16,8 +16,8 @@ function [] = merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,
 % BUDDpath = 'D:\BuddInlet\';
 
 %%%%
-manualpath = [mergedpath 'manual_merged_selectOSU\'];
-feapathbase = [mergedpath 'features_merged_selectOSU\'];
+manualpath = [mergedpath 'manual_merged_NOAA\'];
+feapathbase = [mergedpath 'features_merged_NOAA\'];
 load([class2useName '.mat'], 'class2use');
 
 %% Shimada
@@ -129,57 +129,57 @@ clearvars manual_files fea_files BUDDmanualpath i BUDDfeapath feapath
 disp('Finished copying corresponding Alt and Discrete BUDD manual and feature files');
 
 
-%% OSU
-addpath(genpath(mergedpath));
-
-% copy manual files to merged manual folder and convert classes
-OSUmanualpath = [OSUpath 'manual\'];
-addpath(genpath(OSUmanualpath));
-manual_files = dir([OSUmanualpath 'D*122.mat']); %only select IFCB122 files
-for i=1:length(manual_files)  
-    copyfile([OSUmanualpath manual_files(i).name],manualpath);  
-    baseFileName = manual_files(i).name;        
-    fullFileName = fullfile(manualpath, baseFileName);
-    fprintf(1, 'Now converting classes in file %s\n', fullFileName);
-    load(fullFileName,'class2use_auto','classlist','default_class_original','list_titles');
-    
-    %overwrite OSU classes with NWFSC classes    
-    [classlist(:,2)]=convert_classnum_OSU2NWFSC(classlist(:,2)); 
-    [classlist(:,3)]=convert_classnum_OSU2NWFSC(classlist(:,3));     
-    class2use_manual=class2use;
-    if isempty(class2use_auto)
-    else
-        class2use_auto = class2use;
-    end    
-    
-    save(fullFileName,'class2use_auto','class2use_manual','classlist','default_class_original','list_titles');
-    clearvars class2use_auto class2use_manual classlist default_class_original list_titles baseFileName fullFileName; 
-end
-
-% copy corresponding features files to merged features folder
-OSUfeapathbase = [OSUpath 'features\']; 
-addpath(genpath(OSUfeapathbase));
-manual_files = {manual_files.name}';
-fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
-for i=1:length(fea_files)  
-    OSUfeapath=[OSUfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
-    feapath = [feapathbase manual_files{i}(2:5) filesep];
-    copyfile([OSUfeapath fea_files{i}],feapath); 
-end
-
-%% convert to preferred classlist
-manualdir = dir([manualpath 'D*']);
-for ii = 1:length(manualdir)
-    manualfile = open([manualpath manualdir(ii).name]);
-    manualfile.class2use_manual = class2use;
-    if ~isempty(manualfile.class2use_auto)
-        manualfile.class2use_auto = transpose(class2use);
-    end
-    save([manualpath manualdir(ii).name], '-struct', 'manualfile');
-end
-
-clearvars manual_files fea_files i OSUfeapath feapath
-disp('Finished copying corresponding OSU manual and feature files');
+% %% OSU
+% addpath(genpath(mergedpath));
+% 
+% % copy manual files to merged manual folder and convert classes
+% OSUmanualpath = [OSUpath 'manual\'];
+% addpath(genpath(OSUmanualpath));
+% manual_files = dir([OSUmanualpath 'D*122.mat']); %only select IFCB122 files
+% for i=1:length(manual_files)  
+%     copyfile([OSUmanualpath manual_files(i).name],manualpath);  
+%     baseFileName = manual_files(i).name;        
+%     fullFileName = fullfile(manualpath, baseFileName);
+%     fprintf(1, 'Now converting classes in file %s\n', fullFileName);
+%     load(fullFileName,'class2use_auto','classlist','default_class_original','list_titles');
+% 
+%     %overwrite OSU classes with NWFSC classes    
+%     [classlist(:,2)]=convert_classnum_OSU2NWFSC(classlist(:,2)); 
+%     [classlist(:,3)]=convert_classnum_OSU2NWFSC(classlist(:,3));     
+%     class2use_manual=class2use;
+%     if isempty(class2use_auto)
+%     else
+%         class2use_auto = class2use;
+%     end    
+% 
+%     save(fullFileName,'class2use_auto','class2use_manual','classlist','default_class_original','list_titles');
+%     clearvars class2use_auto class2use_manual classlist default_class_original list_titles baseFileName fullFileName; 
+% end
+% 
+% % copy corresponding features files to merged features folder
+% OSUfeapathbase = [OSUpath 'features\']; 
+% addpath(genpath(OSUfeapathbase));
+% manual_files = {manual_files.name}';
+% fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
+% for i=1:length(fea_files)  
+%     OSUfeapath=[OSUfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
+%     feapath = [feapathbase manual_files{i}(2:5) filesep];
+%     copyfile([OSUfeapath fea_files{i}],feapath); 
+% end
+% 
+% %% convert to preferred classlist
+% manualdir = dir([manualpath 'D*']);
+% for ii = 1:length(manualdir)
+%     manualfile = open([manualpath manualdir(ii).name]);
+%     manualfile.class2use_manual = class2use;
+%     if ~isempty(manualfile.class2use_auto)
+%         manualfile.class2use_auto = transpose(class2use);
+%     end
+%     save([manualpath manualdir(ii).name], '-struct', 'manualfile');
+% end
+% 
+% clearvars manual_files fea_files i OSUfeapath feapath
+% disp('Finished copying corresponding OSU manual and feature files');
 
 end
 

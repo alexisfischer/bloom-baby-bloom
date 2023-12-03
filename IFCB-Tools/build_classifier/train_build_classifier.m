@@ -22,29 +22,29 @@ merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,OSUpath,SHMDAp
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 %% Step 2: select classes of interest and find class2skip
-% Regional CCS classifier
-load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
-SS(end).topclasses(end+1)={'Navicula'};
-
-[class2skip] = find_class2skip(class2useName,SS(end).topclasses);
-class2skip(end+1)={'Bacteriastrum'};
-class2skip(end+1)={'Thalassiosira_single'};
-class2skip(end+1)={'Heterosigma'};
-class2skip(end+1)={'pennate'};
-class2skip(end+1)={'nanoplankton'};
-class2skip(end+1)={'cryptophyta'};
-class2skip(end+1)={'Pseudo-nitzschia'};
-class2skip(end+1)={'Dinophysis'};
-class2skip(end+1)={'Gonyaulax'};
-
-% % Budd Inlet
-% load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');
-% [class2skip] = find_class2skip(class2useName,topclasses);
+% % Regional CCS classifier
+% load([filepath 'bloom-baby-bloom\NOAA\Shimada\Data\seascape_topclasses'],'SS');
+% SS(end).topclasses(end+1)={'Navicula'};
+% 
+% [class2skip] = find_class2skip(class2useName,SS(end).topclasses);
+% class2skip(end+1)={'Bacteriastrum'};
 % class2skip(end+1)={'Thalassiosira_single'};
+% class2skip(end+1)={'Heterosigma'};
 % class2skip(end+1)={'pennate'};
+% class2skip(end+1)={'nanoplankton'};
+% class2skip(end+1)={'cryptophyta'};
 % class2skip(end+1)={'Pseudo-nitzschia'};
 % class2skip(end+1)={'Dinophysis'};
-% class2skip(end+1)={'Scrippsiella'};
+% class2skip(end+1)={'Gonyaulax'};
+
+% Budd Inlet
+load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');
+[class2skip] = find_class2skip(class2useName,topclasses);
+class2skip(end+1)={'Thalassiosira_single'};
+%class2skip(end+1)={'pennate'};
+%class2skip(end+1)={'Pseudo-nitzschia'};
+%class2skip(end+1)={'Dinophysis'};
+%class2skip(end+1)={'Scrippsiella'};
 
 % Step 2: Compile features for the training set
 addpath(genpath('D:\general\classifier\'));
@@ -55,22 +55,24 @@ feapath_base = 'D:\general\classifier\features_merged_selectOSU\'; %feature file
 outpath = 'D:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 1000; %minimum number for inclusion
-class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
-        {'Pseudo-nitzschia_small_2cell' 'Pseudo-nitzschia_large_2cell'}...
-        {'Pseudo-nitzschia_small_3cell' 'Pseudo-nitzschia_large_3cell' ...
-        'Pseudo-nitzschia_small_4cell' 'Pseudo-nitzschia_large_4cell'}...
-        {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
-        {'Chaetoceros_chain' 'Chaetoceros_single'}...      
-        {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}... %CCS
-        {'Heterocapsa_triquetra' 'Scrippsiella'}...              %CCS
-        {'Rhizosolenia' 'Proboscia'}}; %CCS
+class2group={{'Dinophysis_acuminata' 'Dinophysis_fortii'...
+    'Dinophysis_norvegica' 'Dinophysis_parva'}...
+    {'Chaetoceros_chain' 'Chaetoceros_single'}};
 
-%        {'Cerataulina' 'Detonula'}};  %BI
+% class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
+%         {'Pseudo-nitzschia_small_2cell' 'Pseudo-nitzschia_large_2cell'}...
+%         {'Pseudo-nitzschia_small_3cell' 'Pseudo-nitzschia_large_3cell' ...
+%         'Pseudo-nitzschia_small_4cell' 'Pseudo-nitzschia_large_4cell'}...
+%         {'Dinophysis_acuminata' 'Dinophysis_acuta' 'Dinophysis_caudata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_odiosa' 'Dinophysis_parva' 'Dinophysis_rotundata' 'Dinophysis_tripos'}...
+%         {'Chaetoceros_chain' 'Chaetoceros_single'}...      
+%         {'Cerataulina' 'Dactyliosolen' 'Detonula' 'Guinardia'}... %CCS
+%         {'Heterocapsa_triquetra' 'Scrippsiella'}...              %CCS
+%         {'Rhizosolenia' 'Proboscia'}}; %CCS
 
-%group='NOAA'; %[]; %'NOAA'; %'OSU'; 
-group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
-%classifiername=['BI_' group '_v2']; 
-classifiername=['CCS_' group '_v7']; 
+group='NOAA'; %[]; %'NOAA'; %'OSU'; 
+%group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
+classifiername=['BI_' group '_v3']; 
+%classifiername=['CCS_' group '_v7']; 
 
 compile_train_features_NWFSC(manualpath,feapath_base,outpath,maxn,minn,classifiername,class2useName,class2skip,class2group,group);
 addpath(genpath(outpath)); % add new data to search path
