@@ -2,15 +2,18 @@
 addpath(genpath('~/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath('~/MATLAB/bloom-baby-bloom/')); % add new data to search path
 clear;
-fprint=1;
+fprint=0;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB_2021-2022'],...
-    'class2useTB','classbiovolTB','ml_analyzedTB','mdateTB','classcountTB_above_adhocthresh');
-classcountTB=classcountTB_above_adhocthresh;
+indfile=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];
+load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB'],...
+    'class2useTB','classbiovolTB_above_optthresh','ml_analyzedTB','mdateTB','classcountTB_above_optthresh');
+classcountTB=classcountTB_above_optthresh;
+classbiovolTB=classbiovolTB_above_optthresh;
 addpath(genpath(filepath)); % add new data to search path
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 
+%%
 id=contains(class2useTB,'Dinophysis'); class2useTB{id}='Dinophysis';
 
 % %%%% Step 1: take daily average
@@ -21,14 +24,14 @@ id=contains(class2useTB,'Dinophysis'); class2useTB{id}='Dinophysis';
 % end
 
 %%%% Step 2: Convert Biovolume (cubic microns/cell) to ug carbon/ml
-ind_diatom=get_class_ind(class2useTB,'diatom',filepath);
+ind_diatom=get_class_ind(class2useTB,'diatom',indfile);
 [pgCcell] = biovol2carbon(classbiovolTB,ind_diatom); 
 ugCml=NaN*pgCcell;
 for i=1:length(pgCcell)
     ugCml(i,:)=.001*(pgCcell(i,:)./ml_analyzedTB(i)); %convert from pg/cell to pg/mL to ug/L 
 end  
 
-ugCml(:,get_class_ind(class2useTB,'nonliving',filepath))=NaN;
+ugCml(:,get_class_ind(class2useTB,'nonliving',indfile))=NaN;
 
 % find classes contributing to bulk of biomass
 sampletotal=repmat(sum(ugCml,2),1,size(ugCml,2));
@@ -56,7 +59,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.06 0.04], [0.08 0.3]);
 
 %xax1=datenum('2021-07-01'); xax2=datenum('2021-12-15');     
 %xax1=datenum('2022-04-01'); xax2=datenum('2022-10-01');     
-xax1=datenum('2021-08-01'); xax2=datenum('2022-10-01');     
+xax1=datenum('2021-08-01'); xax2=datenum('2023-10-01');     
 
 subplot(2,1,1);
 h = bar(mdateTB,[ugCmli./Total other./Total],'stack','Barwidth',4);
@@ -72,7 +75,7 @@ col=[c;[.9 .9 .9]];
         'fontsize', 12,'fontname', 'arial','tickdir','out',...
         'yticklabel',{'.2','.4','.6','.8','1'},'xticklabel',{});    
         
-[~,label] = get_class_ind(class2useTB,'all',filepath); %label(end+1)={'other'};
+[~,label] = get_class_ind(class2useTB,'all',indfile); %label(end+1)={'other'};
     lh=legend(label);
     legend boxoff; lh.FontSize = 10; hp=get(lh,'pos');
     lh.Position=[hp(1)+.3 hp(2)+.04 hp(3) hp(4)]; hold on    
@@ -86,7 +89,7 @@ h=plot(mdateTB,smooth(classcountTB(:,idx)./ml_analyzedTB,5),'k-',...
 set(gca,'ylim',[0 15],'xlim',[xax1 xax2])
 datetick('x', 'mmm', 'keeplimits');    
 ylabel('Dinophysis (cells/mL)','fontsize',12);
-legend(h,'Classifier','Manual Microscopy','Location','NW');
+legend(h,'Classifier','Microscopy','Location','NW');
 
 if fprint
     set(gcf,'color','w');    

@@ -67,7 +67,6 @@ class2group={{'Pseudo-nitzschia_small_1cell' 'Pseudo-nitzschia_large_1cell'}...
 
 %        {'Cerataulina' 'Detonula'}};  %BI
 
-
 %group='NOAA'; %[]; %'NOAA'; %'OSU'; 
 group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
 %classifiername=['BI_' group '_v2']; 

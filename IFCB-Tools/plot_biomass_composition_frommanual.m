@@ -7,14 +7,14 @@ CCS=0;
 filepath = '/Users/afischer/MATLAB/bloom-baby-bloom/';
 
 if CCS==1
-    load([filepath 'IFCB-Data/Shimada/manual/class_eqdiam_biovol_manual_2019'])
+    load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'])
     load([filepath 'IFCB-Data/Shimada/manual/TopClasses'],'class2use');
     remove={'D_acuminata' 'D_acuta' 'D_caudata' 'D_fortii' ...
         'D_norvegica' 'D_odiosa' 'D_parva' 'D_rotundata' 'D_tripos'};
     xax1=datetime('2019-07-20'); xax2=datetime('2019-08-20');     
     
 else
-    load([filepath 'IFCB-Data/BuddInlet/manual/class_eqdiam_biovol_manual_2021'])
+    load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'])
     load([filepath 'IFCB-Data/BuddInlet/manual/TopClasses'],'class2use'); 
     remove={'D_acuminata' 'D_acuta' 'D_caudata' 'D_fortii' ...
         'D_norvegica' 'D_odiosa' 'D_parva' 'D_rotundata' 'D_tripos'};
