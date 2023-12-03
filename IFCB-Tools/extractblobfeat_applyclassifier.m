@@ -49,8 +49,8 @@ roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 adhocthresh = 0.5;
 micron_factor=1/3.8; %pixels/micron
 
-% summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
-%     feapath_generic,roibasepath_generic,adhocthresh,micron_factor,2021:2023);
+summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
+    feapath_generic,roibasepath_generic,adhocthresh,micron_factor,2021:2023);
 
 summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
