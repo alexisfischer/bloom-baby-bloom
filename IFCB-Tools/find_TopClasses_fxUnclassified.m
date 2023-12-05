@@ -21,7 +21,7 @@ if CCS==1
 else
     load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'],'ml_analyzed','classbiovol','class2use','filelist')
     outdir=[filepath 'IFCB-Data/BuddInlet/manual/'];    
-    num=30;
+    num=35;
 end
 %new=class2use';
 
