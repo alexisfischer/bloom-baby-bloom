@@ -9,12 +9,12 @@ function [ ] = classifier_oob_analysis_og( classifiername,outpath,adhocthresh)
 %
 %% Example Inputs
 % clear
-% classifiername ='D:\general\classifier\summary\Trees_CCS_NOAA-OSU_v5';
-% outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\class\';
+% classifiername ='F:\general\classifier\summary\Trees_BI_NOAA_v3';
+% outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
 % adhocthresh=0.5;
 
 load(classifiername,'b','featitles','classes','maxthre','targets');
-
+%%
 [Yfit,Sfit,Sstdfit] = oobPredict(b);
 [mSfit, ii] = max(Sfit');
 for count = 1:length(mSfit) 

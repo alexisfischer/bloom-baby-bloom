@@ -67,9 +67,10 @@ summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
 
 
 %% adjust classlists
-start_mc_adjust_classes_user_training('D:\general\config\class2use_16','D:\Shimada\manual_test\')
-start_mc_adjust_classes_user_training('D:\general\config\class2use_16','D:\BuddInlet\manual\')
-start_mc_adjust_classes_user_training('D:\general\config\class2use_16','D:\LabData\manual\')
-start_mc_adjust_classes_user_training('D:\general\config\class2use_16','D:\BuddInlet\manual_DiscreteSamples\')
-start_mc_adjust_classes_user_training('D:\general\config\class2use_16','D:\BuddInlet\manual_AltSamples\')
+start_mc_adjust_classes_user_training('F:\general\config\class2use_16','F:\general\classifier\manual_merged_NOAA\')
+start_mc_adjust_classes_user_training('F:\general\config\class2use_16','D:\BuddInlet\manual\')
+start_mc_adjust_classes_user_training('F:\general\config\class2use_16','F:\LabData\manual\')
+start_mc_adjust_classes_user_training('F:\general\config\class2use_16','F:\Shimada\manual\')
+start_mc_adjust_classes_user_training('F:\general\config\class2use_16','F:\BuddInlet\manual_DiscreteSamples\')
+start_mc_adjust_classes_user_training('F:\general\config\class2use_16','F:\BuddInlet\manual_AltSamples\')
 

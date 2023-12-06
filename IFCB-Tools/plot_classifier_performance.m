@@ -1,36 +1,34 @@
 clear;
-Mac=1;
-%name='CCS_v17';
-name='CCS_NOAA-OSU_v7';
-%name='BI_NOAA-OSU_v2';
+Mac=0;
+%name='CCS_NOAA-OSU_v7';
+name='BI_NOAA_v5';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
-    filepath = [basepath 'IFCB-Data/Shimada/class/'];
+    filepath = [basepath 'IFCB-Data/BuddInlet/class/'];
     classidx=[basepath 'IFCB-Tools/convert_index_class/class_indices.mat'];
     figpath = [filepath 'Figs/'];
 else
     basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-    filepath = [basepath 'IFCB-Data\Shimada\class\'];
+    filepath = [basepath 'IFCB-Data\BuddInlet\class\'];
     classidx=[basepath 'IFCB-Tools\convert_index_class\class_indices.mat'];    
     figpath = [filepath 'Figs\'];    
 end
 addpath(genpath(basepath));
 
 load([filepath 'performance_classifier_' name],'topfeat','maxthre','all',...
-    'opt','thr','c_thr','c_all','c_opt','c_aht','aht','adhocthresh','trainingset');
-
+    'opt','c_all','c_opt','c_aht','aht','adhocthresh','trainingset');
 disp(['optimal fx unclassified = ' num2str(opt.fxUnclass(end)) '']); 
 
-%%
-opt(end,:)=[]; 
-[~,class]=get_class_ind( all.class,'all',classidx);
+[id,class]=get_class_ind( all.class,'all',classidx);
+
 [~,classU]=get_class_ind( opt.class,'all',classidx);
+opt(end,:)=[]; 
 maxn=round(max([opt.total]),-2);
-%%
-if exist('thr')    
-    disp(['chosen threshold fx unclassified = ' num2str(thr.fxUnclass(end)) '']); thr(end,:)=[];
-end
+
+% if exist('thr')    
+%     disp(['chosen threshold fx unclassified = ' num2str(thr.fxUnclass(end)) '']); thr(end,:)=[];
+% end
 
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
