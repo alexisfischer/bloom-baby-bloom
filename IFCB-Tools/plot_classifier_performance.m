@@ -1,7 +1,8 @@
-clear;
+%clear;
 Mac=0;
 %name='CCS_NOAA-OSU_v7';
-name='BI_NOAA_v5';
+%name='BI_NOAA-OSU_v2';
+name='BI_NOAA_v9';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -29,6 +30,7 @@ maxn=round(max([opt.total]),-2);
 % if exist('thr')    
 %     disp(['chosen threshold fx unclassified = ' num2str(thr.fxUnclass(end)) '']); thr(end,:)=[];
 % end
+
 
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');

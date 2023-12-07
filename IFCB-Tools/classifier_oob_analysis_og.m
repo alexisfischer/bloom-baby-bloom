@@ -9,7 +9,7 @@ function [ ] = classifier_oob_analysis_og( classifiername,outpath,adhocthresh)
 %
 %% Example Inputs
 % clear
-% classifiername ='F:\general\classifier\summary\Trees_BI_NOAA_v3';
+% classifiername ='F:\general\classifier\summary\Trees_BI_NOAA_v6';
 % outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
 % adhocthresh=0.5;
 
@@ -170,5 +170,5 @@ exportgraphics(gca,[outpath 'Figs/class_vs_thresholdscores_' classifiername(37:e
 hold off
 
 save([outpath 'performance_classifier_' classifiername(37:end) ''],'all','c_all','c_aht','aht','adhocthresh','opt','c_opt','maxthre','topfeat','trainingset');
-
+disp(['summary location: ' outpath 'performance_classifier_' classifiername(37:end) '']);
 end

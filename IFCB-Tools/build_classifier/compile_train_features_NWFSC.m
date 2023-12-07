@@ -130,7 +130,7 @@ if isempty(varargin{3})
     files_all = varargout{2};
     roinum = varargout{3};
 else
-    disp('evenly distribute NOAA, UCSC, and OSU image annotations')    
+    disp('augment NOAA annotations with OSU annotations')    
     [n, class_all, varargout] = handle_train_maxn_subsample( class2use, maxn, class_all, fea_all, files_all, roinum );
     fea_all = varargout{1};
     files_all = varargout{2};
