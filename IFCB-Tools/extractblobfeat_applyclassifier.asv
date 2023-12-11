@@ -4,7 +4,7 @@ clear;
 
 %%%% modify according to dataset
 %ifcbdir='F:\Shimada\'; 
-ifcbdir='F:\BuddInlet\';
+ifcbdir='D:\BuddInlet\';
 %ifcbdir='F:\LabData\'; 
 %ifcbdir='F:\general\classifier\'; 
 
