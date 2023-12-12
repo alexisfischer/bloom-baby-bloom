@@ -5,6 +5,7 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 load([filepath 'NOAA/Shimada/Data/Shimada_HAB_2019'],'HA19');
 load([filepath 'NOAA/Shimada/Data/Shimada_HAB_2021'],'HA21');
 
+%%
 dt=[HA19.dt;HA21.dt];
 st=[HA19.StationID;HA21.StationID];
 lat=[HA19.Lat_dd;HA21.Latitude];
@@ -14,7 +15,7 @@ pDA_pgmL=[HA19.pDAngL;HA21.pDA_ngL];
 Nitrate_uM=[HA19.NitrateM;HA21.NO3AveConcM];
 Phosphate_uM=[HA19.PhosphateM;HA21.PO4AveConcM];
 Silicate_uM=[HA19.SilicateM;HA21.SiAveConcM];
-PNcellsmL=[HA19.Total_PNcellsL;NaN*HA21.StationID]./1000;
+PN_mcrspy=[HA19.Total_PNcellsL;NaN*HA21.StationID]./1000;
 
 %%%% take into account limit of detection
 Nitrate_uM(Nitrate_uM<0.6)=.01;
@@ -54,7 +55,7 @@ fx_mult=[HA19.fx_mult;HA21.fx_mult];
 fx_frau=[HA19.fx_frau;HA21.fx_frau];
 fx_aust=[HA19.fx_aust;HA21.fx_aust];
 
-HA=table(dt,st,lat,lon,chlA_ugL,PNcellsmL,pDA_pgmL,Nitrate_uM,Phosphate_uM,Silicate_uM,...
+HA=table(dt,st,lat,lon,chlA_ugL,PN_mcrspy,pDA_pgmL,Nitrate_uM,Phosphate_uM,Silicate_uM,...
    S2N,P2N,fx_deli,fx_pseu,fx_heim,fx_pung,fx_mult,fx_frau,fx_aust);
 
 save([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');

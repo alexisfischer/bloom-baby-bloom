@@ -9,11 +9,11 @@ file="/Users/alexis.fischer/Documents/Shimada2019/NHL_nuts_chla_4Alexis.xlsx";
 opts = spreadsheetImportOptions("NumVariables", 10);
 opts.Sheet = "NHL_nuts_2019and2021";
 opts.DataRange = "A2:J510";
-opts.VariableNames = ["Var1", "SampleDate", "Station", "Var4", "Var5", "no3", "no3no2", "Latitude", "Longitude", "Depth"];
-opts.SelectedVariableNames = ["SampleDate", "Station", "no3", "no3no2", "Latitude", "Longitude", "Depth"];
-opts.VariableTypes = ["char", "datetime", "categorical", "char", "char", "double", "double", "double", "double", "double"];
-opts = setvaropts(opts, ["Var1", "Var4", "Var5"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["Var1", "Station", "Var4", "Var5"], "EmptyFieldRule", "auto");
+opts.VariableNames = ["Var1", "SampleDate", "Station", "pressure", "no2", "no3", "no3no2", "Latitude", "Longitude", "Depth"];
+opts.SelectedVariableNames = ["SampleDate", "Station", "pressure", "no2", "no3", "no3no2", "Latitude", "Longitude", "Depth"];
+opts.VariableTypes = ["char", "datetime", "char", "double", "double", "double", "double", "double", "double", "double"];
+opts = setvaropts(opts, ["Var1", "Station"], "WhitespaceRule", "preserve");
+opts = setvaropts(opts, ["Var1", "Station"], "EmptyFieldRule", "auto");
 N = readtable(file, opts, "UseExcel", false);
 N = renamevars(N,'SampleDate','dt');
 N = renamevars(N,'Station','station');
@@ -23,8 +23,8 @@ opts.Sheet = "NHL_chla_2019and2021";
 opts.DataRange = "A2:F538";
 opts.VariableNames = ["Var1", "date", "station", "Depth", "Fraction", "ChlorophyllAConcentration"];
 opts.SelectedVariableNames = ["date", "station", "Depth", "Fraction", "ChlorophyllAConcentration"];
-opts.VariableTypes = ["char", "datetime", "categorical", "double", "categorical", "double"];
-opts = setvaropts(opts, "Var1", "WhitespaceRule", "preserve");
+opts.VariableTypes = ["char", "datetime", "char", "double", "categorical", "double"];
+opts = setvaropts(opts, ["Var1", "station"], "WhitespaceRule", "preserve");
 opts = setvaropts(opts, ["Var1", "station", "Fraction"], "EmptyFieldRule", "auto");
 C = readtable(file, opts, "UseExcel", false);
 C = renamevars(C,'date','dt');
@@ -47,15 +47,30 @@ TT((TT.dt>datetime('2019-08-10') & TT.dt<datetime('2021-08-01')),:)=[];
 
 TT(isnan(TT.Latitude),:)=[];
 
-clear opts file C N C2 C10 T
+% extract numbers from cell to get station #
+b=regexp(TT.station,'\d+(\.)?(\d+)?','match');
+TT.st=str2double([b{:}])';
+TT=removevars(TT,'station');
+TT=movevars(TT,'st','After','dt');
+
+clear opts file C N C2 C10 T b
 
 
 i19=(TT.dt<datetime('01-Jan-2020'));
 
-fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 4 3]); 
-plot(TT.dt(i19),TT.no3(i19),'r*',TT.dt(~i19)-2*365,TT.no3(~i19),'bo')
-set(gca,'xlim',[datetime('05-Jul-2019') datetime('10-Sep-2019')])
-legend('2019','2021','Location','Northoutside')
-ylabel('Nitrate (uM)')
+%TT.no3((TT.no3==0))=.00001;
+fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 5 2.5]); 
 
-exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/Nitrate_NHL.png'],'Resolution',100)    
+bubblechart(TT.dt(~i19)-2*365,TT.st(~i19),TT.no3(~i19)); hold on;
+bubblechart(TT.dt(i19),TT.st(i19),TT.no3(i19)); 
+bubblesize([2 20])
+bubblelim([0 40]);
+set(gca,'ylim',[0 30],'xlim',[datetime('06-Jul-2019') datetime('12-Sep-2019')],'tickdir','out')
+ylabel('distance offshore (km)')
+%legend('2019','2021','Location','Northoutside')
+bubblelegend('Nitrate (uM)','Location','eastoutside')
+
+exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/Nitrate_NHL.png'],'Resolution',100)   
+
+
+

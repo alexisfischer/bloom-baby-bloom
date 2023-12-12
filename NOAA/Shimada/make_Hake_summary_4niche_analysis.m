@@ -20,7 +20,7 @@ T=timetable(DT,LAT,LON,TEMP,SAL,PCO2,FL);
 
 load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); %GMT time
 HA.dt.Format='yyyy-MM-dd HH:mm:ss'; HA.dt=dateshift(HA.dt,'start','minute');
-H=table2timetable(HA); H=removevars(H,{'st','lat','lon','PNcellsmL','fx_pseu','fx_heim','fx_pung','fx_mult','fx_frau','fx_aust','fx_deli'});
+H=table2timetable(HA); H=removevars(H,{'st','lat','lon','fx_pseu','fx_heim','fx_pung','fx_mult','fx_frau','fx_aust','fx_deli'});
 H.pDA_pgmL(H.pDA_pgmL<0)=0; H=sortrows(H);
 T = synchronize(T,H,'first','fillwithmissing');
 
@@ -188,7 +188,7 @@ PB.pDA_fgmL=PB.pDA_pgmL.*0.001.*1000000; %convert to fg/mL
 P(P.LAT<40,:)=[]; % remove data south of 40 N
 P(P.LAT>47.5 & P.LON>-124.7,:)=[]; %remove data from the Strait
 P=movevars(P,{'LAT' 'LON' 'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'FL' 'Nitrate_uM' 'Phosphate_uM' ...
-    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'pDA_pgmL' 'pDA_fgmL'},'Before','filelistTB');
+    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'pDA_pgmL' 'pDA_fgmL' 'PN_mcrspy'},'Before','filelistTB');
 P(isnan(P.LAT),:)=[];
 
 % make 2019 and 2021 datasets equivalent
@@ -196,7 +196,7 @@ P(isnan(P.LAT),:)=[];
 PB(PB.LAT<40,:)=[]; % remove data south of 40 N
 PB(PB.LAT>47.5 & PB.LON>-124.7,:)=[]; %remove data from the Strait
 PB=removevars(PB,{'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'FL' 'Nitrate_uM' 'Phosphate_uM' ...
-    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL'});
+    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'PN_mcrspy'});
 PB(isnan(PB.LAT),:)=[];
 
 %%find toxicity/cell and toxicity/biovolume
