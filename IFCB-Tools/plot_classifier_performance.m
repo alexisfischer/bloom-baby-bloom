@@ -1,8 +1,8 @@
 clear;
 Mac=0;
-%name='CCS_NOAA-OSU_v7';
+name='CCS_NOAA-OSU_v7';
 %name='BI_NOAA-OSU_v2';
-name='BI_NOAA_v9';
+%name='BI_NOAA_v9';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -11,7 +11,7 @@ if Mac
     figpath = [filepath 'Figs/'];
 else
     basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-    filepath = [basepath 'IFCB-Data\BuddInlet\class\'];
+    filepath = [basepath 'IFCB-Data\Shimada\class\'];
     classidx=[basepath 'IFCB-Tools\convert_index_class\class_indices.mat'];    
     figpath = [filepath 'Figs\'];    
 end
@@ -42,10 +42,10 @@ end
 set(gca,'xlim',[0.5 (length(class)+.5)], 'xtick', 1:length(class), 'ylim',[0 maxn],...
     'xticklabel', class,'tickdir','out');
 ylabel('total images in set'); hold on
-lh=legend('NWFSC','OSU','Location','NorthOutside');
+lh=legend('NOAA NWFSC','OSU','Location','NorthOutside');
 
 set(gcf,'color','w');
-exportgraphics(gca,[figpath 'TrainingSet_' name '.png'],'Resolution',100)    
+exportgraphics(gca,[figpath 'TrainingSet_' name '.png'],'Resolution',300)    
 hold off
 
 %% F1 scores Winner take all
