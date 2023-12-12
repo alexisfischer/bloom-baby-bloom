@@ -4,15 +4,15 @@ clear;
 
 CCS=0;
 
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath(filepath)); % add new data to search path
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-classidx=[filepath 'IFCB-Tools/convert_index_class/class_indices'];
+% filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+% addpath(genpath(filepath)); % add new data to search path
+% addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+% classidx=[filepath 'IFCB-Tools/convert_index_class/class_indices'];
 
-% filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-% addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
-% addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
-% classidx=[filepath 'IFCB-Tools\convert_index_class\class_indices'];
+filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\')); % add new data to search path
+addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\')); % add new data to search path
+classidx=[filepath 'IFCB-Tools\convert_index_class\class_indices'];
 
 if CCS==1
     load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'])

@@ -1,4 +1,4 @@
-%clear;
+clear;
 Mac=0;
 %name='CCS_NOAA-OSU_v7';
 %name='BI_NOAA-OSU_v2';
