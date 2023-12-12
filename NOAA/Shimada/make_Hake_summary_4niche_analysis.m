@@ -59,7 +59,8 @@ for i=1:length(idx)
 
     irange=idx(i)-X:idx(i)+X;
     T.chlA_ugL(irange)=T.chlA_ugL(idx(i));
-    T.pDA_pgmL(irange)=T.pDA_pgmL(idx(i));
+    T.pDA_pgmL(irange)=T.pDA_pgmL(idx(i));    
+    T.PN_mcrspy(irange)=T.PN_mcrspy(idx(i));
     T.Nitrate_uM(irange)=T.Nitrate_uM(idx(i));
     T.Phosphate_uM(irange)=T.Phosphate_uM(idx(i));
     T.Silicate_uM(irange)=T.Silicate_uM(idx(i));
@@ -107,7 +108,7 @@ idx=contains(class2useTB,'Pseudo-nitzschia'); cellsmL(:,idx)=[]; bvmL(:,idx)=[];
 idx=contains(class2useTB,'unclassified'); cellsmL(:,idx)=[]; bvmL(:,idx)=[]; class2useTB(idx)=[];
 
 %%%% add PN back
-class2useTB(end+1)={'Pseudo-nitzschia'};
+class2useTB(end+1)={'Pseudonitzschia'};
 cellsmL(:,end+1)=PN_cellsmL;
 bvmL(:,end+1)=PN_bvmL;
 
@@ -203,14 +204,14 @@ PB(isnan(PB.LAT),:)=[];
 % P.tox_small=P.pDA_fgmL./P.Pseudonitzschia_small;
 % P.tox_medium=P.pDA_fgmL./P.Pseudonitzschia_medium;
 % P.tox_large=P.pDA_fgmL./P.Pseudonitzschia_large;
-P.tox_PNcell=P.pDA_fgmL./P.Pseudo-nitzschia;
-PB.tox_PNbv=PB.pDA_fgmL./PB.Pseudo-nitzschia;
+P.tox_PNcell=P.pDA_fgmL./P.Pseudonitzschia;
+PB.tox_PNbv=PB.pDA_fgmL./PB.Pseudonitzschia;
 
 % P.tox_small(P.tox_small==Inf)=0;
 % P.tox_medium(P.tox_medium==Inf)=0;
 % P.tox_large(P.tox_large==Inf)=0;
-P.tox_PNcell(P.tox_cell==Inf)=0;
-PB.tox_PNbv(PB.tox_biovol==Inf)=0;
+P.tox_PNcell(P.tox_PNcell==Inf)=0;
+PB.tox_PNbv(PB.tox_PNbv==Inf)=0;
 
 %% format for .csv file
 writetimetable(TT,[filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.csv'])
