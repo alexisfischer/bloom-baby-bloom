@@ -1,8 +1,8 @@
 %USER SET PATHS
 %where are your manual classification results? same resultpath as for manual_classify
-resultpath = 'F:\general\classifier\manual_merged_NOAA\'; % manual annotation file location
+resultpath = 'F:\BuddInlet\manual\'; % manual annotation file location
 outputpath = 'F:\general\ROI_images\'; %USER where to write out pngs
-roibasepath = 'D:\BuddInlet\data\xxxx\'; %USER where are your ROIs, put xxxx to mark loaction so of year digits
+roibasepath = 'F:\BuddInlet\data\xxxx\'; %USER where are your ROIs, put xxxx to mark loaction so of year digits
 %urlbase = 'http://ifcb-data.whoi.edu/mvco/'; %USER where is your dashboard\web server
 
 resultfilelist = dir([resultpath 'D*.mat']);
@@ -15,7 +15,7 @@ for filecount = 1:length(resultfilelist)
 
     %USER CHOOSE A LINE AND EDIT FOR YOUR CASE
     %category = class2use_manual; %use this syntax to export ALL categories
-    category={'Euglenoids'};
+    category={'Mesodinium'};
     % category = {'Actinoptychus' 'Cerataulina' 'Detonula' 'Dictyocha' 'Ditylum' 'Euglenoids' ...
     %     'Gymnodinium' 'Heterosigma' 'Leptocylindrus' 'Melosira' 'Mesodinium' ...
     %     'Scrippsiella' 'Skeletonema' 'Stephanopyxis' 'Verrucophora farcimen (cf)'};

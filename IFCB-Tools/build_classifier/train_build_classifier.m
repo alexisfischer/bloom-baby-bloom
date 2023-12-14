@@ -54,8 +54,8 @@ addpath(genpath('C:\Users\ifcbuser\Documents\'));
 
 %manualpath = 'D:\BuddInlet\manual\'; % manual annotation file location
 %feapath_base = 'D:\BuddInlet\features\'; %feature file location, assumes \yyyy\ organization
-manualpath = 'F:\general\classifier\manual_merged_NOAA\'; % manual annotation file location
-feapath_base = 'F:\general\classifier\features_merged_NOAA\'; %feature file location, assumes \yyyy\ organization
+manualpath = 'F:\BuddInlet\manual\'; % manual annotation file location
+feapath_base = 'F:\BuddInlet\features\'; %feature file location, assumes \yyyy\ organization
 outpath = 'F:\general\classifier\summary\'; % location to save training set
 maxn = 5000; %maximum number of images per class to include
 minn = 1000; %minimum number for inclusion
@@ -74,7 +74,7 @@ class2group={{'Dinophysis_acuminata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 
 
 group=[]; %'NOAAOSU'; %[]; %'NOAA'; %'OSU'; 
 %group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
-classifiername=['BI_NOAA_v10']; 
+classifiername=['BI_NOAA_v11']; 
 %classifiername=['BI_' group '_v2']; 
 %classifiername=['CCS_' group '_v7']; 
 

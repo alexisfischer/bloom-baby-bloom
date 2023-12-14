@@ -6,16 +6,6 @@ function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,cla
 
 %%
 %Example inputs
-% reading 3580 of 7639
-% Index exceeds the number of array elements. Index must not exceed 2196.
-% 
-% Error in TBclass_summarize_biovol_width (line 75)
-%     classbiovolTB(ii) = sum(targets.Biovolume(ind));
-% 
-% Error in summarize_biovol_from_classifier (line 85)
-%     =TBclass_summarize_biovol_width(classfiles{i},feafiles{i},adhocthresh,micron_factor,summarydir_base);
-% 
-
 clear
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\BuddInlet\class\';

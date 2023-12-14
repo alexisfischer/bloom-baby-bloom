@@ -1,8 +1,8 @@
 clear;
 Mac=0;
-name='CCS_NOAA-OSU_v7';
+%name='CCS_NOAA-OSU_v7';
 %name='BI_NOAA-OSU_v2';
-%name='BI_NOAA_v9';
+name='BI_NOAA_v10';
 
 if Mac
     basepath = '~/Documents/MATLAB/bloom-baby-bloom/';    
@@ -11,7 +11,7 @@ if Mac
     figpath = [filepath 'Figs/'];
 else
     basepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-    filepath = [basepath 'IFCB-Data\Shimada\class\'];
+    filepath = [basepath 'IFCB-Data\BuddInlet\class\'];
     classidx=[basepath 'IFCB-Tools\convert_index_class\class_indices.mat'];    
     figpath = [filepath 'Figs\'];    
 end
@@ -35,14 +35,14 @@ maxn=round(max([opt.total]),-2);
 %% plot stacked total in set
 figure('Units','inches','Position',[1 1 7 4],'PaperPositionMode','auto');
 col=[(brewermap(3,'Set2'));[.1 .1 .1]]; 
-b = bar([trainingset.NOAA trainingset.OSU],'stack','linestyle','none','Barwidth',.7);
+b = bar([trainingset.BI trainingset.NCC],'stack','linestyle','none','Barwidth',.7);
 for i=1:length(b)
     set(b(i),'FaceColor',col(i,:));
 end  
 set(gca,'xlim',[0.5 (length(class)+.5)], 'xtick', 1:length(class), 'ylim',[0 maxn],...
     'xticklabel', class,'tickdir','out');
 ylabel('total images in set'); hold on
-lh=legend('NOAA NWFSC','OSU','Location','NorthOutside');
+lh=legend('BI','NCC','Location','NorthOutside');
 
 set(gcf,'color','w');
 exportgraphics(gca,[figpath 'TrainingSet_' name '.png'],'Resolution',300)    

@@ -9,7 +9,7 @@ function [ ] = classifier_oob_analysis_og( classifiername,outpath,adhocthresh)
 %
 %% Example Inputs
 % clear
-% classifiername ='F:\general\classifier\summary\Trees_BI_NOAA_v6';
+% classifiername ='F:\general\classifier\summary\Trees_BI_NOAA_v10';
 % outpath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
 % adhocthresh=0.5;
 
@@ -99,15 +99,21 @@ clearvars i ia ib F1 R P t TP TN FP FN ind win Yfit_max
 
 %% count whos in training set
 %find gaps, if they exist
-idx = contains(targets,'IFCB104');
+% dt = NaT((size(targets)));
+% for i=1:length(dt)
+%     val=targets(i);
+%     dt(i)=datetime([val{1}(2:9) ' ' val{1}(11:16)],'InputFormat','yyyyMMdd HHmmss');
+% end
+
+idx = find(contains(targets,'IFCB150'));
 [C, classT] = confusionmat(b.Y(idx),Yfit(idx)); 
 [~,idx]=sort(classT);classT=classT(idx);C=C(idx,idx);
 totalT = sum(C')'; 
-UCSC=zeros(size(classes));
+BI=zeros(size(classes));
 [~,ib]=ismember(classes,classT);
 for i=1:length(ib)
     if ib(i)>0
-        UCSC(i)= totalT(ib(i));        
+        BI(i)= totalT(ib(i));        
     else
     end
 end
@@ -125,25 +131,25 @@ for i=1:length(ib)
     end
 end
 
-idx = contains(targets,{'IFCB777' 'IFCB117' 'IFCB150'}); %'IFCB122'
+idx = contains(targets,{'IFCB777' 'IFCB117'}); %'IFCB122'
 [C, classT] = confusionmat(b.Y(idx),Yfit(idx)); 
 [~,idx]=sort(classT);classT=classT(idx);C=C(idx,idx);
 totalT = sum(C')'; 
-NOAA=zeros(size(classes));
+NCC=zeros(size(classes));
 [~,ib]=ismember(classes,classT);
 for i=1:length(ib)
     if ib(i)>0
-        NOAA(i)= totalT(ib(i));        
+        NCC(i)= totalT(ib(i));        
     else
     end
 end
 
-total=sum([NOAA,OSU,UCSC],2);
+total=sum([BI,NCC,OSU],2);
 
-trainingset=table(classes,total,NOAA,OSU,UCSC);
+trainingset=table(classes,total,BI,NCC,OSU);
 trainingset = renamevars(trainingset,'classes','class');
 
-clearvars idx C class UCSC NOAA OSU 
+clearvars idx C class BI NCC OSU 
 
 %% sorting features according to the best ones
 figure('Units','inches','Position',[1 1 3.5 3],'PaperPositionMode','auto');
