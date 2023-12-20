@@ -1,29 +1,16 @@
-function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,micron_factor,yrrange)
-%function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,adhocthresh,yrrange)
+function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,yrrange)
+%function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,yrrange)
 %
 % Inputs automatic classified results and outputs a summary file of counts and biovolume
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
-
 %%
-%Example inputs
-% reading 3580 of 7639
-% Index exceeds the number of array elements. Index must not exceed 2196.
-% 
-% Error in TBclass_summarize_biovol_width (line 75)
-%     classbiovolTB(ii) = sum(targets.Biovolume(ind));
-% 
-% Error in summarize_biovol_from_classifier (line 85)
-%     =TBclass_summarize_biovol_width(classfiles{i},feafiles{i},adhocthresh,micron_factor,summarydir_base);
-% 
-
 clear
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\BuddInlet\class\';
 classpath_generic = 'F:\BuddInlet\class\classxxxx_v1\';
 feapath_generic = 'F:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
 roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
-yrrange = 2022;
-adhocthresh = 0.5;
+yrrange = 2021:2023;
 micron_factor=1/2.7;
 
 classfiles = [];
@@ -70,29 +57,23 @@ ml_analyzedTB = IFCB_volume_analyzed(hdrname);
 load(classfiles{1}, 'class2useTB');
 classcountTB = NaN(length(classfiles),length(class2useTB));
 classcountTB_above_optthresh = classcountTB;
-classcountTB_above_adhocthresh = classcountTB;
 classbiovolTB = classcountTB;
 classbiovolTB_above_optthresh = classcountTB;
-classbiovolTB_above_adhocthresh = classcountTB;
 classC_TB = classcountTB;
 classC_TB_above_optthresh = classcountTB;
-classC_TB_above_adhocthresh = classcountTB;
 classwidthTB = classcountTB;
 classwidthTB_above_optthresh = classcountTB;
-classwidthTB_above_adhocthresh = classcountTB;
 runtypeTB=filelistTB;
 filecommentTB=filelistTB;
 num2dostr = num2str(length(classfiles));
 clearvars feapath_generic classpath_generic roibasepath_generic i
 
-
 for i = 1:length(classfiles)
     if ~rem(i,10), disp(['reading ' num2str(i) ' of ' num2dostr]), end
 
     [classcountTB(i,:),classbiovolTB(i,:),classC_TB(i,:),classwidthTB(i,:),...
-    classcountTB_above_optthresh(i,:),classbiovolTB_above_optthresh(i,:),classC_TB_above_optthresh(i,:),classwidthTB_above_optthresh(i,:),...
-    classcountTB_above_adhocthresh(i,:),classbiovolTB_above_adhocthresh(i,:),classC_TB_above_adhocthresh(i,:),classwidthTB_above_adhocthresh(i,:)]...
-    =TBclass_summarize_biovol_width(classfiles{i},feafiles{i},adhocthresh,micron_factor,summarydir_base);
+    classcountTB_above_optthresh(i,:),classbiovolTB_above_optthresh(i,:),classC_TB_above_optthresh(i,:),classwidthTB_above_optthresh(i,:)]...
+    =TBclass_summarize_biovol_width(classfiles{i},feafiles{i},micron_factor,summarydir_base);
         
     hdr=IFCBxxx_readhdr2(hdrname{i});
     runtypeTB{i}=hdr.runtype;
