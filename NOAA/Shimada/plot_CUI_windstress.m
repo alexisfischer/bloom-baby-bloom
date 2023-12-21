@@ -6,18 +6,25 @@ addpath(genpath(filepath)); % add new data to search path
 
 load([filepath 'NOAA/Shimada/Data/wind_46041'],'w19','w21');
 
-w19(~(w19.dt>datetime('2019-05-01') & w19.dt<datetime('2019-08-19')),:)=[];
-w21(~(w21.dt>datetime('2021-05-01') & w21.dt<datetime('2021-09-25')),:)=[];
+% w19(~(w19.dt>datetime('2019-05-01') & w19.dt<datetime('2019-08-19')),:)=[];
+% w21(~(w21.dt>datetime('2021-05-01') & w21.dt<datetime('2021-09-25')),:)=[];
 
-fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 3 3]); 
-    plot(w19.dt+2*365,w19.cui,'r-','linewidth',2); hold on;
-    plot(w21.dt,w21.cui,'b-','linewidth',2); hold on;  
-    set(gca,'ylim',[0 170])
-legend('2019','2021','Location','Northoutside')
-ylabel('cumulative wind stress')
-title('Cape Elizabeth NDBC #46041')
+fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 3.5 2.5]); 
+    h1=plot(w19.dt+2*365,w19.cui,'r-','linewidth',1.5); hold on;
+    h2=plot(w21.dt,w21.cui,'b-','linewidth',1.5); hold on;  
+    set(gca,'xlim',[datetime('27-Apr-2021') datetime('22-Sep-2021')],...
+        'ylim',[-20 170],'tickdir','out','fontsize',10)
+ylabel('cumulative wind stress','fontsize',12)
+%title('Cape Elizabeth NDBC #46041','fontsize',12)
 
-exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/CUI_WA.png'],'Resolution',100)    
+x=datetime('09-Jul-2021'):1:datetime('19-Aug-2021');
+line(x,-10*ones(size(x)),'Color','r','LineStyle',':','linewidth',2)
+
+x=datetime('26-Jul-2021'):1:datetime('22-Sep-2021');
+line(x,0*ones(size(x)),'Color','b','LineStyle',':','linewidth',2)
+legend([h1 h2],'2019','2021','Location','Northwest')
+
+exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/CUI_WA.png'],'Resolution',300)    
 
     %%
 figure

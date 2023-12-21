@@ -3,42 +3,41 @@ clear;
 fprint=1;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-load([filepath 'NOAA/BuddInlet/Data/DinophysisMicroscopy'],'T');
 addpath(genpath(filepath));
+load([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'D');
 
-%% plot BI 
+idx=isnan(D.dinoML_microscopy); D(idx,:)=[]; %remove nans for better plotting
+
+% plot BI 
 figure('Units','inches','Position',[1 1 5 3.5],'PaperPositionMode','auto'); 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.15], [0.12 0.25]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-xax1=datetime('2021-05-01'); xax2=datetime('2022-10-01');     
+xax1=datetime('2021-05-01'); xax2=datetime('2023-11-01');     
 
 subplot(2,1,1);
-plot(T.SampleDate,.001*T.DinophysisConcentrationcellsL,'k*-','MarkerSize',5);
-    datetick('x', 'mm/yy', 'keeplimits');    
+plot(D.dt,D.dinoML_microscopy,'k*','MarkerSize',5);
     set(gca,'xlim',[xax1 xax2],...
         'fontsize', 11,'fontname', 'arial','tickdir','out','xaxislocation','top');   
-    ylabel('Dinophysis (cells/mL)','fontsize',11);
-    title('Microscopy')
+    ylabel('cells/mL','fontsize',11);
+    title('Dinophysis spp. Microscopy')
 
 subplot(2,1,2);
-h = bar(T.SampleDate,0.01*[T.DAcuminata T.DFortii T.DNorvegica T.DOdiosa...
-    T.DRotundata T.DParva],'stack','Barwidth',5,'linestyle','none');
-c=brewermap(6,'Spectral');
+h = bar(D.dt,[D.fx_Dacuminata D.fx_Dfortii D.fx_Dnorvegica D.fx_Dodiosa...
+    D.fx_Drotundata D.fx_Dparva D.fx_Dacuta],'stack','Barwidth',3,'linestyle','none');
+c=brewermap(7,'Spectral');
     for i=1:length(h)
         set(h(i),'FaceColor',c(i,:));
     end  
 
-    datetick('x', 'mm/yy', 'keeplimits');    
-    set(gca,'xlim',[xax1 xax2],'ylim',[0 1],'ytick',.2:.2:1,...
-        'fontsize', 11,'fontname', 'arial','tickdir','out',...
-        'yticklabel',{'.2','.4','.6','.8','1'});   
-        ylabel('species fraction','fontsize',11);
+    set(gca,'xlim',[xax1 xax2],'ylim',[0 1],'ytick',0:.5:1,...
+        'fontsize', 11,'fontname', 'arial','tickdir','out')
+    ylabel('species fraction','fontsize',11);
 
-    lh=legend('acuminata','fortii','norvegica','odiosa','rotundata','parva');
+    lh=legend('acuminata','fortii','norvegica','odiosa','rotundata','parva','acuta');
     legend boxoff; lh.FontSize = 10; hp=get(lh,'pos');
-    lh.Position=[hp(1)+.27 hp(2) hp(3) hp(4)]; hold on    
+    lh.Position=[hp(1)+.27 hp(2)+.05 hp(3) hp(4)]; hold on    
     lh.Title.String='Species';
 
 if fprint

@@ -1,6 +1,6 @@
 %PN chain length frequency histogram
 clear;
-classifiername='CCS_v13';
+classifiername='CCS_NOAA-OSU_v7';
 class2do_full='Pseudo-nitzschia_large_3cell,Pseudo-nitzschia_small_3cell';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
