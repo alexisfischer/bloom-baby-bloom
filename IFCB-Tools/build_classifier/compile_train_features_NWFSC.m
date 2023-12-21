@@ -7,17 +7,16 @@ function [  ] = compile_train_features_NWFSC( manualpath , feapath_base, outpath
 %   Alexis D. Fischer, NOAA NWFSC, September 2021
 
 %% %Example inputs: 
-% clear
-% manualpath = 'F:\general\classifier\manual_merged_NOAA\'; % manual annotation file location
-% feapath_base = 'F:\general\classifier\features_merged_NOAA\'; %feature file location, assumes \yyyy\ organization
+
+% manualpath = 'F:\general\classifier\manual_merged_BI_NCC_Lab\'; % manual annotation file location
+% feapath_base = 'F:\general\classifier\features_merged_BI_NCC_Lab\'; %feature file location, assumes \yyyy\ organization
 % outpath = 'F:\general\classifier\summary\'; % location to save training set
 % maxn = 5000; %maximum number of images per class to include
-% minn = 500; %minimum number for inclusion
-% class2useName = 'F:\general\config\class2use_16'; %classlist
-% classifiername='BI_NOAA_v5'; 
-% varargin{1}={'Alexandrium_catenella_chain','Alexandrium_catenella_doublet','Amphidinium','Amylax','Asterionellopsis','Asteroplanus','Attheya','Aulacodiscus','Azadinium','Bacillaria','Bacteriastrum','Biddulphia','Boreadinium','Chaetoceros_external_pennate','Chaetoceros_setae','Chaetoceros_socialis','Chattonella','Clusterflagellate','Corethron','Cylindrotheca','D_acuminata_dividing','D_acuminata_mating','D_fortii_dividing','D_fortii_mating','D_norvegica_dividing','D_norvegica_mating','D_parva_dividing','D_parva_mating','Dactyliosolen','Dinobryon','Dinophyceae_pointed','Dinophyceae_round','Dinophysis_acuta','Dinophysis_caudata','Dinophysis_odiosa','Dinophysis_rotundata','Dinophysis_sp_dividing','Dinophysis_sp_mating','Dinophysis_tripos','Dissodinium','Ebria','Eucampia','Euglenoids','Fibrocapsa','Fragilaria','Gonyaulax','Guinardia','Gyrodinium','Hemiaulus','Heterocapsa_rotundata','Karenia','Katodinium','Laboea_strobila','Lauderia','Lingulodinium','Margalefidinium','Meringosphaera','Navicula','Nematodinium','Nitzschia','Oxytoxum','Paralia','Phaeocystis','Phalacroma','Plagiogrammopsis','Pleuronema','Pleurosigma','Proboscia','Prorocentrum_micans','Protoceratium','Protoperidinium','Pseudo-nitzschia_external_parasite','Pseudo-nitzschia_large_1cell','Pseudo-nitzschia_large_2cell','Pseudo-nitzschia_large_3cell','Pseudo-nitzschia_large_4cell','Pseudo-nitzschia_large_5cell','Pseudo-nitzschia_large_6cell','Pseudo-nitzschia_small_1cell','Pseudo-nitzschia_small_2cell','Pseudo-nitzschia_small_3cell','Pseudo-nitzschia_small_4cell','Pseudo-nitzschia_small_5cell','Pseudo-nitzschia_small_6cell','Pseudo-nitzschia_sp','Pyramimonas_longicauda','Pyramimonas_sp','Rhizosolenia','Sea_Urchin_larvae','Spiky_pacman','Striatella','Strombidium','Thalassionema','Tiarina_fusus','Tintinnida','Torodinium','Tripos_azoricum','Tripos_divaricatum','Tripos_furca','Tripos_lineatum','Tripos_sp','Tripos_tripos','Tropidoneis','bead','bubble','centric','ciliate','coccolithophorid','cyanobacteria','cyst','detritus','flagellate','nanoplankton','pollen','unclassified','zooplankton','Thalassiosira_single','Dinophysis_sp'};
-% varargin{2}={{'Dinophysis_acuminata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_parva'},...
-%     {'Chaetoceros_chain' 'Chaetoceros_single'},{'Heterocapsa_triquetra' 'Scrippsiella'}};
+% minn = 1000; %minimum number for inclusion
+% class2useName = 'F:\general\config\class2use_17'; %classlist
+% classifiername='BI_NOAA_v13';
+% varargin{1}=class2skip;
+% varargin{2}=class2group;
 % varargin{3}=[]; %which dataset you want the classifier to be made from
 
 % %other examples
@@ -103,6 +102,9 @@ for filecount = 1:length(manual_files) %looping over the manual files
         end
     end
     %ind_nan=isnan(manual_temp.classlist(fea_temp.data(:,1),2));
+    %manual_len=length(manual_temp.classlist); %use for troubleshooting
+    %fea_len=length(fea_temp.data(:,1)); %use for troubleshooting
+
     class_temp = manual_temp.classlist(fea_temp.data(:,1),2);
     ind_nan = find(isnan(class_temp));
     class_temp(ind_nan) = manual_temp.classlist(fea_temp.data(ind_nan,1),3);
@@ -131,7 +133,7 @@ if isempty(varargin{3})
     roinum = varargout{3};
 else
     disp('augment NOAA annotations with OSU annotations')    
-    [n, class_all, varargout] = handle_train_maxn_subsample( class2use, maxn, class_all, fea_all, files_all, roinum );
+    [n, class_all, varargout] = handle_train_maxn_subsample_NOAA_OSU( class2use, maxn, class_all, fea_all, files_all, roinum );
     fea_all = varargout{1};
     files_all = varargout{2};
     roinum = varargout{3};

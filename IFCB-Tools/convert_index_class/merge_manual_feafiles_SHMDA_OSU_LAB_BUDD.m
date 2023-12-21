@@ -37,29 +37,29 @@ end
 clearvars manual_files fea_files SHMDAmanualpath i SHMDAfeapath feapath
 disp('Finished copying corresponding SHIMADA manual and feature files');
 
-% %% Lab Data
-% addpath(genpath(LABpath));
-% addpath(genpath(mergedpath));
-% 
-% % copy manual files to merged manual folder
-% LABmanualpath = [LABpath 'manual\'];
-% manual_files = dir([LABmanualpath 'D*.mat']); %only select manual files
-% for i=1:length(manual_files)  
-%     copyfile([LABmanualpath manual_files(i).name],manualpath); 
-% end
-% 
-% % copy corresponding features files to merged features folder
-% LABfeapathbase = [LABpath 'features\']; 
-% manual_files = {manual_files.name}';
-% fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
-% for i=1:length(fea_files)  
-%     LABfeapath=[LABfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
-%     feapath = [feapathbase manual_files{i}(2:5) filesep];    
-%     copyfile([LABfeapath fea_files{i}],feapath); 
-% end
-% 
-% clearvars manual_files fea_files LABmanualpath i LABfeapath feapath
-% disp('Finished copying corresponding LAB manual and feature files');
+%% Lab Data
+addpath(genpath(LABpath));
+addpath(genpath(mergedpath));
+
+% copy manual files to merged manual folder
+LABmanualpath = [LABpath 'manual\'];
+manual_files = dir([LABmanualpath 'D*.mat']); %only select manual files
+for i=1:length(manual_files)  
+    copyfile([LABmanualpath manual_files(i).name],manualpath); 
+end
+
+% copy corresponding features files to merged features folder
+LABfeapathbase = [LABpath 'features\']; 
+manual_files = {manual_files.name}';
+fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
+for i=1:length(fea_files)  
+    LABfeapath=[LABfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
+    feapath = [feapathbase manual_files{i}(2:5) filesep];    
+    copyfile([LABfeapath fea_files{i}],feapath); 
+end
+
+clearvars manual_files fea_files LABmanualpath i LABfeapath feapath
+disp('Finished copying corresponding LAB manual and feature files');
 
 %% Budd Inlet Data
 addpath(genpath(BUDDpath));
@@ -85,44 +85,44 @@ end
 clearvars manual_files fea_files BUDDmanualpath i BUDDfeapath feapath
 disp('Finished copying corresponding BUDD manual and feature files');
 
-% %% Emilie's Budd Inlet Discrete and alternate sample annotations
-% 
-% % copy manual files to merged manual folder
-% BUDDmanualpath = [BUDDpath 'manual_AltSamples\'];
-% manual_files = dir([BUDDmanualpath 'D*.mat']); %only select manual files
-% for i=1:length(manual_files)  
-%     copyfile([BUDDmanualpath manual_files(i).name],manualpath); 
-% end
-% 
-% % copy corresponding features files to merged features folder
-% BUDDfeapathbase = [BUDDpath 'features\']; 
-% manual_files = {manual_files.name}';
-% fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
-% for i=1:length(fea_files)  
-%     BUDDfeapath=[BUDDfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
-%     feapath = [feapathbase manual_files{i}(2:5) filesep];    
-%     copyfile([BUDDfeapath fea_files{i}],feapath); 
-% end
-% 
-% % copy manual files to merged manual folder
-% BUDDmanualpath = [BUDDpath 'manual_DiscreteSamples\'];
-% manual_files = dir([BUDDmanualpath 'D*.mat']); %only select manual files
-% for i=1:length(manual_files)  
-%     copyfile([BUDDmanualpath manual_files(i).name],manualpath); 
-% end
-% 
-% % copy corresponding features files to merged features folder
-% BUDDfeapathbase = [BUDDpath 'features\']; 
-% manual_files = {manual_files.name}';
-% fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
-% for i=1:length(fea_files)  
-%     BUDDfeapath=[BUDDfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
-%     feapath = [feapathbase manual_files{i}(2:5) filesep];    
-%     copyfile([BUDDfeapath fea_files{i}],feapath); 
-% end
-% 
-% clearvars manual_files fea_files BUDDmanualpath i BUDDfeapath feapath
-% disp('Finished copying corresponding Alt and Discrete BUDD manual and feature files');
+%% Emilie's Budd Inlet Discrete and alternate sample annotations
+
+% copy manual files to merged manual folder
+BUDDmanualpath = [BUDDpath 'manual_AltSamples\'];
+manual_files = dir([BUDDmanualpath 'D*.mat']); %only select manual files
+for i=1:length(manual_files)  
+    copyfile([BUDDmanualpath manual_files(i).name],manualpath); 
+end
+
+% copy corresponding features files to merged features folder
+BUDDfeapathbase = [BUDDpath 'features\']; 
+manual_files = {manual_files.name}';
+fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
+for i=1:length(fea_files)  
+    BUDDfeapath=[BUDDfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
+    feapath = [feapathbase manual_files{i}(2:5) filesep];    
+    copyfile([BUDDfeapath fea_files{i}],feapath); 
+end
+
+% copy manual files to merged manual folder
+BUDDmanualpath = [BUDDpath 'manual_DiscreteSamples\'];
+manual_files = dir([BUDDmanualpath 'D*.mat']); %only select manual files
+for i=1:length(manual_files)  
+    copyfile([BUDDmanualpath manual_files(i).name],manualpath); 
+end
+
+% copy corresponding features files to merged features folder
+BUDDfeapathbase = [BUDDpath 'features\']; 
+manual_files = {manual_files.name}';
+fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
+for i=1:length(fea_files)  
+    BUDDfeapath=[BUDDfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
+    feapath = [feapathbase manual_files{i}(2:5) filesep];    
+    copyfile([BUDDfeapath fea_files{i}],feapath); 
+end
+
+clearvars manual_files fea_files BUDDmanualpath i BUDDfeapath feapath
+disp('Finished copying corresponding Alt and Discrete BUDD manual and feature files');
 
 
 % %% OSU

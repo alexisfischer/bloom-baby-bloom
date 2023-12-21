@@ -4,12 +4,12 @@ function[classcountTB,classbiovolTB,classC_TB,classwidthTB,...
 %%
 % Alexis D. Fischer, NOAA, September 2022
 
-%Example inputs for testing
-clearvars i j ii ind ind_diatom TB* t targets win roinum feastruct classwidth* classcount* classC* cell*
-i=23284
-classfile=classfiles{i};
-feafile=feafiles{i};
-filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+% %Example inputs for testing
+%clearvars i j ii ind ind_diatom TB* t targets win roinum feastruct classwidth* classcount* classC* cell*
+% i=1523
+% classfile=classfiles{i};
+% feafile=feafiles{i};
+% filepath='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 
 load(classfile)
 

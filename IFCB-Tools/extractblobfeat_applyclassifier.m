@@ -4,8 +4,8 @@ clear;
 
 %%%% modify according to dataset
 %ifcbdir='F:\Shimada\'; 
-ifcbdir='F:\BuddInlet\';
-%ifcbdir='F:\LabData\'; 
+%ifcbdir='F:\BuddInlet\';
+ifcbdir='F:\LabData\Brian_PN_expt\'; 
 %ifcbdir='F:\general\classifier\'; 
 
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
@@ -13,33 +13,32 @@ summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddIn
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\UCSC\SCW\';
 %summarydir=[ifcbdir 'summary\'];
 
-yr='2022';
+yr='2023';
 
 addpath(genpath(summarydir));
 addpath(genpath(ifcbdir));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
-classifier='F:\general\classifier\summary\Trees_BI_NOAA_v10';
-%classifier='F:\general\classifier\summary\Trees_CCS_NOAA-OSU_v7';
+%classifier='F:\general\classifier\summary\Trees_BI_NOAA_v10';
+classifier='F:\general\classifier\summary\Trees_CCS_NOAA-OSU_v7';
 
 %sort_data_into_folders('F:\KudelaSynology\',[ifcbdir 'data\' yr '\']);
 %copy_data_into_folders('C:\SFTP-BuddInlet\2023\',[ifcbdir 'data\' yr '\']);
+sort_data_into_folders([ifcbdir 'raw\'],[ifcbdir 'data\' yr '\']);
 
 % Step 2: Extract blobs
-%start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
+start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],true);
 
 % Step 3: Extract features
-%start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
+start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
 
 % Step 4: Apply classifier
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
-yr='2021';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
-yr='2023';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\class' yr '_v1\']);
 
-% %%
+summarize_cells_from_classifier(ifcbdir, [ifcbdir 'summary\'], str2double(yr))
+
+%%
 % start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\CCS_NOAA-OSU_v7\class' yr '_v1\']);
 % yr='2021';
 % start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\CCS_NOAA-OSU_v7\class' yr '_v1\']);

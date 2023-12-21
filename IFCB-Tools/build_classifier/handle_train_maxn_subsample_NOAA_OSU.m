@@ -1,8 +1,8 @@
-function [ n, class_all, varargin ] = handle_train_maxn_subsample( class2use, maxn, class_all, varargin )
-% function [ n, class_all, varargin ] = handle_train_maxn_subsample( class2use, maxn, class_all, varargin )
+function [ n, class_all, varargin ] = handle_train_maxn_subsample_NOAA_OSU( class2use, maxn, class_all, varargin )
+% function [ n, class_all, varargin ] = handle_train_maxn_subsample_NOAA_OSU( class2use, maxn, class_all, varargin )
 % ifcb-analysis; function called by compile_train_features*; 
 %
-% This is a function that replaces ‘handle_train_maxn’ within 
+% This is a function that replaces handle_train_maxn within 
 % compile_train_features. If number of images exceed the USER defined maxn, 
 % this randomly removes excess images from the training set so that images 
 % are balanced across NWFSC, UCSC, and OSU. 

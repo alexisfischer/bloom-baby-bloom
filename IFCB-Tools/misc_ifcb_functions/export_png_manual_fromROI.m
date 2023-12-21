@@ -15,7 +15,7 @@ for filecount = 1:length(resultfilelist)
 
     %USER CHOOSE A LINE AND EDIT FOR YOUR CASE
     %category = class2use_manual; %use this syntax to export ALL categories
-    category={'Mesodinium'};
+    category={'Mesodinium','flagellate','ciliate','cryptophyta'};
     % category = {'Actinoptychus' 'Cerataulina' 'Detonula' 'Dictyocha' 'Ditylum' 'Euglenoids' ...
     %     'Gymnodinium' 'Heterosigma' 'Leptocylindrus' 'Melosira' 'Mesodinium' ...
     %     'Scrippsiella' 'Skeletonema' 'Stephanopyxis' 'Verrucophora farcimen (cf)'};
