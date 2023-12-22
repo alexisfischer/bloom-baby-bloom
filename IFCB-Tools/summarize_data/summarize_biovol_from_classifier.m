@@ -3,7 +3,7 @@ function [] = summarize_biovol_from_classifier(summarydir_base,summaryfolder,cla
 %
 % Inputs automatic classified results and outputs a summary file of counts and biovolume
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
-% %%
+%%
 % clear
 % summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 % summaryfolder='IFCB-Data\BuddInlet\class\';

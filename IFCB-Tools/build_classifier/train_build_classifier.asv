@@ -41,7 +41,7 @@ clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 %% Budd Inlet
 load([filepath 'bloom-baby-bloom\IFCB-Data\BuddInlet\manual\TopClasses'],'topclasses');
-topclasses(end+1)={'ciliate'};
+topclasses(end+1)={'Strombidium'};
 
 [class2skip] = find_class2skip(class2useName,topclasses);
 class2skip(end+1)={'Thalassiosira_single'};
@@ -76,7 +76,7 @@ class2group={{'Dinophysis_acuminata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 
 
 group=[]; %'NOAAOSU'; %[]; %'NOAA'; %'OSU'; 
 %group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
-classifiername=['BI_NOAA_v13']; 
+classifiername=['BI_NOAA_v14']; 
 %classifiername=['BI_' group '_v2']; 
 %classifiername=['CCS_' group '_v7']; 
 
