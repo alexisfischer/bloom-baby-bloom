@@ -56,7 +56,7 @@ micron_factor=1/2.7; %pixels/micron
 % summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
 %     feapath_generic,roibasepath_generic,micron_factor,2021:2023);
  
-summarize_cells_from_classifier(ifcbdir, [ifcbdir 'summary\'], 2021:2023)
+summarize_cells_from_classifier(ifcbdir,summaryfolder,2021:2023)
 
 %% summarize PN width
 % summarize_PN_width_from_classifier([summarydir_base 'IFCB-Data\Shimada\class\'],...
