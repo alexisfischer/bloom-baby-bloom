@@ -4,17 +4,11 @@ function [ ] = summarize_cells_from_classifier(ifcbdir,classpath_generic,summary
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
 %% Example inputs:
-% clear
-% ifcbdir='F:\BuddInlet\';
-% classpath_generic = [ifcbdir 'class\v14\classxxxx_v1\'];
-% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
-% yrrange = 2021:2023;  %one value or range (e.g., 2017:2018)
-
 clear
-ifcbdir='F:\LabData\Brian_PN_expt\';
-classpath_generic = [ifcbdir 'class\classxxxx_v1\'];
-summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\';
-yrrange = 2023;  %one value or range (e.g., 2017:2018)
+ifcbdir='F:\BuddInlet\';
+classpath_generic = [ifcbdir 'class\v14\classxxxx_v1\'];
+summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
+yrrange = 2021:2023;  %one value or range (e.g., 2017:2018)
 
 addpath(genpath(ifcbdir));
 addpath(genpath(summarydir));
@@ -38,9 +32,9 @@ classfiles = [];
 filelist = [];
 for yrcount = 1:length(yrrange)
     yr = yrrange(yrcount);
-    classpath = regexprep(classpath_generic, 'XXXX', num2str(yr))
+    classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
     %temp = [dir([classpath 'I*.mat']); dir([classpath 'D*.mat'])];
-    temp = dir([classpath 'D*.mat'])
+    temp = dir([classpath 'D*.mat']);
     if ~isempty(temp)
         pathall = repmat(classpath, length(temp),1);
         temp = char(temp.name);
