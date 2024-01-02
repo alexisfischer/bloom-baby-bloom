@@ -20,7 +20,7 @@ addpath(genpath(ifcbdir));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
-classifier='F:\general\classifier\summary\Trees_BI_NOAA_v14';
+classifier='F:\general\classifier\summary\Trees_BI_NOAA_v15';
 %classifier='F:\general\classifier\summary\Trees_CCS_NOAA-OSU_v7';
 
 %sort_data_into_folders('F:\KudelaSynology\',[ifcbdir 'data\' yr '\']);
@@ -33,17 +33,17 @@ classifier='F:\general\classifier\summary\Trees_BI_NOAA_v14';
 %start_feature_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],[ifcbdir 'features\' yr '\'],true)
 
 %%%% Step 4: Apply classifier
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\v14\class' yr '_v1\']);
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\v15\class' yr '_v1\']);
 yr='2021';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\v14\class' yr '_v1\']);
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\v15\class' yr '_v1\']);
 yr='2022';
-start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\v14\class' yr '_v1\']);
+start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\v15\class' yr '_v1\']);
 
 
-%% Step 5: Summaries
+%%%% Step 5: Summaries
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\BuddInlet\class\';
-classpath_generic = [ifcbdir 'class\v14\classxxxx_v1\'];
+classpath_generic = [ifcbdir 'class\v15\classxxxx_v1\'];
 feapath_generic = [ifcbdir 'features\xxxx\']; %Put in your featurepath byyear
 roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 micron_factor=1/2.7; %pixels/micron

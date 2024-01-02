@@ -85,24 +85,7 @@ end
 clearvars manual_files fea_files BUDDmanualpath i BUDDfeapath feapath
 disp('Finished copying corresponding BUDD manual and feature files');
 
-%% Emilie's Budd Inlet Discrete and alternate sample annotations
-
-% copy manual files to merged manual folder
-BUDDmanualpath = [BUDDpath 'manual_AltSamples\'];
-manual_files = dir([BUDDmanualpath 'D*.mat']); %only select manual files
-for i=1:length(manual_files)  
-    copyfile([BUDDmanualpath manual_files(i).name],manualpath); 
-end
-
-% copy corresponding features files to merged features folder
-BUDDfeapathbase = [BUDDpath 'features\']; 
-manual_files = {manual_files.name}';
-fea_files = regexprep(manual_files, '.mat', '_fea_v2.csv');
-for i=1:length(fea_files)  
-    BUDDfeapath=[BUDDfeapathbase manual_files{i}(2:5) filesep]; %use correct yr structure
-    feapath = [feapathbase manual_files{i}(2:5) filesep];    
-    copyfile([BUDDfeapath fea_files{i}],feapath); 
-end
+%% Emilie's Budd Inlet Discrete sample annotations
 
 % copy manual files to merged manual folder
 BUDDmanualpath = [BUDDpath 'manual_DiscreteSamples\'];
