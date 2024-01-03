@@ -17,7 +17,7 @@ subplot(4,1,1)
 plot(T.dt,T.t1,':k','linewidth',2); hold on;
 plot(T.dt,T.t3,'-k','linewidth',2); hold on;
     datetick('x', 'm', 'keeplimits');        
-    set(gca,'xaxislocation','top','xlim',[xax(1) xax(2)],...
+    set(gca,'xaxislocation','top','xlim',[xax(1) xax(2)],'ylim',[8 22],...
         'fontsize', 11,'tickdir','out','ycolor','k');   
     ylabel('^oC','fontsize',12,'color','k'); hold on;
     title(yr)
@@ -26,13 +26,13 @@ plot(T.dt,T.t3,'-k','linewidth',2); hold on;
 subplot(4,1,2)
 plot(T.dt,T.s1,':k','linewidth',2); hold on;
 plot(T.dt,T.s3,'-k','linewidth',2); hold on;
-    set(gca,'xlim',[xax(1) xax(2)],'xticklabel',{},...
+    set(gca,'xlim',[xax(1) xax(2)],'xticklabel',{},'ylim',[20 33],...
         'fontsize', 11,'tickdir','out','ycolor','k');   
     ylabel('ppt','fontsize',12,'color','k'); hold on;
    
 subplot(4,1,3)
 plot(T.dt,T.DeschutesCfs,'-k','linewidth',1.5); hold on;
-    set(gca,'xlim',[xax(1) xax(2)],'xticklabel',{},...
+    set(gca,'xlim',[xax(1) xax(2)],'xticklabel',{},'ylim',[0 1400],...
         'fontsize', 11,'tickdir','out','ycolor','k');   
     ylabel('cfs','fontsize',12,'color','k'); hold on;
 

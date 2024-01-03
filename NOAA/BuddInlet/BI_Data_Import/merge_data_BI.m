@@ -7,8 +7,7 @@ addpath(genpath(filepath));
 %% merge continuous data (IFCB, Hobo T and S, Deschutes R)
 %%%% load in and process IFCB data
 load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB'],...
-    'class2useTB','classcountTB_above_optthresh','mdateTB',...
-    'filecommentTB','runtypeTB','ml_analyzedTB');
+    'class2useTB','classcountTB_above_optthresh','mdateTB','filecommentTB','runtypeTB','ml_analyzedTB');
 
 % remove discrete samples (data with file comment)
 idx=contains(filecommentTB,'trigger'); 

@@ -1,7 +1,7 @@
 %% plot manual vs classifier results for Budd Inlet
 clear;
-%class2do_string='Dinophysis'; ymax=20; 
-class2do_string='Mesodinium'; ymax=30;
+class2do_string='Dinophysis'; ymax=20; 
+%class2do_string='Mesodinium'; ymax=20;
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 outpath = [filepath 'IFCB-Data/BuddInlet/class/Figs/'];
@@ -9,32 +9,30 @@ class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
-load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
+load([filepath 'IFCB-Data/BuddInlet/manual/count_class_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
 load([filepath 'IFCB-Data/BuddInlet/class/summary_cells_allTB'],...
-<<<<<<< Updated upstream
-    'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
-=======
     'class2useTB','classcountTB_above_optthresh','classcountTB_above_adhocthresh','filelistTB','mdateTB','ml_analyzedTB');
 % load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB'],...
 %     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
->>>>>>> Stashed changes
 
-%% match up data
+% match up data
 %%%% find matched files and class of interest
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
 end
 [~,im,it] = intersect({filelist.newname}, filelistTB); %finds the matched files between automated and manually classified files
-%mdateTB=datetime(mdateTB(it),'convertfrom','datenum');
+mdateTB=datetime(mdateTB(it),'convertfrom','datenum');
 ml_analyzedTB=ml_analyzedTB(it);
-filelistTB=filelistTB(it);
-matdate=datetime(matdate,'convertfrom','datenum');
+
+ml_analyzed=ml_analyzed(im);
+filelist={filelist(im).name}';
+matdate=datetime(matdate(im),'convertfrom','datenum');
 imclass=find(contains(class2use,class2do_string));
 
 man=sum(classcount(im,imclass),2);
-%auto=classcountTB_above_optthresh(it,contains(class2useTB,class2do_string)); type='opt';
-auto=classcountTB_above_adhocthresh(it,contains(class2useTB,class2do_string)); type='adhoc';
-clearvars im it i imclass ind mdateTB classcountTB_above_optthresh classcountTB_above_adhocthresh;
+auto=classcountTB_above_optthresh(it,contains(class2useTB,class2do_string)); type='opt';
+%auto=classcountTB_above_adhocthresh(it,contains(class2useTB,class2do_string)); type='adhoc';
+clearvars filelistTB im it i imclass ind classcountTB_above_optthresh class2use class2useTB classcountTB_above_adhocthresh classcount;
 
 figure('Units','inches','Position',[1 1 4 5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.14 0.04]);
@@ -42,8 +40,6 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.1 0.1], [0.14 0.04]);
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
 [~,label]=get_class_ind(class2do_string, 'all',class_indices_path);
-
-%ymax=ceil(max(max([auto./ml_analyzedTB,man./ml_analyzed])));
 
 subplot(3,1,1);
 plot(matdate,man./ml_analyzed,'r*','Markersize',5,'linewidth',.8); hold on;
@@ -59,7 +55,7 @@ stem(matdate,auto./ml_analyzedTB,'k-','Linewidth',.5,'Marker','none'); hold on; 
 subplot(3,1,2); 
 plot(matdate,man./ml_analyzed,'r*','Markersize',5,'linewidth',.8); hold on;
 stem(matdate,auto./ml_analyzedTB,'k-','Linewidth',.5,'Marker','none'); hold on; %This adjusts the automated counts by the chosen slope. 
-    set(gca,'xgrid','on','tickdir','out','xlim',[datetime('2022-04-01') datetime('2022-10-01')],...
+    set(gca,'xgrid','on','tickdir','out','xlim',[datetime('2022-01-04') datetime('2022-10-01')],...
         'xticklabel',{},'ylim',[0 ymax],'fontsize',10); 
     datetick('x', 'mmm', 'keeplimits');            
     set(gca,'xticklabel',{});
