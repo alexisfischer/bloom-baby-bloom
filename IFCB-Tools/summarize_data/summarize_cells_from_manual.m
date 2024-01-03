@@ -36,9 +36,7 @@ ml_analyzed = NaN(length(filelist),1);
 runtype={filelist.name}';
 filecomment={filelist.name}';
 
-%for filecount = 1:length(filelist)
-%for filecount = 123:length(filelist)
-for filecount = 130:length(filelist)
+for filecount = 1:length(filelist)
         
     filename = filelist(filecount).name;
     disp(filename)

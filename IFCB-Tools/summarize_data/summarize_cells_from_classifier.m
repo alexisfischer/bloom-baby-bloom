@@ -4,12 +4,12 @@ function [ ] = summarize_cells_from_classifier(ifcbdir,classpath_generic,summary
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
 %% Example inputs:
-clear
-ifcbdir='F:\BuddInlet\';
-classpath_generic = [ifcbdir 'class\v14\classxxxx_v1\'];
-summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
-yrrange = 2021:2023;  %one value or range (e.g., 2017:2018)
-adhoc=0.55;
+% clear
+% ifcbdir='F:\BuddInlet\';
+% classpath_generic = [ifcbdir 'class\v14\classxxxx_v1\'];
+% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
+% yrrange = 2021:2023;  %one value or range (e.g., 2017:2018)
+% adhoc=0.55;
 
 addpath(genpath(ifcbdir));
 addpath(genpath(summarydir));
@@ -108,13 +108,13 @@ clear mdate filelist class2use classcount classcount_above_optthresh filecount y
 
 if exist('adhocthresh', 'var')
     classcountTB_above_adhocthresh = classcount_above_adhocthresh;
-    save([summarydir 'summary_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic')
+    save([summarydir 'summary_cells_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic')
 else
-    save([summarydir 'summary_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic')
+    save([summarydir 'summary_cells_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic')
 end
 
 disp('Summary cell count file stored here:')
-disp([summarydir 'summary_allTB'])
+disp([summarydir 'summary_cells_allTB'])
 
 return
 % %example plotting code for all of the data (load summary file first)
