@@ -1,14 +1,15 @@
-function [ ] = summarize_cells_from_classifier(ifcbdir,classpath_generic,summarydir,yrrange)
+function [ ] = summarize_cells_from_classifier(ifcbdir,classpath_generic,summarydir,yrrange,adhoc)
 %function [ ] = summarize_cells_from_classifier(ifcbdir, summarydir, yrrange)
 % Inputs automatic classified results and summarizes class results for a series of classifier output files (TreeBagger)
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
 %% Example inputs:
-% clear
-% ifcbdir='F:\BuddInlet\';
-% classpath_generic = [ifcbdir 'class\v14\classxxxx_v1\'];
-% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
-% yrrange = 2021:2023;  %one value or range (e.g., 2017:2018)
+clear
+ifcbdir='F:\BuddInlet\';
+classpath_generic = [ifcbdir 'class\v14\classxxxx_v1\'];
+summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
+yrrange = 2021:2023;  %one value or range (e.g., 2017:2018)
+adhoc=0.55;
 
 addpath(genpath(ifcbdir));
 addpath(genpath(summarydir));
@@ -75,7 +76,7 @@ classcount_above_optthresh = classcount;
 classcount_above_adhocthresh = classcount;
 num2dostr = num2str(length(classfiles));
 ml_analyzed = NaN(size(classfiles));
-adhocthresh = 0.5.*ones(size(class2use)); %assign all classes the same adhoc decision threshold between 0 and 1
+adhocthresh = adhoc*ones(size(class2use)); %assign all classes the same adhoc decision threshold between 0 and 1
 %adhocthresh(strmatch('Karenia', class2use, 'exact')) = 0.8; %reassign value for specific class
 for filecount = 1:length(classfiles)
     if ~rem(filecount,10), disp(['reading ' num2str(filecount) ' of ' num2dostr]), end;
@@ -105,15 +106,15 @@ end
 
 clear mdate filelist class2use classcount classcount_above_optthresh filecount yrrange yrcount yr classfiles in_dir num2dostr
 
-if exist('adhocthresh', 'var'),
+if exist('adhocthresh', 'var')
     classcountTB_above_adhocthresh = classcount_above_adhocthresh;
-    save([summarydir 'summary_allTB_' yrrangestr] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic')
+    save([summarydir 'summary_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic')
 else
-    save([summarydir 'summary_allTB_' yrrangestr] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic')
+    save([summarydir 'summary_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic')
 end
 
 disp('Summary cell count file stored here:')
-disp([summarydir 'summary_allTB_' yrrangestr])
+disp([summarydir 'summary_allTB'])
 
 return
 % %example plotting code for all of the data (load summary file first)
