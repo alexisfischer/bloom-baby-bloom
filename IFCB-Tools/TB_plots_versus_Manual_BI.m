@@ -10,10 +10,10 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
 load([filepath 'IFCB-Data/BuddInlet/manual/count_class_biovol_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
-load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB'],...
+load([filepath 'IFCB-Data/BuddInlet/class/summary_cells_allTB'],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
 
-% match up data
+%% match up data
 %%%% find matched files and class of interest
 for i=1:length(filelist)
     filelist(i).newname=filelist(i).name(1:24);
