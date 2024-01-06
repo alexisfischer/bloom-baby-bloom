@@ -7,18 +7,21 @@ addpath(genpath(filepath));
 %% merge continuous data (IFCB, Hobo T and S, Deschutes R)
 %%%% load in and process IFCB data
 load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB'],...
-    'class2useTB','classcountTB_above_optthresh','mdateTB','filecommentTB','runtypeTB','ml_analyzedTB');
+    'class2useTB','classcount_above_adhocthreshTB','graylevel_above_adhocthreshTB',...
+    'mdateTB','filecommentTB','runtypeTB','ml_analyzedTB');
 
 % remove discrete samples (data with file comment)
 idx=contains(filecommentTB,'trigger'); 
-ml_analyzedTB(idx)=[]; mdateTB(idx)=[]; filecommentTB(idx)=[]; classcountTB_above_optthresh(idx,:)=[]; runtypeTB(idx)=[];
+ml_analyzedTB(idx)=[]; mdateTB(idx)=[]; filecommentTB(idx)=[]; runtypeTB(idx)=[];
+classcount_above_adhocthreshTB(idx,:)=[]; graylevel_above_adhocthreshTB(idx,:)=[]; 
 
 % create new variables and put in timetable
-dino=classcountTB_above_optthresh(:,contains(class2useTB,'Dinophysis'))./ml_analyzedTB;
-meso=classcountTB_above_optthresh(:,contains(class2useTB,'Mesodinium'))./ml_analyzedTB;
-cryp=classcountTB_above_optthresh(:,contains(class2useTB,'cryptophyta'))./ml_analyzedTB;
+dino=classcount_above_adhocthreshTB(:,contains(class2useTB,'Dinophysis'))./ml_analyzedTB;
+meso=classcount_above_adhocthreshTB(:,contains(class2useTB,'Mesodinium'))./ml_analyzedTB;
+cryp=classcount_above_adhocthreshTB(:,contains(class2useTB,'cryptophyta'))./ml_analyzedTB;
+dinoG=graylevel_above_adhocthreshTB(:,contains(class2useTB,'Dinophysis'));
 dt=datetime(mdateTB,'convertfrom','datenum','Format','dd-MMM-yyyy HH:mm:ss');
-TT=timetable(dt,dino,meso,cryp);
+TT=timetable(dt,dino,meso,cryp,dinoG);
 
 % split dataset by PMTA and PMTB triggers
 idf=contains(runtypeTB,{'NORMAL','Normal'});
@@ -37,6 +40,8 @@ TTT.cryp_fl = fillmissing(TTT.cryp_fl,'linear','SamplePoints',TTT.dt,'MaxGap',da
 TTT.dino_sc = fillmissing(TTT.dino_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.meso_sc = fillmissing(TTT.meso_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.cryp_sc = fillmissing(TTT.cryp_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.dinoG_fl = fillmissing(TTT.dinoG_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.dinoG_sc = fillmissing(TTT.dinoG_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 
 % merge IFCB, temperature, salinity, Deschutes R discharge data
 load([filepath 'NOAA/BuddInlet/Data/temp_sal_1m_3m_BuddInlet'],'H');
@@ -47,7 +52,7 @@ HD=retime(HD,'daily','mean');
 T=synchronize(TTT,HD);
 T.dt=datetime(T.dt,'Format','dd-MMM-yyyy');
 
-clearvars fl sc idx TT TTT HD H DR idf ida dino meso cryp filecommentTB runtypeTB ml_analyzedTB dt mdateTB classcountTB_above_optthresh class2useTB
+clearvars fl sc idx TT TTT HD H DR idf ida dino meso cryp dt dinoG *TB
 
 %% merge discrete data (DSP, microscopy)
 %%%% add stratification depth to Discrete dataset

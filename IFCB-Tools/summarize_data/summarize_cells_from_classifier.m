@@ -4,28 +4,23 @@ function [ ] = summarize_cells_from_classifier(ifcbdir,classpath_generic,summary
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %
 %% Example inputs:
-% clear
-% ifcbdir='F:\BuddInlet\';
-% classpath_generic = [ifcbdir 'class\v14\classxxxx_v1\'];
-% summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
-% yrrange = 2021:2023;  %one value or range (e.g., 2017:2018)
-% adhoc=0.55;
+clear
+ifcbdir='F:\BuddInlet\';
+classpath_generic = [ifcbdir 'class\v15\classxxxx_v1\'];
+summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
+yrrange = 2021:2023;  %one value or range (e.g., 2017:2018)
+adhoc=0.50;
 
 addpath(genpath(ifcbdir));
 addpath(genpath(summarydir));
 
-%check whether in directory
-urlflag = 0;
-if strcmp('http', ifcbdir(1:4))
-    urlflag = 1;
-end
 %make sure input paths end with filesep
 if ~isequal(classpath_generic(end), filesep)
     classpath_generic = [classpath_generic filesep];
 end
 
 in_dir = [ifcbdir 'data\']; %where to access data (hdr files)
-if (~isequal(in_dir(end), filesep) && ~urlflag)
+if (~isequal(in_dir(end), filesep))
     in_dir = [in_dir filesep];
 end
 
@@ -34,7 +29,6 @@ filelist = [];
 for yrcount = 1:length(yrrange)
     yr = yrrange(yrcount);
     classpath = regexprep(classpath_generic, 'xxxx', num2str(yr));
-    %temp = [dir([classpath 'I*.mat']); dir([classpath 'D*.mat'])];
     temp = dir([classpath 'D*.mat']);
     if ~isempty(temp)
         pathall = repmat(classpath, length(temp),1);
@@ -45,11 +39,6 @@ for yrcount = 1:length(yrrange)
     clear temp pathall classpath
 end
 
-
-if urlflag
-    hdrfiles = cellstr(strcat( in_dir, filelist, '.hdr'));
-    %hdrfiles = cellstr([repmat(in_dir,length(filelist),1) filelist repmat('.hdr', length(filelist), 1)]);
-else
     fsep = repmat(filesep, size(filelist,1),1);
     %determine data subdir structure
     if exist([in_dir filelist(1,:) '.hdr'], 'file') %presume all files in top level of in_dir
@@ -65,7 +54,7 @@ else
         disp('First hdr file not found. Check input directory.')
         return
     end
-end;
+
 mdate = IFCB_file2date(filelist);
 
 %presumes all class files have same class2useTB list
@@ -77,20 +66,22 @@ classcount_above_adhocthresh = classcount;
 num2dostr = num2str(length(classfiles));
 ml_analyzed = NaN(size(classfiles));
 adhocthresh = adhoc*ones(size(class2use)); %assign all classes the same adhoc decision threshold between 0 and 1
-%adhocthresh(strmatch('Karenia', class2use, 'exact')) = 0.8; %reassign value for specific class
-for filecount = 1:length(classfiles)
-    if ~rem(filecount,10), disp(['reading ' num2str(filecount) ' of ' num2dostr]), end;
-    ml_analyzed(filecount) = IFCB_volume_analyzed(hdrfiles{filecount});
-    if exist('adhocthresh', 'var'),
-        [classcount(filecount,:), classcount_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:)] = summarize_TBclass(classfiles{filecount}, adhocthresh);
-    else
-        [classcount(filecount,:), classcount_above_optthresh(filecount,:)] = summarize_TBclass(classfiles{filecount});
-    end;
-end;
+adhocthresh(contains(class2use,'Dinophysis')) = 0.55; %reassign value for specific class
+adhocthresh(contains(class2use,'Mesodinium')) = 0.5; %reassign value for specific class
 
-if ~exist(summarydir, 'dir'),
+for filecount = 1:length(classfiles)
+    if ~rem(filecount,10), disp(['reading ' num2str(filecount) ' of ' num2dostr]), end
+    ml_analyzed(filecount) = IFCB_volume_analyzed(hdrfiles{filecount});
+%    if exist('adhocthresh', 'var')
+        [classcount(filecount,:), classcount_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:)] = summarize_TBclass(classfiles{filecount}, adhocthresh);
+    % else
+    %     [classcount(filecount,:), classcount_above_optthresh(filecount,:)] = summarize_TBclass(classfiles{filecount});
+    % end
+end
+
+if ~exist(summarydir, 'dir')
     mkdir(summarydir)
-end;
+end
 
 ml_analyzedTB = ml_analyzed;
 mdateTB = mdate;
@@ -106,15 +97,15 @@ end
 
 clear mdate filelist class2use classcount classcount_above_optthresh filecount yrrange yrcount yr classfiles in_dir num2dostr
 
-if exist('adhocthresh', 'var')
+%if exist('adhocthresh', 'var')
     classcountTB_above_adhocthresh = classcount_above_adhocthresh;
-    save([summarydir 'summary_cells_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic')
-else
-    save([summarydir 'summary_cells_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic')
-end
+    save([summarydir 'summary_cells_allTB_' yrrangestr] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic')
+% else
+%     save([summarydir 'summary_cells_allTB'] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic')
+% end
 
 disp('Summary cell count file stored here:')
-disp([summarydir 'summary_cells_allTB'])
+disp([summarydir 'summary_cells_allTB_' yrrangestr])
 
 return
 % %example plotting code for all of the data (load summary file first)
