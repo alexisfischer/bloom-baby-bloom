@@ -22,7 +22,7 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
 classifier='F:\general\classifier\summary\Trees_BI_NOAA_v15';
 %classifier='F:\general\classifier\summary\Trees_CCS_NOAA-OSU_v7';
-
+%%
 %sort_data_into_folders('F:\KudelaSynology\',[ifcbdir 'data\' yr '\']);
 %copy_data_into_folders('C:\SFTP-BuddInlet\2023\',[ifcbdir 'data\' yr '\']);
 
@@ -40,7 +40,7 @@ yr='2022';
 start_classify_batch_user_training(classifier,[ifcbdir 'features\' yr '\'],[ifcbdir 'class\v15\class' yr '_v1\']);
 
 
-%%%% Step 5: Summaries
+%% Step 5: Summaries
 summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 summaryfolder='IFCB-Data\BuddInlet\class\';
 classpath_generic = [ifcbdir 'class\v15\classxxxx_v1\'];
@@ -49,7 +49,9 @@ roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 micron_factor=1/2.7; %pixels/micron
 adhoc=0.55;
 
-summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,2021:2023)
+summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,2021)
+summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,2022)
+summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,2023)
 
 %%
 summarize_cells_from_classifier(ifcbdir,classpath_generic,summaryfolder,2021:2023,adhoc)
