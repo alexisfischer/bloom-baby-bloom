@@ -13,14 +13,14 @@ function [] = summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,
 % yr = 2021;
 % micron_factor=1/2.7;
 
-% clear
-% summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-% summaryfolder='IFCB-Data\test\';
-% classpath_generic = 'F:\LabData\Brian_PN_expt\class\classxxxx_v1\';
-% feapath_generic = 'F:\LabData\Brian_PN_expt\features\xxxx\'; %Put in your featurepath byyear
-% roibasepath_generic = 'F:\LabData\Brian_PN_expt\data\xxxx\'; %location of raw data
-% yrrange = 2023;
-% micron_factor=1/2.7;
+clear
+summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+summaryfolder='IFCB-Data\test\';
+classpath_generic = 'F:\LabData\Brian_PN_expt\class\classxxxx_v1\';
+feapath_generic = 'F:\LabData\Brian_PN_expt\features\xxxx\'; %Put in your featurepath byyear
+roibasepath_generic = 'F:\LabData\Brian_PN_expt\data\xxxx\'; %location of raw data
+yr = 2023;
+micron_factor=1/2.7;
 
 classfiles = [];
 filelistTB = [];
