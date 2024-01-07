@@ -49,27 +49,17 @@ roibasepath_generic = [ifcbdir 'data\xxxx\']; %location of raw data
 micron_factor=1/2.7; %pixels/micron
 adhoc=0.55;
 
-summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,2021)
-summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,2022)
-summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,2023)
+summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
 
-%%
-summarize_cells_from_classifier(ifcbdir,classpath_generic,summaryfolder,2021:2023,adhoc)
+%summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,classpath_generic,feapath_generic,roibasepath_generic,micron_factor,2021)
 
-summarize_biovol_from_classifier(summarydir_base,summaryfolder,classpath_generic,...
-    feapath_generic,roibasepath_generic,micron_factor,2021:2023);
- 
-summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
-    [ifcbdir 'data\'],[ifcbdir 'features\'],micron_factor)
+%summarize_cells_from_classifier(ifcbdir,classpath_generic,summaryfolder,2021:2023,adhoc)
+
+%summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],[ifcbdir 'data\'],[ifcbdir 'features\'],micron_factor)
 
 %% summarize PN width
 % summarize_PN_width_from_classifier([summarydir_base 'IFCB-Data\Shimada\class\'],...
 %     feapath_generic,roibasepath_generic,classpath_generic,micron_factor,2019:2021)
-
-summarize_cells_from_manual([ifcbdir 'manual\'],[ifcbdir 'data\'],[summarydir 'manual\']); 
-
-summarize_biovol_from_manual([ifcbdir 'manual\'],[summarydir 'manual\'],...
-    [ifcbdir 'data\'],[ifcbdir 'features\'],micron_factor)
 
 
 %summarize_cells_from_manual([ifcbdir 'manualEmilie\AlternateSamples\'],[ifcbdir 'data\'],[summarydir 'manual\']); 

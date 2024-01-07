@@ -11,12 +11,12 @@ function [ ] = summarize_cells_from_classifier(ifcbdir,classpath_generic,summary
 % yrrange = 2023;
 % adhoc=0.50;
 
-clear
-summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
-classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\';
-roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
-yrrange = 2021:2023;
-adhoc=0.50;
+% clear
+% summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\class\';
+% classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\';
+% roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
+% yrrange = 2021:2023;
+% adhoc=0.50;
 
 classfiles = [];
 filelistTB = [];
