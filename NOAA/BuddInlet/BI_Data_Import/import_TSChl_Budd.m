@@ -1,6 +1,19 @@
 %% Import BI temp, sal, chl profiles data from Excel
-clear;
+% uses GSW toolbox to calculatec the following variables:
+% https://www.teos-10.org/pubs/gsw/html/gsw_contents.html#3
+%
+% SA =  Absolute Salinity               [ g/kg ]
+% CT =  Conservative Temperature        [ deg C ]
+% p =   sea pressure                    [ dbar ]
+% rho = in-situ density                 [ kg m^-3 ]
+% Zm =  upper pycnocline                [m]
+% Zb =  lower pycnocline                [m]
+% Zp =  actual pycnocline               [m]
+% N =   Brunt-Vaisala Frequency at Zp   [cycles s-1 ]
 
+clear;
+lat=47.04571;
+interval=0.25;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/BuddInlet/Data/';
 filename=[filepath 'TSDChl_Data_Graphs.xlsx'];
 sheets = sheetnames(filename);
@@ -14,53 +27,66 @@ for i=1:length(sheets)
     T = readtable(filename, opts, "UseExcel", false);
 
     idx=isnan(T.C); T(idx,:)=[]; %remove all of the extra rows
-    edges=(0:.1:8)'; 
+    edges=(0:interval:8)'; 
     ind=discretize(T.VertPosM,edges);
     
     B(i).dn=datenum(datetime(sheets(i),'InputFormat','MMddyy'));    
-    B(i).depth_m=edges;
-    B(i).temp_C = accumarray(ind,T.C,[length(edges) 1],@mean,NaN);
-    B(i).sal_psu = accumarray(ind,T.SALPSU,[length(edges) 1],@mean,NaN);
-    B(i).chl_rfu = accumarray(ind,T.ChlRFU,[length(edges) 1],@mean,NaN);
+    B(i).z=edges; %depth
+    B(i).p=gsw_p_from_z(-edges,lat); %calculate pressure from height
+    B(i).t = accumarray(ind,T.C,[length(edges) 1],@mean,NaN);
+    B(i).s = accumarray(ind,T.SALPSU,[length(edges) 1],@mean,NaN);
+    B(i).fl = accumarray(ind,T.ChlRFU,[length(edges) 1],@mean,NaN);
     
     clearvars opts T ind idx;    
 end
 
 dt=datetime([B.dn],'ConvertFrom','datenum');
-clearvars i sheets range edges;
 
-%% interpolate data gaps
+%%%% calculate density and interpolate data gaps
 % do not include bottom (bottom varies for each profile)
 for i=1:length(B)
-    iend=find(~isnan(B(i).temp_C),1,'last');
-    B(i).temp_C(1:iend)=fillmissing(B(i).temp_C(1:iend),'linear');
-    B(i).sal_psu(1:iend)=fillmissing(B(i).sal_psu(1:iend),'linear');    
+    iend=find(~isnan(B(i).t),1,'last');
+    %interpolate data gaps and smooth for a 2m running mean
+    B(i).fl(1:iend)=smooth(fillmissing(B(i).fl(1:iend),'linear'),2/interval); 
+    B(i).t(1:iend)=smooth(fillmissing(B(i).t(1:iend),'linear'),1/interval); 
+    B(i).s(1:iend)=smooth(fillmissing(B(i).s(1:iend),'linear'),1/interval);
+    [B(i).SA,~]= gsw_SA_from_SP(B(i).s,B(i).p,-122.90702,lat);    
+    B(i).CT=gsw_CT_from_t(B(i).SA,B(i).t,B(i).p);
+    %B(i).rho=(gsw_rho(B(i).SA,B(i).CT,B(i).p)); %in-situ density  [ kg m^-3 ]
+    B(i).rho=smooth(gsw_rho(B(i).SA,B(i).CT,B(i).p),1.5/interval); %in-situ density  [ kg m^-3 ]
+    B(i).sigmat=B(i).rho-1000; %'Sigma-t' is rho minus 1000
+    B(i).rho_m=[NaN;diff(B(i).rho)./diff(B(i).z)];   
 end
 
-%% Stratification calculation
-% N2 = calculate Brunt-Väisälä frequency
-% mld5 = find where dT from the surface exceeds 0.5ºC, aka the MLD (mixed layer depth)
-% dTdz = maximum temperature difference
+clearvars i sheets range edges iend;
 
-lat=47.04571;
-p=sw_pres(B(1).depth_m,lat); %dbar
-deep=max(B(1).depth_m);
-
+%%%% Stratification calculation
+sigma1=0.1;
+sigma2=0.2;
 for i=1:length(B)
+    iend=find(~isnan(B(i).t),1,'last');    
 
-    B(i).tdiff=abs(diff(B(i).temp_C));
-    [B(i).dTdz,idx]=max(B(i).tdiff);   
-    B(i).Zmax=B(i).depth_m(idx);
+    lp=find(B(i).rho_m>sigma2); %lower pycnocline
+    if isempty(lp)
+        B(i).Zb=B(i).z(iend);        
+    else
+        B(i).Zb=B(i).z(lp(end));        
+    end
 
-    B(i).mld5=B(i).depth_m(find(B(i).tdiff > 0.5,1));
-    iend=find(~isnan(B(i).temp_C),1,'last');
-    B(i).mld5(isempty(B(i).mld5))=B(i).depth_m(iend); %replace with deepest depth if empty      
+    up=find(B(i).rho_m>sigma1); %upper pycnocline
+    if isempty(up)
+        B(i).Zm=B(i).z(up(end));        
+    else
+        B(i).Zm=B(i).z(up(1));
+    end    
 
-    B(i).CT = gsw_CT_from_t( B(i).sal_psu, B(i).temp_C, p ); %calculate Conservative Temperature 
-    [B(i).N2, ~] = gsw_Nsquared( B(i).sal_psu, B(i).CT, p, lat );
-    B(i).N2 = smooth(B(i).N2,10); %10 pt running average as in Graff & Behrenfeld 2018 and log transform
-    B(i).logN2=log10(abs(B(i).N2));
+    [m,im]=max(B(i).rho_m); %actual pycnocline    
+    B(i).Zp=B(i).z(im);
+   [N2,~] = gsw_Nsquared(B(i).SA,B(i).CT,B(i).p,lat);
+    N=sqrt(N2)/(2*pi); %buoyancy frequency (strength of pycnocline) cycles/s
+    B(i).N=N(im);
+    
 end
 
-%%
+
 save([filepath 'BuddInlet_TSChl_profiles'],'B','dt');

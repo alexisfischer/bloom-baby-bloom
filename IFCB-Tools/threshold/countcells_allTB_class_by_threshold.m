@@ -1,13 +1,16 @@
-function [ ] = countcells_allTB_class_by_threshold(class2do_string,yrrange,classpath_generic,out_path,in_dir)
+function [ ] = countcells_allTB_class_by_threshold(class2do_string,yrrange,threlist,classpath_generic,out_path,in_dir)
 % Gives you a summary file of counts for thresholds 0.1 to 1 for the specified class
 % Alexis Fischer, April 2018
 
-% clear;
-% class2do_string = {'Pseudo-nitzschia,Pseudo_nitzschia_large_1cell,Pseudo_nitzschia_large_2cell,Pseudo_nitzschia_large_3cell,Pseudo_nitzschia_large_4cell,Pseudo_nitzschia_large_5cell,Pseudo_nitzschia_large_6cell,Pseudo_nitzschia_small_1cell,Pseudo_nitzschia_small_2cell,Pseudo_nitzschia_small_3cell,Pseudo_nitzschia_small_4cell,Pseudo_nitzschia_small_5cell,Pseudo_nitzschia_small_6cell'}; %USER 
-% yrrange = 2019:2021;
-% classpath_generic = 'D:\Shimada\class\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
-% out_path = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\threshold\'; %USER where to store the results
-% in_dir = 'D:\Shimada\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
+%%
+clear;
+class2do_string='Dinophysis_acuminata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_parva';
+%class2do_string='Mesodinium';
+yrrange = 2021:2023;
+threlist = .4:.05:.6;
+classpath_generic = 'F:\BuddInlet\class\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
+out_path = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\'; %USER where to store the results
+in_dir = 'F:\BuddInlet\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
 
 classfiles = [];
 for yr = yrrange 
@@ -53,7 +56,6 @@ class2use = temp.class2useTB; clear temp classfilestr
 num2dostr = num2str(length(classfiles));
 
 class2do = strmatch(class2do_string, class2use); 
-threlist = [0:.1:1];
 
 classcountTB_above_thre = NaN(length(classfiles),length(threlist));
 

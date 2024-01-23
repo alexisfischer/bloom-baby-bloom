@@ -1,12 +1,14 @@
 %% plot Dinophysis microscopy in Budd Inlet and vs other sites
 clear;
-fprint=1;
-
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
+fprint=0;
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/BuddInlet/';
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
-load([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'D');
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
 
-idx=isnan(D.dinoML_microscopy); D(idx,:)=[]; %remove nans for better plotting
+load([filepath 'Data/BuddInlet_data_summary'],'T');
+
+idx=isnan(T.dinoML_microscopy); T(idx,:)=[]; %remove nans for better plotting
 
 % plot BI 
 figure('Units','inches','Position',[1 1 5 3.5],'PaperPositionMode','auto'); 
@@ -17,15 +19,15 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.15], [0.12 0.25])
 xax1=datetime('2021-05-01'); xax2=datetime('2023-11-01');     
 
 subplot(2,1,1);
-plot(D.dt,D.dinoML_microscopy,'k*','MarkerSize',5);
+plot(T.dt,T.dinoML_microscopy,'k*','MarkerSize',5);
     set(gca,'xlim',[xax1 xax2],...
         'fontsize', 11,'fontname', 'arial','tickdir','out','xaxislocation','top');   
     ylabel('cells/mL','fontsize',11);
     title('Dinophysis spp. Microscopy')
 
 subplot(2,1,2);
-h = bar(D.dt,[D.fx_Dacuminata D.fx_Dfortii D.fx_Dnorvegica D.fx_Dodiosa...
-    D.fx_Drotundata D.fx_Dparva D.fx_Dacuta],'stack','Barwidth',3,'linestyle','none');
+h = bar(T.dt,[T.fx_Dacuminata T.fx_Dfortii T.fx_Dnorvegica T.fx_Dodiosa...
+    T.fx_Drotundata T.fx_Dparva T.fx_Dacuta],'stack','Barwidth',3,'linestyle','none');
 c=brewermap(7,'Spectral');
     for i=1:length(h)
         set(h(i),'FaceColor',c(i,:));
@@ -41,7 +43,7 @@ c=brewermap(7,'Spectral');
     lh.Title.String='Species';
 
 if fprint
-    set(gcf,'color','w');
-    print(gcf,'-dpng','-r300',[filepath 'NOAA/BuddInlet/Figs/Dinophysis_microscopy_BI.png']);
+    exportgraphics(gcf,[filepath 'Figs/Dinophysis_microscopy_BI.png'],'Resolution',100)    
+    hold off
 end
 hold off
