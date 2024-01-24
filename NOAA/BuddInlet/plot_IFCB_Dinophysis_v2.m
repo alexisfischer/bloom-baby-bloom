@@ -17,13 +17,20 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.06 0.11], [0.14 0.22])
 xax=[datetime(['' yr '-05-01']) datetime(['' yr '-10-01'])];
 
 subplot(5,1,1)
+yyaxis left
 plot(T.dt,T.DST,'k*','Markersize',4,'linewidth',1.5); hold on;
 hline(16,'k:'); hold on;
     set(gca,'xaxislocation','top','xlim',[xax(1) xax(2)],'ylim',[0 30],'ytick',0:15:30,...
         'fontsize', 10,'tickdir','out','ycolor','k');
     datetick('x', 'mmm', 'keeplimits');            
     ylabel({'DSP toxins';'(µg/100 g)'},'fontsize',11); hold on;
-    title(yr,'fontsize', 12)    
+    title(yr,'fontsize', 12)   
+yyaxis right
+    plot(T.dt,T.dinoML_microscopy,'ro','MarkerSize',4); hold on;
+       set(gca,'xaxislocation','top','ylim',[0 12],'xlim',[xax(1) xax(2)],...
+        'fontsize', 10,'tickdir','out','ycolor','k');
+    datetick('x', 'mmm', 'keeplimits');      
+    ylabel({'dino/mL'},'fontsize',11); hold on;   
 
 subplot(5,1,2);
 h = bar(T.dt,[T.fx_Dfortii T.fx_Dacuminata T.fx_Dnorvegica T.fx_Dodiosa...

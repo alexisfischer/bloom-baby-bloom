@@ -15,7 +15,7 @@ opt(end,:)=[];
 class2use=opt.class;
 [new,~]=sortrows(opt,'F1','descend');
 
-i=20
+
 optthre=maxthre(i);
 chosen_threshold=0.8;  %USER
 

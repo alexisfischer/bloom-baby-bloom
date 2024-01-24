@@ -61,17 +61,10 @@ ml_analyzedTB = IFCB_volume_analyzed(hdrname);
 
 %%%% preallocate
 load(classfiles{1}, 'class2useTB');
-classcountTB = NaN(length(classfiles),length(class2useTB));
-classcount_above_optthreshTB = classcountTB;
-classcount_above_adhocthreshTB = classcountTB;
-
-classbiovolTB = classcountTB;
-classbiovol_above_optthreshTB = classcountTB;
-classbiovol_above_adhocthreshTB = classcountTB;
-
-graylevelTB = classcountTB;
-graylevel_above_optthreshTB = classcountTB;
-graylevel_above_adhocthreshTB = classcountTB;
+classcount_above_adhocthreshTB = NaN(length(classfiles),length(class2useTB));
+classbiovol_above_adhocthreshTB = classcount_above_adhocthreshTB;
+ESD_above_adhocthreshTB = classcount_above_adhocthreshTB;
+graylevel_above_adhocthreshTB = classcount_above_adhocthreshTB;
 
 adhocthresh = 0.5.*ones(1,length(class2useTB)-1); %leave off 1 for unclassified
 adhocthresh(contains(class2useTB,'Dinophysis')) = 0.55; %example to change a specific class
@@ -85,10 +78,9 @@ clearvars feapath_generic classpath_generic roibasepath_generic i
 for i = 1:length(classfiles)
     if ~rem(i,10), disp(['reading ' num2str(i) ' of ' num2dostr]), end
 
-     [classcountTB(i,:), classcount_above_optthreshTB(i,:), classcount_above_adhocthreshTB(i,:),...
-         classbiovolTB(i,:), classbiovol_above_optthreshTB(i,:), classbiovol_above_adhocthreshTB(i,:),...
-          graylevelTB(i,:), graylevel_above_optthreshTB(i,:), graylevel_above_adhocthreshTB(i,:)]...
-         = summarize_TBclassBI(classfiles{i}, feafiles{i}, micron_factor, adhocthresh); 
+     [classcount_above_adhocthreshTB(i,:),classbiovol_above_adhocthreshTB(i,:),...
+          ESD_above_adhocthreshTB(i,:),graylevel_above_adhocthreshTB(i,:)]...
+         = summarize_TBclass_adhoc_BI(classfiles{i},feafiles{i},micron_factor,adhocthresh); 
 
     hdr=IFCBxxx_readhdr2(hdrname{i});
     runtypeTB{i}=hdr.runtype;

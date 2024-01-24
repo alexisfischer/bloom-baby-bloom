@@ -60,7 +60,8 @@ end
 
 clearvars i sheets range edges iend;
 
-%%%% Stratification calculation
+%% Stratification calculation
+%i=1
 sigma1=0.1;
 sigma2=0.2;
 for i=1:length(B)
@@ -68,23 +69,52 @@ for i=1:length(B)
 
     lp=find(B(i).rho_m>sigma2); %lower pycnocline
     if isempty(lp)
-        B(i).Zb=B(i).z(iend);        
+        B(i).Zb=NaN;             
     else
         B(i).Zb=B(i).z(lp(end));        
     end
 
     up=find(B(i).rho_m>sigma1); %upper pycnocline
     if isempty(up)
-        B(i).Zm=B(i).z(up(end));        
+        B(i).Zm=NaN;
+        B(i).Zp=NaN;
+        B(i).N=NaN;      
     else
         B(i).Zm=B(i).z(up(1));
+        %since a value exceeds 0.1, can find maximum        
+       [m,im]=max(B(i).rho_m); %actual pycnocline    
+       B(i).rho_max=m;
+        B(i).Zp=B(i).z(im);
+       [N2,~] = gsw_Nsquared(B(i).SA,B(i).CT,B(i).p,lat);
+        N=sqrt(N2)/(2*pi); %buoyancy frequency (strength of pycnocline) cycles/s
+        B(i).N=N(im);   
     end    
 
-    [m,im]=max(B(i).rho_m); %actual pycnocline    
-    B(i).Zp=B(i).z(im);
-   [N2,~] = gsw_Nsquared(B(i).SA,B(i).CT,B(i).p,lat);
-    N=sqrt(N2)/(2*pi); %buoyancy frequency (strength of pycnocline) cycles/s
-    B(i).N=N(im);
+    figure('Units','inches','Position',[1 1 2 4],'PaperPositionMode','auto');
+    plot(B(i).sigmat,B(i).z,'r-','linewidth',1); hold on
+    set(gca,'ylim',[0 6],'xlim',[0 24],'Ydir','reverse','xaxislocation','top',...
+        'fontsize',10,'Tickdir','out');
+    title(datestr([B(i).dn]),'fontsize',12);
+    xlabel('sigma-t','fontsize',12);    
+    ylabel('depth (m)','fontsize',12);
+
+    idx=find(B(i).z==B(i).Zp);
+    if ~isempty(idx)
+    text(B(i).sigmat(idx),B(i).Zp,'Zp \rightarrow','fontsize',10,'HorizontalAlignment','right');
+    end
+
+    idx=find(B(i).z==B(i).Zm);
+    if ~isempty(idx)    
+    text(B(i).sigmat(idx),B(i).Zm,'Zm \rightarrow','fontsize',10,'HorizontalAlignment','right')    
+    end
+
+    idx=find(B(i).z==B(i).Zb);
+    if ~isempty(idx)        
+    text(B(i).sigmat(idx),B(i).Zb,'Zb \rightarrow','fontsize',10,'HorizontalAlignment','right')    
+    end
+
+    text(0.5,5.7,[num2str(round(B(i).rho_max,1)) ' kg/m^4 @Zp'])
+    pause;
     
 end
 
