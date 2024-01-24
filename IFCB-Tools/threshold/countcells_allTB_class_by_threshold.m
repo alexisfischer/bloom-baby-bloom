@@ -8,7 +8,7 @@ class2do_string='Dinophysis_acuminata,Dinophysis_fortii,Dinophysis_norvegica,Din
 %class2do_string='Mesodinium';
 yrrange = 2021:2023;
 threlist = .4:.05:.6;
-classpath_generic = 'F:\BuddInlet\class\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
+classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
 out_path = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\'; %USER where to store the results
 in_dir = 'F:\BuddInlet\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
 
