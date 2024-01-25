@@ -1,13 +1,14 @@
 function [ ] = countcells_allTB_class_by_threshold(class2do_string,yrrange,threlist,classpath_generic,out_path,in_dir)
-% Gives you a summary file of counts for thresholds 0.1 to 1 for the specified class
+% Gives you a summary file of counts for thresholds 0.1 to 1 for the specified class(es)
+% Currently set to the following:
+%   'Dinophysis_acuminata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_parva';
+%   'Mesodinium'; 
 % Alexis Fischer, April 2018
 
 %%
 clear;
-%class2do_string='Dinophysis_acuminata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_parva';
-class2do_string='Mesodinium';
+threlist = .4:.05:.8;
 yrrange = 2021:2023;
-threlist = .4:.05:.9;
 classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
 out_path = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\'; %USER where to store the results
 in_dir = 'F:\BuddInlet\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
@@ -54,18 +55,27 @@ ml_analyzed = IFCB_volume_analyzed(hdrfiles);
 temp = load(classfiles{1}, 'class2useTB');
 class2use = temp.class2useTB; clear temp classfilestr
 num2dostr = num2str(length(classfiles));
+runtypeTB=cell(size(hdrfiles)); %preallocate cell array
+filecommentTB=runtypeTB;
 
-class2do = strmatch(class2do_string, class2use); 
+class2do_d = strmatch('Dinophysis_acuminata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_parva', class2use); 
+class2do_m = strmatch('Mesodinium', class2use); 
+dinocount_above_threTB = NaN(length(classfiles),length(threlist));
+mesocount_above_threTB = NaN(length(classfiles),length(threlist));
 
-classcountTB_above_thre = NaN(length(classfiles),length(threlist));
+%% 
+for filecount = 1:length(classfiles)
+    if ~rem(filecount,10), disp(['reading ' num2str(filecount) ' of ' num2dostr]), end;
+    [dinocount_above_threTB(filecount,:), class2useTB, roiid_list] = summarize_TBclassMVCO_threshlist(classfiles{filecount}, threlist, class2do_d);
+    [mesocount_above_threTB(filecount,:), ~, ~] = summarize_TBclassMVCO_threshlist(classfiles{filecount}, threlist, class2do_m);
 
-%    adhocthresh = threlist(ii).*ones(size(class2use));    
-    for filecount = 1:length(classfiles)
-        if ~rem(filecount,10), disp(['reading ' num2str(filecount) ' of ' num2dostr]), end;
-        [classcountTB_above_thre(filecount,:), class2useTB, roiid_list] = summarize_TBclassMVCO_threshlist(classfiles{filecount}, threlist, class2do);
-        %[classcount(filecount,:), classcount_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:), class2useTB, roiid_list] = summarize_TBclassMVCO(classfiles{filecount}, adhocthresh, iclass);
-        roiids{filecount} = roiid_list;
-    end
+    %[classcount(filecount,:), classcount_above_optthresh(filecount,:), classcount_above_adhocthresh(filecount,:), class2useTB, roiid_list] = summarize_TBclassMVCO(classfiles{filecount}, adhocthresh, iclass);
+    roiids{filecount} = roiid_list;
+
+    hdr=IFCBxxx_readhdr2(hdrfiles{filecount});
+    runtypeTB{filecount}=hdr.runtype;
+    filecommentTB{filecount}=hdr.filecomment;           
+end
 
 ml_analyzedTB = ml_analyzed;
 mdateTB = mdate;
@@ -75,13 +85,10 @@ if ~exist(out_path, 'dir')
     mkdir(out_path)
 end
 
-if contains(class2do_string,',')
-    label = [extractBefore(class2do_string,',') '_grouped'];
-else
-    label=class2do_string;
-end
 
-
-save([out_path 'summary_allTB_bythre_' label] , 'class2useTB', 'threlist', 'classcountTB_above_thre', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'classpath_generic', 'roiids', 'class2do')
+save([out_path 'summary_allTB_bythre_Dinophysis_Mesodinium'] ,...
+    'class2useTB', 'threlist','dinocount_above_threTB', 'mesocount_above_threTB', 'ml_analyzedTB',...
+    'mdateTB', 'filelistTB', 'classpath_generic', 'roiids', 'class2do_d','class2do_m',...
+    'runtypeTB','filecommentTB')
 
 %save(['summary_allTB' num2str(yr)] , 'class2useTB', 'classcountTB', 'classcountTB_above_optthresh', 'classcountTB_above_adhocthresh', 'ml_analyzedTB', 'mdateTB', 'filelistTB', 'adhocthresh', 'classpath_generic', 'roiids', 'class2list')
