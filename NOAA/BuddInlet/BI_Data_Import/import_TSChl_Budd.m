@@ -15,9 +15,11 @@ clear;
 lat=47.04571;
 interval=0.25;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/BuddInlet/Data/';
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/'));
+
 filename=[filepath 'TSDChl_Data_Graphs.xlsx'];
 sheets = sheetnames(filename);
-
 for i=1:length(sheets)
     opts = spreadsheetImportOptions("NumVariables", 4);
     opts.Sheet = sheets(i);

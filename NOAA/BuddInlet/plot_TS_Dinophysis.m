@@ -25,11 +25,11 @@ if strcmp('2021-2023',yr), else idx=find(data.dt.Year==str2double(yr)); data=dat
     %label='Dinophysis'; var=data.dino_fl; cax=[0 3]; col=brewermap(256,'YlOrRd');
     %label='Mesodinium'; var=data.meso_fl; cax=[0 3]; col=brewermap(256,'BuGn');
 %continuous
-    %label='Mesodinium'; var=data.meso; cax=[0 10]; col=brewermap(256,'BuGn');
+    label='Mesodinium'; var=data.meso; cax=[0 10]; col=brewermap(256,'BuGn');
     %label='Dinophysis'; var=data.dino; cax=[0 4]; col=brewermap(256,'YlOrRd');
     %label='D. fortii'; var=data.M_dfort; cax=[0 3]; col=brewermap(256,'YlOrRd');
     %label='D. acuminata'; var=data.M_dacum; cax=[0 3]; col=brewermap(256,'YlOrRd');
-    label='D. norvegica'; var=data.M_dnorv; cax=[0 3]; col=brewermap(256,'YlOrRd');
+    %label='D. norvegica'; var=data.M_dnorv; cax=[0 3]; col=brewermap(256,'YlOrRd');
 
 %%%% get isopycnals
 s=data.s1; t=data.t1;
@@ -69,7 +69,7 @@ if strcmp('2021-2023',yr)
         ylabel('Temperature (^oC)','fontsize',12)  
         title([yr ' ' type],'fontsize',12);
     [c1,h] = contour(SA_gridded,CT_gridded,isopycs_gridded,13:2:24,':','Color',[.5 .5 .5]); hold on;
-    clabel(c1,h,'labelspacing',360,'fontsize',10,'color',[.5 .5 .5]); hold on
+    clabel(c1,h,'labelspacing',300,'fontsize',10,'color',[.5 .5 .5]); hold on
 
 else
     %%%% scatter

@@ -47,7 +47,7 @@ for i=1990:2002
         if max(size(s))>smth
             HCB004_dpts=HCB004_dpt(s,:); %broke into a smaller data chunk, 1 month of 1 year
             for k=1:max(size(s))-1 %dTdz calculation
-                HCB004_dpts=sortrows(HCB004_dpts,6); %making sure depths are in correct oder
+                HCB004_dpts=sortrows(HCB004_dpts,6); %making sure depths are in correct order
                 HCB004_dpts(1,19)=0; % add a new column
                 HCB004_dpts(k+1,19)=(HCB004_dpts(k+1,16)-HCB004_dpts(k,16))/(HCB004_dpts(k+1,6)-HCB004_dpts(k,6)); %dTdz
             end

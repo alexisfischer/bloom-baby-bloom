@@ -5,10 +5,16 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
 
-yr='2023'; % '2023'
-ydinolim=[0 4]; ymesolim=[0 10]; 
+yr='2021'; % '2023'
+ydinolim=[0 16]; ymesolim=[0 20]; 
 load([filepath 'Data/BuddInlet_data_summary'],'T');
 load([filepath 'Data/BuddInlet_TSChl_profiles'],'B','dt');
+
+T.dinomax=smoothdata(T.dinomax,'movmean',2,'omitnan');
+T.mesomax=smoothdata(T.mesomax,'movmean',2,'omitnan');
+
+T.t1=smoothdata(T.t1,'movmean',4,'omitnan');
+T.s1=smoothdata(T.s1,'movmean',4,'omitnan');
 
 figure('Units','inches','Position',[1 1 5 5.],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.06 0.11], [0.14 0.22]);
@@ -17,7 +23,6 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.06 0.11], [0.14 0.22])
 xax=[datetime(['' yr '-05-01']) datetime(['' yr '-10-01'])];
 
 subplot(5,1,1)
-yyaxis left
 plot(T.dt,T.DST,'k*','Markersize',4,'linewidth',1.5); hold on;
 hline(16,'k:'); hold on;
     set(gca,'xaxislocation','top','xlim',[xax(1) xax(2)],'ylim',[0 30],'ytick',0:15:30,...
@@ -25,12 +30,6 @@ hline(16,'k:'); hold on;
     datetick('x', 'mmm', 'keeplimits');            
     ylabel({'DSP toxins';'(µg/100 g)'},'fontsize',11); hold on;
     title(yr,'fontsize', 12)   
-yyaxis right
-    plot(T.dt,T.dinoML_microscopy,'ro','MarkerSize',4); hold on;
-       set(gca,'xaxislocation','top','ylim',[0 12],'xlim',[xax(1) xax(2)],...
-        'fontsize', 10,'tickdir','out','ycolor','k');
-    datetick('x', 'mmm', 'keeplimits');      
-    ylabel({'dino/mL'},'fontsize',11); hold on;   
 
 subplot(5,1,2);
 h = bar(T.dt,[T.fx_Dfortii T.fx_Dacuminata T.fx_Dnorvegica T.fx_Dodiosa...
@@ -48,8 +47,8 @@ subplot(5,1,3); %dino
 yyaxis left
 idx=find(isnan(T.dino_fl)); val=0.1*ones(size(idx));
 %plot(T.dt,T.dinoML_microscopy,'ro','MarkerSize',4); hold on;
-h1=plot(T.dt,T.dino_fl,'k-','linewidth',1.5); hold on;
-    set(gca,'xlim',[xax(1) xax(2)],'ylim',ydinolim,'xticklabel',{},...
+h1=plot(T.dt,T.dinomax,'k-','linewidth',1.5); hold on;
+    set(gca,'xlim',[xax(1) xax(2)],'ylim',ydinolim,'ytick',0:8:16,'xticklabel',{},...
         'fontsize', 10,'tickdir','out','ycolor','k');  
     ylabel({'dino/mL'},'fontsize',11); hold on;   
 yyaxis right
@@ -60,7 +59,7 @@ if strcmp(yr,'2021')
     val=0.1*ones(size(dti));
     plot(dti,val,'ks','linewidth',.5,'markersize',5,'markerfacecolor','k'); hold on;
 end
-    h2=plot(T.dt,T.meso_fl,'r-','linewidth',1.5); hold on;
+    h2=plot(T.dt,T.mesomax,'r-','linewidth',1.5); hold on;
     set(gca,'xlim',[xax(1) xax(2)],'ylim',ymesolim,'xticklabel',{},...
         'fontsize', 10,'tickdir','out','ycolor','r');  
     ylabel({'meso/mL'},'fontsize',11); hold on;      

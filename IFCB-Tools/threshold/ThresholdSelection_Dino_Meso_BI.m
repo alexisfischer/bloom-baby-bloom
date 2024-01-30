@@ -1,8 +1,8 @@
 %% plot manual vs classifier results for Budd Inlet
 clear;
 
-%class2do_string='Dinophysis'; ymax=20; filename='summary_allTB_bythre_Dinophysis_acuminata_grouped';
-class2do_string='Mesodinium'; ymax=35; filename='summary_allTB_bythre_Mesodinium';
+%class2do_string='Dinophysis'; ymax=20;
+class2do_string='Mesodinium'; ymax=35; 
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 outpath = [filepath 'IFCB-Data/BuddInlet/class/Figs/'];
@@ -10,13 +10,20 @@ class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat']
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
-load([filepath 'IFCB-Data/BuddInlet/class/' filename ],...
-    'classcountTB_above_thre','threlist','filelistTB','mdateTB','ml_analyzedTB');
-load([filepath 'IFCB-Data/BuddInlet/manual/count_class_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
+load([filepath 'IFCB-Data/BuddInlet/manual/count_class_manual'],...
+    'class2use','classcount','matdate','ml_analyzed','filelist');
 load([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T');
+load([filepath 'IFCB-Data/BuddInlet/class/summary_allTB_bythre_Dinophysis_Mesodinium'],...
+    'dinocount_above_threTB','mesocount_above_threTB','threlist','filelistTB','mdateTB','ml_analyzedTB');
+
+if contains(class2do_string,'Dinophysis')==1    
+    classcountTB_above_thre=dinocount_above_threTB;
+else
+    classcountTB_above_thre=mesocount_above_threTB;    
+end
 
 T((T.dt<datetime('04-Aug-2021')),:)=[];
-%%
+
 % match up data
 %%%% find matched files and class of interest
 for i=1:length(filelist)
@@ -75,14 +82,14 @@ for i=1:length(threlist)
         ax(j)=subplot(3,1,j);
         hm=plot(matdate,man,'r*','Markersize',3,'linewidth',.8); hold on;   
 
-    if (contains(class2do_string,'Dinophysis'))==1 %adjust slope only if Dinophysis
+    if contains(class2do_string,'Dinophysis')==1 %adjust slope only if Dinophysis
         hc=stem(matdate,auto(:,i)./m(i),'k-','Linewidth',.5,'Marker','none'); hold on;
     else
         hc=stem(matdate,auto(:,i),'k-','Linewidth',.5,'Marker','none'); hold on;
     end
         hmm=plot(T.dt,T.mesoML_microscopy,'bo','MarkerSize',4); hold on;     
 
-    if (contains(class2do_string,'Dinophysis'))==1    
+    if contains(class2do_string,'Dinophysis')==1    
             hmm=plot(T.dt,T.dinoML_microscopy,'bo','MarkerSize',4); hold on;    
     end
         set(gca,'xgrid','on','tickdir','out','xlim',[datetime([char(yrlist(j)) '-05-01']) datetime([char(yrlist(j)) '-10-01'])],...
@@ -104,21 +111,25 @@ end
 clearvars classcountTB_above_thre threlist filelistTB mdateTB ml_analyzedTB; 
 
 %%%% save data
-load([filepath 'IFCB-Data/BuddInlet/class/' filename ],'class2do','class2useTB',...
-    'classcountTB_above_thre','threlist','filelistTB','mdateTB','ml_analyzedTB');
+% load([filepath 'IFCB-Data/BuddInlet/class/' filename ],'class2do','class2useTB',...
+%     'classcountTB_above_thre','threlist','filelistTB','mdateTB','ml_analyzedTB');
+load([filepath 'IFCB-Data/BuddInlet/class/summary_allTB_bythre_Dinophysis_Mesodinium'],...
+    'dinocount_above_threTB','mesocount_above_threTB','threlist','filelistTB',...
+    'filecommentTB','runtypeTB','mdateTB','ml_analyzedTB');
 
 if (contains(class2do_string,'Dinophysis'))==1   
     chosen_threshold=.7;
-    idx=find(threlist==chosen_threshold);        
+    idx=find(threlist>=chosen_threshold,1);        
     slope=m(idx);
+    classcount_adjust_TB=dinocount_above_threTB(:,idx)./slope;  
 elseif (contains(class2do_string,'Mesodinium'))==1   
     chosen_threshold=.5;  
-    idx=find(threlist==chosen_threshold);            
+    idx=find(threlist>=chosen_threshold,1);        
     slope=1;    
+    classcount_adjust_TB=mesocount_above_threTB(:,idx)./slope;    
 end
 
-classcount_adjust_TB=classcountTB_above_thre(:,idx)./slope;
 save([filepath 'IFCB-Data/BuddInlet/class/summary_adjustedTB_' class2do_string],...
-    'chosen_threshold','slope','class2do_string','class2do','class2useTB',...
-    'classcount_adjust_TB','filelistTB','mdateTB','ml_analyzedTB');
+    'chosen_threshold','slope','class2do_string',...
+    'classcount_adjust_TB','filelistTB','mdateTB','ml_analyzedTB','filecommentTB','runtypeTB');
 

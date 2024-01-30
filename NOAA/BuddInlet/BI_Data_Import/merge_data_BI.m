@@ -29,16 +29,49 @@ idf=contains(runtypeTB,{'NORMAL','Normal'});
 ida=contains(runtypeTB,{'ALT','Alternative'});
 fli=TT(idf,:); sci=TT(ida,:);
 
-%%%% daily average/max
+% daily average/max
 fl=retime(fli,'daily','mean');
 sc=retime(sci,'daily','mean');
 TTT=synchronize(fl,sc);
 
-% fill gaps of 2 days or less
+% Include Max hourly average
+flii=retime(fli,'regular','mean','TimeStep',hours(1)); %take hourly average
+imax=@(x) find(x==max(x),1);  % anonymous function for index to maximum in group
+dinomax=[];  % empty accumulator for results
+mesomax=[];
+dtmax=[];
+yrlist=[2021;2022;2023];
+for j=1:length(yrlist)
+    DM=flii(flii.dt.Year==yrlist(j),:); %only take data for 1 year
+    DM.DOY=day(DM.dt,'dayofyear');
+    ttMAX=varfun(imax,DM,'InputVariables',{'dino' 'meso'},'GroupingVariables','DOY');
+
+    for i=1:height(ttMAX)    
+        idx=find(DM.DOY==ttMAX.DOY(i)); %get daily index
+        [vald,idd]=max(DM.dino(idx)); %find max value/day from daily subset
+        dinomax=[dinomax;vald]; % accumulate rows in the output table
+
+        dti=DM.dt(idx(idd)); %find corresponding date back in full dataset        
+        dtmax=[dtmax;dti];        
+
+        [valm,idm]=max(DM.meso(idx)); %find max value/day from daily subset
+        mesomax=[mesomax;valm]; % accumulate rows in the output table        
+    end
+
+end
+dtmax=dateshift(dtmax,'start','day');
+D=timetable(dtmax,dinomax,mesomax);
+TTT=synchronize(TTT,D,'first');
+clearvars dtmax D m idm imax dinomax DM dMAX i j yrlist flii
+
+%%%% fill gaps of 2 days or less
 TTT.dino_fl = fillmissing(TTT.dino_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.meso_fl = fillmissing(TTT.meso_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.dino_sc = fillmissing(TTT.dino_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.meso_sc = fillmissing(TTT.meso_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.dino_fl = fillmissing(TTT.dino_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.dinomax = fillmissing(TTT.dinomax,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.mesomax = fillmissing(TTT.mesomax,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 
 %%%% merge IFCB, temperature, salinity, Deschutes R discharge data
 load([filepath 'NOAA/BuddInlet/Data/temp_sal_1m_3m_BuddInlet'],'H');
