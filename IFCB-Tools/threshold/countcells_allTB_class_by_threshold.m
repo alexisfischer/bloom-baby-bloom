@@ -1,4 +1,4 @@
-function [ ] = countcells_allTB_class_by_threshold(class2do_string,yrrange,threlist,classpath_generic,out_path,in_dir)
+function [ ] = countcells_allTB_class_by_threshold(yrrange,threlist,classpath_generic,out_path,in_dir)
 % Gives you a summary file of counts for thresholds 0.1 to 1 for the specified class(es)
 % Currently set to the following:
 %   'Dinophysis_acuminata,Dinophysis_fortii,Dinophysis_norvegica,Dinophysis_parva';
@@ -6,12 +6,12 @@ function [ ] = countcells_allTB_class_by_threshold(class2do_string,yrrange,threl
 % Alexis Fischer, April 2018
 
 %%
-clear;
-threlist = .4:.05:.8;
-yrrange = 2021:2023;
-classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
-out_path = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\'; %USER where to store the results
-in_dir = 'F:\BuddInlet\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
+% clear;
+% threlist = .4:.05:.8;
+% yrrange = 2021:2023;
+% classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\'; %USER where are your class files, xxxx in place for 4 digit year
+% out_path = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\'; %USER where to store the results
+% in_dir = 'F:\BuddInlet\data\'; %USER where is your raw data (e.g., hdr files); URL for web services if desired 
 
 classfiles = [];
 for yr = yrrange 

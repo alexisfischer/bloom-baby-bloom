@@ -33,6 +33,15 @@ targets.ESD = feastruct.data(:,ind)*micron_factor;
 ind = strcmp('texture_average_gray_level',feastruct.textdata);
 targets.GrayLevel = feastruct.data(:,ind);
 
+% make sure same number of rois in feature and class files
+len_f=height(feastruct.data);
+len_c=length(TBclass);
+if len_f == len_c
+    %disp('successful matchup')
+else
+    disp(['Mismatch between number of ROIs in class(' num2str(len_c) ') and feature(' num2str(len_f) ') files!'])
+end
+
 %% get the TBclass labels with application of adhocthresh
 if length(adhocthresh) == 1
     t = ones(size(TBscores))*adhocthresh;

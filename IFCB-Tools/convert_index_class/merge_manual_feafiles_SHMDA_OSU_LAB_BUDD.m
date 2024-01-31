@@ -1,4 +1,4 @@
-function [] = merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,OSUpath,SHMDApath,LABpath,BUDDpath,manualpath,feapathbase)
+function [] = merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,SHMDApath,LABpath,BUDDpath,manualpath,feapathbase)
 % merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,OSUpath,SHMDApath,LABpath,BUDDpath
 %merges manual and feature files in
 %preparation for building a training set
@@ -7,11 +7,12 @@ function [] = merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,
 %   Alexis D. Fischer, SHMDA NWFSC, September 2021
 
 % % % Input path names
-% mergedpath = 'D:\general\classifier\';
-% OSUpath = 'D:\OSU\';
-% SHMDApath = 'D:\Shimada\';
-% LABpath = 'D:\LabData\';
-% BUDDpath = 'D:\BuddInlet\';
+% mergedpath = 'F:\general\classifier\';
+% SHMDApath = 'F:\Shimada\';
+% LABpath = 'F:\LabData\';
+% BUDDpath = 'F:\BuddInlet\';
+% manualpath='F:\general\classifier\manual_merged_BI_NCC_Lab\';
+% feapathbase='F:\general\classifier\features_merged_BI_NCC_Lab\';
 
 %%%%
 load([class2useName '.mat'], 'class2use');

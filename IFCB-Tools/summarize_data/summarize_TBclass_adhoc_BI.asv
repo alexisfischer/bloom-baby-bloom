@@ -4,27 +4,24 @@ function [classcount_above_adhocthresh,classbiovol_above_adhocthresh,...
 % Alexis D. Fischer, NOAA, January 2024
 
 %% uncomment for troubleshooting
-%i=1;
+i=1;
 %clearvars *TB
-%classfile=classfiles{i};
-%feafile=feafiles{i};
+classfile=classfiles{i};
+feafile=feafiles{i};
+%%
 
 load(classfile,'TBclass','TBclass_above_threshold','TBscores','class2useTB');
-%disp(classfile)
+disp(classfile)
 classcount_above_adhocthresh = NaN(length(class2useTB),1);
 classbiovol_above_adhocthresh = classcount_above_adhocthresh;
 ESD_above_adhocthresh = classcount_above_adhocthresh;
 graylevel_above_adhocthresh = classcount_above_adhocthresh;
-feastruct = importdata(feafile);
 
-% make sure same number of rois in feature and class files
+feastruct = importdata(feafile);
 len_f=height(feastruct.data);
-len_c=length(TBclass);
-if len_f == len_c
-    %disp('successful matchup')
-else
-    disp(['Mismatch between number of ROIs in class(' num2str(len_c) ') and feature(' num2str(len_f) ') files!'])
-end
+len_c=
+%% make sure same number of rois in feature and class files
+disp(['ROIs in class ' num2str() ' and feature ' num2str() ' files do not match up!'])
 
 ind = strcmp('Biovolume', feastruct.textdata);
 targets.Biovolume = feastruct.data(:,ind)*micron_factor.^3;

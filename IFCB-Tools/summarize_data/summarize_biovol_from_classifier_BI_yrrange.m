@@ -78,7 +78,7 @@ graylevel_above_optthreshTB = classcountTB;
 graylevel_above_adhocthreshTB = classcountTB;
 
 adhocthresh = 0.5.*ones(1,length(class2useTB)-1); %leave off 1 for unclassified
-adhocthresh(contains(class2useTB,'Dinophysis')) = 0.55; %example to change a specific class
+adhocthresh(contains(class2useTB,'Dinophysis')) = 0.7; %example to change a specific class
 adhocthresh(contains(class2useTB,'Mesodinium')) = 0.5;
 
 runtypeTB=filelistTB;

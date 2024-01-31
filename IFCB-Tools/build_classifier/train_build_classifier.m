@@ -8,7 +8,6 @@ class2useName ='F:\general\config\class2use_17';
 
 %% Step 1: create SCW and Shimada merged manual and feature file folders to pull from for training set
 mergedpath = 'F:\general\classifier\';
-OSUpath = 'F:\OSU\';
 SHMDApath = 'F:\Shimada\';
 LABpath = 'F:\LabData\';
 BUDDpath = 'F:\BuddInlet\';
@@ -20,7 +19,7 @@ feapathbase='F:\general\classifier\features_merged_BI_NCC_Lab\';
 %start_mc_adjust_classes_user_training(class2useName,[SHMDApath 'manual\'])
 %start_mc_adjust_classes_user_training(class2useName,[BUDDpath 'manual\']);
 
-merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,OSUpath,SHMDApath,LABpath,BUDDpath,manualpath,feapathbase)
+merge_manual_feafiles_SHMDA_OSU_LAB_BUDD(class2useName,mergedpath,SHMDApath,LABpath,BUDDpath,manualpath,feapathbase)
 clearvars  mergedpath UCSCpath SHMDApath LABpath BUDDpath OSUpath;
 
 % Step 2: select classes of interest and find class2skip
@@ -59,7 +58,7 @@ addpath(genpath('C:\Users\ifcbuser\Documents\'));
 manualpath = 'F:\general\classifier\manual_merged_BI_NCC_Lab\'; % manual annotation file location
 feapath_base = 'F:\general\classifier\features_merged_BI_NCC_Lab\'; %feature file location, assumes \yyyy\ organization
 outpath = 'F:\general\classifier\summary\'; % location to save training set
-maxn = 5000; %maximum number of images per class to include
+maxn = 7000; %maximum number of images per class to include
 minn = 1000; %minimum number for inclusion
 class2group={{'Dinophysis_acuminata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 'Dinophysis_parva'},...
     {'Chaetoceros_chain' 'Chaetoceros_single'}}; %{'Heterocapsa_triquetra' 'Scrippsiella'}};
@@ -76,7 +75,7 @@ class2group={{'Dinophysis_acuminata' 'Dinophysis_fortii' 'Dinophysis_norvegica' 
 
 group=[]; %'NOAAOSU'; %[]; %'NOAA'; %'OSU'; 
 %group='NOAA-OSU'; %[]; %'NOAA'; %'OSU'; 
-classifiername=['BI_NOAA_v15']; 
+classifiername=['BI_NOAA_v16']; 
 %classifiername=['BI_' group '_v2']; 
 %classifiername=['CCS_' group '_v7']; 
 
