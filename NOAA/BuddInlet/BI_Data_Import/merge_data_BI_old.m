@@ -6,25 +6,15 @@ addpath(genpath(filepath));
 
 %%%% merge continuous data (IFCB, Hobo T and S, Deschutes R)
 %%%% load in and process IFCB data
-load([filepath 'IFCB-Data/BuddInlet/manual/count_class_manual'],...
-    'class2use','classcount','ml_analyzed','filelist');
-mesoi=sum(classcount(:,contains(class2use,'Mesodinium')),2)./ml_analyzed;
-for i=1:length(filelist)
-    filelist(i).newname=filelist(i).name(1:24);
-end
+% load([filepath 'IFCB-Data/BuddInlet/class/summary_cells_allTB_2021_2023'],...
+%     'class2useTB','classcount_above_adhocthreshTB','filecommentTB','runtypeTB','mdateTB','ml_analyzedTB');
 
-%%%% match up manual meso data with dinophysis data
 load([filepath 'IFCB-Data/BuddInlet/class/summary_adjustedTB_Dinophysis'],...
     'classcount_adjust_TB','filelistTB','mdateTB','ml_analyzedTB','filecommentTB','runtypeTB');
 dino=classcount_adjust_TB./ml_analyzedTB;
 
-[~,im,it] = intersect({filelist.newname}', filelistTB); %finds the matched files between automated and manually classified files
-meso=nan*dino; meso(it)=mesoi(im);
-
-clearvars classcount ml_analyzed class2use i mesoi im it filelist
-
-%load([filepath 'IFCB-Data/BuddInlet/class/summary_adjustedTB_Mesodinium'],'classcount_adjust_TB');
-%meso=classcount_adjust_TB./ml_analyzedTB;
+load([filepath 'IFCB-Data/BuddInlet/class/summary_adjustedTB_Mesodinium'],'classcount_adjust_TB');
+meso=classcount_adjust_TB./ml_analyzedTB;
 
 % remove discrete samples (data with file comment)
 idx=contains(filecommentTB,'trigger'); 
@@ -57,7 +47,7 @@ yrlist=[2021;2022;2023];
 for j=1:length(yrlist)
     DM=flii(flii.dt.Year==yrlist(j),:); %only take data for 1 year
     DM.DOY=day(DM.dt,'dayofyear');
-    ttMAX=varfun(imax,DM,'InputVariables','dino','GroupingVariables','DOY');
+    ttMAX=varfun(imax,DM,'InputVariables',{'dino' 'meso'},'GroupingVariables','DOY');
 
     for i=1:height(ttMAX)  
         idx=find(DM.DOY==ttMAX.DOY(i)); %get daily index
@@ -79,7 +69,7 @@ for j=1:length(yrlist)
 
 end
 dtmax=dateshift(dtmax,'start','day');
-D=timetable(dtmax,dinomax,dinomean,dinostd);
+D=timetable(dtmax,dinomax,dinomean,dinostd,mesomax);
 TTT=synchronize(TTT,D,'first');
 
 clearvars D m idm imax dinomax DM dMAX i j yrlist flii
@@ -91,6 +81,7 @@ TTT.dino_sc = fillmissing(TTT.dino_sc,'linear','SamplePoints',TTT.dt,'MaxGap',da
 TTT.meso_sc = fillmissing(TTT.meso_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.dino_fl = fillmissing(TTT.dino_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.dinomax = fillmissing(TTT.dinomax,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.mesomax = fillmissing(TTT.mesomax,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 
 TTT.dinomean = fillmissing(TTT.dinomean,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.dinostd = fillmissing(TTT.dinostd,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));

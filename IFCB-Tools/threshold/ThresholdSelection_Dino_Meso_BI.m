@@ -46,13 +46,14 @@ clearvars filelist im it i imclass ind class2use classcount ml_analyzed;
 
 %%%% stem plot by year
 yrlist={'2021';'2022';'2023'};
+
+%fit = goodnessOfFit(auto(:,i),man,'MSE');
+
 for i=1:length(threlist)
 
     %%%% plot scatter plot
     figure('Units','inches','Position',[1 1 3.5 3.5],'PaperPositionMode','auto');
-
     plot([0 ymax],[0 ymax],'k--'); hold on;  
-
     plot(man,auto(:,i),'ko','Markersize',5); hold on;
     lin_fit{i} = fitlm(man,auto(:,i));
     Rsq(i) = lin_fit{i}.Rsquared.ordinary;
@@ -60,12 +61,13 @@ for i=1:length(threlist)
     coefPs(i,:) = lin_fit{i}.Coefficients.pValue;
     RMSE(i) = lin_fit{i}.RMSE;
     eval(['fplot(@(x)x*' num2str(Coeffs(i,2)) '+' num2str(Coeffs(i,1)) ''' , xlim, ''color'', ''r'')'])
-    addFigureLetter(gca,['th=' num2str(threlist(i))],2,'fontsize',12); hold on
     set(gca,'xlim',[0 ymax],'ylim',[0 ymax],'fontsize',10,'TickDir','out','fontsize',10,'box','on');
     axis square;
+    addFigureLetter(gca,[' r^2=' num2str(round(Rsq(i),2)), ', RMSE=' num2str(round(RMSE(i),2))],2,'fontsize',12); hold on    
+    
     xlabel('manual','fontsize',12)
     ylabel('classifier','fontsize',12)
-    title([char(label) ' (cells mL^{-1})'],'fontsize',12);
+    title(['th=' num2str(threlist(i)) ' ' char(label) ' (cells mL^{-1})'],'fontsize',12);
     m(i) = Coeffs(i,2);
 
     % set figure parameters
