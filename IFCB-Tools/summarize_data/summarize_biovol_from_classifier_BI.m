@@ -4,15 +4,6 @@ function [] = summarize_biovol_from_classifier_BI(summarydir_base,summaryfolder,
 % Inputs automatic classified results and outputs a summary file of counts and biovolume
 % Alexis D. Fischer, University of California - Santa Cruz, June 2018
 %%
-clear
-summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
-summaryfolder='IFCB-Data\BuddInlet\class\';
-classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\';
-feapath_generic = 'F:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
-roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
-yr = 2021;
-micron_factor=1/2.7;
-
 % clear
 % summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 % summaryfolder='IFCB-Data\test\';
@@ -21,6 +12,20 @@ micron_factor=1/2.7;
 % roibasepath_generic = 'F:\LabData\Brian_PN_expt\data\xxxx\'; %location of raw data
 % yr = 2023;
 % micron_factor=1/2.7;
+
+clear
+summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
+summaryfolder='IFCB-Data\BuddInlet\class\';
+classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\';
+feapath_generic = 'F:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
+roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
+yr = 2023;
+micron_factor=1/2.7;
+
+%classifier='F:\general\classifier\summary\Trees_BI_NOAA_v15';
+%start_blob_batch_user_training(['F:\BuddInlet\data\' num2str(yr) '\'],['F:\BuddInlet\blobs\' num2str(yr) '\'],false);
+%start_feature_batch_user_training(['F:\BuddInlet\data\' num2str(yr) '\'],['F:\BuddInlet\blobs\' num2str(yr) '\'],['F:\BuddInlet\features\ ' num2str(yr) '\'],false)
+%start_classify_batch_user_training(classifier,['F:\BuddInlet\features\' num2str(yr) '\'],['F:\BuddInlet\class\v15\class' num2str(yr) '_v1\']);
 
 classfiles = [];
 filelistTB = [];
@@ -54,7 +59,7 @@ if ~isempty(temp)
     xall = repmat('_fea_v2.csv', length(temp),1);
     feafiles = [feafiles; cellstr([pathall names(:,1:24) xall])];   
 end
-clearvars temp names pathall classpath feapath roibasepath xall fall yr
+clearvars temp names pathall classpath feapath roibasepath xall fall
 
 mdateTB = IFCB_file2date(filelistTB);
 ml_analyzedTB = IFCB_volume_analyzed(hdrname); 

@@ -1,5 +1,6 @@
 function [classcount, classcount_above_optthresh, classcount_above_adhocthresh,...
     classbiovol, classbiovol_above_optthresh, classbiovol_above_adhocthresh,...
+    ESD, ESD_above_optthresh, ESD_above_adhocthresh,...    
     graylevel, graylevel_above_optthresh, graylevel_above_adhocthresh] = ...
     summarize_TBclassBI(classfile, feafile, micron_factor, adhocthresh)
 % Alexis D. Fischer, NOAA, January 2024
@@ -21,6 +22,10 @@ classbiovol = classcount;
 classbiovol_above_optthresh = classcount;
 classbiovol_above_adhocthresh = classcount;
 
+ESD = classcount;
+ESD_above_optthresh = classcount;
+ESD_above_adhocthresh = classcount;
+
 graylevel = classcount;
 graylevel_above_optthresh = classcount;
 graylevel_above_adhocthresh = classcount;
@@ -39,7 +44,7 @@ len_c=length(TBclass);
 if len_f == len_c
     %disp('successful matchup')
 else
-    disp(['Mismatch between number of ROIs in class(' num2str(len_c) ') and feature(' num2str(len_f) ') files!'])
+    disp([classfile(end-36:end-21) ' - Mismatch between number of ROIs in class(' num2str(len_c) ') and feature(' num2str(len_f) ') files!'])
 end
 
 %% get the TBclass labels with application of adhocthresh
@@ -68,12 +73,14 @@ for ii = 1:length(class2useTB)
     ind = strmatch(class2useTB(ii), TBclass);
     classcount(ii) = size(ind,1);
     classbiovol(ii) = sum(targets.Biovolume(ind));   
+    ESD(ii) = mean(targets.ESD(ind));   
     graylevel(ii) = mean(targets.GrayLevel(ind));
     
     if exist('TBclass_above_threshold', 'var')
         ind = strmatch(class2useTB(ii), TBclass_above_threshold);
         classcount_above_optthresh(ii) = size(ind,1);
         classbiovol_above_optthresh(ii) = sum(targets.Biovolume(ind));
+        ESD_above_optthresh(ii) = mean(targets.ESD(ind));                
         graylevel_above_optthresh(ii) = mean(targets.GrayLevel(ind));        
     else 
         TBclass_above_threshold = NaN;
@@ -81,6 +88,7 @@ for ii = 1:length(class2useTB)
     ind = strmatch(class2useTB(ii), TBclass_above_adhocthresh);
     classcount_above_adhocthresh(ii) = size(ind,1);
     classbiovol_above_adhocthresh(ii) = sum(targets.Biovolume(ind));
+    ESD_above_adhocthresh(ii) = mean(targets.ESD(ind));    
     graylevel_above_adhocthresh(ii) = mean(targets.GrayLevel(ind));
     
 end

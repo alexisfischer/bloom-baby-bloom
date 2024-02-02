@@ -23,7 +23,7 @@ len_c=length(TBclass);
 if len_f == len_c
     %disp('successful matchup')
 else
-    disp(['Mismatch between number of ROIs in class(' num2str(len_c) ') and feature(' num2str(len_f) ') files!'])
+    disp([classfile(end-36:end-21) ' - Mismatch between number of ROIs in class(' num2str(len_c) ') and feature(' num2str(len_f) ') files!'])
 end
 
 ind = strcmp('Biovolume', feastruct.textdata);
