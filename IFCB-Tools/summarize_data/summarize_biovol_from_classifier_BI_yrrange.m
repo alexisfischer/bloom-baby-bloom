@@ -59,44 +59,35 @@ for i = 1:length(yrrange)
    clearvars temp names pathall classpath feapath roibasepath xall fall yr
 end
 
+%%
+
+val=char(classfiles); filelistTB=cellstr(val(:,end-36:end-13));
+
+%% preallocate
 mdateTB = IFCB_file2date(filelistTB);
 ml_analyzedTB = IFCB_volume_analyzed(hdrname); 
-
-%%%% preallocate
-load(classfiles{1}, 'class2useTB');
-classcountTB = NaN(length(classfiles),length(class2useTB));
-classcount_above_optthreshTB = classcountTB;
-classcount_above_adhocthreshTB = classcountTB;
-
-classbiovolTB = classcountTB;
-classbiovol_above_optthreshTB = classcountTB;
-classbiovol_above_adhocthreshTB = classcountTB;
-
-ESDTB = classcountTB;
-ESD_above_optthreshTB = classcountTB;
-ESD_above_adhocthreshTB = classcountTB;
-
-graylevelTB = classcountTB;
-graylevel_above_optthreshTB = classcountTB;
-graylevel_above_adhocthreshTB = classcountTB;
-
-adhocthresh = 0.5.*ones(1,length(class2useTB)-1); %leave off 1 for unclassified
-adhocthresh(contains(class2useTB,'Dinophysis')) = 0.75; %example to change a specific class
-adhocthresh(contains(class2useTB,'Mesodinium')) = 0.5;
-
+%%
+load(classfiles{1},'class2useTB');
 runtypeTB=filelistTB;
 filecommentTB=filelistTB;
 num2dostr = num2str(length(classfiles));
-clearvars feapath_generic classpath_generic roibasepath_generic i
+DcountTB=NaN(length(classfiles),1);
+DbiovolTB=DcountTB;
+DesdTB=DcountTB;
+DgrayTB=DcountTB;
+McountTB=DcountTB;
+MbiovolTB=DcountTB;
+MesdTB=DcountTB;
+MgrayTB=DcountTB;
+%%
+%%%% extract PN 
+for i = 16626:length(classfiles)
+%for i = 1:length(classfiles)
+    if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end  
 
-for i = 1:length(classfiles)
-    if ~rem(i,10), disp(['reading ' num2str(i) ' of ' num2dostr]), end
-
-     [classcountTB(i,:), classcount_above_optthreshTB(i,:), classcount_above_adhocthreshTB(i,:),...
-         classbiovolTB(i,:), classbiovol_above_optthreshTB(i,:), classbiovol_above_adhocthreshTB(i,:),...
-         ESDTB(i,:), ESD_above_optthreshTB(i,:), ESD_above_adhocthreshTB(i,:),...         
-          graylevelTB(i,:), graylevel_above_optthreshTB(i,:), graylevel_above_adhocthreshTB(i,:)]...
-         = summarize_TBclassBI(classfiles{i}, feafiles{i}, micron_factor, adhocthresh); 
+    [DcountTB(i), DbiovolTB(i), DesdTB(i), DgrayTB(i),...
+        McountTB(i), MbiovolTB(i), MesdTB(i), MgrayTB(i)]...
+        = summarize_TBclass_dino_meso(classfiles{i}, feafiles{i}, micron_factor, adhocthresh);
 
     hdr=IFCBxxx_readhdr2(hdrname{i});
     runtypeTB{i}=hdr.runtype;
@@ -104,14 +95,58 @@ for i = 1:length(classfiles)
 
 end
 
+%%
+% %% preallocate
+% load(classfiles{1}, 'class2useTB');
+% classcountTB = NaN(length(classfiles),length(class2useTB));
+% classcount_above_optthreshTB = classcountTB;
+% classcount_above_adhocthreshTB = classcountTB;
+% 
+% classbiovolTB = classcountTB;
+% classbiovol_above_optthreshTB = classcountTB;
+% classbiovol_above_adhocthreshTB = classcountTB;
+% 
+% ESDTB = classcountTB;
+% ESD_above_optthreshTB = classcountTB;
+% ESD_above_adhocthreshTB = classcountTB;
+% 
+% graylevelTB = classcountTB;
+% graylevel_above_optthreshTB = classcountTB;
+% graylevel_above_adhocthreshTB = classcountTB;
+% 
+% adhocthresh = 0.5.*ones(1,length(class2useTB)-1); %leave off 1 for unclassified
+% adhocthresh(contains(class2useTB,'Dinophysis')) = 0.75; %example to change a specific class
+% adhocthresh(contains(class2useTB,'Mesodinium')) = 0.5;
+% 
+% runtypeTB=filelistTB;
+% filecommentTB=filelistTB;
+% num2dostr = num2str(length(classfiles));
+% clearvars feapath_generic classpath_generic roibasepath_generic i
+% %%
+% for i = 160:length(classfiles)
+% %for i = 1:length(classfiles)
+%     if ~rem(i,10), disp(['reading ' num2str(i) ' of ' num2dostr]), end
+% 
+%      [classcountTB(i,:), classcount_above_optthreshTB(i,:), classcount_above_adhocthreshTB(i,:),...
+%          classbiovolTB(i,:), classbiovol_above_optthreshTB(i,:), classbiovol_above_adhocthreshTB(i,:),...
+%          ESDTB(i,:), ESD_above_optthreshTB(i,:), ESD_above_adhocthreshTB(i,:),...         
+%           graylevelTB(i,:), graylevel_above_optthreshTB(i,:), graylevel_above_adhocthreshTB(i,:)]...
+%          = summarize_TBclassBI(classfiles{i}, feafiles{i}, micron_factor, adhocthresh); 
+% 
+%     hdr=IFCBxxx_readhdr2(hdrname{i});
+%     runtypeTB{i}=hdr.runtype;
+%     filecommentTB{i}=hdr.filecomment;    
+% 
+% end
+
 if ~exist([summarydir_base summaryfolder], 'dir')
     mkdir(resultpath)
 end
 
-save([summarydir_base summaryfolder 'summary_biovol_allTB'] ,'*TB')
+save([summarydir_base summaryfolder 'summary_biovol_Dino_Meso_allTB'] ,'*TB')
 
 disp('Summary file stored here:')
-disp([summarydir_base summaryfolder 'summary_biovol_allTB'])
+disp([summarydir_base summaryfolder 'summary_biovol_Dino_Meso_allTB'])
 
 end
 

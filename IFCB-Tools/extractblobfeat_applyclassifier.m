@@ -1,6 +1,6 @@
 %% Extacting Blobs and Features and Applying a Classifier
 %  Alexis D. Fischer, NOAA NWFSC, August 2021
-clear;
+%clear;
 
 %%%% modify according to dataset
 %ifcbdir='F:\Shimada\'; 
