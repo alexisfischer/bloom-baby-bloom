@@ -4,7 +4,7 @@ function [PNcount_above_optthresh,PNcount,opt_cell1,opt_cell2,opt_cell3,opt_cell
 % Alexis D. Fischer, NOAA, April 2023
 %%
 % % % %Example inputs for testing
-% i=1; %122
+% i=1; %576
 % classfile=classfiles{i}
 % feafile=feafiles{i};
 
