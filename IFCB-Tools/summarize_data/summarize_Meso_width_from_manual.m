@@ -4,13 +4,13 @@ function [ ] = summarize_Meso_width_from_manual(summarydir,feapath_generic,roiba
 % minor axis length for all Pseudo-nitzschia chain lengths
 %
 % Alexis D. Fischer, NOAA NWFSC, April 2023
-%
+%%
 % %% Example inputs
 clear
 summarydir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\manual\';
-feapath_generic = 'D:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
-roibasepath_generic = 'D:\BuddInlet\data\xxxx\'; %location of raw data
-manualpath = 'D:\BuddInlet\manual\';
+feapath_generic = 'F:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
+roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
+manualpath = 'F:\BuddInlet\manual\';
 yrrange = 2021:2023;
 micron_factor=1/2.7;
 
@@ -59,7 +59,6 @@ runtype=filelist;
 filecomment=filelist;
 num2dostr = num2str(length(manualfiles));
 
-%%
 Mcount=NaN(length(manualfiles),1);
 Msize=NaN(length(manualfiles),1);
 
