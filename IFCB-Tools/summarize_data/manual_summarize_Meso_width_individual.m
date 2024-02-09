@@ -1,12 +1,12 @@
-function [count,size]=manual_summarize_Meso_width(manualfile,feafile,micron_factor)
+function [count,size]=manual_summarize_Meso_width_individual(manualfile,feafile,micron_factor)
 %function [large_PN,small_PN,Lcell1,Lcell2,Lcell3,Lcell4,Scell1,Scell2,Scell3,Scell4]=manual_summarize_Meso_width(manualfile,feafile,micron_factor)
 %
 % Alexis D. Fischer, NOAA, May 2023
 %
 %% % % %Example inputs for testing
-i=152
-manualfile=manualfiles{i};
-feafile=feafiles{i};
+% i=161
+% manualfile=manualfiles{i};
+% feafile=feafiles{i};
 
 load(manualfile,'class2use_manual','classlist')
 
@@ -16,19 +16,13 @@ targets.ESD = feastruct.data(:,ind)*micron_factor;
 ind = strcmp('roi_number',feastruct.textdata); 
 targets.roi_number = feastruct.data(:,ind);
 
-[~,~,igb]=intersect(find(classlist(:,2)==find(contains(class2use_manual,'Mesodinium'))),targets.roi_number); 
-
 [~,~,ig]=intersect(find(classlist(:,2)==find(strcmp('Mesodinium',class2use_manual))),targets.roi_number); 
 [~,~,ib]=intersect(find(classlist(:,2)==find(strcmp('Mesodinium_bad',class2use_manual))),targets.roi_number); 
 count=length([ig;ib]);
-size=mean([targets.ESD(ig);targets.ESD(ib)]);
+size=[targets.ESD(ig);targets.ESD(ib)];
 
 mlen=classlist(end,1); flen=targets.roi_number(end);
 if mlen==flen
 else
     disp([feafile(end-34:end-11) ': unequal rois in manual (' num2str(mlen) ') and feature files (' num2str(flen) ')'])
 end
-
-
-
-

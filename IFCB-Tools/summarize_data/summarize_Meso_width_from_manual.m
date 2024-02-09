@@ -59,21 +59,43 @@ runtype=filelist;
 filecomment=filelist;
 num2dostr = num2str(length(manualfiles));
 
-Mcount=NaN(length(manualfiles),1);
-Msize=NaN(length(manualfiles),1);
-Mstdev=NaN(length(manualfiles),1);
+M = struct('filelist',cell(1,length(mdate)),'mdate',cell(1,length(mdate)),...
+    'filecomment',cell(1,length(mdate)),'runtype',cell(1,length(mdate)),...
+    'ml_analyzed',cell(1,length(mdate)),'count',cell(1,length(mdate)),'ESD',cell(1,length(mdate)));
 
 %%%% extract PN 
 for i = 1:length(manualfiles)
-   if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end  
-    [Mcount(i), Msize(i), Mstdev(i)]=manual_summarize_Meso_width(manualfiles{i},feafiles{i},micron_factor);
+   if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end
+     [count,size]=manual_summarize_Meso_width_individual(manualfiles{i},feafiles{i},micron_factor);
+
     hdr=IFCBxxx_readhdr2(hdrname{i});
     runtype{i}=hdr.runtype;
     filecomment{i}=hdr.filecomment;    
+
+     M(i).filelist=filelist(i);     
+     M(i).mdate=mdate(i);     
+     M(i).filecomment=filecomment(i);     
+     M(i).runtype=runtype(i);     
+     M(i).ml_analyzed=ml_analyzed(i);     
+     M(i).count=count;
+     M(i).ESD=size;    
 end
 
+% Mcount=NaN(length(manualfiles),1);
+% Msize=NaN(length(manualfiles),1);
+% Mstdev=NaN(length(manualfiles),1);
+% 
+% %%%% extract PN 
+% for i = 1:length(manualfiles)
+%    if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end  
+%     [Mcount(i), Msize(i), Mstdev(i)]=manual_summarize_Meso_width(manualfiles{i},feafiles{i},micron_factor);
+%     hdr=IFCBxxx_readhdr2(hdrname{i});
+%     runtype{i}=hdr.runtype;
+%     filecomment{i}=hdr.filecomment;    
+% end
+
 save([summarydir 'summary_meso_width_manual'],'runtype','filecomment',...
-    'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','Mcount','Msize','Mstdev');
+    'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','M');
 
 disp('Summary file stored here:')
 disp([summarydir 'summary_meso_width_manual'])

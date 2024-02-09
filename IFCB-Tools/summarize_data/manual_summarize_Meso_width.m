@@ -27,7 +27,3 @@ if mlen==flen
 else
     disp([feafile(end-34:end-11) ': unequal rois in manual (' num2str(mlen) ') and feature files (' num2str(flen) ')'])
 end
-
-
-
-
