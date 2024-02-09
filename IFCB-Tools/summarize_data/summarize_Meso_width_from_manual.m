@@ -55,30 +55,24 @@ end
 mdate = IFCB_file2date(filelist);
 ml_analyzed = IFCB_volume_analyzed(hdrname); 
 load(manualfiles{1},'class2use_manual');
-runtype=filelist;
-filecomment=filelist;
+runtype=cell(length(mdate),1);
+filecomment=runtype;
+total=NaN(length(filelist),1);
+large=total;
+small=total;
+ESD=cell(length(mdate),1);
+
+%% extract PN 
 num2dostr = num2str(length(manualfiles));
-
-M = struct('filelist',cell(1,length(mdate)),'mdate',cell(1,length(mdate)),...
-    'filecomment',cell(1,length(mdate)),'runtype',cell(1,length(mdate)),...
-    'ml_analyzed',cell(1,length(mdate)),'count',cell(1,length(mdate)),'ESD',cell(1,length(mdate)));
-
-%%%% extract PN 
 for i = 1:length(manualfiles)
    if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end
-     [count,size]=manual_summarize_Meso_width_individual(manualfiles{i},feafiles{i},micron_factor);
+     [total(i),small(i),large(i),size]=manual_summarize_Meso_width_individual(manualfiles{i},feafiles{i},micron_factor);
 
     hdr=IFCBxxx_readhdr2(hdrname{i});
     runtype{i}=hdr.runtype;
     filecomment{i}=hdr.filecomment;    
 
-     M(i).filelist=filelist(i);     
-     M(i).mdate=mdate(i);     
-     M(i).filecomment=filecomment(i);     
-     M(i).runtype=runtype(i);     
-     M(i).ml_analyzed=ml_analyzed(i);     
-     M(i).count=count;
-     M(i).ESD=size;    
+     ESD(i)={size};    
 end
 
 % Mcount=NaN(length(manualfiles),1);
@@ -94,8 +88,8 @@ end
 %     filecomment{i}=hdr.filecomment;    
 % end
 
-save([summarydir 'summary_meso_width_manual'],'runtype','filecomment',...
-    'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','M');
+save([summarydir 'summary_meso_width_manual'],'total','large','small','runtype','filecomment',...
+    'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','ESD');
 
 disp('Summary file stored here:')
 disp([summarydir 'summary_meso_width_manual'])
