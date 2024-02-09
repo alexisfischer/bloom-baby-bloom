@@ -72,7 +72,7 @@ for i = 1:length(manualfiles)
     filecomment{i}=hdr.filecomment;    
 
 end
-
+%%
 save([summarydir 'summary_meso_width_manual'],'runtype','filecomment',...
     'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','Mcount','Msize');
 

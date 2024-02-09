@@ -61,20 +61,19 @@ num2dostr = num2str(length(manualfiles));
 
 Mcount=NaN(length(manualfiles),1);
 Msize=NaN(length(manualfiles),1);
+Mstdev=NaN(length(manualfiles),1);
 
 %%%% extract PN 
 for i = 1:length(manualfiles)
    if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end  
-    [Mcount(i), Msize(i)]=manual_summarize_Meso_width(manualfiles{i},feafiles{i},micron_factor);
-    
+    [Mcount(i), Msize(i), Mstdev(i)]=manual_summarize_Meso_width(manualfiles{i},feafiles{i},micron_factor);
     hdr=IFCBxxx_readhdr2(hdrname{i});
     runtype{i}=hdr.runtype;
     filecomment{i}=hdr.filecomment;    
-
 end
 
 save([summarydir 'summary_meso_width_manual'],'runtype','filecomment',...
-    'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','Mcount','Msize');
+    'class2use_manual','ml_analyzed','mdate','filelist','micron_factor','Mcount','Msize','Mstdev');
 
 disp('Summary file stored here:')
 disp([summarydir 'summary_meso_width_manual'])

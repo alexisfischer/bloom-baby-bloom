@@ -4,7 +4,7 @@ function [count,size]=manual_summarize_Meso_width(manualfile,feafile,micron_fact
 % Alexis D. Fischer, NOAA, May 2023
 %
 %% % % %Example inputs for testing
-i=576
+i=152
 manualfile=manualfiles{i};
 feafile=feafiles{i};
 
@@ -15,6 +15,8 @@ ind = strcmp('EquivDiameter',feastruct.textdata);
 targets.ESD = feastruct.data(:,ind)*micron_factor;
 ind = strcmp('roi_number',feastruct.textdata); 
 targets.roi_number = feastruct.data(:,ind);
+
+[~,~,igb]=intersect(find(classlist(:,2)==find(contains(class2use_manual,'Mesodinium'))),targets.roi_number); 
 
 [~,~,ig]=intersect(find(classlist(:,2)==find(strcmp('Mesodinium',class2use_manual))),targets.roi_number); 
 [~,~,ib]=intersect(find(classlist(:,2)==find(strcmp('Mesodinium_bad',class2use_manual))),targets.roi_number); 
