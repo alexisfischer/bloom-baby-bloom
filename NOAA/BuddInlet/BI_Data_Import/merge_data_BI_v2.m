@@ -6,42 +6,63 @@ addpath(genpath(filepath));
 
 %%%% merge continuous data (IFCB, Hobo T and S, Deschutes R)
 %%%% load in and process IFCB data
-load([filepath 'IFCB-Data/BuddInlet/manual/count_class_manual'],...
-    'class2use','classcount','ml_analyzed','filelist');
-mesoi=sum(classcount(:,contains(class2use,'Mesodinium')),2)./ml_analyzed;
-for i=1:length(filelist)
-    filelist(i).newname=filelist(i).name(1:24);
-end
-
 %%%% match up manual meso data with dinophysis data
-load([filepath 'IFCB-Data/BuddInlet/class/summary_adjustedTB_Dinophysis'],...
-    'classcount_adjust_TB','filelistTB','mdateTB','ml_analyzedTB','filecommentTB','runtypeTB');
-dino=classcount_adjust_TB./ml_analyzedTB;
+% load([filepath 'IFCB-Data/BuddInlet/class/summary_adjustedTB_Dinophysis'],...
+%     'classcount_adjust_TB','filelistTB','mdateTB','ml_analyzedTB','filecommentTB','runtypeTB');
 
-[~,im,it] = intersect({filelist.newname}', filelistTB); %finds the matched files between automated and manually classified files
-meso=nan*dino; meso(it)=mesoi(im);
+load([filepath 'IFCB-Data/BuddInlet/class/summary_biovol_allTB'],'filelistTB',...
+    'class2useTB','mdateTB','ml_analyzedTB','filecommentTB','runtypeTB',...
+    'classcount_above_adhocthreshTB','classbiovol_above_adhocthreshTB','ESD_above_adhocthreshTB','graylevel_above_adhocthreshTB');
+dind=contains(class2useTB,'Dinophysis');
+dBvol=classbiovol_above_adhocthreshTB(:,dind)./ml_analyzedTB;
+dSize=ESD_above_adhocthreshTB(:,dind);
+dGray=graylevel_above_adhocthreshTB(:,dind);
 
-clearvars classcount ml_analyzed class2use i mesoi im it filelist
+% adjust data by respective slopes
+load([filepath 'IFCB-Data/BuddInlet/class/summary_adjustedTB_Dinophysis'],'slope');
+dino=classcount_above_adhocthreshTB(:,dind)./ml_analyzedTB./slope;
 
-%load([filepath 'IFCB-Data/BuddInlet/class/summary_adjustedTB_Mesodinium'],'classcount_adjust_TB');
-%meso=classcount_adjust_TB./ml_analyzedTB;
+% load in Mesodinium manual
+load([filepath 'IFCB-Data/BuddInlet/manual/summary_meso_width_manual'],...
+    'large','small','ml_analyzed','filelist');
 
-% remove discrete samples (data with file comment)
-idx=contains(filecommentTB,'trigger'); 
-dino(idx)=[]; meso(idx)=[]; mdateTB(idx)=[]; filecommentTB(idx)=[]; runtypeTB(idx)=[];
+mesoml=(small+large)./ml_analyzed;
+smallml=small./ml_analyzed;
+largeml=large./ml_analyzed;
 
-% put in timetable
+[~,im,it] = intersect(filelist, filelistTB); %finds the matched files between automated and manually classified files
+meso=nan*dino; mesoSmall=nan*dino; mesoLarge=nan*dino; 
+meso(it)=mesoml(im); mesoSmall(it)=smallml(im); mesoLarge(it)=largeml(im); 
+
+clearvars im it mesoS mesoL slope ml_analyzed* dind small large filelist 
+
+%%%% put in timetable
 dt=datetime(mdateTB,'convertfrom','datenum','Format','dd-MMM-yyyy HH:mm:ss');
-TT=timetable(dt,dino,meso);
+TT=timetable(dt,dino,dBvol,dSize,dGray,meso,mesoSmall,mesoLarge,filecommentTB,runtypeTB);
+
+%remove that outlier
+idx=find(TT.dt==datetime('09-Jul-2023 19:24:00')); 
+TT.mesoLarge(idx)=TT.mesoLarge(idx)-30;
+TT.meso(idx)=TT.meso(idx)-30;
+
+clearvars classcount ml_analyzed class2use i mesoi im it filelist slope dind *TB
+   
+% remove discrete samples (data with file comment)
+TT(contains(TT.filecommentTB,'trigger'),:)=[];
 
 % split dataset by PMTA and PMTB triggers
-idf=contains(runtypeTB,{'NORMAL','Normal'});
-ida=contains(runtypeTB,{'ALT','Alternative'});
+idf=contains(TT.runtypeTB,{'NORMAL','Normal'});
+ida=contains(TT.runtypeTB,{'ALT','Alternative'});
 fli=TT(idf,:); sci=TT(ida,:);
 
+% clean up tables by removing specific variables
+TT=removevars(TT,{'filecommentTB','runtypeTB'});
+fli=removevars(fli,{'filecommentTB','runtypeTB'});
+sci=removevars(sci,{'filecommentTB','runtypeTB'});
+
 % daily average/max
-fl=retime(fli,'daily','mean');
-sc=retime(sci,'daily','mean');
+fl=retime(fli,'daily','median');
+sc=retime(sci,'daily','median');
 TTT=synchronize(fl,sc);
 
 % Include Max hourly average
@@ -50,7 +71,7 @@ imax=@(x) find(x==max(x),1);  % anonymous function for index to maximum in group
 dinomax=[];  % empty accumulator for results
 dinomean=[];
 dinostd=[];
-dtmax=[];
+dmatrix=[];
 ymatrix=[];
 yrlist=[2021;2022;2023];
 
@@ -73,27 +94,27 @@ for j=1:length(yrlist)
         dinostd=[dinostd;std(DM.dino(idx),1)];
 
         dti=DM.dt(idx(idd)); %find corresponding date back in full dataset        
-        dtmax=[dtmax;dti];        
-     
+        dmatrix=[dmatrix;dti];        
+
     end
 
 end
-dtmax=dateshift(dtmax,'start','day');
-D=timetable(dtmax,dinomax,dinomean,dinostd);
-TTT=synchronize(TTT,D,'first');
+dmatrix=dateshift(dmatrix,'start','day');
+% D=timetable(dmatrix,dinomax,dinomean,dinostd);
+% TTT=synchronize(TTT,D,'first');
 
-clearvars D m idm imax dinomax DM dMAX i j yrlist flii
+clearvars D m idm imax dino* DM dMAX i j yrlist flii meso* i* nanday val* ttMAX dBvol dGray dSize dti
 
 %% fill gaps of 2 days or less
 TTT.dino_fl = fillmissing(TTT.dino_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
-TTT.meso_fl = fillmissing(TTT.meso_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 TTT.dino_sc = fillmissing(TTT.dino_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
-TTT.meso_sc = fillmissing(TTT.meso_sc,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
-TTT.dino_fl = fillmissing(TTT.dino_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
-TTT.dinomax = fillmissing(TTT.dinomax,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.dBvol_fl = fillmissing(TTT.dBvol_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.dSize_fl = fillmissing(TTT.dSize_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+TTT.dGray_fl = fillmissing(TTT.dGray_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
 
-TTT.dinomean = fillmissing(TTT.dinomean,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
-TTT.dinostd = fillmissing(TTT.dinostd,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
+idx=find(TTT.dino_fl==0);
+TTT.dGray_fl(idx)=NaN;
+TTT.dSize_fl(idx)=NaN;
 
 %%%% merge IFCB, temperature, salinity, Deschutes R discharge data
 load([filepath 'NOAA/BuddInlet/Data/temp_sal_1m_3m_BuddInlet'],'H');
@@ -106,7 +127,7 @@ HD=retime(HD,'daily','mean');
 T=synchronize(TTT,HD);
 T.dt=datetime(T.dt,'Format','dd-MMM-yyyy');
 
-clearvars HD Hc fl sc idx TT TTT idf ida dino meso dt dinoG *TB 
+clearvars HD Hc fl sc idx TT TTT idf ida dt *TB 
 
 %%%% match up IFCB continuous data with manual data
 load([filepath 'IFCB-Data/BuddInlet/manual/count_class_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
@@ -163,4 +184,4 @@ T=synchronize(T,D);
 clearvars idx TT
 
 %%
-save([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T','Tc','fli','sci','dtmax','ymatrix');
+save([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T','Tc','fli','sci','dmatrix','ymatrix');

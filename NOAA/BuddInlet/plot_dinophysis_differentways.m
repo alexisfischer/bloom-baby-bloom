@@ -43,7 +43,7 @@ datetick('x', 'mmm', 'keeplimits');
 lh=legend([hf hm],'IFCB FL','microscopy','location','nw');  hp=get(lh,'pos');
     lh.Position=[hp(1)-.02 hp(2)+.6 hp(3) hp(4)]; hold on    
 
-% set figure parameters
+%% set figure parameters
 exportgraphics(gcf,[filepath 'NOAA/BuddInlet/Figs/' class2do_string 'IFCB_fl_microscopy.png'],'Resolution',100)    
 hold off
 

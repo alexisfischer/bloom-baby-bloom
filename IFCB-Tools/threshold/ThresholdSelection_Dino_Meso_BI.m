@@ -1,8 +1,8 @@
 %% plot manual vs classifier results for Budd Inlet
 clear;
 
-%class2do_string='Dinophysis'; ymax=20;
-class2do_string='Mesodinium'; ymax=35; 
+class2do_string='Dinophysis'; ymax=20;
+%class2do_string='Mesodinium'; ymax=35; 
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 outpath = [filepath 'IFCB-Data/BuddInlet/class/Figs/'];
@@ -120,7 +120,7 @@ load([filepath 'IFCB-Data/BuddInlet/class/summary_allTB_bythre_Dinophysis_Mesodi
     'filecommentTB','runtypeTB','mdateTB','ml_analyzedTB');
 
 if (contains(class2do_string,'Dinophysis'))==1   
-    chosen_threshold=.7;
+    chosen_threshold=.75;
     idx=find(threlist>=chosen_threshold,1);        
     slope=m(idx);
     classcount_adjust_TB=dinocount_above_threTB(:,idx)./slope;  

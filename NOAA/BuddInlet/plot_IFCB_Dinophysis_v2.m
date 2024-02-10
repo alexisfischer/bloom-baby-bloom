@@ -6,7 +6,7 @@ addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
 
 yr='2023'; % '2023'
-ydinolim=[0 4.2]; ymesolim=[0 10]; 
+ydinolim=[0 4]; ymesolim=[0 10]; 
 load([filepath 'Data/BuddInlet_data_summary'],'T');
 load([filepath 'Data/BuddInlet_TSChl_profiles'],'B','dt');
 
@@ -19,7 +19,7 @@ figure('Units','inches','Position',[1 1 5 5.],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.06 0.11], [0.14 0.22]);
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
-xax=[datetime(['' yr '-05-01']) datetime(['' yr '-10-01'])];
+xax=[datetime(['' yr '-04-01']) datetime(['' yr '-10-01'])];
 
 subplot(5,1,1)
 plot(T.dt,T.DST,'k*','Markersize',4,'linewidth',1.5); hold on;
@@ -45,22 +45,22 @@ h = bar(T.dt,[T.fx_Dfortii T.fx_Dacuminata T.fx_Dnorvegica T.fx_Dodiosa...
 subplot(5,1,3); %dino
 yyaxis left
 idx=find(isnan(T.dino_fl)); val=0.1*ones(size(idx));
-%plot(T.dt,T.dinoML_microscopy,'ro','MarkerSize',4); hold on;
-h1=plot(T.dt,smoothdata(T.dino_fl,'movmean',2,'omitnan'),'k-','linewidth',1.5); hold on;
+h1=plot(T.dt,T.dino_fl,'k-','linewidth',1.5); hold on;
     set(gca,'xlim',[xax(1) xax(2)],'ylim',ydinolim,'ytick',0:2:4,'xticklabel',{},...
         'fontsize', 10,'tickdir','out','ycolor','k');  
     ylabel({'dino/mL'},'fontsize',11); hold on;   
 yyaxis right
-    plot(T.dt(idx),val,'ks','linewidth',.5,'markersize',5,'markerfacecolor','k'); hold on;
 if strcmp(yr,'2021')
     iend=find(~isnan(T.dino_fl),1); 
-    dti=datetime(T.dt(1)):1:datetime(T.dt(iend-1)); 
+    dti=datetime('01-Apr-2021'):1:datetime(T.dt(iend-1)); 
     val=0.1*ones(size(dti));
     plot(dti,val,'ks','linewidth',.5,'markersize',5,'markerfacecolor','k'); hold on;
+else
+    plot(T.dt(idx),val,'ks','linewidth',.5,'markersize',5,'markerfacecolor','k'); hold on;    
 end
 
-    h2=plot(dtf,mesof,':r.','Linewidth',.5); hold on;
-    set(gca,'xlim',[xax(1) xax(2)],'ylim',ymesolim,'xticklabel',{},...
+    h2=plot(dtf,mesof,'--r.','Linewidth',1); hold on;
+    set(gca,'xlim',[xax(1) xax(2)],'ylim',ymesolim,'ytick',0:5:10,'xticklabel',{},...
         'fontsize', 10,'tickdir','out','ycolor','r');  
     ylabel({'meso/mL'},'fontsize',11); hold on;      
 
