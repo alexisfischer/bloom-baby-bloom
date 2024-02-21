@@ -181,7 +181,12 @@ D=movevars(D,{'dinoML_microscopy','mesoML_microscopy','DST'},'After','IFCBDepthm
 
 T=synchronize(T,D);
 
-clearvars idx TT
+%%%% merge with toxicity cell quota data
+load([filepath 'NOAA/BuddInlet/Data/ToxinCellQuota_BI.mat'],'Q');
+QT=table2timetable(Q);
+T=synchronize(T,QT);
+
+clearvars idx TT Q
 
 %%
 save([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T','Tc','fli','sci','dmatrix','ymatrix');
