@@ -8,8 +8,8 @@ addpath(genpath(filepath)); % add new data to search path
 fprint=1; %0=don't print, 1=print
 type=1; %1=discrete, 2=sensor
 %yr='2019';
-yr='2021';
-%yr='2019 & 2021';
+%yr='2021';
+yr='2019 & 2021';
 
 load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
 %P(P.PN_cell==0,:)=[];
@@ -51,7 +51,9 @@ xtickangle(45)
 col=flipud(brewermap(256,'RdBu'));col(120:136,:)=[]; 
 colormap(gca,col); h=colorbar('XTick',-1:.5:1);
     hp=get(h,'pos');     
-    hp=[1.05*hp(1) hp(2) .8*hp(3) .6*hp(4)]; % [left, bottom, width, height].
+    hp=[1.05*hp(1) hp(2) .8*hp(3) .85*hp(4)]; % [left, bottom, width, height].
+
+    %    hp=[1.05*hp(1) hp(2) .8*hp(3) .6*hp(4)]; % [left, bottom, width, height].
     set(h,'pos',hp,'xaxisloc','right','tickdir','out','fontsize',10);
 clim([-1 1]);
 title(yr,'fontsize',12);

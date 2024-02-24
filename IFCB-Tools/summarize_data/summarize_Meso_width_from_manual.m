@@ -12,7 +12,7 @@ feapath_generic = 'F:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
 roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
 manualpath = 'F:\BuddInlet\manual\';
 yrrange = 2021:2023;
-micron_factor=1/2.7;
+micron_factor=1/3.8;
 
 manualfiles = [];
 filelist = [];

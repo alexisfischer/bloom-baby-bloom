@@ -3,7 +3,7 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search 
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/CharacteristicPNGs/dinophysis/4publication/';
 
-pixPerUm = 2.7;%3.8;
+pixPerUm = 3.8;
 scalebarLength = 10; % scalebar will be X micrometer long
 unit = sprintf('%sm', '\mu'); % micrometer
 
