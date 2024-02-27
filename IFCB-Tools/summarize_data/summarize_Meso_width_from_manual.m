@@ -62,7 +62,7 @@ large=total;
 small=total;
 ESD=cell(length(mdate),1);
 
-%% extract PN 
+%%%% extract meso size 
 num2dostr = num2str(length(manualfiles));
 for i = 1:length(manualfiles)
    if ~rem(i,100), disp(['reading ' num2str(i) ' of ' num2dostr]), end
