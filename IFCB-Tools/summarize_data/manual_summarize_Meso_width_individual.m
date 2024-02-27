@@ -21,7 +21,7 @@ targets.roi_number = feastruct.data(:,ind);
 total=length([ig;ib]);
 size=[targets.ESD(ig);targets.ESD(ib)];
 
-large=length(find(size>26));
+large=length(find(size>19));
 small=total-large;
 
 mlen=classlist(end,1); flen=targets.roi_number(end);
