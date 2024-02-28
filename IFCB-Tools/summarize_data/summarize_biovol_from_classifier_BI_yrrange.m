@@ -11,7 +11,7 @@ classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\';
 feapath_generic = 'F:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
 roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
 yrrange = 2021:2023;
-micron_factor=1/2.7;
+micron_factor=1/3.8;
 
 % clear
 % summarydir_base='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
@@ -88,8 +88,10 @@ runtypeTB=filelistTB;
 filecommentTB=filelistTB;
 num2dostr = num2str(length(classfiles));
 clearvars feapath_generic classpath_generic roibasepath_generic i
+%%
+%for i = 1:length(classfiles)
+for i = 22018:length(classfiles)
 
-for i = 1:length(classfiles)
     if ~rem(i,10), disp(['reading ' num2str(i) ' of ' num2dostr]), end
 
      [classcountTB(i,:), classcount_above_optthreshTB(i,:), classcount_above_adhocthreshTB(i,:),...

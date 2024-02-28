@@ -20,7 +20,7 @@ classpath_generic = 'F:\BuddInlet\class\v15\classxxxx_v1\';
 feapath_generic = 'F:\BuddInlet\features\xxxx\'; %Put in your featurepath byyear
 roibasepath_generic = 'F:\BuddInlet\data\xxxx\'; %location of raw data
 yr = 2023;
-micron_factor=1/2.7;
+micron_factor=1/3.8;
 
 %classifier='F:\general\classifier\summary\Trees_BI_NOAA_v15';
 %start_blob_batch_user_training(['F:\BuddInlet\data\' num2str(yr) '\'],['F:\BuddInlet\blobs\' num2str(yr) '\'],false);
