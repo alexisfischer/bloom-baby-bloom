@@ -1,5 +1,4 @@
 %% histogram of what was imaged between 2022 and 2023
-
 clear
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));

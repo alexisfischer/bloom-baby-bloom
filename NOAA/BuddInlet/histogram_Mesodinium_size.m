@@ -6,40 +6,35 @@ addpath(genpath(filepath));
 
 load([filepath 'IFCB-Data/BuddInlet/manual/summary_meso_width_manual'],'mdate','ESD');
 dt=datetime(mdate,'convertfrom','datenum')';
+
 % remove data from October-March
 idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12);
 dt(idx)=[]; ESD(idx)=[];
 
-figure('Units','inches','Position',[1 1 3.5 3.5],'PaperPositionMode','auto');
-    histogram(cell2mat(ESD),5:2:55); hold on
-    xl=xline(19,':',{'19 \mum'},'linewidth',1.5); hold on;
-    set(gca,'xlim',[8 50],'xtick',10:10:50,'ylim',[0 900],'ytick',0:400:800,'fontsize',10,'tickdir','out');
-    ylabel('count','fontsize',11)
-    xlabel('Mesodinium ESD (\mum)')
-
-% set figure parameters
-exportgraphics(gcf,[filepath 'NOAA/BuddInlet/Figs/Mesodinium_ESD_histogram.png'],'Resolution',100)    
-hold off
-
-
-%% year by year
-figure('Units','inches','Position',[1 1 3.5 5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.1 0.04], [0.19 0.04]);
+figure('Units','inches','Position',[1 1 3.5 4],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.05], [0.19 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
- yrlist=[2021;2022;2023];
-for i=1:length(yrlist)
-    ax(i)=subplot(3,1,i);
-    idx=(dt.Year==yrlist(i));
-    histogram(cell2mat([ESD(idx)]),5:2:55); hold on
-    xl=xline(19,':','linewidth',1.5); hold on;
-    set(gca,'xlim',[8 50],'xtick',10:10:50,'ylim',[0 800],'ytick',0:400:800, ...
-       'fontsize',10,'tickdir','out'); hold on;
-    ylabel(num2str(yrlist(i)),'fontsize',11)
-end
-    xlabel('Mesodinium ESD (\mum)')
 
-ax(1).XTickLabel={}; ax(2).XTickLabel={};
+subplot(2,1,1)
+yrlist=[2021;2022;2023];
+c=brewermap(3,'Set2'); 
+for i=1:length(yrlist)
+    idx=(dt.Year==yrlist(i));
+    histogram(cell2mat([ESD(idx)]),0:1:70,'DisplayStyle','stairs','edgecolor',c(i,:)); hold on
+    set(gca,'xlim',[8 45],'xtick',10:10:45,'xticklabel',{},'ylim',[0 620],'ytick',0:300:600, ...
+       'fontsize',10,'tickdir','out'); hold on;    
+    ylabel('particle count','fontsize',11)
+end
+    xline(19,':',{'19 \mum'},'linewidth',1.5); hold on;
+    legend('2021','2022','2023'); legend boxoff;
+
+subplot(2,1,2)    
+    histogram(cell2mat(ESD),0:1:70,'facecolor',[.5 .5 .5]); hold on
+    xline(19,':','linewidth',1.5); hold on;
+    set(gca,'xlim',[8 45],'xtick',10:10:45,'ylim',[0 620],'ytick',0:300:600, ...
+       'fontsize',10,'tickdir','out'); hold on;    
+    xlabel('Mesodinium ESD (\mum)')
 
 % set figure parameters
 exportgraphics(gcf,[filepath 'NOAA/BuddInlet/Figs/Mesodinium_ESD_histogram_yr.png'],'Resolution',100)    
