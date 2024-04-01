@@ -4,12 +4,12 @@ function [ ] = summarize_biovol_eqdiam_from_features(out_dir,roibasepath,feapath
 % Inputs Features files and outputs a summary file of biovolume and equivalent spherical diameter
 % Alexis D. Fischer, University of California - Santa Cruz, April 2018
 %
-% %% Example inputs
-% out_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\Shimada\';
-% roibasepath = 'D:\test\data\'; %Where you raw data is
-% feapath_base = 'D:\test\features\2021\'; %Put in your featurepath byyear
+%% Example inputs
+out_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\sizes\';
+roibasepath = 'F:\BuddInlet\data\'; %Where you raw data is
+feapath_base = 'F:\BuddInlet\features\2023\'; %Put in your featurepath byyear
 
-micron_factor = 1/3.4; %USER PUT YOUR OWN microns per pixel conversion
+micron_factor = 1/3.8; %USER PUT YOUR OWN microns per pixel conversion
 filelist = dir([feapath_base 'D*.csv']);
 matdate = IFCB_file2date({filelist.name}); %calculate date
 ml_analyzed = NaN(length(filelist),1);
@@ -29,14 +29,14 @@ for i = 1:length(filelist)
     roi = feastruct.data(:,ind);
     ind = strmatch('EquivDiameter', feastruct.colheaders);
     eqdiam = feastruct.data(:,ind);
-    ind = strmatch('MinorAxisLength', feastruct.colheaders);
-    minoraxislength = feastruct.data(:,ind);
+    % ind = strmatch('MinorAxisLength', feastruct.colheaders);
+    % minoraxislength = feastruct.data(:,ind);
     
     BiEq(i).filename=filename;
     BiEq(i).matdate=matdate(i);
     BiEq(i).ml_analyzed=ml_analyzed(i);    
     BiEq(i).roi=roi;
-    BiEq(i).minoraxislength=minoraxislength;    
+    %BiEq(i).minoraxislength=minoraxislength;    
     BiEq(i).eqdiam=eqdiam*micron_factor;
     BiEq(i).biovol=biovol*micron_factor.^3;    
     
@@ -49,5 +49,7 @@ save([out_dir 'eqdiam_biovol_' yr], 'BiEq', 'note1', 'note2')
 
 disp('Summary file stored here:')
 disp([out_dir 'eqdiam_biovol_' yr])
+
+
 
 end
