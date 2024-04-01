@@ -157,7 +157,7 @@ Tc=synchronize(Tc,Hc,'first');
 
 clearvars Hc H DR 
 
-%% merge discrete data (DSP, microscopy)
+%% merge discrete data (DST, microscopy, nutrients, cell quota)
 %%%% add stratification depth to Discrete dataset
 load([filepath 'NOAA/BuddInlet/Data/DinophysisMicroscopy_BI'],'TT'); 
 load([filepath 'NOAA/BuddInlet/Data/BuddInlet_TSChl_profiles'],'B','dt');
@@ -176,17 +176,20 @@ D((D.dt>datetime('30-Nov-2021') & D.dt<datetime('02-Mar-2022')),:)=[];
 D((D.dt>datetime('15-Oct-2022') & D.dt<datetime('23-Mar-2023')),:)=[];
 D(D.dt>datetime('16-Oct-2023'),:)=[];
 
-D=removevars(D,{'ChlMaxDepthm','ChlMaxLower1','ChlMaxUpper1','ChlMaxLower2','ChlMaxUpper2'});
+D=removevars(D,{'ChlMaxDepthm','ChlMaxLower1','ChlMaxUpper1','ChlMaxLower2','ChlMaxUpper2','AmmoniaM'});
 D=movevars(D,{'dinoML_microscopy','mesoML_microscopy','DST'},'After','IFCBDepthm');
-
 T=synchronize(T,D);
+
+%%%% merge with nutrient data
+load([filepath 'NOAA/BuddInlet/Data/Data_nutrients_BI'],'N');
+T=synchronize(T,N);
 
 %%%% merge with toxicity cell quota data
 load([filepath 'NOAA/BuddInlet/Data/ToxinCellQuota_BI.mat'],'Q');
 QT=table2timetable(Q);
 T=synchronize(T,QT);
 
-clearvars idx TT Q
+clearvars idx TT Q NT
 
 %%
 save([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T','Tc','fli','sci','dmatrix','ymatrix');

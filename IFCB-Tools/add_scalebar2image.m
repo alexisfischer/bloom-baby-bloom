@@ -1,7 +1,8 @@
 clear; close all;
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/')); % add new data to search path
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/CharacteristicPNGs/dinophysis/4publication/';
+%filepath = '~/Documents/MATLAB/bloom-baby-bloom/CharacteristicPNGs/dinophysis/4publication/';
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/CharacteristicPNGs/mesodinium/4publication/';
 
 pixPerUm = 3.8;
 scalebarLength = 10; % scalebar will be X micrometer long

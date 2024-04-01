@@ -14,7 +14,7 @@ opts.ExtraColumnsRule = "ignore";
 opts.EmptyLineRule = "read";
 opts = setvaropts(opts, ["Var4", "Var5", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11"], "WhitespaceRule", "preserve");
 opts = setvaropts(opts, ["Var4", "Var5", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11"], "EmptyFieldRule", "auto");
-B = readtable("/Users/alexis.fischer/Documents/BEUTI_daily.csv", opts);
+B = readtable([filepath 'NOAA/Shimada/Data/BEUTI_daily.csv'], opts);
 
 %%%% prep data for mean climatology
 dt=datetime(B.year,B.month,B.day); dt.Format='yyyy-MM-dd';

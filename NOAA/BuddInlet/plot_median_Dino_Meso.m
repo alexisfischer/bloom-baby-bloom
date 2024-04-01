@@ -7,7 +7,7 @@ addpath(genpath(filepath));
 load([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T','fli','dmatrix','ymatrix');
 class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];   
 
-%%%% plot Mesodinium 25-50-75 percentile
+%% plot Mesodinium 25-50-75 percentile
 class2do_string='Mesodinium'; ymax=8;
 [~,label]=get_class_ind(class2do_string,'all',class_indices_path);
 
@@ -32,7 +32,6 @@ for j=1:length(yrlist)
         set(gca,'xgrid','on','tickdir','out','xlim',[datetime([char(yrlist(j)) '-04-01']) datetime([char(yrlist(j)) '-10-01'])],...
             'xticklabel',{},'ylim',[0 ymax],'ytick',0:4:8,'fontsize',10,'ycolor','k','box','on');         
         ylabel(yrlist(j)','fontsize',11);  
-
 end
 
 set(gca,'Layer','top'); grid off;
@@ -52,8 +51,8 @@ class2do_string='Dinophysis'; ymax=15;
 P=prctile(ymatrix,[25 50 75],1);
 x=dmatrix'; y1=P(1,:); y2=P(2,:); y3=P(3,:);
 
-figure('Units','inches','Position',[1 1 5 4],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.08 0.08], [0.1 0.04]);
+figure('Units','inches','Position',[1 1 3.3 4],'PaperPositionMode','auto');
+subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.07 0.18], [0.08 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
@@ -89,19 +88,22 @@ for j=1:length(yrlist)
     hm=plot(T.dt,T.dinoML_microscopy,'r^','markerfacecolor','r','Linewidth',.8,'markersize',4); hold on;            
     ylabel('2021','fontsize',11);     
         set(gca,'xgrid','on','tickdir','out','xlim',[datetime([char(yrlist(j)) '-04-01']) datetime([char(yrlist(j)) '-10-01'])],...
-            'xticklabel',{},'ylim',[0 ymax],'fontsize',10,'ycolor','k','box','on');         
-        ylabel(yrlist(j)','fontsize',11);  
+            'xticklabel',{},'ylim',[0 ymax],'ytick',0:10:10,'fontsize',10,'ycolor','k','box','on');         
+       % ylabel(yrlist(j)','fontsize',11);  
 set(gca,'Layer','top'); grid off;        
 end
 
 set(gca,'Layer','top'); grid off;
-ax(1).Title.String=[ char(label) ' cells/mL'];
+%ax(1).Title.String=[ char(label) ' cells/mL'];
 datetick('x', 'mmm', 'keeplimits');            
-lh=legend([hf h50 h27 hm],'raw IFCB','median','25-75%','microscopy','location','nw');  hp=get(lh,'pos');
-lh.Position=[hp(1)-.02 hp(2)+.6 hp(3) hp(4)]; hold on            
+% lh=legend([hf h50 h27 hm],'raw IFCB','median','25-75%','microscopy','location','nw');  hp=get(lh,'pos');
+% lh.Position=[hp(1)-.02 hp(2)+.6 hp(3) hp(4)]; hold on            
+
+lh=legend([hf h50 h27 hm],'raw IFCB','median','25-75%','microscopy','location','NW');  
+hp=get(lh,'pos'); lh.Position=[hp(1)+.25 hp(2)+.72 hp(3) hp(4)]; legend boxoff; hold on           
 
 % set figure parameters
-exportgraphics(gcf,[filepath 'NOAA/BuddInlet/Figs/Dinophysis_IFCB_fl_microscopy_25-50-75_percentile.png'],'Resolution',100)    
+exportgraphics(gcf,[filepath 'NOAA/BuddInlet/Figs/Dinophysis_IFCB_fl_microscopy_25-50-75_percentile.png'],'Resolution',300)    
 hold off
 
 

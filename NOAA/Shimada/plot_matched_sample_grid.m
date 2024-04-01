@@ -15,7 +15,13 @@ unit=0.06;
 %load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
 load([filepath 'NOAA/Shimada/Data/matched_discrete_samples_2019_2021'],'HA');
 HA((HA.lat<40),:)=[]; %remove CA stations
-data=HA.chlA_ugL; cax=[0 20]; ticks=[0,10,20]; label={'Chl a (ug/L)'}; name='CHL'; col=brewermap(256,'BuGn'); col(1:50,:)=[]; lim=.1;
+
+HA=HA(HA.lat>=45 & HA.lat<=48,:); % only look at 45-47ºN
+
+%data=HA.chlA_ugL; cax=[0 20]; ticks=[0,10,20]; label={'Chl a (ug/L)'}; name='CHL'; col=brewermap(256,'PuBu'); col(1:50,:)=[]; lim=.1;
+data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^- + NO_2^- (μM)'}; name='NIT'; col=brewermap(256,'YlGn'); lim=0.6;
+%data=HA.Phosphate_uM; cax=[0 3]; ticks=[0,1.5,3]; label={'PO_4^{3−} (μM)'}; name='PHS';col=brewermap(256,'YlGn'); lim=0.6;
+%data=HA.Silicate_uM; cax=[0 48]; ticks=[0,24,48]; label={'Si[OH]_4 (μM)'}; name='SIL';col=brewermap(256,'YlGn'); lim=1.1;
 
 if yr==2019    
     idx=find(HA.dt<datetime('01-Jan-2020') & HA.lat>42);
@@ -25,29 +31,20 @@ elseif yr==2021
     data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx); match=HA.match(idx); 
 end
 
-if strcmp(name,'SiNi') || strcmp(name,'PhNi') 
-    val=HA.Nitrate_uM; val=val(idx);
-end
-
 idx=isnan(data); data(idx)=[]; lat(idx)=[]; lon(idx)=[]; match(idx)=[];
 lon=lon-unit;
 
+fx=length(find(data>lim))./length(data)
+
+%%
 %%%% plot
 if leftsubplot == 1
     figure; set(gcf,'color','w','Units','inches','Position',[1 1 3 4.7]); 
-elseif leftsubplot == 0 && strcmp(name,'SILHi')
-    figure; set(gcf,'color','w','Units','inches','Position',[1 1 1.2 2.35]); 
 elseif leftsubplot == 0 
     figure; set(gcf,'color','w','Units','inches','Position',[1 1 2 4.7]); 
 end
 
-if strcmp(name,'SiNi') || strcmp(name,'PhNi') 
-    val(idx)=[];
-    ind=(val<=.6);     
-else
-    ind=(data<=lim); 
-end
-
+ind=(data<=lim); 
 scatter(lon(ind),lat(ind),2,[.3 .3 .3],'o','filled'); hold on
 scatter(lon(~ind),lat(~ind),20,data(~ind),'filled'); hold on
 scatter(lon(match),lat(match),20,'k','o','linewidth',.2); hold on %match ups

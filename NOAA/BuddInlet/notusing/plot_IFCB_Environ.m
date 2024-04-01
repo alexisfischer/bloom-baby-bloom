@@ -67,7 +67,7 @@ plot(T.dt,T.DST,'ko','Markersize',4,'linewidth',1.5); hold on;
         'fontsize', 10,'tickdir','out');  
     ylabel('DST','fontsize',11); hold on;
 
-% set figure parameters
+%% set figure parameters
 exportgraphics(gcf,[filepath 'Figs/BI_overview_' yr '.png'],'Resolution',100)    
 hold off
 

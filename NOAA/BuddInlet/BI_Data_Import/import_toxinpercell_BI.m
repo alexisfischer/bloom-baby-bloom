@@ -6,13 +6,13 @@ addpath(genpath(filepath));
 
 opts = spreadsheetImportOptions("NumVariables", 19);
 opts.Sheet = " Sequim Bay_Budd Inlet";
-opts.DataRange = "A34:S81";
+opts.DataRange = "A34:S100";
 opts.VariableNames = ["Var1", "Location", "Date", "Var4", "Var5", "VolumeSievedliter", "CellLSeawater", "TotalCells", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14", "OABHNg", "DTX1BHNg", "DTX2BHNg", "dihydroDTX1BHNg", "PTX2Ng"];
 opts.SelectedVariableNames = ["Location", "Date", "VolumeSievedliter", "CellLSeawater", "TotalCells", "OABHNg", "DTX1BHNg", "DTX2BHNg", "dihydroDTX1BHNg", "PTX2Ng"];
 opts.VariableTypes = ["char", "categorical", "datetime", "char", "char", "double", "double", "double", "char", "char", "char", "char", "char", "char", "double", "double", "double", "double", "double"];
 opts = setvaropts(opts, ["Var1", "Var4", "Var5", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14"], "WhitespaceRule", "preserve");
 opts = setvaropts(opts, ["Var1", "Location", "Var4", "Var5", "Var9", "Var10", "Var11", "Var12", "Var13", "Var14"], "EmptyFieldRule", "auto");
-T = readtable([filepath 'DinoX Toxin Data Shared_March 2023.xlsx'], opts, "UseExcel", false);
+T = readtable([filepath 'DinoXToxinData.xlsx'], opts, "UseExcel", false);
 clear opts
 
 % deal with data gaps
