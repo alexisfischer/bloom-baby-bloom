@@ -56,8 +56,11 @@ hold off
 %%%% plot Mesodinium and all particles ESD together
 %load([filepath 'IFCB-Data/BuddInlet/manual/summary_meso_width_manual'],'mdate','ESD');
 load([filepath 'IFCB-Data\BuddInlet\manual\summary_meso_width_manual'],'mdate','ESD');
-
+%remove: discrete samples and PMTA triggers
+idx=find(contains(filecomment,'trigger')); ESD(idx)=[]; mdate(idx)=[]; filecomment(idx)=[]; runtype(idx)=[];
+idx=find(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[]; mdate(idx)=[]; filecomment(idx)=[]; runtype(idx)=[];
 dt=datetime(mdate,'convertfrom','datenum')';
+
 % remove data from October-March
 idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12);
 dt(idx)=[]; ESD(idx)=[];
