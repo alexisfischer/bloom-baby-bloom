@@ -32,14 +32,14 @@ idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 |
 E3=ESD;
 clearvars runtype filecomment dt idx matdate ESD
 
-% plotting
+%% plotting
 c=brewermap(3,'Set2'); 
 
 figure('Units','inches','Position',[1 1 3.5 2],'PaperPositionMode','auto');
     histogram(cell2mat(E2),0:1:70,'DisplayStyle','stairs','edgecolor',c(1,:)); hold on
     histogram(cell2mat(E2),0:1:70,'DisplayStyle','stairs','edgecolor',c(2,:)); hold on
-    histogram(cell2mat(E2),0:1:70,'DisplayStyle','stairs','edgecolor',c(3,:)); hold on
-    set(gca,'ylim',[0 6*10^5],'xlim',[-1 50],'fontsize',10,'tickdir','out');
+    histogram(cell2mat(E3),0:1:70,'DisplayStyle','stairs','edgecolor',c(3,:)); hold on
+    set(gca,'xlim',[0 50],'fontsize',10,'tickdir','out');
     ylabel('particle count','fontsize',11)
     xlabel('ESD (\mum)')    
     legend('2021','2022','2023'); legend boxoff;

@@ -6,7 +6,7 @@ function [ ] = summarize_biovol_eqdiam_from_features(out_dir,roibasepath,feapath
 %
 %% Example inputs
 clear;
-yr='2023';
+yr='2021';
 out_dir = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddInlet\';
 roibasepath = 'F:\BuddInlet\data\'; %Where you raw data is
 feapath_base = ['F:\BuddInlet\features\' yr '\']; %Put in your featurepath byyear
