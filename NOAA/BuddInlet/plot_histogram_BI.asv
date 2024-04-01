@@ -46,7 +46,7 @@ figure('Units','inches','Position',[1 1 3.5 2],'PaperPositionMode','auto');
     set(gca,'xlim',[0 50],'fontsize',10,'tickdir','out');
     ylabel('particle count','fontsize',11)
     xlabel('ESD (\mum)')    
-    legend('2021 (g.63, t.138)','2022 (g.60, t.125)','2023 (g.70, t.140)'); legend boxoff;
+    legend('2021 (g.6, t.125)','2022 (g.6, t.125)','2023 (g.7, t.140)'); legend boxoff;
 
 % set figure parameters
 exportgraphics(gcf,[filepath 'NOAA\BuddInlet\Figs\BI_particle_size_distribution.png'],'Resolution',100)    
@@ -75,7 +75,7 @@ subplot(2,1,1)
     set(gca,'ylim',[0 5*10^6],'xlim',[0 50],'xticklabel',{},'fontsize',10,'tickdir','out');
     ylabel('particle count','fontsize',11)
     xline(19,':','linewidth',1.5); hold on;    
-    legend('2021 (g.63, t.138)','2022 (g.60, t.125)','2023 (g.70, t.140)'); legend boxoff;
+    legend('2021 (g.6, t.125)','2022 (g.6, t.125)','2023 (g.7, t.140)'); legend boxoff;
 
 subplot(2,1,2)
 yrlist=[2021;2022;2023];
