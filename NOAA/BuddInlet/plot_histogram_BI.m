@@ -11,7 +11,7 @@ filepath = 'C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\';
 load([filepath 'IFCB-Data/BuddInlet/eqdiam_biovol_2021'],'ESD','matdate','filecomment','runtype');
 dt=datetime(matdate,'convertfrom','datenum');
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; dt(idx)=[]; runtype(idx)=[]; 
-idx=(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[];  dt(idx)=[];
+idx=~(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[];  dt(idx)=[];
 idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12); ESD(idx)=[]; dt(idx)=[]; 
 E1=ESD;
 clearvars runtype filecomment dt idx matdate ESD
@@ -19,7 +19,7 @@ clearvars runtype filecomment dt idx matdate ESD
 load([filepath 'IFCB-Data/BuddInlet/eqdiam_biovol_2022'],'ESD','matdate','filecomment','runtype');
 dt=datetime(matdate,'convertfrom','datenum');
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; dt(idx)=[]; runtype(idx)=[]; 
-idx=(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[];  dt(idx)=[];
+idx=~(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[];  dt(idx)=[];
 idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12); ESD(idx)=[]; dt(idx)=[]; 
 E2=ESD;
 clearvars runtype filecomment dt idx matdate ESD
@@ -27,7 +27,7 @@ clearvars runtype filecomment dt idx matdate ESD
 load([filepath 'IFCB-Data/BuddInlet/eqdiam_biovol_2023'],'ESD','matdate','filecomment','runtype');
 dt=datetime(matdate,'convertfrom','datenum');
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; dt(idx)=[]; runtype(idx)=[]; 
-idx=(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[];  dt(idx)=[];
+idx=~(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[];  dt(idx)=[];
 idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12); ESD(idx)=[]; dt(idx)=[]; 
 E3=ESD;
 clearvars runtype filecomment dt idx matdate ESD
@@ -59,7 +59,7 @@ load([filepath 'IFCB-Data\BuddInlet\manual\summary_meso_width_manual'],'filecomm
 
 %remove: discrete samples and PMTA triggers
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; mdate(idx)=[]; filecomment(idx)=[]; runtype(idx)=[];
-idx=(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[]; mdate(idx)=[]; filecomment(idx)=[]; runtype(idx)=[];
+idx=~(contains(runtype,{'ALT','Alternative'})); ESD(idx)=[]; mdate(idx)=[]; filecomment(idx)=[]; runtype(idx)=[];
 dt=datetime(mdate,'convertfrom','datenum')';
 
 % remove data from October-March
@@ -79,9 +79,9 @@ subplot(2,1,1)
     set(gca,'xlim',[0 50],'xticklabel',{},'fontsize',10,'tickdir','out');
     ylabel('particle count','fontsize',11)
     xline(19,':','linewidth',1.5); hold on;    
-%    legend('2021','2022','2023'); legend boxoff;    
-    legend('2021 (g.63, t.138)','2022 (g.60, t.125)','2023 (g.70, t.140)'); legend boxoff;
-    title('PMTB')
+    legend('2021','2022','2023'); legend boxoff;    
+%    legend('2021 (g.63, t.138)','2022 (g.60, t.125)','2023 (g.70, t.140)'); legend boxoff;
+    title('PMTA')
 
 subplot(2,1,2)
 yrlist=[2021;2022;2023];
@@ -98,5 +98,5 @@ end
 
 % set figure parameters
 %exportgraphics(gcf,[filepath 'NOAA/BuddInlet/Figs/Mesodinium_ESD_histogram_yr.png'],'Resolution',100)    
-exportgraphics(gcf,[filepath 'NOAA\BuddInlet\Figs\Mesodinium_ESD_histogram_PMTB.png'],'Resolution',100)    
+exportgraphics(gcf,[filepath 'NOAA\BuddInlet\Figs\Mesodinium_ESD_histogram_PMTA.png'],'Resolution',100)    
 hold off
