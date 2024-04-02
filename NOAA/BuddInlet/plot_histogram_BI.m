@@ -79,7 +79,7 @@ subplot(2,1,1)
     set(gca,'xlim',[0 50],'xticklabel',{},'fontsize',10,'tickdir','out');
     ylabel('particle count','fontsize',11)
     xline(19,':','linewidth',1.5); hold on;    
-   % legend('2021','2022','2023'); legend boxoff;    
+%    legend('2021','2022','2023'); legend boxoff;    
     legend('2021 (g.63, t.138)','2022 (g.60, t.125)','2023 (g.70, t.140)'); legend boxoff;
     title('PMTB')
 
@@ -88,7 +88,7 @@ yrlist=[2021;2022;2023];
 for i=1:length(yrlist)
     idx=(dt.Year==yrlist(i));
     histogram(cell2mat([ESD(idx)]),0:1:70,'DisplayStyle','stairs','edgecolor',c(i,:)); hold on
-    set(gca,'xlim',[0 50],'xtick',0:10:50,'ytick',0:250:500, ...
+    set(gca,'xlim',[0 50],'xtick',0:10:50,...
        'fontsize',10,'tickdir','out'); hold on;    
     ylabel('particle count','fontsize',11)
 end
