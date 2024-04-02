@@ -35,8 +35,8 @@ load([filepath 'IFCB-Data\BuddInlet\manual\summary_meso_width_manual'],'filecomm
 %remove: discrete samples, PMTA triggers, and data from October-March
 dt=datetime(mdate,'convertfrom','datenum')';
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; dt(idx)=[]; runtype(idx)=[];
-idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12); ESD(idx)=[]; runtype(idx)=[]; 
-idx=(contains(runtype,{'ALT','Alternative'})); Ma=ESD(idx); Mb=ESD(~idx);
+idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12); ESD(idx)=[]; runtype(idx)=[]; dt(idx)=[]; 
+idx=(contains(runtype,{'ALT','Alternative'})); Ma=ESD(idx); Mb=ESD(~idx); dta=dt(idx); dtb=dt(~idx);
 
 clearvars runtype filecomment dt idx matdate ESD
 
@@ -49,25 +49,25 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.12 0.05], [0.19 0.04])
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
 subplot(2,1,1)
-    histogram(cell2mat(E1b),0:1:70,'DisplayStyle','stairs','edgecolor',c(1,:)); hold on
-    histogram(cell2mat(E2b),0:1:70,'DisplayStyle','stairs','edgecolor',c(2,:)); hold on
-    histogram(cell2mat(E3b),0:1:70,'DisplayStyle','stairs','edgecolor',c(3,:)); hold on
+    histogram(cell2mat(E1b),0:1:70,'DisplayStyle','stairs','edgecolor',c(1,:),'linewidth',1.5); hold on
+    histogram(cell2mat(E2b),0:1:70,'DisplayStyle','stairs','edgecolor',c(2,:),'linewidth',1.5); hold on
+    histogram(cell2mat(E3b),0:1:70,'DisplayStyle','stairs','edgecolor',c(3,:),'linewidth',1.5); hold on
     set(gca,'xlim',[0 50],'xticklabel',{},'fontsize',10,'tickdir','out');
     ylabel('particle count','fontsize',11)
-    xline(19,':','linewidth',1.5); hold on;    
+    xline(19,':',{'19 \mum'},'linewidth',1.5); hold on;   
 
 subplot(2,1,2)
+hx=histogram(cell2mat(Ma(dta.Year==2022)),0:1:70,'DisplayStyle','stairs','edgecolor','k','linewidth',1.5); hold on    
 yrlist=[2021;2022;2023];
 for i=1:length(yrlist)
-    idx=(dt.Year==yrlist(i));
-    h(i)=histogram(cell2mat([Mb(idx)]),0:1:70,'DisplayStyle','stairs','edgecolor',c(i,:)); hold on
+    idx=(dtb.Year==yrlist(i));
+    h(i)=histogram(cell2mat([Mb(idx)]),0:1:70,'DisplayStyle','stairs','edgecolor',c(i,:),'linewidth',1.5); hold on
 end
-    hx=histogram(cell2mat(Ma(dt.Year==2022)),0:1:70,'DisplayStyle','stairs','edgecolor',c(2,:),'LineStyle','-.'); hold on    
-    xline(19,':',{'19 \mum'},'linewidth',1.5); hold on;    
+    xline(19,':','linewidth',1.5); hold on;    
     set(gca,'xlim',[0 50],'xtick',0:10:50,'fontsize',10,'tickdir','out'); hold on;    
     ylabel('Mesodinium count','fontsize',11)    
-    xlabel('ESD (\mum)')    
-    legend([h(1) h(2) hx h(3)],'2021 (PMTB.63, t.138)','2022 (PMTB.60, t.125)','2022 (PMTA.50, t.25)','2023 (PMTB.70, t.140)'); legend boxoff;
+    xlabel('ESD (\mum)')  
+    legend([h(1) h(2) hx h(3)],'2021 (B.63, t.138)','2022 (B.60, t.125)','2022 (A.50, t.250)','2023 (B.70, t.140)'); legend boxoff;    
 
 % set figure parameters
 %exportgraphics(gcf,[filepath 'NOAA/BuddInlet/Figs/Mesodinium_ESD_histogram_yr.png'],'Resolution',100)    
