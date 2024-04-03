@@ -189,7 +189,9 @@ load([filepath 'NOAA/BuddInlet/Data/ToxinCellQuota_BI.mat'],'Q');
 QT=table2timetable(Q);
 T=synchronize(T,QT);
 
+%%%% change very low microscopy values to 0
+T.dinoML_microscopy(T.dinoML_microscopy<0.4)=0;
+
 clearvars idx TT Q NT
 
-%%
 save([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T','Tc','fli','sci','dmatrix','ymatrix');

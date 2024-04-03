@@ -18,12 +18,11 @@ opts = setvaropts(opts, ["Var1", "Var2", "Site", "Var5", "Var6", "Species", "Abu
 opts = setvaropts(opts, "Date", "InputFormat", "MM/dd/yy HH:mm");
 opts = setvaropts(opts, "CellPerLiter", "TrimNonNumeric", true);
 opts = setvaropts(opts, "CellPerLiter", "ThousandsSeparator", ",");
-T = readtable([filepath 'Data/Soundtoxins_dinophysis.csv'], opts);
+T = readtable([filepath 'Data/Soundtoxins_dinophysis_allsites.csv'], opts);
 
 T(isundefined(T.Abundance),:)=[]; %remove blanks
 T(~contains(cellstr(T.Species),'sp'),:)=[]; %only look at bulk Dinophysis
 T(T.Date<datetime('01-Jan-2014'),:)=[]; %remove data before 2014
-fxbloom=length(find(contains(cellstr(T.Abundance),'Bloom')))/length(T.Abundance); %only look at bulk Dinophysis
 
 % separate sites
 [site,ib,ic]=unique(T.Site,'stable');
@@ -54,6 +53,6 @@ for j=1:length(S)
 end
 clearvars Month n Absent Present Common Bloom i j B
 
-QH=S(1).table; BI=S(2).table; LB=S(3).table; SB=S(4).table;
+QH=S(1).table; BI=S(2).table; LB=S(3).table; SB=S(4).table; MB=S(5).table;  DB=S(6).table;
 
-save([filepath 'Data/SoundToxins_Dinophysis.mat'],'QH','BI','LB','SB','S');
+save([filepath 'Data/SoundToxins_Dinophysis.mat'],'QH','BI','LB','SB','MB','DB','S');

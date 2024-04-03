@@ -8,11 +8,11 @@ load([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T','Tc','fli');
 
 %%%% remove IFCB sampling data gaps, but keep meso gaps
 idx=find(isnan(T.mesoSmall_fl)); 
-    T.mesoSmall_fl(idx)=999; T.mesoLarge_fl(idx)=999;
+    T.mesoSmall_fl(idx)=999; T.mesoLarge_fl(idx)=999; T.mesoSmall_sc(idx)=999; T.mesoLarge_sc(idx)=999;
 idx=find(isnan(T.dino_fl));
-    T.mesoSmall_fl(idx)=NaN; T.mesoLarge_fl(idx)=NaN;
+    T.mesoSmall_fl(idx)=NaN; T.mesoLarge_fl(idx)=NaN; T.mesoSmall_sc(idx)=NaN; T.mesoLarge_sc(idx)=NaN;
 idx=~((T.mesoSmall_fl)==999); 
-    small=T.mesoSmall_fl(idx); large=T.mesoLarge_fl(idx); dt=T.dt(idx);
+    small=T.mesoSmall_fl(idx); large=T.mesoLarge_fl(idx); smallA=T.mesoSmall_sc(idx); largeA=T.mesoLarge_sc(idx); dt=T.dt(idx);
 
 idx=find(dt==datetime('09-Jul-2023')); large(idx)=large(idx)-17;
 
@@ -35,8 +35,10 @@ yyaxis left
             'xticklabel',{},'ylim',[0 4],'fontsize',9,'ycolor','k');         
         
     yyaxis right
-        hl=plot(dt,large,'--.','color',c(2,:),'Linewidth',1); hold on;            
-        hs=plot(dt,small,'--.','color',c(1,:),'Linewidth',1); hold on;
+        hl=plot(dt,large,':.','color',c(2,:),'Linewidth',1.); hold on;   
+        hs=plot(dt,small,':.','color',c(1,:),'Linewidth',1.); hold on;
+        %hl=plot(dt,large,':.',dt,largeA,'-','color',c(2,:),'Linewidth',1.); hold on;   
+        %hs=plot(dt,small,':.',dt,smallA,'-','color',c(1,:),'Linewidth',1.); hold on;        
         set(gca,'xgrid','on','tickdir','out',...
             'xlim',[datetime([char(yrlist(j)) '-04-01']) datetime([char(yrlist(j)) '-10-01'])],...
             'xticklabel',{},'ylim',[0 ymax],'ytick',0:4:ymax,'fontsize',9,'ycolor',c(1,:));

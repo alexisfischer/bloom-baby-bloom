@@ -5,7 +5,7 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
 
-yr='2022'; % '2023'
+yr='2021'; % '2023'
 ydinolim=[0 4]; ymesolim=[0 10]; 
 load([filepath 'Data/BuddInlet_data_summary'],'T','fli','dmatrix','ymatrix');
 
@@ -31,54 +31,29 @@ h = bar(T.dt,[T.fx_Dfortii T.fx_Dacuminata T.fx_Dnorvegica T.fx_Dodiosa...
 title(yr,'fontsize', 11)   
 
 subplot(4,1,2); 
-%%%Option 1
-% idx=find(isnan(T.dino_fl)); val=0.1*ones(size(idx));
-% h1=plot(T.dt,T.dino_fl,'k-','linewidth',1.5); hold on;
-%     set(gca,'xlim',[xax(1) xax(2)],'ylim',ydinolim,'ytick',0:2:4,'xticklabel',{},...
-%         'fontsize', 9,'tickdir','out','ycolor','k');  
-%     ylabel('cells/mL','fontsize',11); hold on; 
-% 
-%     % add grey lines to axis where no IFCB data 
-%     idx=find(isnan(T.dino_fl)); val=0.12*ones(size(idx));
-%     hn=plot(T.dt(idx),val,'s','markersize',3,'linewidth',.5,'color',[.5 .5 .5],'markerfacecolor',[.5 .5 .5]); hold on;              
-%     if strcmp(yr,'2021')
-%         iend=find(~isnan(T.dino_fl),1); 
-%         dti=datetime(T.dt(1)):1:datetime(T.dt(iend-1)); 
-%         val=0.1*ones(size(dti));
-%         plot(dti,val,'-','linewidth',3.2,'color',[.5 .5 .5]); hold on;        
-%     end
 
-%%%%Option 2
 P=prctile(ymatrix,[25 50 75],1); x=dmatrix'; y1=P(1,:); y2=P(2,:); y3=P(3,:);
     hf=plot(fli.dt,fli.dino,'.','color',[.7 .7 .7],'markersize',4,'Linewidth',.5); hold on; %raw
-    % h27=patch([x fliplr(x)], [y1 fliplr(y3)],[65 173 213]./255,'Edgecolor',[76 134 162]./255,'Linewidth',1); hold on
-    % h50=plot(x,y2,'-','Color',[16 48 82]./255,'Linewidth',2); hold on;
+    %h50=plot(x,y2,'-k','Linewidth',1); hold on;  
 
-    %deal with data gaps
-    xx=datetime('15-Aug-2021'):1:datetime('18-Aug-2021');
-    yy1=.05*ones(size(xx)); yy2=3*ones(size(xx));
-    patch([xx fliplr(xx)], [yy1 fliplr(yy2)],'w','Edgecolor','none'); hold on
+    % add grey lines to axis where no IFCB data 
+    idx=find(isnan(T.dino_fl)); val=0.12*ones(size(idx));
+    hn=plot(T.dt(idx),val,'s','markersize',3,'linewidth',.5,'color','k','markerfacecolor','k'); hold on;              
+    if strcmp(yr,'2021')
+        iend=find(~isnan(T.dino_fl),1); 
+        dti=datetime(T.dt(1)):1:datetime(T.dt(iend-1)); 
+        val=0.13*ones(size(dti));
+        plot(dti,val,'-k','linewidth',2.7); hold on;        
+    end
 
-    %deal with data gaps
-    xx=datetime('26-Jul-2022'):1:datetime('03-Aug-2022');
-    yy1=.05*ones(size(xx)); yy2=5.5*ones(size(xx));
-    patch([xx fliplr(xx)], [yy1 fliplr(yy2)],'w','Edgecolor','none'); hold on    
-
-    %deal with data gaps
-    xx=datetime('28-Sep-2022'):1:datetime('01-Oct-2022');
-    yy1=.05*ones(size(xx)); yy2=3*ones(size(xx));
-    patch([xx fliplr(xx)], [yy1 fliplr(yy2)],'w','Edgecolor','none'); hold on        
-
-    %deal with data gaps
-    xx=datetime('24-Jun-2023'):1:datetime('27-Jun-2023');
-    yy1=.05*ones(size(xx)); yy2=3*ones(size(xx));
-    patch([xx fliplr(xx)], [yy1 fliplr(yy2)],'w','Edgecolor','none'); hold on        
-
-    hm=plot(T.dt,T.dinoML_microscopy,'r^','markerfacecolor','r','Linewidth',.8,'markersize',4); hold on;            
+    idx=(T.dinoML_microscopy==0);
+    hz=plot(T.dt(idx),T.dinoML_microscopy(idx),'r^','markerfacecolor','w','Linewidth',.5,'markersize',4); hold on;                
+    hm=plot(T.dt(~idx),T.dinoML_microscopy(~idx),'r^','markerfacecolor','r','Linewidth',.5,'markersize',4); hold on;            
     ylabel({'dino/mL'},'fontsize',11); hold on;   
         set(gca,'xgrid','on','tickdir','out','xlim',xax,'xticklabel',{},...
             'ylim',[0 15],'ytick',0:7:14,'fontsize',10,'ycolor','k','box','on');         
-set(gca,'Layer','top'); grid off;        
+set(gca,'Layer','top'); grid off;    
+    
 %lh=legend([hf h50 h27 hm],'raw IFCB','median','25-75%','microscopy','location','east');  
 %hp=get(lh,'pos'); lh.Position=[hp(1)+.27 hp(2) hp(3) hp(4)]; hold on            
 

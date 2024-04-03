@@ -1,10 +1,39 @@
 %% plot Puget Sound map
+%https://www.mathworks.com/help/map/converting-coastline-data-gshhs-to-shapefile-format.html
+%https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/
 clear
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/BuddInlet/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
 
+workingFolder = tempdir;
+files = gunzip('~/Downloads/gshhg-gmt-2.3.7.tar.gz', workingFolder);
+filename = files{1};
+
+indexfile = gshhs(filename, 'createindex');
+latlim = [46.5  49];
+lonlim = [-125 -122];
+S = gshhs(filename, latlim, lonlim);
+delete(filename)
+delete(indexfile)
+
+S(1)
+levels = [S.Level];
+unique(levels)
+S(104).LevelString
+
+L1 = S(levels == 1);
+L2 = S(levels == 2);
+
+figure
+axesm('mercator', 'MapLatLimit', latlim, 'MapLonLimit', lonlim)
+gridm; mlabel; plabel
+geoshow([L1.Lat], [L1.Lon], 'Color', 'blue')
+geoshow([L2.Lat], [L2.Lon], 'Color', 'red')
+tightmap
+
+%%
 m_proj('albers equal-area','lat',[48.5 46.8],'long',[-125 -122],'rect','on');
 m_gshhs_f('save',[filepath 'Figs/PugetSound_map']);
 
