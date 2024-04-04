@@ -5,12 +5,12 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
 
-yr='2021'; % '2023'
+yr='2023'; % '2023'
 ydinolim=[0 4]; ymesolim=[0 10]; 
 load([filepath 'Data/BuddInlet_data_summary'],'T','fli','dmatrix','ymatrix');
 
 figure('Units','inches','Position',[1 1 3 5],'PaperPositionMode','auto');
-subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.07 0.11], [0.16 0.24]);
+subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.07 0.11], [0.16 0.24]);
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.  
 
 xax=[datetime(['' yr '-04-01']) datetime(['' yr '-10-01'])];
@@ -31,19 +31,19 @@ h = bar(T.dt,[T.fx_Dfortii T.fx_Dacuminata T.fx_Dnorvegica T.fx_Dodiosa...
 title(yr,'fontsize', 11)   
 
 subplot(4,1,2); 
-
 P=prctile(ymatrix,[25 50 75],1); x=dmatrix'; y1=P(1,:); y2=P(2,:); y3=P(3,:);
     hf=plot(fli.dt,fli.dino,'.','color',[.7 .7 .7],'markersize',4,'Linewidth',.5); hold on; %raw
     %h50=plot(x,y2,'-k','Linewidth',1); hold on;  
 
     % add grey lines to axis where no IFCB data 
     idx=find(isnan(T.dino_fl)); val=0.12*ones(size(idx));
-    hn=plot(T.dt(idx),val,'s','markersize',3,'linewidth',.5,'color','k','markerfacecolor','k'); hold on;              
+    hn=plot(T.dt(idx),val,'s','markersize',3,'linewidth',.5,...
+        'color','k','markerfacecolor','k'); hold on;              
     if strcmp(yr,'2021')
         iend=find(~isnan(T.dino_fl),1); 
         dti=datetime(T.dt(1)):1:datetime(T.dt(iend-1)); 
         val=0.13*ones(size(dti));
-        plot(dti,val,'-k','linewidth',2.7); hold on;        
+        plot(dti,val,'-','color','k','linewidth',2.7); hold on;        
     end
 
     idx=(T.dinoML_microscopy==0);
@@ -51,7 +51,7 @@ P=prctile(ymatrix,[25 50 75],1); x=dmatrix'; y1=P(1,:); y2=P(2,:); y3=P(3,:);
     hm=plot(T.dt(~idx),T.dinoML_microscopy(~idx),'r^','markerfacecolor','r','Linewidth',.5,'markersize',4); hold on;            
     ylabel({'dino/mL'},'fontsize',11); hold on;   
         set(gca,'xgrid','on','tickdir','out','xlim',xax,'xticklabel',{},...
-            'ylim',[0 15],'ytick',0:7:14,'fontsize',10,'ycolor','k','box','on');         
+            'ylim',[0 15],'ytick',0:7:14,'fontsize',9,'ycolor','k','box','on');         
 set(gca,'Layer','top'); grid off;    
     
 %lh=legend([hf h50 h27 hm],'raw IFCB','median','25-75%','microscopy','location','east');  

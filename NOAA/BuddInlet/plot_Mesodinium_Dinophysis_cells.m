@@ -21,7 +21,6 @@ figure('Units','inches','Position',[1 1 3.2 3.5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.08 0.04], [0.08 0.08]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
-%c=(brewermap(4,'RdYlGn')); ymax=8;
 c=flipud(brewermap(3,'YlOrRd')); ymax=8;
 
 yrlist={'2021';'2022';'2023'};
@@ -29,16 +28,18 @@ for j=1:length(yrlist)
     ax(j)=subplot(3,1,j);
 
 yyaxis left    
-        hd=plot(T.dt,T.dino_fl,'-k','Linewidth',.5); hold on;                           
+        hd=plot(T.dt,T.dino_fl,'-k','Linewidth',1); hold on;                           
         set(gca,'xgrid','on','tickdir','out',...
             'xlim',[datetime([char(yrlist(j)) '-04-01']) datetime([char(yrlist(j)) '-10-01'])],...
             'xticklabel',{},'ylim',[0 4],'fontsize',9,'ycolor','k');         
         
     yyaxis right
-        hl=plot(dt,large,':.','color',c(2,:),'Linewidth',1.); hold on;   
-        hs=plot(dt,small,':.','color',c(1,:),'Linewidth',1.); hold on;
-        %hl=plot(dt,large,':.',dt,largeA,'-','color',c(2,:),'Linewidth',1.); hold on;   
-        %hs=plot(dt,small,':.',dt,smallA,'-','color',c(1,:),'Linewidth',1.); hold on;        
+        hl=plot(dt,large,':.','color',c(2,:),'Linewidth',1.5); hold on;  
+        if strcmp(yrlist(j),'2022')
+            hs=plot(dt,smallA,':.','color',c(1,:),'Linewidth',1.5); hold on;
+        else
+            hs=plot(dt,small,':.','color',c(1,:),'Linewidth',1.5); hold on;
+        end            
         set(gca,'xgrid','on','tickdir','out',...
             'xlim',[datetime([char(yrlist(j)) '-04-01']) datetime([char(yrlist(j)) '-10-01'])],...
             'xticklabel',{},'ylim',[0 ymax],'ytick',0:4:ymax,'fontsize',9,'ycolor',c(1,:));

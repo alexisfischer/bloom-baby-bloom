@@ -194,4 +194,10 @@ T.dinoML_microscopy(T.dinoML_microscopy<0.4)=0;
 
 clearvars idx TT Q NT
 
+% remove data before Apr 1 or afer Oct 1
+T((T.dt.Month<=3 | T.dt.Month>=10),:)=[];
+Tc((Tc.dt.Month<=3 | Tc.dt.Month>=10),:)=[];
+fli((fli.dt.Month<=3 | fli.dt.Month>=10),:)=[];
+sci((sci.dt.Month<=3 | sci.dt.Month>=10),:)=[];
+
 save([filepath 'NOAA/BuddInlet/Data/BuddInlet_data_summary'],'T','Tc','fli','sci','dmatrix','ymatrix');
