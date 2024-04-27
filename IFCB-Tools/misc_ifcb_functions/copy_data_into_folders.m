@@ -3,8 +3,8 @@ function [] = copy_data_into_folders(in_dir_base, out_dir_data_base)
 % Alexis Fischer, April 2023
 
 %Example inputs
-%in_dir_base='F:\Shimada\data\2023_raw\'; % example input
-%out_dir_data_base = 'F:\Shimada\data\2023\'; % example input
+%in_dir_base='C:\SFTP-BuddInlet\2024\'; % example input
+%out_dir_data_base = 'F:\BuddInlet\data\2024\'; % example input
 
 yeardir = dir([in_dir_base 'D*']);
 
@@ -13,7 +13,7 @@ for i = 1:length(yeardir)
     daydir = dir([in_dir_base daystr '\' 'D*']);
     out_folder=[out_dir_data_base daystr '\'];
     if ~exist(out_folder, 'dir')
-        mkdir(out_folder);
+        mkdir(out_folder)
     end
 
     for j=1:length(daydir)

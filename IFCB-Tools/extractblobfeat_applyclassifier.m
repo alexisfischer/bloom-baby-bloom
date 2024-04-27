@@ -1,6 +1,6 @@
 %% Extacting Blobs and Features and Applying a Classifier
 %  Alexis D. Fischer, NOAA NWFSC, August 2021
-%clear;
+clear;
 
 %%%% modify according to dataset
 %ifcbdir='F:\Shimada\'; 
@@ -13,7 +13,7 @@ summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\BuddIn
 %summarydir='C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\IFCB-Data\UCSC\SCW\';
 %summarydir=[ifcbdir 'summary\'];
 
-yr='2023';
+yr='2024';
 
 addpath(genpath(summarydir));
 addpath(genpath(ifcbdir));
@@ -21,14 +21,12 @@ addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\ifcb-analysis\'));
 addpath(genpath('C:\Users\ifcbuser\Documents\GitHub\bloom-baby-bloom\'));
 
 classifier='F:\general\classifier\summary\Trees_BI_NOAA_v15';
-%classifier='F:\general\classifier\summary\Trees_BI_NOAA_v16';
-
 %classifier='F:\general\classifier\summary\Trees_CCS_NOAA-OSU_v7';
 
 %sort_data_into_folders('F:\KudelaSynology\',[ifcbdir 'data\' yr '\']);
-%copy_data_into_folders('C:\SFTP-BuddInlet\2023\',[ifcbdir 'data\' yr '\']);
+copy_data_into_folders('C:\SFTP-BuddInlet\2024\',[ifcbdir 'data\' yr '\']);
 
-%%%% Step 2: Extract blobs
+%% Step 2: Extract blobs
 start_blob_batch_user_training([ifcbdir 'data\' yr '\'],[ifcbdir 'blobs\' yr '\'],false);
 
 %%%% Step 3: Extract features
