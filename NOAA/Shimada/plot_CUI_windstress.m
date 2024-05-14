@@ -25,8 +25,7 @@ line(x,0*ones(size(x)),'Color','b','LineStyle',':','linewidth',2)
 legend([h1 h2],'2019','2021','Location','Northwest')
 
 exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/CUI_WA.png'],'Resolution',300)    
-
-    %%
+%%
 figure
 subplot(2,1,1)
 yyaxis left

@@ -1,5 +1,7 @@
 %% match up discrete samples in 2019 and 2021, so same grid
-clear; %close all;
+%needs mapping toolbox
+
+clear; 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 addpath(genpath(filepath)); % add new data to search path
