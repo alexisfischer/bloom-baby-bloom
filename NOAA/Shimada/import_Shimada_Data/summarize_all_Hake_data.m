@@ -94,7 +94,7 @@ PN_bvmL = sum(classbiovolTB_above_optthresh(:,[id1,id2,id3]),2)./ml_analyzedTB;
 diatom_bvmL=sum(classbiovolTB_above_optthresh(:,idiatom),2)./ml_analyzedTB;
 dino_bvmL=sum(classbiovolTB_above_optthresh(:,idino),2)./ml_analyzedTB;
 dino_diat_ratio=log10(dino_bvmL./diatom_bvmL); %log scale so don't bias denominator low. see Isles 2020
-dino_diat_ratio(dino_diat_ratio==Inf)=1; dino_diat_ratio(dino_diat_ratio==-Inf)=-1;
+dino_diat_ratio(dino_diat_ratio==Inf)=1; dino_diat_ratio(dino_diat_ratio==-Inf)=-2;
 
 %%%% rename grouped classes 
 class2useTB(strcmp('Cerataulina,Dactyliosolen,Detonula,Guinardia',class2useTB))={'Cera_Dact_Deto_Guin'};

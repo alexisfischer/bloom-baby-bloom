@@ -17,15 +17,13 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
-load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P'); %IFCB data
-load([filepath 'Data/coast_CCS.mat'],'coast'); %map
-states=load([filepath 'Data/USwestcoast_pol.mat']); %map
+load([filepath 'Data/summary_19-21Hake_biovolume'],'PB'); %IFCB data
+load([filepath 'Data/coast_CCS'],'coast'); %map
+states=load([filepath 'Data/USwestcoast_pol']); %map
 
-P(~(P.DT.Year==yr),:)=[]; %select year of data
-data=P.dino_diat_ratio; label={'dino:diat ratio'}; name='ratio'; cax=[-1 1]; 
-%data=log10(P.dino_diat_ratio); label={'dino:diat ratio'}; name='ratio'; cax=[-1 1]; 
-%data(data==Inf)=1; data(data==-Inf)=-1;
-lat=P.LAT; lon=P.LON-unit; dt=P.DT;  
+PB(~(PB.DT.Year==yr),:)=[]; %select year of data
+data=PB.dino_diat_ratio; label={'log(dino:diat)'}; name='ratio'; cax=[-2 2]; 
+lat=PB.LAT; lon=PB.LON-unit; dt=PB.DT;  
 col=flipud(brewermap(256,'PiYG'));
 
 %%%% plot

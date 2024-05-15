@@ -12,7 +12,7 @@ filepath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/'; %enter filepath
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
-load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+load([filepath 'Data/summary_19-21Hake_cells'],'P');
 load([filepath 'Data/HAB_merged_Shimada19-21'],'HA');
 HA=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
 HA((HA.lat<41),:)=[]; %remove CA stations
@@ -43,7 +43,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.14 0.14], [0.12 0.03], [0.06 0.06])
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
 subplot(1,2,1)
- stem(P.LAT,P.PN_cell,'k','marker','none');
+ stem(P.LAT,P.Pseudonitzschia,'k','marker','none');
  set(gca,'ylim',[0 100],'ytick',50:50:100,'xlim',[39.9 49],'tickdir','out',...
      'xticklabel',{},'fontsize',9);
  ylabel('PN cells/mL','fontsize',10); hold on;

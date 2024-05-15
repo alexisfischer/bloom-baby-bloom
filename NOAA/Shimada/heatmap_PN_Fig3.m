@@ -10,8 +10,8 @@
 clear;
 
 %%%%USER
-fprint = 0; % 1 = print; 0 = don't
-yr = 2021; % 2019; 2021
+fprint = 1; % 1 = print; 0 = don't
+yr = 2019; % 2019; 2021
 option = 1; % 1 = Plot the individual data points; 2 = Grid the data
 res = 0.15; % heatmap resolution: Coarser = 0.2; Finer = 0.1 % Set grid resolution (degrees)
 unit = 0.06; % amount to subtract from latitude so does not overlap with map
@@ -19,16 +19,16 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
-load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P'); %IFCB data
+load([filepath 'Data/summary_19-21Hake_cells'],'P'); %IFCB data
 load([filepath 'Data/HAB_merged_Shimada19-21'],'HA'); %SEM data
-load([filepath 'Data/coast_CCS.mat'],'coast'); %map
-states=load([filepath 'Data/USwestcoast_pol.mat']); %map
+load([filepath 'Data/coast_CCS'],'coast'); %map
+states=load([filepath 'Data/USwestcoast_pol']); %map
 
 P(~(P.DT.Year==yr),:)=[]; %select year of data
 lat=P.LAT; lon=P.LON-unit; dt=P.DT;  
 
 %%%%USER enter data of interest
-data=log10(P.PN_cell); label={'log PN (cells/mL)'}; name='PN'; cax=[0 2]; col=brewermap(256,'YlOrBr'); col(1:30,:)=[];
+data=log10(P.Pseudonitzschia); label={'log PN (cells/mL)'}; name='PN'; cax=[0 2]; col=brewermap(256,'YlOrBr'); col(1:30,:)=[];
 %data=P.tox_biovol; label={'pDA';'fg/biovol'}; name='tox_biovol'; cax=[0 100]; col=brewermap(256,'Purples'); col(1:30,:)=[];
 %data=P.tox_cell; label={'pDA';'fg/cell'}; name='tox_cell'; cax=[0 200000]; col=brewermap(256,'Purples'); col(1:30,:)=[];
 
