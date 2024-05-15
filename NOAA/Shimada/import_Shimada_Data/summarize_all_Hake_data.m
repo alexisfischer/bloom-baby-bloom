@@ -1,11 +1,10 @@
-%% make 2019 and 2021 summary file for Emilie's niche analysis
+%% make summary file of 2019 and 2021 Shimada data
 % merge IFCB data, sensor data, and discrete data
+% the resulting merged data are used in Fischer et al. 2024, L&O
 %
 clear;
 
 classifiername='CCS_NOAA-OSU_v7';
-thm=3.4; %large PN width threshold
-thl=6.5; %australis width threshold
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
@@ -78,8 +77,6 @@ dt=datetime(mdateTB,'convertfrom','datenum'); dt.Format='yyyy-MM-dd HH:mm:ss';
 cellsmL = classcountTB_above_optthresh./ml_analyzedTB;    
 bvmL = classbiovolTB_above_optthresh./ml_analyzedTB;    
 
-%images=sum(sum(classcountTB_above_optthresh,2))*3404/4497
-
 %%%% sum PN biovolume into one variable all variables except and PN from regular summary
 id1=find(contains(class2useTB,'Pseudo-nitzschia_large_1cell')); 
 id2=find(contains(class2useTB,'Pseudo-nitzschia_large_2cell')); 
@@ -121,9 +118,13 @@ load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNw
 width=[PNwidth_opt.mean]';
 width(isnan(width))=0;
 cellsmL(:,end+1)=width;
+bvmL(:,end+1)=width;
 class2useTB(end+1)={'mean_PNwidth'};
 
 %%%% split PN into small and large cells (not using)
+% thm=3.4; %large PN width threshold
+% thl=6.5; %australis width threshold
+%
 % %preallocate
 % smallPN1=NaN*ml_analyzedTB; smallPN2=smallPN1; smallPN3=smallPN1; 
 % medPN1=smallPN1; medPN2=smallPN1; medPN3=smallPN1;
@@ -153,8 +154,6 @@ class2useTB(end+1)={'mean_PNwidth'};
 % class2useTB(end+1)={'Pseudonitzschia_small'};
 % class2useTB(end+1)={'Pseudonitzschia_medium'};
 % class2useTB(end+1)={'Pseudonitzschia_large'};
-% 
-%
 % 
 % %sum all PN
 % cellsmL(:,end+1)=sum([cellsmL(:,contains(class2useTB,'Pseudonitzschia'))],2);
@@ -200,7 +199,9 @@ P(isnan(P.LAT),:)=[];
 PB(PB.LAT<40,:)=[]; % remove data south of 40 N
 PB(PB.LAT>47.5 & PB.LON>-124.7,:)=[]; %remove data from the Strait
 PB=removevars(PB,{'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'FL' 'Nitrate_uM' 'Phosphate_uM' ...
-    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'PN_mcrspy'});
+    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'PN_mcrspy' 'mean_PNwidth'});
+PB=movevars(PB,{'LAT' 'LON'},'Before','filelistTB');
+
 PB(isnan(PB.LAT),:)=[];
 
 %%find toxicity/cell and toxicity/biovolume
