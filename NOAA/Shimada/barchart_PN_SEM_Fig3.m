@@ -6,8 +6,8 @@
 clear; 
 
 %%%%USER
-fprint=0; % 1 to print; 0 to not
-yr=2019; % 2019; 2021
+fprint=1; % 1 to print; 0 to not
+yr=2021; % 2019; 2021
 filepath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/'; %enter filepath
 
 % load in data
@@ -36,7 +36,7 @@ end
 
 c=brewermap(7,'Set3'); col=[c(4,:);c(6,:);c(1,:);c(3,:);c(2,:);c(5,:);c(7,:)];
 
-%% plot species composition for each year
+%%%% plot species composition for each year
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 1.7 3.85]); 
 subplot = @(m,n,p) subtightplot (m, n, p, [0.14 0.14], [0.12 0.03], [0.06 0.06]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 

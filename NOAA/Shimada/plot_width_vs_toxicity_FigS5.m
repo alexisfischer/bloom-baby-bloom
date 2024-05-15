@@ -10,7 +10,7 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
 %%%% load in and format data
 addpath(genpath(filepath));
-load([filepath 'Data/summary_19-21Hake_4nicheanalysis'],'P');
+load([filepath 'Data/summary_19-21Hake_cells'],'P');
 P=sortrows(P,'pDA_pgmL','descend');
 P(isnan(P.pDA_pgmL),:)=[]; %remove non detects from discrete dataset    
 idx=(P.mean_PNwidth>0); X=P.mean_PNwidth(idx); Y=P.pDA_pgmL(idx); DT=P.DT(idx);

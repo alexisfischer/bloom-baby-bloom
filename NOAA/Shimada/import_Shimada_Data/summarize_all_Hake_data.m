@@ -81,8 +81,11 @@ bvmL = classbiovolTB_above_optthresh./ml_analyzedTB;
 id1=find(contains(class2useTB,'Pseudo-nitzschia_large_1cell')); 
 id2=find(contains(class2useTB,'Pseudo-nitzschia_large_2cell')); 
 id3=find(contains(class2useTB,'Pseudo-nitzschia_large_3cell')); 
-PN_cellsmL = sum(classcountTB_above_optthresh(:,[id1,id2,id3]),2)./ml_analyzedTB;
 PN_bvmL = sum(classbiovolTB_above_optthresh(:,[id1,id2,id3]),2)./ml_analyzedTB;
+PN1 = sum(classcountTB_above_optthresh(:,id1),2);
+PN2 = 2*sum(classcountTB_above_optthresh(:,id2),2);
+PN3 = 3.5*sum(classcountTB_above_optthresh(:,id3),2);
+PN_cellsmL = sum([PN1,PN2,PN3],2)./ml_analyzedTB;
 
 %%%% get ratio of of dinos to diatoms 
 % sum diatom biovolume
