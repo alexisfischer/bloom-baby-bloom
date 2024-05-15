@@ -1,13 +1,18 @@
-%% plot BEUTI
+%% plot BEUTI during 2019 and 2021 Hake surveys along CCS
+% data from https://mjacox.com/upwelling-indices/
+% Fig. 2 in Fischer et al. 2024, L&O
+% A.D. Fischer, May 2024
+%
 clear;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath(filepath)); % add new data to search path
 
-load([filepath 'NOAA/Shimada/Data/BEUTI_Shimada2019'],'B'); B19=B;
-load([filepath 'NOAA/Shimada/Data/BEUTI_Shimada2021'],'B'); B21=B;
+%%%%USER
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
+
+% load in data
+addpath(genpath(filepath)); % add new data to search path
+load([filepath 'Data/BEUTI_Shimada2019'],'B'); B19=B;
+load([filepath 'Data/BEUTI_Shimada2021'],'B'); B21=B;
 LAT=B.lat;
-%LAT=(B.lat+.5);
 c=brewermap(6,'RdBu');
 
 %%%% line plot
@@ -28,6 +33,6 @@ set(gca,'ylim',[39.9 49],'xlim',[-3 35],'xtick',10:20:30,'xaxislocation','top','
     'fontsize',9,'tickdir','out');
 box on;
 
-exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/BEUTI_2019-2021_line.png'],'Resolution',300)    
+exportgraphics(fig,[filepath 'Figs/BEUTI_2019-2021_line.png'],'Resolution',300)    
 
 

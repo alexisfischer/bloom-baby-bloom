@@ -1,6 +1,7 @@
 %% plot fx phytoplankton composition bar charts by latitude using IFCB data
 % Shimada 2019 and 2021
 % colors PN black to make it pop out
+% A.D. Fischer, May 2024
 %
 clear;
 

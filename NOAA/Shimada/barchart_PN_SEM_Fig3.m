@@ -1,10 +1,12 @@
 %% plot fx PN species composition bar charts by latitude using SEM data
 % Shimada 2019 and 2021
+% Fig. 3 in Fischer et al. 2024, L&O
+% A.D. Fischer, May 2024
 %
 clear; 
 
 %%%%USER
-fprint=1; % 1 to print; 0 to not
+fprint=0; % 1 to print; 0 to not
 yr=2019; % 2019; 2021
 filepath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/'; %enter filepath
 
@@ -15,18 +17,17 @@ load([filepath 'Data/HAB_merged_Shimada19-21'],'HA');
 HA=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
 HA((HA.lat<41),:)=[]; %remove CA stations
 
+% select year of data
+P(~(P.DT.Year==yr),:)=[];    
+HA(~(HA.dt.Year==yr),:)=[];    
+
+% adjust plotting location of bars
 if yr==2019
-    P((P.DT>datetime('01-Jan-2020')),:)=[];    
-    idx=find(HA.dt<datetime('01-Jan-2020'));
-    HA=HA(idx,:);
     val=4.3;
     HA.stlabel(:)=fliplr(1:1:length(HA.st)); %add stations   
     HA.lat(end-1)=HA.lat(end-1)-.18;
     HA.lat(end-2)=HA.lat(end-2)-.2;
 elseif yr==2021
-    P((P.DT<datetime('01-Jan-2020')),:)=[];    
-    idx=find(HA.dt>datetime('01-Jan-2020'));
-    HA=HA(idx,:);
     val=4.0;    
     HA.stlabel(:)=9+fliplr(1:1:length(HA.st)); %add stations  
     HA.lat(end-1)=HA.lat(end-1)-.3;
@@ -68,7 +69,6 @@ hold off
 
 
 %% plot the SEM legend of species names
-
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 1.7 3.85]); 
 
 b=bar(HA.lat,[HA.fx_aust,HA.fx_mult,HA.fx_frau,HA.fx_heim,HA.fx_pseu,HA.fx_pung,HA.fx_deli],...

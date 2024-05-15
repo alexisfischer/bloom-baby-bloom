@@ -1,19 +1,23 @@
-%% plot cell width vs toxicity
+%% plot PN cell width vs particulate DA
+% Fig. SF in Fischer et al. 2024, L&O
+% A.D. Fischer, May 2024
+%
 clear;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+
+%%%%USER
+fprint = 0; % 1 = print; 0 = don't
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
+
+%%%% load in and format data
 addpath(genpath(filepath));
-
-fprint=1; %0=don't print, 1=print
-
-%%%% load in pDA and width data
-load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
 P=sortrows(P,'pDA_pgmL','descend');
 P(isnan(P.pDA_pgmL),:)=[]; %remove non detects from discrete dataset    
 idx=(P.mean_PNwidth>0); X=P.mean_PNwidth(idx); Y=P.pDA_pgmL(idx); DT=P.DT(idx);
-mdl = fitlm(X,Y);
+mdl = fitlm(X,Y); % linear regression for total dataset
 
-idx=(P.DT<datetime('01-Jan-2020')); 
+% split data in 2019 and 2021
+idx=(P.DT.Year==2019); 
 X19=P.mean_PNwidth(idx); Y19=P.pDA_pgmL(idx);
 X21=P.mean_PNwidth(~idx); Y21=P.pDA_pgmL(~idx);
 
@@ -26,8 +30,8 @@ s(5).width=[4 6]; s(5).name='hemii';
 s(6).width=[4.5 7.5]; s(6).name='fraudulenta';
 s(7).width=[6.5 8]; s(7).name='australis';
 
+% set colors
 c=brewermap(7,'Set3'); col=[c(7,:);c(2,:);c(5,:);c(6,:);c(3,:);c(1,:);c(4,:)];
-
 for i=1:length(col)
     s(i).color=col(i,:);
 end
@@ -65,6 +69,6 @@ set(gca,'xlim',[-.1 8.1],'ylim',[0 400],'fontsize',11,'tickdir','out','box','on'
     xlabel('PN Width (\mum)','fontsize',12);
 
 if fprint
-    exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/width_vs_pDA.png'],'Resolution',300)    
+    exportgraphics(fig,[filepath 'Figs/width_vs_pDA.png'],'Resolution',300)    
 end
 hold off 

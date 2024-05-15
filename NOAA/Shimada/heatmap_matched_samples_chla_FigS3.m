@@ -1,37 +1,43 @@
-%% plot matched sampling grid for chl
+%% heatmap of matched discrete samples (2019 and 2021) along CCS
+% data options: chlA, nitrate, phosphate, silicate
+% option to include or remove sites of interest
 % requires input from match_discrete_samplegrid
-clear; %close all;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath(filepath)); % add new data to search path
+% Shimada 2019 and 2021
+% A.D. Fischer, May 2024
+%
+clear;
 
 %%%%USER
-yr=2019; % 2019; 2021
-fprint=1;
-leftsubplot=0; %special formatting for the leftmost subplot
-unit=0.06;
+fprint = 0; % 1 = print; 0 = don't
+yr = 2019; % 2019; 2021
+unit = 0.06; % amount to subtract from latitude so does not overlap with map
+leftsubplot=0; % 1 = larger plot sites of interest; 0 = basic version
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
-%%%% load in discrete data
-%load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
-load([filepath 'NOAA/Shimada/Data/matched_discrete_samples_2019_2021'],'HA');
+% load in data
+addpath(genpath(filepath)); % add new data to search path
+load([filepath 'Data/coast_CCS.mat'],'coast'); %map
+states=load([filepath 'Data/USwestcoast_pol.mat']); %map
+
+load([filepath 'Data/matched_discrete_samples_2019_2021'],'HA');
+
+% %or run the function if have mapping toolbox
+% load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
+% [HA] = match_discrete_samples_2019_2021(HA);
+
 HA((HA.lat<40),:)=[]; %remove CA stations
+HA(~(HA.dt.Year==yr),:)=[]; %select year of data
 
+%%%%USER enter data of interest
 data=HA.chlA_ugL; cax=[0 20]; ticks=[0,10,20]; label={'Chl a (ug/L)'}; name='CHL'; col=brewermap(256,'PuBu'); col(1:50,:)=[]; lim=.1;
 %data=HA.Nitrate_uM; cax=[0 48]; ticks=[0,24,48]; label={'NO_3^- + NO_2^- (μM)'}; name='NIT'; col=brewermap(256,'YlGn'); lim=0.6;
 %data=HA.Phosphate_uM; cax=[0 3]; ticks=[0,1.5,3]; label={'PO_4^{3−} (μM)'}; name='PHS';col=brewermap(256,'YlGn'); lim=0.6;
 %data=HA.Silicate_uM; cax=[0 48]; ticks=[0,24,48]; label={'Si[OH]_4 (μM)'}; name='SIL';col=brewermap(256,'YlGn'); lim=1.1;
 
-if yr==2019    
-    idx=find(HA.dt<datetime('01-Jan-2020') & HA.lat>42);
-    data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx); match=HA.match(idx); 
-elseif yr==2021
-    idx=find(HA.dt>datetime('01-Jan-2020'));
-    data=data(idx); lat = HA.lat(idx); lon = HA.lon(idx); match=HA.match(idx); 
-end
-
-idx=isnan(data); data(idx)=[]; lat(idx)=[]; lon(idx)=[]; match(idx)=[];
+% remove Nans and add lon gap
+lat = HA.lat; lon = HA.lon; match=HA.match;
+idx=isnan(data); data(idx)=[]; lat(idx)=[]; lon(idx)=[]; match(idx)=[]; 
 lon=lon-unit;
-
 
 %%%% plot
 if leftsubplot == 1
@@ -44,41 +50,15 @@ ind=(data<=lim);
 scatter(lon(ind),lat(ind),2,[.3 .3 .3],'o','filled'); hold on
 scatter(lon(~ind),lat(~ind),20,data(~ind),'filled'); hold on
 scatter(lon(match),lat(match),20,'k','o','linewidth',.2); hold on %match ups
-
-    colormap(col); clim(cax);
-    axis([min(lon) max(lon) min(lat) max(lat)]);
-    h=colorbar('northoutside','xtick',ticks); hp=get(h,'pos');    
-    set(h,'pos',hp,'xaxisloc','top','fontsize',9,'tickdir','out');
-    xtickangle(0); hold on;    
-    hold on     
-
+colormap(col); clim(cax);
+axis([min(lon) max(lon) min(lat) max(lat)]);
+h=colorbar('northoutside','xtick',ticks); hp=get(h,'pos');    
+set(h,'pos',hp,'xaxisloc','top','fontsize',9,'tickdir','out');
+xtickangle(0); hold on;    
 colorTitleHandle = get(h,'Title');
 set(colorTitleHandle,'String',label,'fontsize',11);
-    
-load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA'); 
-HA.lon=HA.lon-unit;
-sem=NaN*ones(size(HA.st));
-HA=addvars(HA,sem,'after','dt');
-HA((HA.lat<40),:)=[]; %remove CA stations
-HA=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
-
-if strcmp(name,'pDA')
-    if yr==2019
-        idx=find(HA.dt<datetime('01-Jan-2020')); HA=HA(idx,:);    
-        H=flipud(HA); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
-        scatter([H.lon],[H.lat],20,'o','k','MarkerFaceColor','none'); hold on
-        text([H.lon]-0.4,[H.lat]-.1,num2str([H.st2]),'fontsize',8)    
-    else
-        idx=find(HA.dt>datetime('01-Jan-2020'));HA=HA(idx,:); 
-        H=flipud(HA); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
-        scatter([H.lon],[H.lat],20,'o','k','MarkerFaceColor','none'); hold on
-        text([H.lon]-0.6,[H.lat]-.15,num2str([H.st2]+9),'fontsize',8)   
-    end
-end
 
 % Plot map
-states=load([filepath 'NOAA/Shimada/Data/USwestcoast_pol.mat']);
-load([filepath 'NOAA/Shimada/Data/coast_CCS.mat'],'coast');
 fillseg(coast); dasp(42); hold on;
 plot(states.lon,states.lat,'k'); hold on;
 set(gca,'ylim',[39.9 49],'xlim',[-126.6 -123.5],'xtick',-127:2:-124,...
@@ -95,13 +75,9 @@ if leftsubplot == 1
    text(-124,44,{'Heceta';'Bank'},'fontsize',9); hold on
    text(-124,41.65,{'Trinidad';' Head'},'fontsize',9); hold on
 end
-    xtickangle(0); hold on;    
-
-if strcmp(name,'SILHi')
-    set(gca,'ylim',[43.5 47.5],'ytick',44:1:47,'yticklabel',44:1:47,'xticklabel',{});
-end
+xtickangle(0); hold on;    
 
 if fprint==1
-    exportgraphics(gca,[filepath 'NOAA/Shimada/Figs/' name '_discrete_Shimada' num2str(yr) '.png'],'Resolution',300)    
+    exportgraphics(gca,[filepath 'Figs/' name '_discrete_Shimada' num2str(yr) '.png'],'Resolution',300)    
 end
 hold off 

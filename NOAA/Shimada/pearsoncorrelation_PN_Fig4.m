@@ -1,29 +1,30 @@
-%% factors associated with high cellular toxicity
+%% Pearson Correlation of the factors associated with Pseudo-nitzschia and particulate DA
+% Shimada 2019 and 2021
+% Fig 4 in Fischer et al. 2024
+% A.D. Fischer, May 2024
+%
 clear;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
-addpath(genpath(filepath)); % add new data to search path
 
 %%%%USER
-fprint=1; %0=don't print, 1=print
+fprint = 0; % 1 = print; 0 = don't
 var='\itPseudo-nitzschia';
 %var='Particulate DA';
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
-load([filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+% load in data
+load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+addpath(genpath(filepath)); % add new data to search path
 
-%split data into 2019, 2021, and combined
-P1=P(P.DT<datetime('01-Jan-2020'),:); 
-P2=P(P.DT>datetime('01-Jan-2020'),:);
+%split data into 2019 and 2021
+P1=P((P.DT.Year==2019),:);
+P2=P((P.DT.Year==2021),:);
 
-% %% find sample size
-% P1=P1(~isnan(P1.PCO2),:); P1=P1(~isnan(P1.TEMP),:); P1=P1(~isnan(P1.SAL),:);  
-% P2=P2(~isnan(P2.PCO2),:); P2=P2(~isnan(P2.TEMP),:); P2=P2(~isnan(P2.SAL),:);  
-
-    Xlabel={'Temperature' 'Salinity' 'pCO_2' 'NO_3^- + NO_2^-' 'Si[OH]_4' 'PO_4^{3−}' 'Si:N' 'P:N' };
-    Ylabel={'2019','2021','both'};
-    X1=[P1.TEMP,P1.SAL,P1.PCO2,P1.Nitrate_uM,P1.Silicate_uM,P1.Phosphate_uM,P1.S2N,P1.P2N];
-    X2=[P2.TEMP,P2.SAL,P2.PCO2,P2.Nitrate_uM,P2.Silicate_uM,P2.Phosphate_uM,P2.S2N,P2.P2N];
-    X=[P.TEMP,P.SAL,P.PCO2,P.Nitrate_uM,P.Silicate_uM,P.Phosphate_uM,P.S2N,P.P2N];
+%format data for pearson correlation
+Xlabel={'Temperature' 'Salinity' 'pCO_2' 'NO_3^- + NO_2^-' 'Si[OH]_4' 'PO_4^{3−}' 'Si:N' 'P:N' };
+Ylabel={'2019','2021','both'};
+X1=[P1.TEMP,P1.SAL,P1.PCO2,P1.Nitrate_uM,P1.Silicate_uM,P1.Phosphate_uM,P1.S2N,P1.P2N];
+X2=[P2.TEMP,P2.SAL,P2.PCO2,P2.Nitrate_uM,P2.Silicate_uM,P2.Phosphate_uM,P2.S2N,P2.P2N];
+X=[P.TEMP,P.SAL,P.PCO2,P.Nitrate_uM,P.Silicate_uM,P.Phosphate_uM,P.S2N,P.P2N];
 
 if strcmp(var,'\itPseudo-nitzschia')
     Y1=[P1.PN_cell];
@@ -40,7 +41,8 @@ end
 [rho2,pval2] = corr(X2,Y2,'Type','Pearson','Rows','pairwise');
 R=[rho1,rho2,rho];
 PV=[pval1,pval2,pval];
-%%
+
+%% plot
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 3 4.4]); 
 imagesc(R); xtickangle(45)
 col=flipud(brewermap(256,'RdBu'));%col(120:136,:)=[]; 
@@ -73,12 +75,11 @@ for i=1:size(R,2)
     end
 end
 
-
 if fprint
     if strcmp(var,'\itPseudo-nitzschia')
-        exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/PN_correlation_2019-2021.png'],'Resolution',300)    
+        exportgraphics(fig,[filepath 'Figs/PN_correlation_2019-2021.png'],'Resolution',300)    
     elseif strcmp(var,'Particulate DA')
-        exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/pDA_correlation_2019-2021.png'],'Resolution',300)    
+        exportgraphics(fig,[filepath 'Figs/pDA_correlation_2019-2021.png'],'Resolution',300)    
     end
 end
 hold off 

@@ -1,30 +1,31 @@
-%% plot SEM pie charts
-clear; %close all;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+%% plot fx PN species composition as pie charts using SEM data
+% Shimada 2019 and 2021
+% did not end up using this, but is a nice plot
+% A.D. Fischer, May 2024
+%
+clear; 
+
+%%%%USER
+yr=2019; % 2019; 2021
+filepath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/'; %enter filepath
+
+% load in data
 addpath(genpath(filepath)); % add new data to search path
-
-load([filepath 'NOAA/Shimada/Data/HAB_merged_Shimada19-21'],'HA');
-
-yr=2021;
+load([filepath 'Data/HAB_merged_Shimada19-21'],'HA');
+HA=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
+HA((HA.lat<41),:)=[]; %remove CA stations
+HA(~(HA.dt.Year==yr),:)=[]; % select year of data
 
 if yr==2019
-    idx=find(HA.dt<datetime('01-Jan-2020'));
-    HA=HA(idx,:);
     val=4.3;
 elseif yr==2021
-    idx=find(HA.dt>datetime('01-Jan-2020'));
-    HA=HA(idx,:);
     val=4.0;    
 end
 
-H=HA(~isnan(HA.fx_frau),:); %remove non SEM samples
-H((H.lat<41),:)=[]; %remove CA stations
-H=flipud(H); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
+H=flipud(HA); H.st2(:)=(1:1:length(H.st)); %order them so 1:6, top to bottom
 
 labels={'delicatatisi.','pungens','pseudodeli.','heimii','fraudulenta','multiseries','australis'};
-low=brewermap(2,'Blues'); 
-mh=brewermap(7,'YlOrRd'); 
+low=brewermap(2,'Blues'); mh=brewermap(7,'YlOrRd'); 
 col(1,:)=low(2,:); 
 col(2,:)=mh(1,:); col(3,:)=mh(2,:); col(4,:)=mh(3,:); 
 col(5,:)=mh(4,:); col(6,:)=mh(6,:); col(7,:)=mh(7,:);
@@ -45,13 +46,11 @@ for i=1:length(H.fx_pseu)
 end
 
 t.TileSpacing = 'none'; t.Padding = 'none';
-
-% Create legend
 lgd = legend(labels,'fontsize',9);
 lgd.Layout.Tile = 'south';
 legend boxoff;
 
 % set figure parameters
-exportgraphics(gcf,[filepath 'NOAA/Shimada/Figs/SEM_Shimada' num2str(yr) '.png'],'Resolution',300)    
+exportgraphics(gcf,[filepath 'Figs/SEM_Shimada' num2str(yr) '.png'],'Resolution',300)    
 hold off
 

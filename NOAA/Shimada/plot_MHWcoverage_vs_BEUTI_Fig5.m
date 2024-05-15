@@ -1,14 +1,21 @@
-%plot CCIEA and BEUTI
+%% imports data and plots timing of BEUTI relative to MHW coverage of the EEZ in 2015 and 2019
+% Estimates of coastal upwelling-derived nitrate flux in WA, OR, and N.CA 
+% are provided by BEUTI at 47ºN, 44ºN, and 41ºN, respectively. 
+% The percentage of the EEZ off the coasts of WA (46–48ºN), OR (42–46ºN), 
+% and N. CA (38–42ºN) that are in marine heatwave status is shown.
+% Fig. 5 in Fischer et al. 2024, L&O
+% A.D. Fischer, May 2024
+%
 clear;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath(filepath)); % add new data to search path
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
 
-%%%% import CCIEA
-Tdir=dir([filepath 'NOAA/Shimada/Data/CCIEA/*2015.mat']);
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
+addpath(genpath(filepath)); % add new data to search path
+
+%% import MHW coverage of EEZ
+Tdir=dir([filepath 'Data/CCIEA/*2015.mat']);
 for i=1:length(Tdir)   
     name=Tdir(i).name;    
-    load([filepath 'NOAA/Shimada/Data/CCIEA/' name]);    
+    load([filepath 'Data/CCIEA/' name]);    
     disp(name);
     dt=datetime(unixtime2mat(cciea_OC_MHW_regions.time),'ConvertFrom','datenum'); % seconds since 1970-01-01T00:00:00Z;
     C.y2015(i).region=cciea_OC_MHW_regions.region(1,:);
@@ -16,10 +23,10 @@ for i=1:length(Tdir)
     C.y2015(i).mhwcover=smoothdata(cciea_OC_MHW_regions.heatwave_cover(1:365),'movmean',14);
 end
 
-Tdir=dir([filepath 'NOAA/Shimada/Data/CCIEA/*2019.mat']);
+Tdir=dir([filepath 'Data/CCIEA/*2019.mat']);
 for i=1:length(Tdir)   
     name=Tdir(i).name;    
-    load([filepath 'NOAA/Shimada/Data/CCIEA/' name]);    
+    load([filepath 'Data/CCIEA/' name]);    
     disp(name);
     dt=datetime(unixtime2mat(cciea_OC_MHW_regions.time),'ConvertFrom','datenum'); % seconds since 1970-01-01T00:00:00Z;
     C.y2019(i).region=cciea_OC_MHW_regions.region(1,:);
@@ -28,7 +35,7 @@ for i=1:length(Tdir)
 end
 clearvars cciea_OC_MHW_regions i Tdir name dt
 
-%%%% import BEUTI
+%% import BEUTI
 opts = delimitedTextImportOptions("NumVariables", 20);
 opts.DataLines = [2, Inf];
 opts.Delimiter = ",";
@@ -39,12 +46,11 @@ opts.ExtraColumnsRule = "ignore";
 opts.EmptyLineRule = "read";
 opts = setvaropts(opts, ["Var4", "Var5", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "Var12", "Var13", "Var15", "Var16", "Var18", "Var19"], "WhitespaceRule", "preserve");
 opts = setvaropts(opts, ["Var4", "Var5", "Var6", "Var7", "Var8", "Var9", "Var10", "Var11", "Var12", "Var13", "Var15", "Var16", "Var18", "Var19"], "EmptyFieldRule", "auto");
-B = readtable([filepath 'NOAA/Shimada/Data/BEUTI_daily.csv'], opts);
+B = readtable([filepath 'Data/BEUTI_daily.csv'], opts);
 BB=B;
 
 %2015
 B(~(B.year==2015),:)=[];
-%dt15=datetime(B.year,B.month,B.day); dt.Format='yyyy-MM-dd';
 B=table2array(B(:,4:end));
 C.y2015(1).BEUTI_lat=41;
 C.y2015(2).BEUTI_lat=44;
@@ -55,7 +61,6 @@ C.y2015(3).BEUTI=smoothdata(B(:,3),'movmean',14);
 
 %2019
 BB(~(BB.year==2019),:)=[];
-%dt19=datetime(BB.year,BB.month,BB.day); dt.Format='yyyy-MM-dd';
 BB=smoothdata(table2array(BB(:,4:end)),'movmean',14);
 C.y2019(1).BEUTI_lat=41;
 C.y2019(2).BEUTI_lat=44;
@@ -158,6 +163,6 @@ subplot(3,2,6)
 xtickangle(0);
 
 % set figure parameters
-exportgraphics(gcf,[filepath 'NOAA/Shimada/Figs/MHWcover_BEUTI_2019_2021.png'],'Resolution',300)    
+exportgraphics(gcf,[filepath 'Figs/MHWcover_BEUTI_2019_2021.png'],'Resolution',300)    
 hold off
 

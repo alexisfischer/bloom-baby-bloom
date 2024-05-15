@@ -8,24 +8,23 @@
 clear;
 
 %%%%USER
-fprint=1; % 1 to print; 0 to not
-yr=2019; % 2019; 2021
-option=2; % 1=Plot the individual data points; 2=Grid the data
-res = 0.15; % heatmap resolution: Coarser=0.2; Finer=0.1 % Set grid resolution (degrees)
-unit=0.06; % amount to subtract from latitude so does not overlap with map
+fprint = 1; % 1 = print; 0 = don't
+yr = 2019; % 2019; 2021
+option = 2; % 1 = Plot the individual data points; 2 = Grid the data
+res = 0.15; % heatmap resolution: Coarser = 0.2; Finer = 0.1 % Set grid resolution (degrees)
+unit = 0.06; % amount to subtract from latitude so does not overlap with map
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
-load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
-load([filepath 'Data/coast_CCS.mat'],'coast');
-states=load([filepath 'Data/USwestcoast_pol.mat']);
+load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P'); %IFCB data
+load([filepath 'Data/coast_CCS.mat'],'coast'); %map
+states=load([filepath 'Data/USwestcoast_pol.mat']); %map
 
 P(~(P.DT.Year==yr),:)=[]; %select year of data
 data=P.dino_diat_ratio; label={'dino:diat ratio'}; name='ratio'; cax=[-1 1]; 
 %data=log10(P.dino_diat_ratio); label={'dino:diat ratio'}; name='ratio'; cax=[-1 1]; 
 %data(data==Inf)=1; data(data==-Inf)=-1;
-
 lat=P.LAT; lon=P.LON-unit; dt=P.DT;  
 col=flipud(brewermap(256,'PiYG'));
 
@@ -53,13 +52,11 @@ else
     clearvars lat_plot lon_plot ii jj nx ny lon_grid lat_grid data_grid res
 end 
 
-    colormap(col); clim(cax);
-    axis([min(lon) max(lon) min(lat) max(lat)]);
-    h=colorbar('northoutside'); hp=get(h,'pos');    
-    set(h,'pos',hp,'xaxisloc','top','fontsize',9,'tickdir','out');
-    xtickangle(0); hold on;    
-    hold on     
-
+colormap(col); clim(cax);
+axis([min(lon) max(lon) min(lat) max(lat)]);
+h=colorbar('northoutside'); hp=get(h,'pos');    
+set(h,'pos',hp,'xaxisloc','top','fontsize',9,'tickdir','out');
+xtickangle(0); hold on;    
 colorTitleHandle = get(h,'Title');
 set(colorTitleHandle,'String',label,'fontsize',11);
 

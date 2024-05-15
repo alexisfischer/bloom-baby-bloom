@@ -1,14 +1,17 @@
 %% Calculate CUI (cumulative upwelling index) from Cape Elizabeth NDBC #46041 
+% analysis to examine how leaky the Juan de Fuca Eddy was during 2019 and 2021 Hake surveys
+% A.D. Fischer, May 2024
+%
 clear;
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+
+%%%%USER
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
+
+% load in data
 addpath(genpath(filepath)); % add new data to search path
+load([filepath 'Data/wind_46041'],'w19','w21');
 
-load([filepath 'NOAA/Shimada/Data/wind_46041'],'w19','w21');
-
-% w19(~(w19.dt>datetime('2019-05-01') & w19.dt<datetime('2019-08-19')),:)=[];
-% w21(~(w21.dt>datetime('2021-05-01') & w21.dt<datetime('2021-09-25')),:)=[];
-
+%%%% plot cumulative wind stress 
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 3.5 2.5]); 
     h1=plot(w19.dt+2*365,w19.cui,'r-','linewidth',1.5); hold on;
     h2=plot(w21.dt,w21.cui,'b-','linewidth',1.5); hold on;  
@@ -24,8 +27,9 @@ x=datetime('26-Jul-2021'):1:datetime('22-Sep-2021');
 line(x,0*ones(size(x)),'Color','b','LineStyle',':','linewidth',2)
 legend([h1 h2],'2019','2021','Location','Northwest')
 
-exportgraphics(fig,[filepath 'NOAA/Shimada/Figs/CUI_WA.png'],'Resolution',300)    
-%%
+exportgraphics(fig,[filepath 'Figs/CUI_WA.png'],'Resolution',300)    
+
+%% plot wind stress
 figure
 subplot(2,1,1)
 yyaxis left
@@ -49,5 +53,4 @@ yyaxis right
     plot(w21.dt,w21.cui,'--','Color','r','linewidth',2); hold on;  
     set(gca,'ylim',[-200 200],'ycolor','r')
      
-%%
 save([filepath 'NOAA/Shimada/Data/Wind_Shimada'],'w19','w21');

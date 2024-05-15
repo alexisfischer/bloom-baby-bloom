@@ -1,24 +1,23 @@
-%% plot PN classifier results
+%% plots NCC Pseudo-nitzschia classifier results against manual data
+% Shimada 2019 and 2021
+% A.D. Fischer, May 2024
+%
 clear;
-classifiername='CCS_NOAA-OSU_v7';
-type='opt';
 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
-outpath = [filepath 'NOAA/Shimada/Figs/'];
-class_indices_path=[filepath 'IFCB-Tools/convert_index_class/class_indices.mat'];   
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 
-load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],'class2use','classcount','matdate','ml_analyzed','filelist');
-load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
+load([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],...
+    'class2use','classcount','matdate','ml_analyzed','filelist');
+load([filepath 'IFCB-Data/Shimada/class/summary_biovol_allTB_CCS_NOAA-OSU_v7'],...
     'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
-
 
 totalI=sum(sum(classcountTB_above_optthresh))
 totalU=(sum(classcountTB_above_optthresh(:,end)))
 fxU=totalU./totalI
 
-%%
+%% format data
 %%%% eliminate manual files with high fx of unclassified data
 [badfilelist] = findmanualfiles_w_highUnclassified([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],0.2,'Pseudo-nitzschia');
 [~,ia,~]=intersect({filelist.name}',badfilelist);
@@ -32,7 +31,7 @@ end
 mdateTB=datetime(mdateTB(it),'convertfrom','datenum');
 ml_analyzedTB=ml_analyzedTB(it);
 filelistTB=filelistTB(it);
-%%
+
 %%%% sum up grouped classes for class of interest
 class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
 ind = strfind(class2do_full, ',');
@@ -89,10 +88,10 @@ man1=man1(ia); man2=man2(ia); man34=man34(ia);
 lat=lat(ia);
 
 clearvars im it i imclass ind badfilelist filelist filelistTB ml_analyzedTBtype ...
-    filepath classifiername matdate ml_analyzedTB ml_analyzed class2use classcount classcountTB ...
+    filepath matdate ml_analyzedTB ml_analyzed class2use classcount classcountTB ...
     classcountTB_above_optthresh classcountTB_above_adhocthresh class2do_full mdateTB opt fx;
 
-% Plot automated vs manual classification cell counts
+%% Plot automated vs manual classification cell counts
 figure('Units','inches','Position',[1 1 3.3 3.3],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.15 0.08], [0.14 0.04]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
@@ -119,5 +118,5 @@ plot(lat,man34,'r*','Markersize',5,'linewidth',.8); hold on
     xlabel('Latitude (ºN)','fontsize',11); 
 
 % set figure parameters
-exportgraphics(gcf,[outpath 'Manual_automated_PN_byLatitude.png'],'Resolution',100)    
+exportgraphics(gcf,[filepath 'NOAA/Shimada/Figs/Manual_automated_PN_byLatitude.png'],'Resolution',100)    
 hold off
