@@ -9,7 +9,7 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 addpath(genpath(filepath)); % add new data to search path
 
 % load in data and split into 2019 and 2021
-load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+load([filepath 'Data/summary_19-21Hake_4nicheanalysis'],'P');
 idx=(P.DT.Year==2019); cells19=P.PN_cell(idx); tox19=P.tox_cell(idx)./1000; km19=P.gap_km(idx);
 idx=(P.DT.Year==2021); cells21=P.PN_cell(idx); tox21=P.tox_cell(idx)./1000; km21=P.gap_km(idx);
 

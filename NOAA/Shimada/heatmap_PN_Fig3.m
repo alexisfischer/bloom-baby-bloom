@@ -28,9 +28,8 @@ P(~(P.DT.Year==yr),:)=[]; %select year of data
 lat=P.LAT; lon=P.LON-unit; dt=P.DT;  
 
 %%%%USER enter data of interest
-data=log10(P.Pseudonitzschia); label={'log PN (cells/mL)'}; name='PN'; cax=[0 2]; col=brewermap(256,'YlOrBr'); col(1:30,:)=[];
-%data=P.tox_biovol; label={'pDA';'fg/biovol'}; name='tox_biovol'; cax=[0 100]; col=brewermap(256,'Purples'); col(1:30,:)=[];
-%data=P.tox_cell; label={'pDA';'fg/cell'}; name='tox_cell'; cax=[0 200000]; col=brewermap(256,'Purples'); col(1:30,:)=[];
+%data=log10(P.Pseudonitzschia); label={'log PN (cells/mL)'}; name='PN'; cax=[0 2]; col=brewermap(256,'YlOrBr'); col(1:30,:)=[];
+data=P.tox_PNcell; label={'pDA (fg/cell)'}; name='tox_cell'; cax=[0 200000]; col=brewermap(256,'Purples'); col(1:30,:)=[];
 
 %%%% plot
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 2 4.7]); 

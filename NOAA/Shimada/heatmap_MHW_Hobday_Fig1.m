@@ -13,8 +13,8 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 % load in data
 addpath(genpath('~/Documents/MATLAB/m_mhw1.0/')); % add new data to search path
 addpath(genpath(filepath)); % add new data to search path
-load([filepath 'Data/coast_CCS.mat'],'coast'); %map
-states=load([filepath 'Data/USwestcoast_pol.mat']); %map
+load([filepath 'Data/coast_CCS'],'coast'); %map
+states=load([filepath 'Data/USwestcoast_pol']); %map
 load([filepath 'Data/MHW_' num2str(yr) ''],'lat','lon','sst','clm','mhw','m90');
 
 %%%%USER enter data of interest

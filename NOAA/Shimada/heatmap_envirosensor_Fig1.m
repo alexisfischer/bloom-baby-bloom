@@ -18,8 +18,8 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 % load in data
 addpath(genpath(filepath)); % add new data to search path
 load([filepath 'Data/environ_Shimada' num2str(yr) ''],'DT','LON','LAT','FL','TEMP','SAL','PCO2');
-load([filepath 'Data/coast_CCS.mat'],'coast'); %map
-states=load([filepath 'Data/USwestcoast_pol.mat']); %map
+load([filepath 'Data/coast_CCS'],'coast'); %map
+states=load([filepath 'Data/USwestcoast_pol']); %map
 
 %%%%USER enter data of interest
 data=TEMP; cax=[10 20];  ticks=10:5:20; label={'SST (^oC)'}; name='SST'; col=brewermap(256,'BuPu');

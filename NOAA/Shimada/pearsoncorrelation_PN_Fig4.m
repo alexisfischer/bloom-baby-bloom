@@ -6,13 +6,13 @@
 clear;
 
 %%%%USER
-fprint = 0; % 1 = print; 0 = don't
-var='\itPseudo-nitzschia';
-%var='Particulate DA';
+fprint = 1; % 1 = print; 0 = don't
+%var='\itPseudo-nitzschia';
+var='Particulate DA';
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
 % load in data
-load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
+load([filepath 'Data/summary_19-21Hake_cells'],'P');
 addpath(genpath(filepath)); % add new data to search path
 
 %split data into 2019 and 2021
@@ -27,9 +27,9 @@ X2=[P2.TEMP,P2.SAL,P2.PCO2,P2.Nitrate_uM,P2.Silicate_uM,P2.Phosphate_uM,P2.S2N,P
 X=[P.TEMP,P.SAL,P.PCO2,P.Nitrate_uM,P.Silicate_uM,P.Phosphate_uM,P.S2N,P.P2N];
 
 if strcmp(var,'\itPseudo-nitzschia')
-    Y1=[P1.PN_cell];
-    Y2=[P2.PN_cell];
-    Y=[P.PN_cell];
+    Y1=[P1.Pseudonitzschia];
+    Y2=[P2.Pseudonitzschia];
+    Y=[P.Pseudonitzschia];
 elseif strcmp(var,'Particulate DA')
     Y1=[P1.pDA_pgmL];
     Y2=[P2.pDA_pgmL];
@@ -42,7 +42,7 @@ end
 R=[rho1,rho2,rho];
 PV=[pval1,pval2,pval];
 
-%% plot
+%%%% plot
 fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 3 4.4]); 
 imagesc(R); xtickangle(45)
 col=flipud(brewermap(256,'RdBu'));%col(120:136,:)=[]; 

@@ -16,8 +16,8 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
-load([filepath 'Data/coast_CCS.mat'],'coast'); %map
-states=load([filepath 'Data/USwestcoast_pol.mat']); %map
+load([filepath 'Data/coast_CCS'],'coast'); %map
+states=load([filepath 'Data/USwestcoast_pol']); %map
 load([filepath 'Data/HAB_merged_Shimada19-21'],'HA');
 
 HA((HA.lat<40),:)=[]; %remove CA stations

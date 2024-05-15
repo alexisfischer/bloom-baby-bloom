@@ -10,8 +10,8 @@ filepath = '~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/';
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
-load([filepath 'Data/summary_19-21Hake_4nicheanalysis.mat'],'P');
-i19=(P.DT<datetime('01-Jan-2020')); 
+load([filepath 'Data/summary_19-21Hake_cells'],'P');
+i19=(P.DT.Year==2019); 
 
 %%%% plot
 c=brewermap(2,'RdBu');
@@ -29,8 +29,8 @@ ylabel('pCO_2 (ppm)','fontsize',12)
 box on;
 
 subplot(4,1,2)
-scatter(P.coast_km(~i19),P.PN_cell(~i19),25,c(2,:),'.','linewidth',1); hold on
-scatter(P.coast_km(i19),P.PN_cell(i19),25,c(1,:),'.','linewidth',1); hold on
+scatter(P.coast_km(~i19),P.Pseudonitzschia(~i19),25,c(2,:),'.','linewidth',1); hold on
+scatter(P.coast_km(i19),P.Pseudonitzschia(i19),25,c(1,:),'.','linewidth',1); hold on
 set(gca,'xlim',[0 110],'xtick',0:50:100,'xticklabel',{},'tickdir','out');
 ylabel('PN (cells/mL)','fontsize',12,'color','k')
 box on;

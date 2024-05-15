@@ -115,9 +115,15 @@ bvmL(:,end+1)=PN_bvmL;
 
 clearvars PN_bvmL PN_cellsmL ml_analyzedTB idx classcountTB_above_optthresh classbiovolTB_above_optthresh mdateTB id1 id2 id3
 
+%%%% add PN width
+load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNwidth_opt');
+
+width=[PNwidth_opt.mean]';
+width(isnan(width))=0;
+cellsmL(:,end+1)=width;
+class2useTB(end+1)={'mean_PNwidth'};
+
 %%%% split PN into small and large cells (not using)
-% load([filepath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNwidth_opt','ml_analyzedTB');
-%
 % %preallocate
 % smallPN1=NaN*ml_analyzedTB; smallPN2=smallPN1; smallPN3=smallPN1; 
 % medPN1=smallPN1; medPN2=smallPN1; medPN3=smallPN1;
@@ -148,11 +154,7 @@ clearvars PN_bvmL PN_cellsmL ml_analyzedTB idx classcountTB_above_optthresh clas
 % class2useTB(end+1)={'Pseudonitzschia_medium'};
 % class2useTB(end+1)={'Pseudonitzschia_large'};
 % 
-% %mean width
-% width=[PNwidth_opt.mean]';
-% width(isnan(width))=0;
-% cellsmL(:,end+1)=width;
-% class2useTB(end+1)={'mean_PNwidth'};
+%
 % 
 % %sum all PN
 % cellsmL(:,end+1)=sum([cellsmL(:,contains(class2useTB,'Pseudonitzschia'))],2);
@@ -215,7 +217,6 @@ P.tox_PNcell(P.tox_PNcell==Inf)=0;
 PB.tox_PNbv(PB.tox_PNbv==Inf)=0;
 
 %% format for .csv file
-writetimetable(TT,[filepath 'NOAA/Shimada/Data/summary_19-21Hake_4nicheanalysis.csv'])
 save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_cells.mat'],'P');
 save([filepath 'NOAA/Shimada/Data/summary_19-21Hake_biovolume.mat'],'PB');
 

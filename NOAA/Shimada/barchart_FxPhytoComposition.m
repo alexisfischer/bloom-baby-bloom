@@ -6,13 +6,13 @@
 clear;
 
 %%%%USER
-fprint=1; % 1 to print; 0 to not
-yr=2019; % 2019; 2021
+fprint=0; % 1 to print; 0 to not
+yr=2021; % 2019; 2021
 filepath='~/Documents/MATLAB/bloom-baby-bloom/NOAA/Shimada/'; %enter filepath
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
-load([filepath 'Data/summary_19-21Hake_biovolume.mat'],'PB');
+load([filepath 'Data/summary_19-21Hake_biovolume'],'PB');
 PB(~(PB.DT.Year==yr),:)=[]; %select year of data
 names=PB.Properties.VariableNames(2:21);
 bvmL=timetable2table(PB(:,2:21));
