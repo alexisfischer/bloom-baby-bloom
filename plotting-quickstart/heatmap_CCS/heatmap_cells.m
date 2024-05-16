@@ -13,7 +13,7 @@ yr = 2019; % 2019; 2021
 option = 1; % 1 = Plot the individual data points; 2 = Grid the data
 res = 0.15; % heatmap resolution: Coarser = 0.2; Finer = 0.1 % Set grid resolution (degrees)
 unit = 0.06; % amount to subtract from latitude so does not overlap with map
-filepath = '~/Documents/MATLAB/ifcb-data-science-quickstart/'; % enter your path
+filepath = '~/Documents/MATLAB/ifcb-data-science/plotting-quickstart/'; % enter your path
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
