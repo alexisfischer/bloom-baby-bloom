@@ -7,9 +7,9 @@ clear
 %%%%USER
 fprint = 1; % 1 = print; 0 = don't
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/plotting-quickstart/'; % enter your path
-addpath(genpath(filepath));
 
 %%%% load in data and format dataset
+addpath(genpath(filepath));
 load([filepath 'Data/eqdiam_biovol_2021'],'ESD','matdate','filecomment','runtype');
 dt=datetime(matdate,'convertfrom','datenum');
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; dt(idx)=[]; runtype(idx)=[]; 
