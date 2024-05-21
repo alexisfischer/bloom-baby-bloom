@@ -11,19 +11,19 @@ addpath(genpath(filepath));
 addpath(genpath(ifcbpath));
 
 %%%% load in data and format dataset
-load([ifcbpath 'IFCB-Data/BuddInlet/eqdiam_biovol_2021'],'ESD','matdate','filecomment','runtype');
+load([ifcbpath 'IFCB-Data\BuddInlet\eqdiam_biovol_2021'],'ESD','matdate','filecomment','runtype');
 dt=datetime(matdate,'convertfrom','datenum');
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; dt(idx)=[]; runtype(idx)=[]; 
 idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12); ESD(idx)=[]; runtype(idx)=[]; 
 idx=(contains(runtype,{'ALT','Alternative'})); E1a=ESD(idx); E1b=ESD(~idx);  
 
-load([ifcbpath 'IFCB-Data/BuddInlet/eqdiam_biovol_2022'],'ESD','matdate','filecomment','runtype');
+load([ifcbpath 'IFCB-Data\BuddInlet\eqdiam_biovol_2022'],'ESD','matdate','filecomment','runtype');
 dt=datetime(matdate,'convertfrom','datenum');
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; dt(idx)=[]; runtype(idx)=[]; 
 idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12); ESD(idx)=[]; runtype(idx)=[]; 
 idx=(contains(runtype,{'ALT','Alternative'})); E2a=ESD(idx); E2b=ESD(~idx);  
 
-load([ifcbpath 'IFCB-Data/BuddInlet/eqdiam_biovol_2023'],'ESD','matdate','filecomment','runtype');
+load([ifcbpath 'IFCB-Data\BuddInlet\eqdiam_biovol_2023'],'ESD','matdate','filecomment','runtype');
 dt=datetime(matdate,'convertfrom','datenum');
 idx=(contains(filecomment,'trigger')); ESD(idx)=[]; dt(idx)=[]; runtype(idx)=[]; 
 idx=find(dt.Month==1 | dt.Month==2 | dt.Month==3 | dt.Month==10 | dt.Month==11 | dt.Month==12); ESD(idx)=[]; runtype(idx)=[]; 

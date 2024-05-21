@@ -9,11 +9,11 @@ clear;
 
 %%%%USER
 fprint = 1; % 1 = print; 0 = don't
-yr = 2019; % 2019; 2021
+yr = 2021; % 2019; 2021
 option = 2; % 1 = Plot the individual data points; 2 = Grid the data
 res = 0.15; % heatmap resolution: Coarser = 0.2; Finer = 0.1 % Set grid resolution (degrees)
 unit = 0.06; % amount to subtract from latitude so does not overlap with map
-filepath = '~/Documents/MATLAB/ifcb-data-science/plotting-quickstart/'; % enter your path
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/plotting-quickstart/'; % enter your path
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
@@ -69,6 +69,6 @@ set(gca,'ylim',[39.9 49],'xlim',[-126.6 -123.5],'xtick',-127:2:-124,...
     'fontsize',9,'tickdir','out','box','on','xaxisloc','bottom');
 
 if fprint
-    exportgraphics(fig,[filepath 'heatmap_CCS/Figs/' name '_bv_CCS_heatmap_' num2str(yr) '.png'],'Resolution',300)    
+    exportgraphics(fig,[filepath 'heatmap_CCS/Figs/' name '_bv_CCS_heatmap_' num2str(yr) '.png'],'Resolution',100)    
 end
 hold off 

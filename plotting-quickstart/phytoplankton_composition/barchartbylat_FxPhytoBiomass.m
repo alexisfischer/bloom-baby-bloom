@@ -6,8 +6,8 @@ clear;
 
 %%%%USER
 fprint = 1; % 1 = print; 0 = don't
-yr=2021; % 2019; 2021
-filepath = '~/Documents/MATLAB/ifcb-data-science/plotting-quickstart/'; % enter your path
+yr=2019; % 2019; 2021
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/plotting-quickstart/'; % enter your path
 
 % load in data
 addpath(genpath(filepath)); % add new data to search path
@@ -68,6 +68,6 @@ ylabel('fx of sample biomass','fontsize',10); hold on;
 view([90 -90])
 
 if fprint
-    exportgraphics(fig,[filepath 'phytoplankton_composition/Figs/FxPhytoCommunity_CCS_' num2str(yr) '.png'],'Resolution',300)    
+    exportgraphics(fig,[filepath 'phytoplankton_composition/Figs/FxPhytoCommunity_CCS_' num2str(yr) '.png'],'Resolution',100)    
 end
 hold off 
