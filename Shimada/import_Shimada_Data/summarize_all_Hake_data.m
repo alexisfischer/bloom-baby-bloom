@@ -4,7 +4,6 @@
 %
 clear;
 
-classifiername='CCS_NOAA-OSU_v7';
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 ifcbpath = '~/Documents/MATLAB/ifcb-data-science/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
@@ -71,29 +70,29 @@ end
 clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT i FL
 
 %% format IFCB data
-load([ifcbpath 'IFCB-Data/Shimada/class/summary_biovol_allTB_' classifiername],...
-    'class2useTB','classcountTB_above_optthresh','classbiovolTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
+load([ifcbpath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2021-2023'],...
+    'class2useTB','classcount_above_optthreshTB','classbiovol_above_optthreshTB','filelistTB','mdateTB','ml_analyzedTB');
 
 dt=datetime(mdateTB,'convertfrom','datenum'); dt.Format='yyyy-MM-dd HH:mm:ss';        
-cellsmL = classcountTB_above_optthresh./ml_analyzedTB;    
-bvmL = classbiovolTB_above_optthresh./ml_analyzedTB;    
+cellsmL = classcount_above_optthreshTB./ml_analyzedTB;    
+bvmL = classbiovol_above_optthreshTB./ml_analyzedTB;    
 
 %%%% sum PN biovolume into one variable all variables except and PN from regular summary
 id1=find(contains(class2useTB,'Pseudo-nitzschia_large_1cell')); 
 id2=find(contains(class2useTB,'Pseudo-nitzschia_large_2cell')); 
 id3=find(contains(class2useTB,'Pseudo-nitzschia_large_3cell')); 
-PN_bvmL = sum(classbiovolTB_above_optthresh(:,[id1,id2,id3]),2)./ml_analyzedTB;
-PN1 = sum(classcountTB_above_optthresh(:,id1),2);
-PN2 = 2*sum(classcountTB_above_optthresh(:,id2),2);
-PN3 = 3.5*sum(classcountTB_above_optthresh(:,id3),2);
+PN_bvmL = sum(classbiovol_above_optthreshTB(:,[id1,id2,id3]),2)./ml_analyzedTB;
+PN1 = sum(classcount_above_optthreshTB(:,id1),2);
+PN2 = 2*sum(classcount_above_optthreshTB(:,id2),2);
+PN3 = 3.5*sum(classcount_above_optthreshTB(:,id3),2);
 PN_cellsmL = sum([PN1,PN2,PN3],2)./ml_analyzedTB;
 
 %%%% get ratio of of dinos to diatoms 
 % sum diatom biovolume
 [idiatom,~]=get_class_ind(class2useTB,'diatom',[filepath 'IFCB-Tools/convert_index_class/class_indices']);
 [idino,~]=get_class_ind(class2useTB,'dinoflagellate',[filepath 'IFCB-Tools/convert_index_class/class_indices']);
-diatom_bvmL=sum(classbiovolTB_above_optthresh(:,idiatom),2)./ml_analyzedTB;
-dino_bvmL=sum(classbiovolTB_above_optthresh(:,idino),2)./ml_analyzedTB;
+diatom_bvmL=sum(classbiovol_above_optthreshTB(:,idiatom),2)./ml_analyzedTB;
+dino_bvmL=sum(classbiovol_above_optthreshTB(:,idino),2)./ml_analyzedTB;
 dino_diat_ratio=log10(dino_bvmL./diatom_bvmL); %log scale so don't bias denominator low. see Isles 2020
 dino_diat_ratio(dino_diat_ratio==Inf)=1; dino_diat_ratio(dino_diat_ratio==-Inf)=-2;
 
@@ -114,17 +113,17 @@ class2useTB(end+1)={'Pseudonitzschia'};
 cellsmL(:,end+1)=PN_cellsmL;
 bvmL(:,end+1)=PN_bvmL;
 
-clearvars PN_bvmL PN_cellsmL ml_analyzedTB idx classcountTB_above_optthresh classbiovolTB_above_optthresh mdateTB id1 id2 id3
+clearvars PN_bvmL PN_cellsmL ml_analyzedTB idx classcount_above_optthreshTB classbiovol_above_optthreshTB mdateTB id1 id2 id3
 
-%%%% add PN width
-load([ifcbpath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNwidth_opt');
-
-width=[PNwidth_opt.mean]';
-width(isnan(width))=0;
-cellsmL(:,end+1)=width;
-bvmL(:,end+1)=width;
-class2useTB(end+1)={'mean_PNwidth'};
-
+%%%% option to add PN width (did not end up using in Fischer et al. 2024)
+% load([ifcbpath 'IFCB-Data/Shimada/class/summary_PN_allTB_micron-factor3.8'],'PNwidth_opt');
+% 
+% width=[PNwidth_opt.mean]';
+% width(isnan(width))=0;
+% cellsmL(:,end+1)=width;
+% bvmL(:,end+1)=width;
+% class2useTB(end+1)={'mean_PNwidth'};
+%
 %%%% split PN into small and large cells (not using)
 % thm=3.4; %large PN width threshold
 % thl=6.5; %australis width threshold
@@ -182,7 +181,7 @@ TT=addvars(TT,filelistTB,'Before',class2useTB(1));
 TB = array2timetable(bvmL(:,1:end),'RowTimes',dt,'VariableNames',class2useTB_b(1:end));
 TB=addvars(TB,filelistTB,'Before',class2useTB(1));
 
-clearvars class2useTB th dt cellsmL filelistTB i idx ml_analyzedTB PNwidth_opt mdateTB smallPN1 smallPN2 smallPN3 largePN1 largePN2 largePN3
+clearvars class2useTB th dt cellsmL filelistTB i idx ml_analyzedTB mdateTB smallPN1 smallPN2 smallPN3 largePN1 largePN2 largePN3
 
 %% merge environmental data with IFCB data
 P=synchronize(TT,T,'first');
@@ -203,7 +202,7 @@ P(isnan(P.LAT),:)=[];
 PB(PB.LAT<40,:)=[]; % remove data south of 40 N
 PB(PB.LAT>47.5 & PB.LON>-124.7,:)=[]; %remove data from the Strait
 PB=removevars(PB,{'gap_km' 'sample_km' 'coast_km' 'TEMP' 'SAL' 'PCO2' 'FL' 'Nitrate_uM' 'Phosphate_uM' ...
-    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'PN_mcrspy' 'mean_PNwidth'});
+    'Silicate_uM' 'P2N' 'S2N' 'chlA_ugL' 'PN_mcrspy'});
 PB=movevars(PB,{'LAT' 'LON'},'Before','filelistTB');
 
 PB(isnan(PB.LAT),:)=[];
