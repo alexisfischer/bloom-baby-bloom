@@ -1,4 +1,4 @@
-%% Import 2019 pCO2
+%% import processed pCO2 data and timestamps from 2019 Shimada cruise data
 clear
 filepath='~/Documents/Shimada2019/2019_pco2data/';
 outpath='~/Documents/MATLAB/bloom-baby-bloom/Shimada/Data/';

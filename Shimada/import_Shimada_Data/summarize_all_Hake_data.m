@@ -70,7 +70,7 @@ end
 clearvars S19 S21 LON LAT TEMP SAL PCO2 H HA DT i FL
 
 %% format IFCB data
-load([ifcbpath 'IFCB-Data/Shimada/class/summary_biovol_allTB_2021-2023'],...
+load([ifcbpath 'IFCB-Data/Shimada/class/summary_biovol_allTB'],...
     'class2useTB','classcount_above_optthreshTB','classbiovol_above_optthreshTB','filelistTB','mdateTB','ml_analyzedTB');
 
 dt=datetime(mdateTB,'convertfrom','datenum'); dt.Format='yyyy-MM-dd HH:mm:ss';        
@@ -93,8 +93,7 @@ PN_cellsmL = sum([PN1,PN2,PN3],2)./ml_analyzedTB;
 [idino,~]=get_class_ind(class2useTB,'dinoflagellate',[filepath 'IFCB-Tools/convert_index_class/class_indices']);
 diatom_bvmL=sum(classbiovol_above_optthreshTB(:,idiatom),2)./ml_analyzedTB;
 dino_bvmL=sum(classbiovol_above_optthreshTB(:,idino),2)./ml_analyzedTB;
-dino_diat_ratio=log10(dino_bvmL./diatom_bvmL); %log scale so don't bias denominator low. see Isles 2020
-dino_diat_ratio(dino_diat_ratio==Inf)=1; dino_diat_ratio(dino_diat_ratio==-Inf)=-2;
+dino_diat_ratio=log10((dino_bvmL+1)./(diatom_bvmL+1)); %log scale so don't bias denominator low. see Isles 2020. Add +1 to prevent Inf
 
 %%%% rename grouped classes 
 class2useTB(strcmp('Cerataulina,Dactyliosolen,Detonula,Guinardia',class2useTB))={'Cera_Dact_Deto_Guin'};
@@ -175,10 +174,10 @@ class2useTB_b(end+1)={'dino_diat_ratio'};
 
 %%%% round IFCB data to nearest minute and match with environmental data
 dt=dateshift(dt,'start','minute'); 
-TT = array2timetable(cellsmL(:,1:end),'RowTimes',dt,'VariableNames',class2useTB(1:end));
+TT = array2timetable(cellsmL,'RowTimes',dt,'VariableNames',class2useTB(1:end));
 TT=addvars(TT,filelistTB,'Before',class2useTB(1));
 
-TB = array2timetable(bvmL(:,1:end),'RowTimes',dt,'VariableNames',class2useTB_b(1:end));
+TB = array2timetable(bvmL,'RowTimes',dt,'VariableNames',class2useTB_b(1:end));
 TB=addvars(TB,filelistTB,'Before',class2useTB(1));
 
 clearvars class2useTB th dt cellsmL filelistTB i idx ml_analyzedTB mdateTB smallPN1 smallPN2 smallPN3 largePN1 largePN2 largePN3

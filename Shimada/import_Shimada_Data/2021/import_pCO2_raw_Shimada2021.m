@@ -1,6 +1,9 @@
-%% import pCO2 data and timestamps from 2021 Shimada cruise data
+%% import raw pCO2 data and timestamps from 2021 Shimada cruise data
 % process these data like a .csv file
-% Alexis D. Fischer, NWFSC, October 2022
+% make this file for Simone Alin for data processing
+%
+% A.D. Fischer, October 2022
+
 clear;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/'; %USER
 indir= '~/Documents/Shimada2021/pCO2_2021/'; %USER
@@ -79,7 +82,6 @@ for i=1:length(Tdir)
     
 end
 
-
 %% merge with lat lon
 load([outpath 'lat_lon_time_Shimada2021'],'DT','LON','LAT');
 
@@ -95,7 +97,7 @@ DRYBOXTEMP=dryBoxTemp(ia); O2UMM=O2Umm(ia); O2SAT=O2Sat(ia); O2TEMP=O2Temp(ia);
 PHTEMP=pHTemp(ia); FETINTV=FETIntV(ia); FETEXTV=FETExtV(ia); ATMPRESSURE=AtmPressure(ia); 
 INTAKETEMP=IntakeTemp(ia); SALINITY=Salinity(ia); AIRTEMP=AirTemp(ia);
 
-save([outpath 'pCO2_Shimada2021'],'DT','LAT','LON','TYPE','ERROR','EQUTEMP','STDVAL',...
+save([outpath 'raw_pCO2_Shimada2021'],'DT','LAT','LON','TYPE','ERROR','EQUTEMP','STDVAL',...
     'CO2AW','CO2BW','CO2UMM','H2OAW','H2OBW','H2OMMM','LICORTEMP','LICORPRESS',...
     'DRYDRUCK','EQUPRESS','H2OFLOW','LICORFLOW','EQUPUMP','VENTFLOW',...
     'ATMCOND','EQUCOND','DRIP1','CONDTEMP','DRYBOXTEMP','O2UMM','O2SAT',...

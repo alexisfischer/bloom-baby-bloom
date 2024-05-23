@@ -1,6 +1,9 @@
-%% import pCO2 data and timestamps from 2021 Shimada cruise data
+%% import raw pCO2 data and timestamps from 2021 Shimada cruise data
 % process these data like a .csv file
-% Alexis D. Fischer, NWFSC, October 2022
+% make this file for Simone Alin for data processing
+%
+% A.D. Fischer, October 2022
+
 clear;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/'; %USER
 indir= '~/Documents/Shimada2019/2019_pco2datagap/'; %USER
