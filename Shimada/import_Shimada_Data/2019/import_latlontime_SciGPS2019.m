@@ -17,7 +17,7 @@ LAT=[];
 LON=[];
 for i=1:length(Tdir)
     name=Tdir(i).name;
-    filename = [indir name];    
+    filename = [indir name];
     disp(name);
   %  date=datetime(name(14:21),'InputFormat','yyyyMMdd');
 

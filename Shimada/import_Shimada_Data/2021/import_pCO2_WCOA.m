@@ -3,7 +3,7 @@
 % Alexis D. Fischer, NWFSC, May 2022
 clear;
 filepath='~/Documents/MATLAB/bloom-baby-bloom/'; %USER
-indir= '~/Documents/pCO2_WCOA21/'; %USER
+indir= '~/Documents/Shimada2021/pCO2_WCOA_2021/'; %USER
 outpath=[filepath 'Shimada/Data/']; %USER
 
 addpath(genpath(outpath)); 

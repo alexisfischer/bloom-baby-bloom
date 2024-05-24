@@ -1,4 +1,5 @@
 %% import salinity, temperature, and timestamps from 2019 Shimada cruise data
+% use TSG45 (not TSG21)
 % process these data like a .csv file
 % Alexis D. Fischer, NWFSC, May 2022
 clear;

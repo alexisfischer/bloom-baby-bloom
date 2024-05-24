@@ -87,6 +87,9 @@ PN2 = 2*sum(classcount_above_optthreshTB(:,id2),2);
 PN3 = 3.5*sum(classcount_above_optthreshTB(:,id3),2);
 PN_cellsmL = sum([PN1,PN2,PN3],2)./ml_analyzedTB;
 
+
+figure; plot(dt(dt.Year==2023),PN_cellsmL(dt.Year==2023))
+
 %%%% get ratio of of dinos to diatoms 
 % sum diatom biovolume
 [idiatom,~]=get_class_ind(class2useTB,'diatom',[filepath 'IFCB-Tools/convert_index_class/class_indices']);
