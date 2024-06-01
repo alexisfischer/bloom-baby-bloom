@@ -87,14 +87,14 @@ set(gca,'Layer','top'); grid off;
 
 subplot(4,1,3)
 yyaxis left
-idx=~isnan(T.PTX2Ng);
-plot(T.dt(idx),T.DSTng(idx),'ko-','Markersize',3,'markerfacecolor','w','linewidth',1); hold on
-    set(gca,'ylim',[0 300],'ytick',0:150:300,'xlim',[xax(1) xax(2)],'xticklabel',{},...
+idx=~isnan(T.PTX2_ngL);
+plot(T.dt(idx),T.DST_ngL(idx),'ko-','Markersize',3,'markerfacecolor','w','linewidth',1); hold on
+    set(gca,'ylim',[0 100],'ytick',0:50:100,'xlim',[xax(1) xax(2)],'xticklabel',{},...
         'fontsize', 8,'tickdir','out','ycolor','k');
     ylabel({'DST (ng)'},'fontsize',10); hold on;
 yyaxis right
-plot(T.dt(idx),T.PTX2Ng(idx),'o-','Color',c(1,:),'MarkerFaceColor',c(1,:),'Markersize',2,'linewidth',1); hold on
-    set(gca,'ylim',[0 1600],'ytick',0:800:1600,'xlim',[xax(1) xax(2)],'xticklabel',{},...
+plot(T.dt(idx),T.PTX2_ngL(idx),'o-','Color',c(1,:),'MarkerFaceColor',c(1,:),'Markersize',2,'linewidth',1); hold on
+    set(gca,'ylim',[0 400],'ytick',0:200:400,'xlim',[xax(1) xax(2)],'xticklabel',{},...
         'fontsize', 8,'tickdir','out','ycolor',c(1,:));
     ylabel({'PTX2 (ng)'},'fontsize',10); hold on;    
 
@@ -175,8 +175,8 @@ subplot(5,1,3);
     ylabel({'large/mL'},'fontsize',10); hold on;   
  
 % yyaxis right
-%     idx=~isnan(T.PTX2Ng);
-%     p2=plot(T.dt(idx),T.PTX2Ng(idx),':','color','k','MarkerFaceColor','k','Markersize',7,'linewidth',1); hold on
+%     idx=~isnan(T.PTX2_ngL);
+%     p2=plot(T.dt(idx),T.PTX2_ngL(idx),':','color','k','MarkerFaceColor','k','Markersize',7,'linewidth',1); hold on
 %     set(gca,'ylim',[0 2100],'ytick',0:1000:2000,'xlim',[xax(1) xax(2)],...
 %         'xticklabel',{},'fontsize', 8,'tickdir','out','ycolor','k');
 %     ylabel({'PTX2 (ng)'},'fontsize',10); hold on;    
@@ -208,8 +208,8 @@ subplot(5,1,4);
     ylabel({'small/mL'},'fontsize',10); hold on;   
  
 % yyaxis right
-%     idx=~isnan(T.DSTng);
-%     p2=plot(T.dt(idx),T.DSTng(idx),':','color','k','MarkerFaceColor','k','Markersize',7,'linewidth',1); hold on
+%     idx=~isnan(T.DST_ngL);
+%     p2=plot(T.dt(idx),T.DST_ngL(idx),':','color','k','MarkerFaceColor','k','Markersize',7,'linewidth',1); hold on
 %     set(gca,'ylim',[0 300],'ytick',0:150:300,'xlim',[xax(1) xax(2)],...
 %         'xticklabel',{},'fontsize', 8,'tickdir','out','ycolor','k');
 %     ylabel({'DST (ng)'},'fontsize',10); hold on;    
@@ -279,8 +279,8 @@ yyaxis right
     ylabel({'large/mL'},'fontsize',11); hold on;   
  
 yyaxis left
-    idx=~isnan(T.PTX2Ng);
-    p2=plot(T.dt(idx),T.PTX2Ng(idx),'k.:','MarkerFaceColor','k','Markersize',10,'linewidth',1.5); hold on
+    idx=~isnan(T.PTX2_ngL);
+    p2=plot(T.dt(idx),T.PTX2_ngL(idx),'k.:','MarkerFaceColor','k','Markersize',10,'linewidth',1.5); hold on
     set(gca,'ylim',[0 2100],'ytick',0:1000:2000,'xlim',[xax(1) xax(2)],...
         'xticklabel',{},'fontsize', 10,'tickdir','out','ycolor','k');
     set(gca,'SortMethod', 'depth');
@@ -308,8 +308,8 @@ yyaxis right
     ylabel({'small/mL'},'fontsize',11); hold on;   
  
 yyaxis left
-    idx=~isnan(T.DSTng);
-    p2=plot(T.dt(idx),T.DSTng(idx),'k.:','MarkerFaceColor','k','Markersize',10,'linewidth',1.5); hold on
+    idx=~isnan(T.DST_ngL);
+    p2=plot(T.dt(idx),T.DST_ngL(idx),'k.:','MarkerFaceColor','k','Markersize',10,'linewidth',1.5); hold on
     set(gca,'ylim',[0 300],'ytick',0:150:300,'xlim',[xax(1) xax(2)],...
         'xticklabel',{},'fontsize', 10,'tickdir','out','ycolor','k');
     set(gca,'SortMethod', 'depth');

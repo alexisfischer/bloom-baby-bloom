@@ -111,7 +111,7 @@ for j=1:length(D)
     for i=1:length(Month)
         idx=D(j).month==i;
         n(i)=sum(idx);
-        with(i)=sum((D(j).dsp(idx)>1));
+        with(i)=sum((D(j).dsp(idx)>.18)); %0.18 ng/100g mussel tissue detection limit
         above16(i)=sum((D(j).dsp(idx)>=16));
         % avg(i)=mean(D(j).dsp(idx));        
         % stdv(i)=std(D(j).dsp(idx));             

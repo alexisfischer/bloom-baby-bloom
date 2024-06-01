@@ -1,38 +1,44 @@
 %% plots NCC Pseudo-nitzschia classifier results against manual data
-% Shimada 2019 and 2021
+% Shimada 2019, 2021, 2023
 % A.D. Fischer, May 2024
 %
 clear;
 
-filepath = '~/Documents/MATLAB/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
-addpath(genpath(filepath));
+%%%%USER
+fprint = 0; % 1 = print; 0 = don't
+filepath = '~/Documents/MATLAB/bloom-baby-bloom/'; % enter your path
+ifcbpath = '~/Documents/MATLAB/ifcb-data-science/'; % enter your path
 
-load([filepath 'ifcb-data-science/IFCB-Data/Shimada/manual/count_class_biovol_manual'],...
-    'class2use','classcount','matdate','ml_analyzed','filelist');
-load([filepath 'ifcb-data-science/IFCB-Data/Shimada/class/summary_biovol_allTB_CCS_NOAA-OSU_v7'],...
-    'class2useTB','classcountTB_above_optthresh','filelistTB','mdateTB','ml_analyzedTB');
+% load in data
+addpath(genpath(filepath)); % add new data to search path
+addpath(genpath(ifcbpath)); % add new data to search path
+addpath(genpath('~/Documents/MATLAB/ifcb-analysis/')); % add new data to search path
+load([ifcbpath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],...
+    'class2use','classcount','matdate','ml_analyzed','filelist'); % manual data summary
+load([ifcbpath 'IFCB-Data/Shimada/class/summary_biovol_allTB'],'class2useTB',...
+    'classcountTB','classcount_above_optthreshTB','classcount_above_adhocthreshTB',...
+    'filelistTB','mdateTB','ml_analyzedTB'); %classified data summary
 
-totalI=sum(sum(classcountTB_above_optthresh))
-totalU=(sum(classcountTB_above_optthresh(:,end)))
-fxU=totalU./totalI
+% totalI=sum(sum(classcount_above_optthreshTB))
+% totalU=(sum(classcount_above_optthreshTB(:,end)))
+% fxU=totalU./totalI
 
-%% format data
-%%%% eliminate manual files with high fx of unclassified data
-[badfilelist] = findmanualfiles_w_highUnclassified([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],0.2,'Pseudo-nitzschia');
-[~,ia,~]=intersect({filelist.name}',badfilelist);
-filelist(ia)=[]; classcount(ia,:)=[]; matdate(ia)=[]; ml_analyzed(ia)=[];
+% %% format data
+% %%%% eliminate manual files with high fx of unclassified data
+% [badfilelist] = findmanualfiles_w_highUnclassified([filepath 'IFCB-Data/Shimada/manual/count_class_biovol_manual'],0.2,'Pseudo-nitzschia');
+% [~,ia,~]=intersect({filelist.name}',badfilelist);
+% filelist(ia)=[]; classcount(ia,:)=[]; matdate(ia)=[]; ml_analyzed(ia)=[];
 
-%%%% find matched files 
+%%%% find and select matching manual and class files using filenames
 for i=1:length(filelist)
-    filelist(i).newname=filelist(i).name(1:24);
+    filelist(i).newname=filelist(i).name(1:24); %format manual filenames like class filenames
 end
-[~,im,it] = intersect({filelist.newname}, filelistTB); %finds the matched files between automated and manually classified files
+[~,im,it] = intersect({filelist.newname}, filelistTB); 
 mdateTB=datetime(mdateTB(it),'convertfrom','datenum');
 ml_analyzedTB=ml_analyzedTB(it);
 filelistTB=filelistTB(it);
 
-%%%% sum up grouped classes for class of interest
+%%%% sum up grouped PN classes for manual data
 class2do_full='Pseudo-nitzschia_large_1cell,Pseudo-nitzschia_small_1cell';
 ind = strfind(class2do_full, ',');
 if ~isempty(ind)
@@ -46,7 +52,7 @@ else
     imclass = find(strcmp(class2use,class2do_full));
 end
 man1=sum(classcount(im,imclass),2)./ml_analyzedTB;
-auto1=classcountTB_above_optthresh(it,strcmp(class2do_full,class2useTB))./ml_analyzedTB;
+auto1=classcount_above_optthreshTB(it,strcmp(class2do_full,class2useTB))./ml_analyzedTB;
 
 class2do_full='Pseudo-nitzschia_large_2cell,Pseudo-nitzschia_small_2cell';
 ind = strfind(class2do_full, ',');
@@ -61,7 +67,7 @@ else
     imclass = find(strcmp(class2use,class2do_full));
 end
 man2=sum(classcount(im,imclass),2)./ml_analyzedTB;
-auto2=classcountTB_above_optthresh(it,strcmp(class2do_full,class2useTB))./ml_analyzedTB;
+auto2=classcount_above_optthreshTB(it,strcmp(class2do_full,class2useTB))./ml_analyzedTB;
 
 class2do_full='Pseudo-nitzschia_large_3cell,Pseudo-nitzschia_large_4cell,Pseudo-nitzschia_small_3cell,Pseudo-nitzschia_small_4cell';
 ind = strfind(class2do_full, ',');
@@ -76,7 +82,7 @@ else
     imclass = find(strcmp(class2use,class2do_full));
 end
 man34=sum(classcount(im,imclass),2)./ml_analyzedTB;
-auto34=classcountTB_above_optthresh(it,strcmp(class2do_full,class2useTB))./ml_analyzedTB;
+auto34=classcount_above_optthreshTB(it,strcmp(class2do_full,class2useTB))./ml_analyzedTB;
 
 %%%% match with latitude
 [lat,~,ia,filelistTB]=match_IFCBdata_w_Shimada_lat_lon(filepath,filelistTB);
@@ -88,8 +94,8 @@ man1=man1(ia); man2=man2(ia); man34=man34(ia);
 lat=lat(ia);
 
 clearvars im it i imclass ind badfilelist filelist filelistTB ml_analyzedTBtype ...
-    filepath matdate ml_analyzedTB ml_analyzed class2use classcount classcountTB ...
-    classcountTB_above_optthresh classcountTB_above_adhocthresh class2do_full mdateTB opt fx;
+    matdate ml_analyzedTB ml_analyzed class2use classcount classcountTB ...
+    classcount_above_optthreshTB classcountTB_above_adhocthresh class2do_full mdateTB opt fx;
 
 %% Plot automated vs manual classification cell counts
 figure('Units','inches','Position',[1 1 3.3 3.3],'PaperPositionMode','auto');
@@ -117,6 +123,7 @@ plot(lat,man34,'r*','Markersize',5,'linewidth',.8); hold on
     ylabel('3-4 cells','fontsize',11); 
     xlabel('Latitude (ºN)','fontsize',11); 
 
-% set figure parameters
-exportgraphics(gcf,[filepath 'bloom-baby-bloom/Shimada/Figs/Manual_automated_PN_byLatitude.png'],'Resolution',100)    
+if fprint
+    exportgraphics(gcf,[filepath 'Shimada/Figs/Manual_automated_PN_byLatitude.png'],'Resolution',100)    
+end
 hold off

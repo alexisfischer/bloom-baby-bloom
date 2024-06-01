@@ -120,7 +120,7 @@ dmatrix=dateshift(dmatrix,'start','day');
 % D=timetable(dmatrix,dinomax,dinomean,dinostd);
 % TTT=synchronize(TTT,D,'first');
 
-clearvars D m idm imax dino* DM dMAX i j yrlist flii meso* i* nanday val* ttMAX dBvol dGray dSize dti
+clearvars D m idm imax dino* DM dMAX i j yrlist flii meso* i ida idd idf idx nanday val* ttMAX dBvol dGray dSize dti
 
 %% fill gaps of 3 days or less
 TTT.dino_fl = fillmissing(TTT.dino_fl,'linear','SamplePoints',TTT.dt,'MaxGap',days(3));
@@ -224,8 +224,10 @@ T.fx_Dparva(idx)=0;
 T.fx_Dacuta(idx)=0;
 T.DST_pgcell(idx)=0;
 T.PTX2_pgcell(idx)=0;
-T.DSTng(idx)=0;
-T.PTX2Ng(idx)=0;
+T.DST_ng(idx)=0;
+T.DST_ngL(idx)=0;
+T.PTX2_ng(idx)=0;
+T.PTX2_ngL(idx)=0;
 
 clearvars idx TT Q NT
 
