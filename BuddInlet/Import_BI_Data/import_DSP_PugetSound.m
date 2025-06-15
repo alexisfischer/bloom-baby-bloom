@@ -14,7 +14,7 @@ opts.VariableTypes = ["char", "char", "double", "datetime", "char", "char", "cat
 opts = setvaropts(opts, ["Var1", "Var2", "Var5", "Var6", "Var8", "Var9", "Var11", "Var14", "Var15", "Var16", "Var18", "Var19", "Var20", "Var21", "Var22", "Var23", "Var24"], "WhitespaceRule", "preserve");
 opts = setvaropts(opts, ["Var1", "Var2", "Var5", "Var6", "Waterbody", "Var8", "Var9", "SiteName", "Var11", "SiteID", "MonitoringType", "Var14", "Var15", "Var16", "Species", "Var18", "Var19", "Var20", "Var21", "Var22", "Var23", "Var24", "DSPTissue"], "EmptyFieldRule", "auto");
 T = readtable("/Users/alexis.fischer/Documents/MATLAB/bloom-baby-bloom/BuddInlet/Data/DSP_2012_2023.xlsx", opts, "UseExcel", false);
-
+%%
 T(~contains(cellstr(T.Species),'Mussel'),:)=[];
 %T(~contains(cellstr(T.MonitoringType),'Monitoring'),:)=[];
 T(isnat(T.DSPDate),:)=[]; %remove nans
