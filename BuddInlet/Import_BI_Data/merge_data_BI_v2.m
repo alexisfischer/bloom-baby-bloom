@@ -199,8 +199,8 @@ D((D.dt>datetime('30-Nov-2021') & D.dt<datetime('02-Mar-2022')),:)=[];
 D((D.dt>datetime('15-Oct-2022') & D.dt<datetime('23-Mar-2023')),:)=[];
 D(D.dt>datetime('16-Oct-2023'),:)=[];
 
-D=removevars(D,{'ChlMaxDepthm','ChlMaxLower1','ChlMaxUpper1','ChlMaxLower2','ChlMaxUpper2','AmmoniaM'});
-D=movevars(D,{'dinoML_microscopy','mesoML_microscopy','DST'},'After','IFCBDepthm');
+D=removevars(D,{'AmmoniaM'});
+D=movevars(D,{'DinoML_micro','MesoML_micro','DST'},'After','IFCBDepthm');
 T=synchronize(T,D);
 
 %%%% merge with nutrient data
@@ -213,21 +213,17 @@ QT=table2timetable(Q);
 T=synchronize(T,QT);
 
 %%%% change very low microscopy values to 0
-idx=(T.dinoML_microscopy<=0.15);
-T.dinoML_microscopy(idx)=0;
-T.fx_Dacuminata(idx)=0;
-T.fx_Dfortii(idx)=0;
-T.fx_Dnorvegica(idx)=0;
-T.fx_Dodiosa(idx)=0;
-T.fx_Drotundata(idx)=0;
-T.fx_Dparva(idx)=0;
-T.fx_Dacuta(idx)=0;
+idx=(T.DinoML_micro<=0.15);
+T.DinoML_micro(idx)=0;
+T.DAcumML(idx)=0;
+T.DNorvML(idx)=0;
+T.DOdioML(idx)=0;
+T.DParvML(idx)=0;
+T.DAcutML(idx)=0;
 T.DST_pgcell(idx)=0;
 T.PTX2_pgcell(idx)=0;
-T.DST_ng(idx)=0;
-T.DST_ngL(idx)=0;
-T.PTX2_ng(idx)=0;
-T.PTX2_ngL(idx)=0;
+T.DST_pgML(idx)=0;
+T.PTX2_pgML(idx)=0;
 
 clearvars idx TT Q NT
 

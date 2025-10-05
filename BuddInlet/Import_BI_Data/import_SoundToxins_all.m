@@ -53,6 +53,43 @@ for j=1:length(S)
 end
 clearvars Month n Absent Present Common Bloom i j B
 
+%% match SB cells with temp
+% %in progress
+% opts = spreadsheetImportOptions("NumVariables", 6);
+% opts.Sheet = "My Visits";
+% opts.DataRange = "A2:F212";
+% opts.VariableNames = ["Var1", "Var2", "DateTime", "Water", "Air", "Salinity"];
+% opts.SelectedVariableNames = ["DateTime", "Water", "Air", "Salinity"];
+% opts.VariableTypes = ["char", "char", "datetime", "double", "double", "double"];
+% opts = setvaropts(opts, ["Var1", "Var2"], "WhitespaceRule", "preserve");
+% opts = setvaropts(opts, ["Var1", "Var2"], "EmptyFieldRule", "auto");
+% T = readtable([filepath 'Data/SQ Temp data 2020 thru 2025.xlsx'], opts, "UseExcel", false);
+% T((T.Water==172),:)=[];
+% T=renamevars(T,'DateTime','dt');
+% T=table2timetable(T);
+% clear opts
+% 
+% %extract SB cells
+% dt=S(4).Date;
+% dinoML=S(4).CellPerLiter.*001;
+% cell=timetable(dt,dinoML);
+% cell(isnan(cell.dinoML),:)=[];
+% 
+% %merge timeseriues together
+% TT=synchronize(cell,T,'first');
+% 
+% % figure; scatter(TT.Water,TT.dinoML)
+% % 
+% % figure; 
+% % yyaxis left
+% % plot(TT.dt, TT.dinoML,'o'); hold on;
+% % ylabel('Dinophysis (cells/mL)')
+% % yyaxis right
+% % plot(T.dt, T.Water); hold on;
+% % ylabel('Temperature (^oC)')
+
+
+%%
 QH=S(1).table; BI=S(2).table; LB=S(3).table; SB=S(4).table; MB=S(5).table;  DB=S(6).table;
 
 save([filepath 'Data/SoundToxins_Dinophysis.mat'],'QH','BI','LB','SB','MB','DB','S');

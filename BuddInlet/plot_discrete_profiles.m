@@ -6,8 +6,8 @@ addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom/Misc-Functions/')); % add n
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 
 %yr='2021';
-%yr='2022';
-yr='2023';
+yr='2022';
+%yr='2023';
 
 load([filepath 'Data/BuddInlet_data_summary'],'T');
 load([filepath 'Data/BuddInlet_TSChl_profiles'],'B','dt');
@@ -16,26 +16,27 @@ load([filepath 'Data/BuddInlet_TSChl_profiles'],'B','dt');
 % select data for the year you want and May through October
 %yr='2021-2023';
 idx=(dt.Year==str2double(yr)); data=[B(:,idx)]; dt=dt(idx);
-idx=find(dt.Month>=5 & dt.Month<=10); data=[data(:,idx)]; dt=dt(idx);
-%idx=find(dt.Month==5); data=[data(:,idx)]; dt=dt(idx);
+%idx=find(dt.Month>=5 & dt.Month<=10); data=[data(:,idx)]; dt=dt(idx);
+idx=find(dt.Month==7); data=[data(:,idx)]; dt=dt(idx);
+%idx=find(dt.Day>=1 & dt.Day<30); data=[data(:,idx)]; dt=dt(idx);
 
 figure('Units','inches','Position',[1 1 7 5],'PaperPositionMode','auto');
 subplot = @(m,n,p) subtightplot (m, n, p, [0.03 0.03], [0.04 0.1], [0.06 0.02]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-col=flipud(brewermap(length(data),'Set1')); 
+col=(brewermap(length(data),'Set1')); 
 
 subplot(1,5,1);
 for i=1:length(data)
     idx = ~isnan(data(i).fl);    
     h(i)=plot(data(i).fl(idx),data(i).z(idx),'-','Color',col(i,:),'linewidth',1); hold on
 end
-h=plot(mean([data.fl],2,'omitnan'),[data(1).z],'k--','linewidth',2);
-set(gca,'ylim',[0 6],'xlim',[0 10],'Ydir','reverse','xaxislocation','top','fontsize',10,'Tickdir','out');
+%h=plot(mean([data.fl],2,'omitnan'),[data(1).z],'k--','linewidth',2);
+set(gca,'ylim',[0 6],'xlim',[0 20],'Ydir','reverse','xaxislocation','top','fontsize',10,'Tickdir','out');
 xlabel('Chl (rfu)','fontsize',12);
 ylabel('depth (m)','fontsize',12);
-legend(h,'mean','location','se')
+%legend(h,'mean','location','se')
 
 subplot(1,5,2);
 for i=1:length(data)
@@ -72,12 +73,12 @@ for i=1:length(data)
     plot(data(i).rho_m(idx),data(i).Zp,'k*'); hold on
 end
 
-set(gca,'ylim',[0 6],'xlim',[0 15],'Ydir','reverse','xaxislocation','top',...
+set(gca,'ylim',[0 6],'xlim',[0 16],'xtick',0:8:16,'Ydir','reverse','xaxislocation','top',...
     'yticklabel',{},'fontsize',10,'Tickdir','out');
 xlabel('gradient (kg/m^4)','fontsize',12);
 
-%char=datestr([data.dn]);
-%legend(h,char(:,1:6),'location','SE','fontsize',10); legend boxoff;
+char=datestr([data.dn]);
+legend(h,char(:,1:6),'location','SE','fontsize',10); legend boxoff;
 
 %text(0,mean([data.Zm],'omitnan'),'Zm');
 %text(0,mean([data.Zb],'omitnan'),'Zb');

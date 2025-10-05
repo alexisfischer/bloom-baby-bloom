@@ -33,8 +33,8 @@ m_line(-122.90702,47.04571,'marker','o','linewidth',1,'markersize',8,'color','k'
 m_line(-122.90702,47.04571,'marker','.','linewidth',1,'markersize',12,'color','k');
 m_text(-122.90702-.04,47.04571-.07,{'BI'},'fontsize',9);
 
-m_line(-123.04609,48.08195,'marker','.','markersize',10,'color','k');
-m_text(-123.04609-.13,48.08195-.03,{'SB'},'fontsize',9);
+m_line(-123.03,48.04,'marker','.','markersize',10,'color','k');
+m_text(-123.03-.13,48.04-.03,{'SB'},'fontsize',9);
 
 m_line(-122.62655,47.70521,'marker','.','markersize',10,'color','k');
 m_text(-122.62655-.13,47.70521-.03,{'LB'},'fontsize',9);

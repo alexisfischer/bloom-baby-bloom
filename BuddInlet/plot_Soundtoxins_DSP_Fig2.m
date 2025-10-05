@@ -17,7 +17,7 @@ subplot = @(m,n,p) subtightplot (m, n, p, [0.04 0.04], [0.07 0.25], [0.2 0.03]);
 %subplot = @(m,n,p) subtightplot(m,n,p,opt{:}); 
 %where opt = {gap, width_h, width_w} describes the inner and outer spacings.
 
-cr=brewermap(1,'Reds'); cg=brewermap(6,'Greys');  c=[cr;cg(2:end,:)];
+cr=brewermap(1,'RdPu'); cg=brewermap(6,'Greys');  c=[cr;cg(2:end,:)];
 
 subplot(2,1,1)
 b=bar(Month,[BI.n,SB.n,QH.n,DB.n,MB.n,LB.n],'stacked','FaceColor','flat','BarWidth',1); hold on;
@@ -26,9 +26,9 @@ for i=1:length(b)
 end
 set(gca,'ylim',[0 220],'ytick',0:100:200,'fontsize',9,'xlim',[.5 12.5],...
     'xtick',1:1:12,'tickdir','out','xticklabel',{})
-ylabel({'Soundtoxins';'total samples'},'fontsize',11)
-lh=legend([b(6) b(5) b(4) b(3) b(2) b(1)],'LB (Liberty Bay)','MB (Mystery Bay)',...
-    'DB (Discovery Bay)','QH (Quartermaster Harbor)','SB (Sequim Bay)','BI (Budd Inlet)',...
+    ylabel({'\itDinophysis \rmsamples'},'fontsize',10); hold on;  
+lh=legend([b(6) b(5) b(4) b(3) b(2) b(1)],'Liberty Bay','Mystery Bay',...
+    'Discovery Bay','Quartermaster Harbor','Sequim Bay','Budd Inlet',...
     'Location','North','fontsize',9); legend boxoff;
    lh.FontSize = 9; hp=get(lh,'pos');
    lh.Position=[hp(1) hp(2)+.25 hp(3) hp(4)]; hold on   
@@ -41,7 +41,7 @@ end
 set(gca,'ylim',[0 400],'ytick',0:200:400,'fontsize',9,...
     'xlim',[.5 12.5],'xtick',1:1:12,'tickdir','out',...
     'xticklabel',{'J','F','M','A','M','J','J','A','S','O','N','D'}); hold on;
-ylabel({'WA DOH';'total samples'},'fontsize',11)
+ylabel({'DST samples'},'fontsize',10)
 
 % set figure parameters
 exportgraphics(gcf,[filepath 'Figs/Soundtoxins_DSP_samplesize.png'],'Resolution',300)  
@@ -61,7 +61,7 @@ mo_B=sum([DB.n.*DB.Bloom,LB.n.*LB.Bloom,MB.n.*MB.Bloom,QH.n.*QH.Bloom,SB.n.*SB.B
 mo_fxP=mo_P./mo_total;
 mo_fxC=(mo_C+mo_B)./mo_total;
 
-c=brewermap(4,'RdGy');
+c=brewermap(4,'RdGy'); c(1:2,:)=flipud(brewermap(2,'RdPu'));
 hb=bar([BI.Present,mo_fxP]); hold on
 hl=plot(Month,(BI.Common+BI.Bloom),'-o',Month,mo_fxC,'-s','markersize',4,'linewidth',1.5); hold on
 set(hb(1),'facecolor',c(2,:))
@@ -70,7 +70,7 @@ set(hl(1),'color',c(1,:),'markerfacecolor',c(1,:))
 set(hl(2),'color','k','markerfacecolor','k')
 set(gca,'ylim',[0 1],'ytick',0:.5:1,'fontsize',10,...
     'xlim',[.5 12.5],'xtick',1:1:12,'tickdir','out','xticklabel',{});
-ylabel('fx of water samples','fontsize',11)
+ylabel('fx of samples','fontsize',11)
 
 lh1=legend([hb(1) hl(1)],'Present','Common','location','east','fontsize',9); legend boxoff;
    lh1.FontSize = 9; hp=get(lh1,'pos');
@@ -101,7 +101,7 @@ set(hl(2),'color','k','markerfacecolor','k')
 set(gca,'ylim',[0 1],'ytick',0:.5:1,'fontsize',10,...
     'xlim',[.5 12.5],'xtick',1:1:12,'tickdir','out',...
     'xticklabel',{'J','F','M','A','M','J','J','A','S','O','N','D'}); hold on;
-ylabel({'fx of mussel samples'},'fontsize',11)   
+ylabel({'fx of samples'},'fontsize',11)   
 
 lh1=legend([hb(1) hl(1)],'Detected','\geq16\mug/100g','location','east','fontsize',9); legend boxoff;
    lh1.FontSize = 9; hp=get(lh1,'pos');

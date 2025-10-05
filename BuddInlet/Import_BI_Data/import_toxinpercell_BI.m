@@ -27,10 +27,10 @@ idx=find(T.Date==datetime('12-Aug-2021')); T.VolumeSievedliter(idx)=5;
 
 % calculate toxin quotas and toxin per L
 T.DST_ng=sum([T.OABHNg,T.DTX1BHNg,T.DTX2BHNg,T.dihydroDTX1BHNg],2);
-T.DST_ngL=T.DST_ng./T.VolumeSievedliter;
+T.DST_pgML=T.DST_ng./T.VolumeSievedliter;
 T.DST_pgcell=1000*T.DST_ng./T.TotalCells;
 T.PTX2_ng=T.PTX2Ng;
-T.PTX2_ngL=T.PTX2_ng./T.VolumeSievedliter;
+T.PTX2_pgML=T.PTX2_ng./T.VolumeSievedliter;
 T.PTX2_pgcell=1000*T.PTX2_ng./T.TotalCells;
 
 idx=find(T.TotalCells==0);
@@ -44,7 +44,7 @@ end
 if sum(T.dihydroDTX1BHNg,1)==0
     T=removevars(T,'dihydroDTX1BHNg');
 end
-T=removevars(T,{'Location','VolumeSievedliter','CellLSeawater','TotalCells','PTX2Ng'});
+T=removevars(T,{'Location','PTX2_ng','DST_ng','VolumeSievedliter','CellLSeawater','TotalCells','PTX2Ng'});
 
 Q=T;
 save([filepath 'ToxinCellQuota_BI.mat'],'Q');
