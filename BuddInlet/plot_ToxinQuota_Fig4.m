@@ -1,12 +1,13 @@
 %% plot continuous Budd Inlet data
 clear
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/BuddInlet/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
-addpath(genpath(filepath));
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
+% filepath = '~/Documents/MATLAB/bloom-baby-bloom/BuddInlet/';
+filepath = 'C:\Users\alexis.fischer\OneDrive - SePRO Corporation\Documents\MATLAB\bloom-baby-bloom\BuddInlet\';
+addpath(genpath('C:\Users\alexis.fischer\OneDrive - SePRO Corporation\Documents\MATLAB\'));
+%addpath(genpath(filepath));
 
 yr='2021'; % '2023'
 load([filepath 'Data/BuddInlet_data_summary'],'T','fli','dmatrix','ymatrix');
+%load([filepath 'Data\BuddInlet_data_summary'],'T','fli','dmatrix','ymatrix');
 
 % create cells/mL vectors for Other
 T.DOtherML=sum([T.DOdioML T.DParvML T.DAcutML],2);
@@ -26,10 +27,14 @@ c(4,:)=[.1 .1 .1];
 pink=brewermap(3,'PuRd');
 B=flipud(brewermap(6,'Blues'));
 
-
+%%%% pie chart of toxin cell quota at max cell densities
 [~,idx]=max(M.DinoML_micro);
-figure;
-pie([T.PTX2_pgcell(idx) T.DST_pgcell(idx)])
+figure('Units','inches','Position',[1 1 1 1],'PaperPositionMode','auto');
+p=piechart([M.DST_pgcell(idx) M.PTX2_pgcell(idx)],LabelStyle="none");
+colororder([pink(3,:);B(1,:)])
+
+% set figure parameters
+exportgraphics(gcf,[filepath 'Figs/maxcells_pgcell_pie_' yr '.png'],'Resolution',300)    
 
 %% Total Dinophysis
 figure('Units','inches','Position',[1 1 2.5 3.8],'PaperPositionMode','auto');
