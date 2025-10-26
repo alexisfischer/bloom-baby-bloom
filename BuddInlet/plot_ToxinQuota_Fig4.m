@@ -5,7 +5,7 @@ filepath = 'C:\Users\alexis.fischer\OneDrive - SePRO Corporation\Documents\MATLA
 addpath(genpath('C:\Users\alexis.fischer\OneDrive - SePRO Corporation\Documents\MATLAB\'));
 %addpath(genpath(filepath));
 
-yr='2021'; % '2023'
+yr='2023'; % '2023'
 load([filepath 'Data/BuddInlet_data_summary'],'T','fli','dmatrix','ymatrix');
 %load([filepath 'Data\BuddInlet_data_summary'],'T','fli','dmatrix','ymatrix');
 
@@ -32,6 +32,7 @@ B=flipud(brewermap(6,'Blues'));
 figure('Units','inches','Position',[1 1 1 1],'PaperPositionMode','auto');
 p=piechart([M.DST_pgcell(idx) M.PTX2_pgcell(idx)],LabelStyle="none");
 colororder([pink(3,:);B(1,:)])
+p.FaceAlpha=1;
 
 % set figure parameters
 exportgraphics(gcf,[filepath 'Figs/maxcells_pgcell_pie_' yr '.png'],'Resolution',300)    
