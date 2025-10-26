@@ -5,7 +5,7 @@ addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
 addpath(genpath(filepath));
 addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
 
-yr='2021'; % '2023'
+yr='2023'; % '2023'
 load([filepath 'Data/BuddInlet_data_summary'],'T','fli','dmatrix','ymatrix');
 
 % create cells/mL vectors for Other
@@ -26,12 +26,7 @@ c(4,:)=[.1 .1 .1];
 pink=brewermap(3,'PuRd');
 B=flipud(brewermap(6,'Blues'));
 
-
-[~,idx]=max(M.DinoML_micro);
-figure;
-pie([T.PTX2_pgcell(idx) T.DST_pgcell(idx)])
-
-%% Total Dinophysis
+%%%% Total Dinophysis
 figure('Units','inches','Position',[1 1 2.5 3.8],'PaperPositionMode','auto');
 %subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.07 0.13], [0.19 0.05]);
 subplot = @(m,n,p) subtightplot (m, n, p, [0.05 0.05], [0.07 0.12], [0.23 0.18]);
@@ -76,7 +71,7 @@ plot(T.dt(idx),T.DST_pgcell(idx),'o-','color',pink(3,:),'Markersize',2,'linewidt
     ylabel({'pg/cell';'DST'},'fontsize',9); hold on;
 yyaxis right
 plot(T.dt(idx),T.PTX2_pgcell(idx),'*-','Color',B(1,:),'Markersize',2,'linewidth',.5); hold on
-    set(gca,'ylim',[0 152],'ytick',0:75:150,'xlim',[xax(1) xax(2)],'ycolor',B(1,:),'xticklabel',{},'fontsize',8,'tickdir','out');
+    set(gca,'ylim',[0 160],'ytick',0:75:150,'xlim',[xax(1) xax(2)],'ycolor',B(1,:),'xticklabel',{},'fontsize',8,'tickdir','out');
     ylabel({'PTX2'},'fontsize',9); hold on;    
 
 subplot(4,1,4)
