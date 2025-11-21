@@ -57,7 +57,7 @@ if strcmp('2021-2023',yr)
     fig=figure; set(gcf,'color','w','Units','inches','Position',[1 1 2.7 3.6]);     
         pcolor(s_plot-res/2,t_plot-res/2,data_grid); % have to shift t/s for pcolor with flat shading     
         shading flat; hold on;
-        clearvars t_plot s_plot ii jj nx ny s_grid t_grid data_grid res
+       % clearvars t_plot s_plot ii jj nx ny s_grid t_grid res data_grid
 
         colormap(col); clim(cax);
         axis([xax(1) xax(2) yax(1) yax(2)]);
