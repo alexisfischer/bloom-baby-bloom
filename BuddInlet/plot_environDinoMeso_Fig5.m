@@ -1,11 +1,14 @@
 %% plot continuous Budd Inlet data
 clear
-filepath = '~/Documents/MATLAB/bloom-baby-bloom/BuddInlet/';
-addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
-addpath(genpath(filepath));
-addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
+% filepath = '~/Documents/MATLAB/bloom-baby-bloom/BuddInlet/';
+% addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
+% addpath(genpath(filepath));
+% addpath(genpath('~/Documents/MATLAB/bloom-baby-bloom'));
 
-yr='2022'; % '2023'
+filepath = 'C:\Users\alexis.fischer\OneDrive - SePRO Corporation\Documents\MATLAB\bloom-baby-bloom\BuddInlet\';
+addpath(genpath('C:\Users\alexis.fischer\OneDrive - SePRO Corporation\Documents\MATLAB\'));
+
+yr='2023'; % '2023'
 load([filepath 'Data/BuddInlet_data_summary'],'T','fli');
 load([filepath 'Data/BuddInlet_TSChl_profiles'],'B','dt');
 load([filepath 'Data/BI_Precipitation'],'P');
@@ -16,8 +19,13 @@ T(~(T.dt.Year==str2double(yr)),:)=[];
 % nanmean(T.NH3_avg)
 % nanstd(T.NH3_avg)
 
-idx=find(T.dt==datetime('09-Jul-2023')); T.mesoLarge_fl(idx)=T.mesoLarge_fl(idx)+17;
+%%% find median concentration on max bloom concentration
+% fli(~(fli.dt.Year==str2double(yr)),:)=[];
+% [val,idx]=max(fli.dino)
+% idx2=find(T.dt==dateshift(fli.dt(idx),'start', 'day'));
+% T.dino_fl(idx2)
 
+idx=find(T.dt==datetime('09-Jul-2023')); T.mesoLarge_fl(idx)=T.mesoLarge_fl(idx)+17;
 T.t1=(smoothdata(T.t1,'movmean',3,'omitnan'));
 T.s1=(smoothdata(T.s1,'movmean',3,'omitnan'));
 

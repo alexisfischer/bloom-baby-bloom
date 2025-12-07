@@ -1,5 +1,5 @@
 %% merge Budd Inlet data
-clear
+clear 
 filepath = '~/Documents/MATLAB/bloom-baby-bloom/';
 ifcbpath = '~/Documents/MATLAB/ifcb-data-science/';
 addpath(genpath('~/Documents/MATLAB/ifcb-analysis/'));
